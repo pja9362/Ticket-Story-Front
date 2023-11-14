@@ -1,36 +1,46 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {StyleSheet, Text, TouchableOpacity, View, Image} from 'react-native';
+// import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import logo from '../../images/logo.png';
 
 const Home = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.title}>
-        <Text style={styles.titleText}>Ticket-Story</Text>
+        <Image source={logo} style={styles.image} />
       </View>
 
-      <View style={styles.snsBtnContainer}>
-        <TouchableOpacity style={styles.snsBtn} onPress={() => navigation.navigate("Main")}>
-          <Icon name="chat" size={20} color="#000" />
-          <Text style={styles.text}>카카오로 계속하기</Text>
+      <View style={styles.mainBtnContainer}>
+        <TouchableOpacity
+          style={styles.snsBtn}
+          onPress={() => navigation.navigate('SignUp')}>
+          <Text style={{...styles.text, color: '#fff'}}>회원가입</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={{...styles.snsBtn, backgroundColor: '#fff', borderWidth: 1}}
-          onPress={() => navigation.navigate("Main")}  
-        >
-          <Icon name="apple" size={22} color="#000" />
-          <Text style={styles.text}>Apple로 계속하기</Text>
+          onPress={() => navigation.navigate('Main')}>
+          {/* <Icon name="chat" size={20} color="#000" /> */}
+          <Text style={styles.text}>카카오톡 계정으로 시작하기</Text>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.authBtnContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text>로그인</Text>
+      <View style={styles.tmpBtnContainer}>
+        <TouchableOpacity>
+          <View style={styles.tempBtn}></View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-          <Text>회원가입</Text>
+        <TouchableOpacity>
+          <View style={styles.tempBtn}></View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <View style={styles.tempBtn}></View>
         </TouchableOpacity>
       </View>
+
+      <TouchableOpacity
+        style={styles.authBtnContainer}
+        onPress={() => navigation.navigate('Login')}>
+        <Text>로그인</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -39,11 +49,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 20,
+    padding: 38,
   },
   text: {
     fontSize: 14,
-    color: '#000',
+    color: '#000000',
     lineHeight: 20,
   },
   title: {
@@ -51,12 +61,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 5,
   },
-  titleText: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: '#000',
+  image: {
+    width: 140,
+    height: 140,
   },
-  snsBtnContainer: {
+  mainBtnContainer: {
     marginTop: 20,
     flex: 1.5,
   },
@@ -65,16 +74,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 10,
-    backgroundColor: '#f9e000',
+    backgroundColor: '#000',
     padding: 10,
     marginBottom: 10,
-    borderRadius: 5,
+    borderRadius: 50,
   },
   authBtnContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     flex: 1,
     gap: 10,
+  },
+
+  // 임시 버튼
+  tmpBtnContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flex: 1,
+    gap: 25,
+  },
+  tempBtn: {
+    height: 30,
+    width: 30,
+    borderRadius: 15,
+    backgroundColor: '#D9D9D9',
   },
 });
 

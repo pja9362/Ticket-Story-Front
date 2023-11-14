@@ -5,10 +5,10 @@ import Step1 from '../../components/SignUp/Step1';
 import Step2 from '../../components/SignUp/Step2';
 import Step3 from '../../components/SignUp/Step3';
 import Step4 from '../../components/SignUp/Step4';
-import StepIndicator from '../../components/SignUp/StepIndicator';
+import LineIndicator from '../../components/SignUp/LineIndicator';
 
 const SignUp = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(3);
   const [formData, setFormData] = useState({});
 
   const nextStep = () => {
@@ -21,9 +21,8 @@ const SignUp = () => {
 
   return (
     <View style={styles.container}>
-      <Header />
-      <StepIndicator step={step} />
-      <Text style={styles.titleText}>회원가입</Text>
+      <Header title="계정 생성" />
+      <LineIndicator step={step} />
       {step === 1 && (
         <Step1
           nextStep={nextStep}
@@ -62,6 +61,7 @@ const SignUp = () => {
           values={formData}
         />
       )}
+
     </View>
   );
 };

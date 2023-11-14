@@ -6,7 +6,6 @@ const NextButton = ({onClick, isValid, isLast}) => {
     if (!isValid) {
       console.log('disabled');
     } else {
-      // 다음 단계로 이동
       onClick();
     }
   };

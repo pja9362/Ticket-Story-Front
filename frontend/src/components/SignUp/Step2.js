@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {View, Text, TextInput, StyleSheet} from 'react-native';
 import NextButton from './NextButton';
 
@@ -7,11 +7,6 @@ const Step2 = ({nextStep, prevStep}) => {
   const [passwordCheck, setPasswordCheck] = useState('');
 
   const isValid = password !== '' && password === passwordCheck;
-
-  useEffect(() => {
-    console.log(password + 'vs' + passwordCheck);
-    console.log(isValid);
-  }, [isValid, password, passwordCheck]);
 
   return (
     <View style={styles.container}>

@@ -10,24 +10,20 @@ import NextButton from './NextButton';
 
 const Step1 = ({nextStep}) => {
   const [id, setId] = useState('');
-  const [isIdCheck, setIsIdCheck] = useState(false);
-  const isValid = isIdCheck && id !== '';
+  const isIdCheck = true;
+  // const isValid = isIdCheck && id !== '';
+  const isValid = id !== '';
 
   return (
     <View style={styles.container}>
       <Text style={styles.sectionText}>아이디</Text>
-      <View style={styles.formContainer}>
-        <TextInput
-          style={styles.inputBox}
-          value={id}
-          onChangeText={text => setId(text)}
-        />
-        <TouchableOpacity
-          style={styles.checkBtn}
-          onPress={() => setIsIdCheck(true)}>
-          <Text style={styles.checkBtnLabel}>중복확인</Text>
-        </TouchableOpacity>
-      </View>
+      <TextInput
+        style={styles.inputBox}
+        value={id}
+        onChangeText={text => setId(text)}
+      />
+      {!isIdCheck && <Text style={styles.alertText}>중복된 아이디예요.</Text>}
+      {/* 중복확인 버튼 */}
       <NextButton onClick={nextStep} isValid={isValid} />
     </View>
   );
@@ -37,12 +33,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     margin: 16,
-    paddingVertical: 36,
+    paddingVertical: 10,
   },
   sectionText: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 12,
+    color: '#000',
   },
   formContainer: {
     flexDirection: 'row',
@@ -50,11 +47,10 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     fontSize: 16,
-    borderColor: '#d3d3d3',
-    borderWidth: 1,
-    borderRadius: 8,
-    flex: 1,
-    padding: 12,
+    backgroundColor: '#D9D9D9',
+    borderRadius: 5,
+    height: 50,
+    paddingHorizontal: 12,
   },
   checkBtn: {
     backgroundColor: '#e4f3fb',
@@ -65,6 +61,11 @@ const styles = StyleSheet.create({
   checkBtnLabel: {
     color: '#666666',
     fontSize: 14,
+  },
+  alertText: {
+    color: '#000',
+    fontSize: 12,
+    lineHeight: 40,
   },
 });
 

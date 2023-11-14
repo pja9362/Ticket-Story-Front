@@ -1,12 +1,12 @@
 import React from 'react';
 import {TouchableOpacity, Text, StyleSheet, View} from 'react-native';
 
-const NextButton = ({onClick, isValid, isLast}) => {
+const VerifyButton = ({isValid}) => {
   const handleNextClick = () => {
     if (!isValid) {
       console.log('disabled');
     } else {
-      onClick();
+        // onClick();
     }
   };
 
@@ -16,7 +16,7 @@ const NextButton = ({onClick, isValid, isLast}) => {
         style={[styles.nextBtn, !isValid && styles.disabledBtn]}
         onPress={handleNextClick}
         disabled={!isValid}>
-        <Text style={styles.text}>{isLast ? '계정 만들기' : '다음'}</Text>
+        <Text style={styles.text}>인증번호 요청</Text>
       </TouchableOpacity>
     </View>
   );
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   nextBtn: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 20,
+    width: 78,
     height: 43,
     backgroundColor: '#000',
     marginTop: 60,
@@ -43,4 +43,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NextButton;
+export default VerifyButton;

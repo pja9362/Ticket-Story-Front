@@ -16,6 +16,8 @@ const Step2 = ({nextStep, prevStep}) => {
           style={styles.inputBox}
           value={password}
           secureTextEntry={true}
+          placeholder='8자리 이상'
+          placeholderTextColor='gray'
           onChangeText={text => setPassword(text)}
         />
       </View>
@@ -39,23 +41,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     margin: 16,
-    paddingVertical: 36,
+    paddingVertical: 10,
   },
   sectionText: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 8,
-    color: '#3b3b3b',
+    marginBottom: 12,
+    color: '#000',
   },
   formContainer: {
     marginBottom: 20,
   },
   inputBox: {
     fontSize: 16,
-    borderColor: '#d3d3d3',
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 12,
+    backgroundColor: '#D9D9D9',
+    borderRadius: 5,
+    height: 50,
+    paddingHorizontal: 12,
   },
   checkBtn: {
     backgroundColor: '#e4f3fb',

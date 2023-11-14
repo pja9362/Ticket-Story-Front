@@ -13,12 +13,12 @@ const Header = ({title = '', icon, onIconClick}) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={onBackClick}>
-        <Icon name="chevron-back-sharp" size={24} color="black" />
+        <Icon name="chevron-back-sharp" size={20} color="black" />
       </TouchableOpacity>
       <Text style={styles.title}>{title}</Text>
       {icon === '' ? (
         <TouchableOpacity onPress={onIconClick}>
-          <Icon name={icon} size={24} color="black" />
+          <Icon name={icon} size={20} color="black" />
           <Text>Icon</Text>
         </TouchableOpacity>
       ) : (
@@ -30,14 +30,14 @@ const Header = ({title = '', icon, onIconClick}) => {
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
+    paddingVertical: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%',
-    paddingVertical: 24,
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 14,
+    color: '#000',
   },
 });
 

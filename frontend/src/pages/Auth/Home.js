@@ -10,12 +10,14 @@ const Home = ({navigation}) => {
       </View>
 
       <View style={styles.snsBtnContainer}>
-        <TouchableOpacity style={styles.snsBtn}>
+        <TouchableOpacity style={styles.snsBtn} onPress={() => navigation.navigate("Main")}>
           <Icon name="chat" size={20} color="#000" />
           <Text style={styles.text}>카카오로 계속하기</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={{...styles.snsBtn, backgroundColor: '#fff', borderWidth: 1}}>
+          style={{...styles.snsBtn, backgroundColor: '#fff', borderWidth: 1}}
+          onPress={() => navigation.navigate("Main")}  
+        >
           <Icon name="apple" size={22} color="#000" />
           <Text style={styles.text}>Apple로 계속하기</Text>
         </TouchableOpacity>

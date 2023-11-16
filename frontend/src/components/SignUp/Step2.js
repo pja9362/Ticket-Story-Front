@@ -1,12 +1,16 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, TextInput, StyleSheet} from 'react-native';
 import NextButton from './NextButton';
 
-const Step2 = ({nextStep, prevStep}) => {
+const Step2 = ({nextStep, handleChange, values}) => {
   const [password, setPassword] = useState('');
   const [passwordCheck, setPasswordCheck] = useState('');
 
   const isValid = password !== '' && password === passwordCheck;
+
+  useEffect(() => {
+    console.log('Step2: ', values);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -16,9 +20,12 @@ const Step2 = ({nextStep, prevStep}) => {
           style={styles.inputBox}
           value={password}
           secureTextEntry={true}
-          placeholder='8자리 이상'
-          placeholderTextColor='gray'
-          onChangeText={text => setPassword(text)}
+          placeholder="8자리 이상"
+          placeholderTextColor="gray"
+          onChangeText={text => {
+            setPassword(text);
+            handleChange('password', text);
+          }}
         />
       </View>
 

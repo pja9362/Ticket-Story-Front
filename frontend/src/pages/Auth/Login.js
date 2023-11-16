@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,18 +7,40 @@ import {
   View,
 } from 'react-native';
 import Header from '../../components/Header';
+import api from '../../api/api';
 
 const Login = () => {
+  const [userId, setUserId] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async () => {
+    try {
+      const result = await api.signInRequest(userId, password);
+      console.log('login result:', result);
+    } catch (error) {
+      console.error('login error:', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Header />
 
       <View style={styles.formContainer}>
         <Text style={styles.sectionText}>아이디</Text>
-        <TextInput style={styles.inputBox} />
+        <TextInput
+          value={userId}
+          onChangeText={text => setUserId(text)}
+          style={styles.inputBox}
+        />
 
         <Text style={styles.sectionText}>비밀번호</Text>
-        <TextInput secureTextEntry={true} style={styles.inputBox} />
+        <TextInput
+          value={password}
+          onChangeText={text => setPassword(text)}
+          secureTextEntry={true}
+          style={styles.inputBox}
+        />
 
         <View style={styles.findBtnContainer}>
           <TouchableOpacity style={styles.findBtn}>
@@ -28,6 +50,10 @@ const Login = () => {
             <Text>비밀번호 찾기</Text>
           </TouchableOpacity>
         </View>
+
+        <TouchableOpacity onPress={handleLogin} style={styles.loginBtn}>
+          <Text style={styles.btnText}>로그인</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -61,6 +87,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     gap: 10,
+  },
+
+  loginBtn: {
+    backgroundColor: '#000',
+    margin: 30,
+    paddingVertical: 8,
+    width: 90,
+    borderRadius: 20,
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
+  btnText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    lineHeight: 20,
   },
 });
 

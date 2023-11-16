@@ -8,21 +8,17 @@ import {
 } from 'react-native';
 import Header from '../../components/Header';
 
-const Login = ({navigation}) => {
+const Login = () => {
   return (
     <View style={styles.container}>
       <Header />
-      <View style={styles.title}>
-        <Text style={styles.titleText}>Ticket-Story</Text>
-      </View>
 
       <View style={styles.formContainer}>
-        <TextInput style={styles.inputBox} placeholder="아이디" />
-        <TextInput
-          secureTextEntry={true}
-          style={styles.inputBox}
-          placeholder="비밀번호"
-        />
+        <Text style={styles.sectionText}>아이디</Text>
+        <TextInput style={styles.inputBox} />
+
+        <Text style={styles.sectionText}>비밀번호</Text>
+        <TextInput secureTextEntry={true} style={styles.inputBox} />
 
         <View style={styles.findBtnContainer}>
           <TouchableOpacity style={styles.findBtn}>
@@ -32,12 +28,6 @@ const Login = ({navigation}) => {
             <Text>비밀번호 찾기</Text>
           </TouchableOpacity>
         </View>
-      </View>
-
-      <View style={styles.signupBtnContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-          <Text style={styles.signupText}>계정이 없으신가요? 회원가입</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -49,45 +39,28 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 20,
   },
-  title: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 2,
-  },
-  titleText: {
-    fontSize: 30,
-    fontWeight: 'bold',
+  sectionText: {
+    fontSize: 16,
+    marginBottom: 12,
     color: '#000',
   },
   formContainer: {
-    flex: 5,
-    gap: 10,
-    paddingHorizontal: 20,
-    justifyContent: 'center',
+    marginBottom: 20,
+    margin: 16,
+    paddingVertical: 10,
   },
   inputBox: {
-    backgroundColor: '#eff8fc',
-    borderRadius: 8,
-    paddingHorizontal: 20,
-    paddingVertical: 13,
+    fontSize: 16,
+    backgroundColor: '#D9D9D9',
+    borderRadius: 5,
+    height: 50,
+    paddingHorizontal: 12,
+    marginBottom: 25,
   },
   findBtnContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingTop: 15,
     gap: 10,
-  },
-  signupBtnContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  signupText: {
-    fontSize: 14,
-    color: 'gray',
-    lineHeight: 20,
-    textDecorationLine: 'underline',
   },
 });
 

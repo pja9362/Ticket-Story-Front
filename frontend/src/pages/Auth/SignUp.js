@@ -9,7 +9,7 @@ import Step5 from '../../components/SignUp/Step5';
 import LineIndicator from '../../components/SignUp/LineIndicator';
 
 const SignUp = ({navigation}) => {
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
 
   const nextStep = () => {

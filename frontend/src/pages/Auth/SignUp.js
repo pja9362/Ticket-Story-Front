@@ -5,9 +5,10 @@ import Step1 from '../../components/SignUp/Step1';
 import Step2 from '../../components/SignUp/Step2';
 import Step3 from '../../components/SignUp/Step3';
 import Step4 from '../../components/SignUp/Step4';
+import Step5 from '../../components/SignUp/Step5';
 import LineIndicator from '../../components/SignUp/LineIndicator';
 
-const SignUp = () => {
+const SignUp = ({navigation}) => {
   const [step, setStep] = useState(3);
   const [formData, setFormData] = useState({});
 
@@ -18,6 +19,10 @@ const SignUp = () => {
   const prevStep = () => {
     setStep(step - 1);
   };
+
+  const goLogin = () => {
+    navigation.navigate('Login');
+  }
 
   return (
     <View style={styles.container}>
@@ -54,6 +59,7 @@ const SignUp = () => {
       )}
       {step === 4 && (
         <Step4
+          nextStep={nextStep}
           prevStep={prevStep}
           handleChange={(name, value) =>
             setFormData({...formData, [name]: value})
@@ -61,7 +67,7 @@ const SignUp = () => {
           values={formData}
         />
       )}
-
+      {step === 5 && <Step5 nextStep={goLogin}/>}
     </View>
   );
 };

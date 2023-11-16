@@ -29,7 +29,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     height: 43,
     backgroundColor: '#000',
-    marginTop: 60,
+    marginTop: 38,
+    marginBottom: 15,
     borderRadius: 50,
   },
   disabledBtn: {

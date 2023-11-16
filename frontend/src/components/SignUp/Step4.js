@@ -1,15 +1,10 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-} from 'react-native';
+import {View, Text, StyleSheet, TextInput, ScrollView} from 'react-native';
 import NextButton from './NextButton';
 import GenderButton from './GenderButton';
 import Agreement from './Agreement';
 
-const Step4 = ({prevStep}) => {
+const Step4 = ({nextStep, prevStep}) => {
   const [nickname, setNickname] = useState('');
   const [gender, setGender] = useState('');
 
@@ -18,7 +13,7 @@ const Step4 = ({prevStep}) => {
   const genderOptions = ['남성', '여성'];
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.formContainer}>
         <Text style={styles.sectionText}>닉네임</Text>
         <TextInput
@@ -41,17 +36,15 @@ const Step4 = ({prevStep}) => {
           ))}
         </View>
       </View>
-      
+
       <Agreement />
 
       <NextButton
         isLast={true}
         isValid={isValid}
-        onClick={() => {
-          console.log('submit form');
-        }}
+        onClick={nextStep}
       />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -59,7 +52,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     margin: 16,
-    paddingVertical: 10,
+    paddingTop: 10,
+    marginBottom: 0,
   },
   sectionText: {
     fontSize: 16,

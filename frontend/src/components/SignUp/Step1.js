@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -7,24 +7,48 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import NextButton from './NextButton';
+import api from '../../api/api';
 
-const Step1 = ({nextStep}) => {
+const Step1 = ({nextStep, handleChange, values}) => {
   const [id, setId] = useState('');
-  const isIdCheck = true;
-  // const isValid = isIdCheck && id !== '';
+  const [isIdCheck, setIsIdCheck] = useState(true);
   const isValid = id !== '';
 
+  useEffect(() => {
+    console.log('Step1: ', values);
+  }, []);
+
+  const handleIdCheck = async () => {
+    try {
+      const isIdDuplicated = await api.checkIdDuplicate(id);
+  
+      if (isIdDuplicated === false) {
+        console.log('사용 가능한 아이디입니다.');
+        setIsIdCheck(true);
+        nextStep();
+      } else {
+        console.log('중복된 아이디입니다.');
+        setIsIdCheck(false);
+      }
+    } catch (error) {
+      console.error('id-check error:', error);
+    }
+  };
+  
   return (
     <View style={styles.container}>
       <Text style={styles.sectionText}>아이디</Text>
       <TextInput
         style={styles.inputBox}
         value={id}
-        onChangeText={text => setId(text)}
+        onChangeText={text => {
+          setId(text);
+          handleChange('userId', text);
+        }}
       />
       {!isIdCheck && <Text style={styles.alertText}>중복된 아이디예요.</Text>}
       {/* 중복확인 버튼 */}
-      <NextButton onClick={nextStep} isValid={isValid} />
+      <NextButton onClick={handleIdCheck} isValid={isValid} />
     </View>
   );
 };

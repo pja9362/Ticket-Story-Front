@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, TextInput, StyleSheet} from 'react-native';
 import formatPhoneNum from '../../utils/formatPhoneNum';
 import NextButton from './NextButton';
 
-const Step3 = ({nextStep, prevStep}) => {
+const Step3 = ({nextStep, handleChange, values}) => {
   const [name, setName] = useState('');
   const [firstPartIdentityNum, setFirstPartIdentityNum] = useState('');
   const [secondPartIdentityNum, setSecondPartIdentityNum] = useState('');
@@ -11,9 +11,14 @@ const Step3 = ({nextStep, prevStep}) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [verifyCode, setVerifyCode] = useState('');
 
-  const handleChange = text => {
+  useEffect(() => {
+    console.log('Step3: ', values);
+  }, []);
+
+  const handlePhoneNumChange = text => {
     const formattedPhoneNumber = formatPhoneNum(text);
     setPhoneNumber(formattedPhoneNumber);
+    handleChange('phoneNumber', formattedPhoneNumber);
   };
 
   const handleFirstPartChange = text => {
@@ -67,7 +72,7 @@ const Step3 = ({nextStep, prevStep}) => {
       <TextInput
         style={styles.inputBox}
         value={phoneNumber}
-        onChangeText={handleChange}
+        onChangeText={handlePhoneNumChange}
         keyboardType="numeric"
         placeholder="전화번호"
         placeholderTextColor="gray"

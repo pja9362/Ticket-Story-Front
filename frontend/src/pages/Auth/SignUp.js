@@ -16,13 +16,13 @@ const SignUp = ({navigation}) => {
     setStep(step + 1);
   };
 
-  const prevStep = () => {
-    setStep(step - 1);
-  };
-
   const goLogin = () => {
     navigation.navigate('Login');
   }
+
+  const updateFormData = (name, value) => {
+    setFormData({...formData, [name]: value});
+  };
 
   return (
     <View style={styles.container}>
@@ -31,39 +31,28 @@ const SignUp = ({navigation}) => {
       {step === 1 && (
         <Step1
           nextStep={nextStep}
-          handleChange={(name, value) =>
-            setFormData({...formData, [name]: value})
-          }
+          handleChange={(name, value) => updateFormData(name, value)}
           values={formData}
         />
       )}
       {step === 2 && (
         <Step2
           nextStep={nextStep}
-          prevStep={prevStep}
-          handleChange={(name, value) =>
-            setFormData({...formData, [name]: value})
-          }
+          handleChange={(name, value) => updateFormData(name, value)}
           values={formData}
         />
       )}
       {step === 3 && (
         <Step3
           nextStep={nextStep}
-          prevStep={prevStep}
-          handleChange={(name, value) =>
-            setFormData({...formData, [name]: value})
-          }
+          handleChange={(name, value) => updateFormData(name, value)}
           values={formData}
         />
       )}
       {step === 4 && (
         <Step4
           nextStep={nextStep}
-          prevStep={prevStep}
-          handleChange={(name, value) =>
-            setFormData({...formData, [name]: value})
-          }
+          handleChange={(name, value) => updateFormData(name, value)}
           values={formData}
         />
       )}

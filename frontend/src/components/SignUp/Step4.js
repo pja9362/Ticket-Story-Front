@@ -1,16 +1,36 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, TextInput, ScrollView} from 'react-native';
 import NextButton from './NextButton';
 import GenderButton from './GenderButton';
 import Agreement from './Agreement';
+import api from '../../api/api';
 
-const Step4 = ({nextStep, prevStep}) => {
+const Step4 = ({nextStep, handleChange, values}) => {
   const [nickname, setNickname] = useState('');
   const [gender, setGender] = useState('');
 
   const isValid = nickname !== '' && gender !== '';
 
-  const genderOptions = ['남성', '여성'];
+  const genderOptions = [
+    {label: '여성', value: 'Female'},
+    {label: '남성', value: 'Male'},
+  ];
+
+  useEffect(() => {
+    console.log('Step4: ', values);
+  }, []);
+
+  const handleSignUp = async () => {
+    try {
+      const signUpResponse = await api.signUpRequest(values);
+      console.log('Sign-up response:', signUpResponse);
+
+      nextStep();
+    } catch (error) {
+      console.error('Sign-up error:', error);
+    }
+  };
+
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -28,10 +48,13 @@ const Step4 = ({nextStep, prevStep}) => {
         <View style={styles.genderContainer}>
           {genderOptions.map(option => (
             <GenderButton
-              key={option}
-              label={option}
-              isActive={gender === option}
-              onPress={() => setGender(option)}
+              key={option.value}
+              label={option.label}
+              isActive={gender === option.value}
+              onPress={() => {
+                setGender(option.value);
+                handleChange('gender', option.value);
+              }}
             />
           ))}
         </View>
@@ -39,11 +62,7 @@ const Step4 = ({nextStep, prevStep}) => {
 
       <Agreement />
 
-      <NextButton
-        isLast={true}
-        isValid={isValid}
-        onClick={nextStep}
-      />
+      <NextButton isLast={true} isValid={isValid} onClick={handleSignUp}/>
     </ScrollView>
   );
 };

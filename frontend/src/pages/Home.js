@@ -46,7 +46,7 @@ const Home = () => {
         {category.map((item, index) => (
           <View key={index} style={styles.category}>
             <View style={styles.categoryIcon}></View>
-            <Text style={styles.categoryLabel}>{item}</Text>
+            <Text>{item}</Text>
           </View>
         ))}
       </View>
@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     backgroundColor: '#D9D9D9',
+    marginBottom: 5,
   },
   // 추천 리스트
   sectionText: {

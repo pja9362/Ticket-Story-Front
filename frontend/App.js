@@ -8,6 +8,8 @@ import LoginScreen from './src/pages/Auth/Login';
 import SignUpScreen from './src/pages/Auth/SignUp';
 import HomeScreen from './src/pages/Home';
 import MainScreen from './src/pages/Main';
+import EnrollInfoByHand from './src/pages/EnrollTicket/EnrollInfoByHand';
+import EnrollReviewByHand from './src/pages/EnrollTicket/EnrollReviewByHand';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -50,7 +52,7 @@ const App = () => {
       <Tab.Screen
         name="TicketBook"
         options={{headerShown: false, tabBarLabel: '티켓북'}}
-        component={HomeScreen}
+        component={EnrollInfoByHand}
       />
       <Tab.Screen
         name="Main"
@@ -91,6 +93,11 @@ const App = () => {
         <Stack.Screen name="MainStack" options={{headerShown: false}}>
           {() => <MainStack />}
         </Stack.Screen>
+        <Stack.Screen
+          name="EnrollReviewByHand"
+          options={{headerShown: false}}
+          component={EnrollReviewByHand}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

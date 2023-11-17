@@ -3,7 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View, Image} from 'react-native';
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import logo from '../../images/logo.png';
 
-const Home = ({navigation}) => {
+const Init = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.title}>
@@ -25,7 +25,7 @@ const Home = ({navigation}) => {
       </View>
 
       <View style={styles.tmpBtnContainer}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('MainStack')}>
           <View style={styles.tempBtn}></View>
         </TouchableOpacity>
         <TouchableOpacity>
@@ -101,4 +101,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default Init;

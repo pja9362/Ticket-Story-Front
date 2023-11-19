@@ -4,12 +4,11 @@ import {
   Text,
   StyleSheet,
   Image,
-  Touchable,
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import EnrollHeader from '../../components/EnrollHeader';
-import StarRating from '../../components/StarRating';
+import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
+import StarRating from '../../components/EnrollTicket/StarRating';
 import addPhoto from '../../images/icon_add_photo.png';
 
 const EnrollReviewByHand = ({navigation}) => {
@@ -33,7 +32,7 @@ const EnrollReviewByHand = ({navigation}) => {
 
   return (
     <>
-      <EnrollHeader title="티켓 후기 입력" />
+      <EnrollHeader title="티켓 후기 입력" onIconClick={()=> navigation.navigate('EnrollFinish')} />
       <View style={styles.container}>
         <Text style={{fontSize: 16, fontWeight: 'bold', color: '#000'}}>
           관람한 자전차왕 엄복동의 후기를 알려주세요.

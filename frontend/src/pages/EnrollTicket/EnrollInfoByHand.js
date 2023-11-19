@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, TextInput} from 'react-native';
-import EnrollHeader from '../../components/EnrollHeader';
+import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 
 const EnrollInfoByHand = ({navigation}) => {
   const [name, setName] = useState('');

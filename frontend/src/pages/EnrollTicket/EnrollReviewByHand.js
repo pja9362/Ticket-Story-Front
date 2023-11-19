@@ -4,12 +4,11 @@ import {
   Text,
   StyleSheet,
   Image,
-  Touchable,
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import EnrollHeader from '../../components/EnrollHeader';
-import StarRating from '../../components/StarRating';
+import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
+import StarRating from '../../components/EnrollTicket/StarRating';
 import addPhoto from '../../images/icon_add_photo.png';
 
 const EnrollReviewByHand = ({navigation}) => {

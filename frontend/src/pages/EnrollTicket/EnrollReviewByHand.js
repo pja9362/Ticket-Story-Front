@@ -32,7 +32,7 @@ const EnrollReviewByHand = ({navigation}) => {
 
   return (
     <>
-      <EnrollHeader title="티켓 후기 입력" />
+      <EnrollHeader title="티켓 후기 입력" onIconClick={()=> navigation.navigate('EnrollFinish')} />
       <View style={styles.container}>
         <Text style={{fontSize: 16, fontWeight: 'bold', color: '#000'}}>
           관람한 자전차왕 엄복동의 후기를 알려주세요.

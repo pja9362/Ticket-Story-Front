@@ -5,12 +5,16 @@ import TicketAgreement from '../../components/EnrollTicket/TicketAgreement';
 import SelectType from '../../components/EnrollTicket/SelectType';
 
 const EnrollInfoByHandAgreement = ({navigation}) => {
-    const [isModalVisible, setModalVisible] = useState(true);
-    const [showSelectType, setShowSelectType] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(true);
+  const [showSelectType, setShowSelectType] = useState(false);
 
   const closeModal = () => {
     setModalVisible(false);
     setShowSelectType(true);
+  };
+
+  const onClick = () => {
+    navigation.navigate('EnrollInfoByHand');
   };
 
   return (
@@ -22,7 +26,7 @@ const EnrollInfoByHandAgreement = ({navigation}) => {
       {!showSelectType ? (
         <TicketAgreement isModalVisible={isModalVisible} onClick={closeModal} />
       ) : (
-        <SelectType />
+        <SelectType onClick={onClick}/>
       )}
     </>
   );

@@ -2,7 +2,6 @@ import React from 'react';
 import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
 import HomeHeader from '../components/HomeHeader';
 import Swiper from 'react-native-swiper';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Home = () => {
   // Dummy images
@@ -22,6 +21,13 @@ const Home = () => {
   ];
 
   const category = ['영화', '뮤지컬', '연극', '야구'];
+
+  const dummyHotTopic = [
+    '커뮤니티 인기글1',
+    '커뮤니티 인기글2',
+    '커뮤니티 인기글3',
+    '커뮤니티 인기글4',
+  ];
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -74,6 +80,30 @@ const Home = () => {
           ))}
         </ScrollView>
       </View>
+
+      <View style={styles.contentContainer}>
+        <Text style={styles.sectionText}>오늘의 리뷰</Text>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.itemContainer}>
+          {itemImages.map((image, index) => (
+            <Image key={index} source={{uri: image}} style={styles.itemImage} />
+          ))}
+        </ScrollView>
+      </View>
+
+      <View style={[styles.contentContainer, {paddingBottom: 50}]}>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 13}}>
+          <Text style={styles.sectionText}>커뮤니티 인기글</Text>
+          <Text style={styles.moreText}>더보기</Text>
+        </View>
+        {dummyHotTopic.map((item, index) => (
+          <View key={index} style={styles.hotTopicContainer}>
+            <Text>{item}</Text>
+          </View>
+        ))}
+      </View>
     </ScrollView>
   );
 };
@@ -83,6 +113,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 20,
+  },
+  contentContainer: {
+    marginVertical: 4,
   },
   // 상단 배너
   bannerContainer: {
@@ -117,7 +150,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    marginVertical: 25
+    marginVertical: 25,
   },
   category: {
     alignItems: 'center',
@@ -145,6 +178,19 @@ const styles = StyleSheet.create({
     height: 150,
     resizeMode: 'cover',
   },
+  // 커뮤니티 인기글
+  hotTopicContainer: {
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.05)',
+    borderRadius: 10,
+    padding: 9,
+    marginBottom: 5,
+  },
+  moreText: {
+    textDecorationLine: 'underline',
+    color: '#000',
+    fontSize: 12,
+  }
 });
 
 export default Home;

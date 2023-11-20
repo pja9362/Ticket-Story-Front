@@ -8,10 +8,13 @@ import LoginScreen from './src/pages/Auth/Login';
 import SignUpScreen from './src/pages/Auth/SignUp';
 import HomeScreen from './src/pages/Home';
 import MainScreen from './src/pages/Main';
-import EnrollInfoByHandAgreement from './src/pages/EnrollTicket/EnrollByHandAgreement';
+import EnrollByOCRAgreement from './src/pages/EnrollTicket/EnrollByOCRAgreement';
+import EnrollByHandAgreement from './src/pages/EnrollTicket/EnrollByHandAgreement';
+import EnrollInfoByOCR from './src/pages/EnrollTicket/EnrollInfoByOCR';
 import EnrollInfoByHand from './src/pages/EnrollTicket/EnrollInfoByHand';
 import EnrollReviewByHand from './src/pages/EnrollTicket/EnrollReviewByHand';
 import EnrollFinish from './src/pages/EnrollTicket/EnrollFinish';
+import OCRFail from './src/pages/EnrollTicket/OCRFail';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -54,7 +57,7 @@ const App = () => {
       <Tab.Screen
         name="TicketBook"
         options={{headerShown: false, tabBarLabel: '티켓북'}}
-        component={EnrollInfoByHandAgreement}
+        component={EnrollByHandAgreement}
       />
       <Tab.Screen
         name="Main"
@@ -64,7 +67,7 @@ const App = () => {
       <Tab.Screen
         name="Community"
         options={{headerShown: false, tabBarLabel: '게시판'}}
-        component={HomeScreen}
+        component={EnrollByOCRAgreement}
       />
       <Tab.Screen
         name="Profile"
@@ -110,6 +113,16 @@ const App = () => {
           name="EnrollFinish"
           options={{headerShown: false}}
           component={EnrollFinish}
+        />
+        <Stack.Screen
+          name="EnrollInfoByOCR"
+          options={{headerShown: false}}
+          component={EnrollInfoByOCR}
+        />
+        <Stack.Screen
+          name="OCRFail"
+          options={{headerShown: false}}
+          component={OCRFail}
         />
       </Stack.Navigator>
     </NavigationContainer>

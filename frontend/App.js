@@ -4,6 +4,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import InitScreen from './src/pages/Auth/Init';
 import LoginScreen from './src/pages/Auth/Login';
 import SignUpScreen from './src/pages/Auth/SignUp';
+import EnrollByOCRAgreement from './src/pages/EnrollTicket/EnrollByOCRAgreement';
+import EnrollInfoByHandAgreement from './src/pages/EnrollTicket/EnrollByHandAgreement';
 import EnrollInfoByOCR from './src/pages/EnrollTicket/EnrollInfoByOCR';
 import EnrollInfoByHand from './src/pages/EnrollTicket/EnrollInfoByHand';
 import EnrollReviewByHand from './src/pages/EnrollTicket/EnrollReviewByHand';
@@ -13,7 +15,7 @@ import MainStack from './src/navigation/MainStack';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
-  
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -33,9 +35,19 @@ const App = () => {
           component={SignUpScreen}
         />
         <Stack.Screen name="MainStack" options={{headerShown: false}}>
-          {() => <MainStack />}
+          {({navigation}) => <MainStack navigation={navigation}/>}
         </Stack.Screen>
 
+        <Stack.Screen
+          name="EnrollByOCRAgreement"
+          options={{headerShown: false}}
+          component={EnrollByOCRAgreement}
+        />
+        <Stack.Screen
+          name="EnrollByHandAgreement"
+          options={{headerShown: false}}
+          component={EnrollInfoByHandAgreement}
+        />
         <Stack.Screen
           name="EnrollInfoByHand"
           options={{headerShown: false}}

@@ -32,18 +32,4 @@ const EnrollInfoByHandAgreement = ({navigation}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    paddingHorizontal: 27,
-    paddingVertical: 24,
-  },
-  modalContainer: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-  },
-});
-
 export default EnrollInfoByHandAgreement;

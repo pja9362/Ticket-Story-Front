@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Button} from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import TicketAgreement from '../../components/EnrollTicket/TicketAgreement';
 import SelectType from '../../components/EnrollTicket/SelectType';

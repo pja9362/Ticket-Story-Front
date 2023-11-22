@@ -2,9 +2,6 @@ import React, {useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {View, Text} from 'react-native';
 import HomeScreen from '../pages/Home';
-import MainScreen from '../pages/Main';
-import EnrollByOCRAgreement from '../pages/EnrollTicket/EnrollByOCRAgreement';
-import EnrollByHandAgreement from '../pages/EnrollTicket/EnrollByHandAgreement';
 import BottomSheetMenu from '../components/EnrollTicket/BottomSheetMenu';
 
 const Tab = createBottomTabNavigator();

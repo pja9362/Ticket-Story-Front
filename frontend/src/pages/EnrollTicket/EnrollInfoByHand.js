@@ -47,13 +47,13 @@ const EnrollInfoByHand = ({navigation}) => {
         <Text style={styles.sectionText}>관람 좌석</Text>
         <View style={styles.seatInputContainer}>
           <TextInput
-            style={[styles.inputBox, {marginRight: 5}]}
+            style={[styles.inputBox, {marginRight: 5, width: 35}]}
             value={seatRow}
             onChangeText={text => setSeatRow(text)}
           />
           <Text style={styles.inputLabel}>열</Text>
           <TextInput
-            style={styles.inputBox}
+            style={[styles.inputBox , {width: 35}]}
             value={seatNum}
             onChangeText={text => setSeatNum(text)}
           />
@@ -106,6 +106,7 @@ const styles = StyleSheet.create({
     borderColor: '#000',
     borderRadius: 5,
     height: 40,
+    paddingHorizontal: 10,
   },
   sectionText: {
     fontSize: 16,

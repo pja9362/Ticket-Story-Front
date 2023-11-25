@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import InitScreen from './src/pages/Auth/Init';
@@ -21,10 +21,23 @@ const App = () => {
     headerShown: false,
   };
 
+  const customTheme = {
+    ...DefaultTheme,
+    fonts: {
+      black: 'Inter-Black',
+      bold: 'Inter-Bold',
+      extraBold: 'Inter-ExtraBold',
+      regular: 'Inter-Regular',
+      medium: 'Inter-Medium',
+      light: 'Inter-Light',
+      thin: 'Inter-Thin',
+    },
+  };
+
   return (
     <SafeAreaProvider>
       <SafeAreaView edges={['top']} style={{flex: 1}}>
-        <NavigationContainer>
+        <NavigationContainer theme={customTheme}>
           <Stack.Navigator screenOptions={screenOptions}>
             <Stack.Screen name="Init" component={InitScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />

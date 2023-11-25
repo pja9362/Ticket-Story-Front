@@ -1,10 +1,11 @@
 import axios from 'axios';
 
-const apiUrl = 'http://192.168.25.3:8080';
+// const apiUrl = 'http://192.168.25.3:8080'; 집
+const apiUrl = 'http://192.168.0.98:8080'; 
 
 const checkIdDuplicate = async userId => {
   try {
-    const response = await axios.get(`${apiUrl}/auth/idIdDuplicate/${userId}`);
+    const response = await axios.get(`${apiUrl}/auth/isIdDuplicate/${userId}`);
     console.log('ID duplicate check response:', response.data);
     return response.data;
   } catch (error) {

@@ -7,8 +7,10 @@ import LoginScreen from './src/pages/Auth/Login';
 import SignUpScreen from './src/pages/Auth/SignUp';
 import EnrollByOCRAgreement from './src/pages/EnrollTicket/EnrollByOCRAgreement';
 import EnrollInfoByHandAgreement from './src/pages/EnrollTicket/EnrollByHandAgreement';
+import EnrollByOCR from './src/pages/EnrollTicket/EnrollByOCR';
 import EnrollInfoByOCR from './src/pages/EnrollTicket/EnrollInfoByOCR';
 import EnrollInfoByHand from './src/pages/EnrollTicket/EnrollInfoByHand';
+import EnrollReviewByOCR from './src/pages/EnrollTicket/EnrollReviewByOCR';
 import EnrollReviewByHand from './src/pages/EnrollTicket/EnrollReviewByHand';
 import EnrollFinish from './src/pages/EnrollTicket/EnrollFinish';
 import OCRFail from './src/pages/EnrollTicket/OCRFail';
@@ -45,24 +47,14 @@ const App = () => {
             <Stack.Screen name="MainStack">
               {({navigation}) => <MainStack navigation={navigation} />}
             </Stack.Screen>
-            <Stack.Screen
-              name="EnrollByOCRAgreement"
-              component={EnrollByOCRAgreement}
-            />
-            <Stack.Screen
-              name="EnrollByHandAgreement"
-              component={EnrollInfoByHandAgreement}
-            />
-            <Stack.Screen
-              name="EnrollInfoByHand"
-              component={EnrollInfoByHand}
-            />
-            <Stack.Screen
-              name="EnrollReviewByHand"
-              component={EnrollReviewByHand}
-            />
-            <Stack.Screen name="EnrollFinish" component={EnrollFinish} />
+            <Stack.Screen name="EnrollByOCRAgreement" component={EnrollByOCRAgreement} />
+            <Stack.Screen name="EnrollByHandAgreement" component={EnrollInfoByHandAgreement} />
+            <Stack.Screen name="EnrollByOCR" component={EnrollByOCR} />
             <Stack.Screen name="EnrollInfoByOCR" component={EnrollInfoByOCR} />
+            <Stack.Screen name="EnrollInfoByHand" component={EnrollInfoByHand} />
+            <Stack.Screen name="EnrollReviewByOCR" component={EnrollReviewByOCR} />
+            <Stack.Screen name="EnrollReviewByHand" component={EnrollReviewByHand} />
+            <Stack.Screen name="EnrollFinish" component={EnrollFinish} />
             <Stack.Screen name="OCRFail" component={OCRFail} />
           </Stack.Navigator>
         </NavigationContainer>

@@ -11,8 +11,7 @@ import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import StarRating from '../../components/EnrollTicket/StarRating';
 import addPhoto from '../../images/icon_add_photo.png';
 
-const EnrollReviewByHand = ({navigation, route}) => {
-  const { name } = route.params;
+const EnrollReviewByOCR = ({navigation}) => {
 
   const [artRating, setArtRating] = useState(0);
   const [seatRating, setSeatRating] = useState(0);
@@ -34,10 +33,10 @@ const EnrollReviewByHand = ({navigation, route}) => {
 
   return (
     <>
-      <EnrollHeader title="티켓 후기 입력" onIconClick={()=> navigation.navigate('EnrollFinish')} />
+      <EnrollHeader title="티켓 후기 입력" onIconClick={()=> navigation.navigate('EnrollInfoByOCR')} />
       <View style={styles.container}>
         <Text style={{fontSize: 16, fontWeight: 'bold', color: '#000'}}>
-          관람한 <Text style={{color: '#6D6D6D'}}>{name}</Text>의 후기를 알려주세요.
+          관람한 영화의 후기를 알려주세요.
         </Text>
 
         <Text style={styles.sectionText}>작품 평점</Text>
@@ -113,4 +112,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EnrollReviewByHand;
+export default EnrollReviewByOCR;

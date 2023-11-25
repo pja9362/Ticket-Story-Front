@@ -1,9 +1,15 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, Image} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View, Image, Linking} from 'react-native';
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import logo from '../../images/logo.png';
+import axios from 'axios';
 
 const Init = ({navigation}) => {
+
+  const handleKaKaoLogin = async () => {
+    console.log('handleKaKaoLogin');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.title}>
@@ -18,7 +24,7 @@ const Init = ({navigation}) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={{...styles.snsBtn, backgroundColor: '#fff', borderWidth: 1}}
-          onPress={() => navigation.navigate('Main')}>
+          onPress={handleKaKaoLogin}>
           {/* <Icon name="chat" size={20} color="#000" /> */}
           <Text style={styles.text}>카카오톡 계정으로 시작하기</Text>
         </TouchableOpacity>

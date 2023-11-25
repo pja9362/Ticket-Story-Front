@@ -13,14 +13,14 @@ const EnrollInfoByOCRAgreement = ({navigation}) => {
   };
 
   const onClick = () => {
-    navigation.navigate('EnrollInfoByOCR');
+    navigation.navigate('EnrollByOCR');
   };
 
   return (
     <>
       <EnrollHeader
         title="카메라로 티켓 등록하기"
-        onIconClick={() => navigation.navigate('EnrollInfoByOCR')}
+        onIconClick={() => navigation.navigate('EnrollByOCR')}
       />
       {!showSelectType ? (
         <TicketAgreement isModalVisible={isModalVisible} onClick={closeModal} />

@@ -1,15 +1,24 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet } from 'react-native';
 import DocumentScanner from 'react-native-document-scanner-plugin';
+import api from '../../api/api';
 
-const OCR = ({onNextStep}) => {
+const OCR = ({ onNextStep }) => {
   const [scannedImage, setScannedImage] = useState();
 
   const scanDocument = async () => {
-    const {scannedImages} = await DocumentScanner.scanDocument();
+    try {
+      const { scannedImages } = await DocumentScanner.scanDocument({
+        responseType: 'base64',
+        letUserAdjustCrop: true,
+      });
 
-    if (scannedImages.length > 0) {
-      setScannedImage(scannedImages[0]);
+      if (scannedImages.length > 0) {
+        setScannedImage(scannedImages[0]);
+        onNextStep(); 
+      }
+    } catch (error) {
+      console.error('Error scanning document:', error);
     }
   };
 
@@ -17,28 +26,21 @@ const OCR = ({onNextStep}) => {
     scanDocument();
   }, []);
 
-  return (
-    <View style={styles.container}>
-      {scannedImage && (
-        <>
-        <Image
-          resizeMode="contain"
-          style={{width: '100%', height: 300}}
-          source={{uri: scannedImage}}
-        />
+  useEffect(() => {
+    if (scannedImage) {
+      api.saveImageAndPerformOCR(scannedImage);
+    }
+  }, [scannedImage]);
 
-        <TouchableOpacity onPress={onNextStep}>
-          <Text>다음</Text>
-        </TouchableOpacity>
-        </>
-      )}
-    </View>
+  return (
+    <View style={styles.container}></View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff'
   },
 });
 

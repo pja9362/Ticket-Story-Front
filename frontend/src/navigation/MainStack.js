@@ -3,19 +3,26 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {View, Text} from 'react-native';
 import HomeScreen from '../pages/Home';
 import BottomSheetMenu from '../components/EnrollTicket/BottomSheetMenu';
+import {useRoute} from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
-const CustomTabIcon = ({focused}) => (
-  <View
-    style={{
-      width: 22,
-      height: 22,
-      borderRadius: 11,
-      backgroundColor: focused ? '#565656' : '#B6B6B6',
-    }}
-  />
-);
+const CustomTabIcon = ({ focused, width = 22, height = 22 }) => {
+  const route = useRoute();
+  const isMainTab = route.name === 'Main';
+
+  return (
+    <View
+      style={{
+        width: isMainTab ? 50 : width,
+        height: isMainTab ? 50 : height,
+        borderRadius: isMainTab ? 25 : height / 2,
+        backgroundColor: focused ? '#565656' : '#B6B6B6',
+        marginTop: isMainTab ? 15 : 0,
+      }}
+    />
+  );
+};
 
 const MainStack = ({navigation}) => {
 
@@ -45,16 +52,16 @@ const MainStack = ({navigation}) => {
       <Tab.Navigator
         screenOptions={() => ({
           tabBarStyle: {
-            height: 90,
+            height: 100,
             backgroundColor: '#EAEAEA',
-            paddingTop: 10,
           },
           tabBarLabelStyle: {
             fontSize: 14,
             color: '#000',
-            paddingBottom: 18,
           },
-          tabBarIcon: ({focused}) => <CustomTabIcon focused={focused} />,
+          tabBarIcon: ({ focused }) => (
+            <CustomTabIcon focused={focused}/>
+          ),
           tabBarLabel: ({focused, color}) => (
             <Text style={{color}}>{focused ? 'Active' : 'Inactive'}</Text>
           ),

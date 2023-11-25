@@ -17,7 +17,7 @@ const EnrollInfoByHand = ({navigation}) => {
 
   return (
     <>
-      <EnrollHeader title="티켓 정보 입력" onIconClick={()=> navigation.navigate('EnrollReviewByHand')}/>
+      <EnrollHeader title="티켓 정보 입력" onIconClick={()=> navigation.navigate('EnrollReviewByHand', {name})}/>
       <View style={styles.container}>
         <Text style={{fontSize: 16, fontWeight: 'bold', color: '#000'}}>
           작품 정보를 입력해주세요.

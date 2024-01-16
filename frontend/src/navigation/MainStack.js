@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {View, Text} from 'react-native';
 import HomeScreen from '../pages/Home';
+import MyScreen from '../pages/My';
 import BottomSheetMenu from '../components/EnrollTicket/BottomSheetMenu';
 import {useRoute} from '@react-navigation/native';
 
@@ -95,7 +96,7 @@ const MainStack = ({navigation}) => {
         <Tab.Screen
           name="Profile"
           options={{headerShown: false, tabBarLabel: '프로필'}}
-          component={HomeScreen}
+          component={MyScreen}
         />
       </Tab.Navigator>
 

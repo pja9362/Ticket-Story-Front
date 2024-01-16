@@ -15,6 +15,7 @@ import EnrollReviewByHand from './src/pages/EnrollTicket/EnrollReviewByHand';
 import EnrollFinish from './src/pages/EnrollTicket/EnrollFinish';
 import OCRFail from './src/pages/EnrollTicket/OCRFail';
 import MainStack from './src/navigation/MainStack';
+import ScrapInfo from './src/pages/ScrapInfo';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -56,6 +57,7 @@ const App = () => {
             <Stack.Screen name="EnrollReviewByHand" component={EnrollReviewByHand} />
             <Stack.Screen name="EnrollFinish" component={EnrollFinish} />
             <Stack.Screen name="OCRFail" component={OCRFail} />
+            <Stack.Screen name="ScrapInfo" component={ScrapInfo} />
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaView>

@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import { SafeAreaView, StyleSheet, Dimensions, Text, TouchableOpacity } from 'react-native';
 import WebView from 'react-native-webview';
 import { useNavigation } from '@react-navigation/native';
-import { scrapeCGVTicketDetails, injectCGVScrapButton, scrapeInterparkTicketDetails, scrapeLotteCinemaTicketDetails, injectMegaboxScrapButton, scrapeMegaboxTicketDetails, scrapeYes24TicketDetails } from '../utils/scrapingUtils';
+import { scrapeCGVTicketDetails, injectCGVScrapButton, scrapeInterparkTicketDetails, scrapeLotteCinemaTicketDetails, injectMegaboxScrapButton, scrapeMegaboxTicketDetails, scrapeYes24TicketDetails, injectTimeticketScript, scrapeTimeticketTicketDetails } from '../utils/scrapingUtils';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -18,6 +18,7 @@ const My = () => {
   const [showMegaboxWebView, setShowMegaboxWebView] = useState(false);
   const [showYes24WebView, setShowYes24WebView] = useState(false);
   const [showTicketlinkWebView, setShowTicketlinkWebView] = useState(false);
+  const [showTimeticketWebView, setShowTimeticketWebView] = useState(false);
 
   const handleCGVNavigationStateChange = (state) => {
     if (state.url === 'https://movielog.cgv.co.kr/movielog/main') {
@@ -82,6 +83,21 @@ const My = () => {
       console.log('logout success');
     }
   };
+
+  const handleTimeticketNavigationStateChange = (state) => {
+    const targetURL = 'https://timeticket.co.kr/myticket.php?mode=detail&jp_number=';
+
+    if(state.url.startsWith(targetURL)) {
+      scrapeTimeticketTicketDetails(webViewRef);
+    } else if (state.url === "https://timeticket.co.kr/myticket.php?mode=buy") {
+      injectTimeticketScript(webViewRef);
+    } else if (state.url === "https://timeticket.co.kr/") {
+      const redirectScript = `
+        window.location.href = 'https://timeticket.co.kr/myticket.php?mode=buy';
+      `;
+      webViewRef.current.injectJavaScript(redirectScript);
+    } 
+  }
   
   const handleScraping = ({platform}) => {
     if (platform === 'cgv') {
@@ -96,6 +112,8 @@ const My = () => {
       setShowYes24WebView(true);
     } else if (platform === 'ticketlink') {
       setShowTicketlinkWebView(true);
+    } else if (platform === 'timeticket') {
+      setShowTimeticketWebView(true);
     }
   };
 
@@ -159,8 +177,15 @@ const My = () => {
           onNavigationStateChange={handleTicketlinkNavigationStateChange}
           onMessage={(event) => handleMessage(event, 'ticketlink')}
         />
-      ):
-        (
+      ) : showTimeticketWebView ? (
+        <WebView
+          ref={webViewRef}
+          style={styles.webview}
+          source={{ uri: 'https://timeticket.co.kr/login/?r=%2Fmyticket.php%3Fmode%3Dbuy' }}
+          onNavigationStateChange={handleTimeticketNavigationStateChange}
+          onMessage={(event) => handleMessage(event, 'timeticket')}
+        />
+      ) : (
         <>
           <TouchableOpacity
             style={{ padding: 25, backgroundColor: 'red' }}
@@ -197,6 +222,12 @@ const My = () => {
             onPress={() => handleScraping({ platform: 'ticketlink' })}
           >
             <Text>티켓링크 Scrap</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={{ padding: 25, backgroundColor: 'purple' }}
+            onPress={() => handleScraping({ platform: 'timeticket' })}
+          >
+            <Text>타임티켓 Scrap</Text>
           </TouchableOpacity>
         </>
       )}

@@ -7,7 +7,7 @@ const ScrapInfo = ({ route }) => {
 
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-      <Image source={{ uri: ticketInfo.image }} style={{ width: 100, height: 150 }} />
+      {ticketInfo.image && <Image source={{ uri: ticketInfo.image }} style={{ width: 100, height: 150 }} />}
       <Text>{ticketInfo.title}</Text>
       <Text>{ticketInfo.date}</Text>
       <Text>{ticketInfo.location}</Text>
@@ -54,6 +54,7 @@ const ScrapInfo = ({ route }) => {
       {
         source === 'timeticket' && (
           <>
+            <Text>{ticketInfo.address}</Text>
             <Text>{ticketInfo.option}</Text>
           </>
         )

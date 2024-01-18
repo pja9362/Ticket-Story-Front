@@ -51,7 +51,6 @@ export const scrapeCGVTicketDetails = webViewRef => {
             seatCount: seatCount
           };
   
-          // Send movieDetail to React Native
           window.ReactNativeWebView.postMessage(JSON.stringify(movieDetail));
         }
       }, 500); 
@@ -306,36 +305,22 @@ export const scrapeYes24TicketDetails = (webViewRef) => {
 };
 
 // TimeTicket
-export const scrapeTimeticketTicketDetails = (webViewRef) => {
+export const injectTimeticketScript = (webViewRef) => {
   const injectScrapScript = `
     setTimeout(function() {
       var ticketItems = document.querySelectorAll('.buy_rows_wrap');
 
       ticketItems.forEach(function (ticketItem) {
         ticketItem.style.cursor = 'pointer';
-
+        
         ticketItem.onclick = function() {
-          
-          var titleElement = ticketItem.querySelector('.product_title a');
-          var title = titleElement ? titleElement.innerText.trim() : '';
-
-          var optionElement = ticketItem.querySelector('.right_wrap .options');
-          var option = optionElement ? optionElement.innerText.trim() : '';
-
-          var imageElement = ticketItem.querySelector('.left img');
-          var imageUrlRelative = imageElement ? imageElement.getAttribute('src') : '';
-          var imageUrl = new URL(imageUrlRelative, window.location.origin).href;
-
-          var movieDetail = {
-            title: title,
-            option: option,
-            image: imageUrl,
-          };
-
-          window.ReactNativeWebView.postMessage(JSON.stringify(movieDetail));
+          var detailLinkElement = ticketItem.querySelector('.btn_pink');
+          if (detailLinkElement) {
+            detailLinkElement.click();
+          }
         };
       });
-    }, 1500);
+    }, 500);
     true;
   `;
 
@@ -347,5 +332,38 @@ export const scrapeTimeticketTicketDetails = (webViewRef) => {
   `;
 
   webViewRef.current.injectJavaScript(style);
+  webViewRef.current.injectJavaScript(injectScrapScript);
+};
+
+export const scrapeTimeticketTicketDetails = webViewRef => {
+  const injectScrapScript = `
+    setTimeout(function() {
+      var ticketInfoElement = document.querySelector('.detail_row');
+      if (ticketInfoElement) {
+        var titleElement = ticketInfoElement.querySelector('.flex_left:nth-child(1) a');
+        var title = titleElement ? titleElement.innerText.trim() : '';
+
+        var locationElement = ticketInfoElement.querySelector('.flex_left:nth-child(3) div:nth-child(2)');
+        var location = locationElement ? locationElement.innerText.trim() : '';
+        
+        var addressElement = ticketInfoElement.querySelector('#address_text');
+        var address = addressElement ? addressElement.innerText.trim() : '';
+
+        var optionElement = document.querySelector('.flex_left:nth-child(1) div p');
+        var option = optionElement ? optionElement.innerText.trim() : '';
+
+        var movieDetail = {
+          title: title,
+          location: location,
+          address: address,
+          option: option,
+        };
+
+        window.ReactNativeWebView.postMessage(JSON.stringify(movieDetail));
+      }
+    }, 500);
+    true;
+  `;
+
   webViewRef.current.injectJavaScript(injectScrapScript);
 };

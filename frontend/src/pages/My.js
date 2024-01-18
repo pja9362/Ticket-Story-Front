@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import { SafeAreaView, StyleSheet, Dimensions, Text, TouchableOpacity } from 'react-native';
 import WebView from 'react-native-webview';
 import { useNavigation } from '@react-navigation/native';
-import { scrapeCGVTicketDetails, injectCGVScrapButton, scrapeInterparkTicketDetails, scrapeLotteCinemaTicketDetails, injectMegaboxScrapButton, scrapeMegaboxTicketDetails, scrapeYes24TicketDetails, scrapeTimeticketTicketDetails } from '../utils/scrapingUtils';
+import { scrapeCGVTicketDetails, injectCGVScrapButton, scrapeInterparkTicketDetails, scrapeLotteCinemaTicketDetails, injectMegaboxScrapButton, scrapeMegaboxTicketDetails, scrapeYes24TicketDetails, injectTimeticketScript, scrapeTimeticketTicketDetails } from '../utils/scrapingUtils';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -85,14 +85,18 @@ const My = () => {
   };
 
   const handleTimeticketNavigationStateChange = (state) => {
-    if (state.url === "https://timeticket.co.kr/myticket.php?mode=buy") {
+    const targetURL = 'https://timeticket.co.kr/myticket.php?mode=detail&jp_number=';
+
+    if(state.url.startsWith(targetURL)) {
       scrapeTimeticketTicketDetails(webViewRef);
+    } else if (state.url === "https://timeticket.co.kr/myticket.php?mode=buy") {
+      injectTimeticketScript(webViewRef);
     } else if (state.url === "https://timeticket.co.kr/") {
       const redirectScript = `
         window.location.href = 'https://timeticket.co.kr/myticket.php?mode=buy';
       `;
       webViewRef.current.injectJavaScript(redirectScript);
-    }
+    } 
   }
   
   const handleScraping = ({platform}) => {

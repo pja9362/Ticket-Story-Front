@@ -12,7 +12,7 @@ const ScrapInfo = ({ route }) => {
       <Text>{ticketInfo.date}</Text>
       <Text>{ticketInfo.location}</Text>
 
-      {source === 'CGV' && (
+      {source === 'cgv' && (
         <>
           <Text>{ticketInfo.cinema}</Text>
           <Text>{ticketInfo.seat}</Text>
@@ -20,7 +20,7 @@ const ScrapInfo = ({ route }) => {
         </>
       )}
 
-      {source === 'Interpark' && (
+      {source === 'interpark' && (
         <>
           <Text>{ticketInfo.seatCount}</Text>
           {ticketInfo.seatDetails.map((seatDetail, index) => (
@@ -35,10 +35,19 @@ const ScrapInfo = ({ route }) => {
       )}
 
       {
-        source === 'LotteCinema' && (
+        source === 'lottecinema' && (
           <>
             <Text>{ticketInfo.time}</Text>
             <Text>{ticketInfo.seatCount}</Text>
+          </>
+        )
+      }
+
+      {
+        source === 'yes24' && (
+          <>
+            <Text>{ticketInfo.seat}</Text>
+            <Text>{ticketInfo.seatCount}명</Text>
           </>
         )
       }

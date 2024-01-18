@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import { SafeAreaView, StyleSheet, Dimensions, Text, TouchableOpacity } from 'react-native';
 import WebView from 'react-native-webview';
 import { useNavigation } from '@react-navigation/native';
-import { scrapeCGVTicketDetails, injectCGVScrapButton, scrapeInterparkTicketDetails, scrapeLotteCinemaTicketDetails, injectMegaboxScrapButton, scrapeMegaboxTicketDetails } from '../utils/scrapingUtils';
+import { scrapeCGVTicketDetails, injectCGVScrapButton, scrapeInterparkTicketDetails, scrapeLotteCinemaTicketDetails, injectMegaboxScrapButton, scrapeMegaboxTicketDetails, scrapeYes24TicketDetails } from '../utils/scrapingUtils';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -16,6 +16,8 @@ const My = () => {
   const [showInterparkWebView, setShowInterparkWebView] = useState(false);
   const [showLotteCinemaWebView, setShowLotteCinemaWebView] = useState(false);
   const [showMegaboxWebView, setShowMegaboxWebView] = useState(false);
+  const [showYes24WebView, setShowYes24WebView] = useState(false);
+  const [showTicketlinkWebView, setShowTicketlinkWebView] = useState(false);
 
   const handleCGVNavigationStateChange = (state) => {
     if (state.url === 'https://movielog.cgv.co.kr/movielog/main') {
@@ -60,7 +62,27 @@ const My = () => {
     }
   }
 
+  const handleYes24NavigationStateChange = (state) => {
+    const targetURL = 'https://m.ticket.yes24.com:442/MyPage/OrderDetail.aspx';
+    if (state.url.startsWith(targetURL)) {
+      scrapeYes24TicketDetails(webViewRef);
+    }
+  }
 
+  const handleTicketlinkNavigationStateChange = (state) => {
+    console.log('Current URL:', state.url);
+  
+    if (state.url === 'https://m.ticketlink.co.kr/auth/validate?selfRedirect=N') {
+      console.log('Reached validation page');
+      const redirectScript = `
+        window.location.href = 'https://m.ticketlink.co.kr/my';
+      `;
+      webViewRef.current.injectJavaScript(redirectScript);
+    } else if (state.url === 'https://m.ticketlink.co.kr/auth/logout') {
+      console.log('logout success');
+    }
+  };
+  
   const handleScraping = ({platform}) => {
     if (platform === 'cgv') {
       setShowCGVWebView(true);
@@ -70,6 +92,10 @@ const My = () => {
       setShowLotteCinemaWebView(true); 
     } else if (platform === 'megabox') {
       setShowMegaboxWebView(true);
+    } else if (platform === 'yes24') {
+      setShowYes24WebView(true);
+    } else if (platform === 'ticketlink') {
+      setShowTicketlinkWebView(true);
     }
   };
 
@@ -91,7 +117,7 @@ const My = () => {
           style={styles.webview}
           source={{ uri: 'https://m.cgv.co.kr/WebApp/Member/Login.aspx?RedirectURL=%2fWebApp%2fMobileMovieLog%2fGateway.aspx%3ftype%3d' }}
           onNavigationStateChange={handleCGVNavigationStateChange}
-          onMessage={(event) => handleMessage(event, 'CGV')}
+          onMessage={(event) => handleMessage(event, 'cgv')}
         />
       ) : showInterparkWebView ? (
         <WebView
@@ -99,7 +125,7 @@ const My = () => {
           style={styles.webview}
           source={{ uri: 'https://accounts.interpark.com/login/form' }}
           onNavigationStateChange={handleInterparkNavigationStateChange}
-          onMessage={(event) => handleMessage(event, 'Interpark')}
+          onMessage={(event) => handleMessage(event, 'interpark')}
         />
       ) : showLotteCinemaWebView ? (
         <WebView
@@ -107,7 +133,7 @@ const My = () => {
           style={styles.webview}
           source={{ uri: 'https://www.lottecinema.co.kr/NLCMW/member/login?hidUrlReferrer=/NLCMW/MyPage' }}
           onNavigationStateChange={handleLotteCinemaNavigationStateChange}
-          onMessage={(event) => handleMessage(event, 'LotteCinema')}
+          onMessage={(event) => handleMessage(event, 'lottecinema')}
         />
       ) : showMegaboxWebView ? (
         <WebView
@@ -117,32 +143,60 @@ const My = () => {
           onNavigationStateChange={handleMegaboxNavigationStateChange}
           onMessage={(event) => handleMessage(event, 'megabox')}
         />
-      ) : 
+      ) : showYes24WebView ? (
+        <WebView
+          ref={webViewRef}
+          style={styles.webview}
+          source={{ uri: 'https://m.yes24.com/Momo/Templates/FTLogin.aspx?ReturnURL=https://m.ticket.yes24.com:442/MyPage/OrderList.aspx' }}
+          onNavigationStateChange={handleYes24NavigationStateChange}
+          onMessage={(event) => handleMessage(event, 'yes24')}
+        /> 
+      ) : showTicketlinkWebView ? (
+        <WebView
+          ref={webViewRef}
+          style={styles.webview}
+          source={{ uri: 'https://m.ticketlink.co.kr/my' }}
+          onNavigationStateChange={handleTicketlinkNavigationStateChange}
+          onMessage={(event) => handleMessage(event, 'ticketlink')}
+        />
+      ):
         (
         <>
           <TouchableOpacity
-            style={{ padding: 25, margin: 25, backgroundColor: 'red' }}
+            style={{ padding: 25, backgroundColor: 'red' }}
             onPress={() => handleScraping({ platform: 'cgv' })}
           >
             <Text>CGV Scrap</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={{ padding: 25, margin: 25, backgroundColor: 'green' }}
+            style={{ padding: 25, backgroundColor: 'green' }}
             onPress={() => handleScraping({ platform: 'interpark' })}
           >
             <Text>인터파크 Scrap</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={{ padding: 25, margin: 25, backgroundColor: 'orange' }}
+            style={{ padding: 25,backgroundColor: 'orange' }}
             onPress={() => handleScraping({ platform: 'lottecinema' })}
           >
             <Text>롯데시네마 Scrap</Text>
           </TouchableOpacity>
           <TouchableOpacity 
-            style={{ padding: 25, margin: 25, backgroundColor: 'yellow' }}
+            style={{ padding: 25, backgroundColor: 'yellow' }}
             onPress={() => handleScraping({ platform: 'megabox' })}
           >
             <Text>메가박스 Scrap</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={{ padding: 25, backgroundColor: 'skyblue' }}
+            onPress={() => handleScraping({ platform: 'yes24' })}
+          >
+            <Text>Yes24 Scrap</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={{ padding: 25, backgroundColor: 'blue' }}
+            onPress={() => handleScraping({ platform: 'ticketlink' })}
+          >
+            <Text>티켓링크 Scrap</Text>
           </TouchableOpacity>
         </>
       )}

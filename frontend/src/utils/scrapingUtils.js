@@ -24,7 +24,7 @@ export const scrapeCGVTicketDetails = webViewRef => {
       setTimeout(function() {
         var movieInfoElement = document.querySelector('.movieLog_detail_movie_info_wrap .btn_movieInfo');
         if (movieInfoElement) {
-          var title = movieInfoElement.childNodes[0].textContent.trim(); 
+          var title = movieInfoElement.childNodes[0].innerText.trim(); 
           
           var dateElement = document.querySelector('.movieLog_detail_movie_info_wrap .movieInfo_date');
           var dateTime = dateElement.innerText.replace('관람', '').trim(); 
@@ -47,7 +47,6 @@ export const scrapeCGVTicketDetails = webViewRef => {
             date: dateTime,
             image: document.querySelector('.movie_info_poster_wrap .img_wrap img').getAttribute('data-ng-src'),
             location: location,
-            cinema: cinema,
             seat: seat,
             seatCount: seatCount
           };
@@ -263,4 +262,45 @@ export const scrapeMegaboxTicketDetails = (webViewRef) => {
 
   webViewRef.current.injectJavaScript(style);
   webViewRef.current.injectJavaScript(injectScrapScript);
+};
+
+// Yes24
+export const scrapeYes24TicketDetails = (webViewRef) => {
+  const injectScrapButtonScript = `
+      setTimeout(function() {
+        var ticketInfoElement = document.querySelector(".goods_gBox ul li");
+        if (ticketInfoElement) {
+          var title = ticketInfoElement.querySelector(".goods_name").innerText.trim();
+          
+          var dateTimeElement = document.querySelector("#ctl00_ContentPlaceHolder1_trPerfDateTime td.txt");
+          var dateTime = dateTimeElement ? dateTimeElement.innerText.trim() : '';
+
+          var locationElement = document.querySelector(".goods_loca a");
+          var location = locationElement ? locationElement.innerText.replace('\>', '').trim() : '';
+
+          var seatElement = document.querySelector("#ctl00_ContentPlaceHolder1_trSeat > td");
+          var seat = seatElement ? seatElement.innerText.replace(' > ', '').trim() : '';
+          
+          var seatCountElement = document.querySelector("#ctl00_ContentPlaceHolder1_trSeat > th > strong")
+          var seatCount = seatCountElement ? seatCountElement.innerText.trim() : '';
+  
+          var imageElement = document.querySelector(".goods_img img");
+          var image = imageElement ? imageElement.getAttribute("src") : '';
+
+          var movieDetail = {
+            title: title,
+            date: dateTime,
+            image: image,
+            location: location,
+            seat: seat,
+            seatCount: seatCount
+          };
+
+          // Send movieDetail to React Native
+          window.ReactNativeWebView.postMessage(JSON.stringify(movieDetail));
+        }
+      }, 500); 
+      true;
+    `;
+  webViewRef.current.injectJavaScript(injectScrapButtonScript);
 };

@@ -19,7 +19,7 @@ export const injectCGVScrapButton = webViewRef => {
   webViewRef.current.injectJavaScript(script);
 };
 
-export const scrapeCGVMovieDetails = webViewRef => {
+export const scrapeCGVTicketDetails = webViewRef => {
   const injectScrapButtonScript = `
       setTimeout(function() {
         var movieInfoElement = document.querySelector('.movieLog_detail_movie_info_wrap .btn_movieInfo');
@@ -115,7 +115,7 @@ export const scrapeInterparkTicketDetails = (webViewRef) => {
 
 // Lotte Cinema
 export const scrapeLotteCinemaTicketDetails = (webViewRef) => {
-  const injectScrapButtonScript = `
+  const injectScrapScript = `
       setTimeout(function() {
         var movieItems = document.querySelectorAll('.list_movie_type2 li');
 
@@ -139,13 +139,16 @@ export const scrapeLotteCinemaTicketDetails = (webViewRef) => {
             var seatCountElement = movieItem.querySelector('dl > dd.info_cont > dl > dd:nth-child(8)');
             var seatCount = seatCountElement ? seatCountElement.innerText.trim() : '';
 
+            var imageElement = movieItem.querySelector('div.bx_thm > a > img');
+            var image = imageElement ? imageElement.getAttribute('src') : '';
+  
             var movieDetail = {
-              image: document.querySelector(' div.bx_thm > a > img').getAttribute('src'),
               title: title,
               location: location,
               date: date,
               time: time,
               seatCount: seatCount,
+              image: image,
             };
 
             window.ReactNativeWebView.postMessage(JSON.stringify(movieDetail));
@@ -163,6 +166,101 @@ export const scrapeLotteCinemaTicketDetails = (webViewRef) => {
   `;
 
   webViewRef.current.injectJavaScript(style);
-  webViewRef.current.injectJavaScript(injectScrapButtonScript);
+  webViewRef.current.injectJavaScript(injectScrapScript);
 };
 
+
+// Megabox
+export const injectMegaboxScrapButton = (webViewRef) => {
+  const script = `
+    var isLoggedIn = document.querySelector('.myMagaWrap') !== null;
+
+    if (isLoggedIn) {
+      var scrapButton = document.createElement('button');
+      scrapButton.innerHTML = '스크랩 하러가기';
+      scrapButton.style.backgroundColor = 'red';
+      scrapButton.style.padding = '15px';
+      scrapButton.style.color= 'white';
+      scrapButton.onclick = function() {
+        window.location.href = 'https://m.megabox.co.kr/mypage/moviestory?divCd=WATCHED';
+      };
+
+      var floatingDiv = document.createElement('div');
+      floatingDiv.classList.add('scrap-button-container'); 
+      document.body.appendChild(floatingDiv);
+
+      floatingDiv.appendChild(scrapButton);
+
+      var mainContent = document.querySelector('.container');
+      if (mainContent) {
+        mainContent.appendChild(floatingDiv);
+      }
+    }
+
+    var style = document.createElement('style');
+    style.innerHTML = '.scrap-button-container { position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%); width: 50%; padding: 15px; text-align: center; z-index: 9999; padding: 10px;}';
+    document.head.appendChild(style);
+
+    true;
+  `;
+
+  webViewRef.current.injectJavaScript(script);
+};
+
+export const scrapeMegaboxTicketDetails = (webViewRef) => {
+  const injectScrapScript = `
+      setTimeout(function() {
+        var movieItems = document.querySelectorAll('#movieList > li');
+
+        movieItems.forEach(function (movieItem) {
+          movieItem.style.cursor = 'pointer'; 
+
+          var posterWrap = movieItem.querySelector('div.poster-area > div');
+          if (posterWrap) {
+            posterWrap.removeAttribute('onclick');
+          }
+
+          var titleElement = movieItem.querySelector('div.movie-info-area > p');
+          if (titleElement) {
+            titleElement.removeAttribute('onclick');
+          }
+
+          movieItem.onclick = function(event) {
+            event.preventDefault();
+
+            var titleElement = movieItem.querySelector('div.movie-info-area > p');
+            var title = titleElement ? titleElement.innerText.trim() : '';
+
+            var dateElement = movieItem.querySelector('div.movie-info-area > div.info-detail > p:nth-child(1)');
+            var date = dateElement ? dateElement.innerText.trim() : '';
+
+            var locationElement = movieItem.querySelector('div.movie-info-area > div.info-detail > p:nth-child(2)');
+            var location = locationElement ? locationElement.innerText.trim() : '';
+
+            var imageElement = movieItem.querySelector('div.poster-area > div > img');
+            var image = imageElement ? imageElement.getAttribute('src') : '';
+  
+            var movieDetail = {
+              title: title,
+              date: date,
+              location: location,
+              image: image,
+            };
+
+            window.ReactNativeWebView.postMessage(JSON.stringify(movieDetail));
+          };
+        });
+      }, 1500);
+    true;
+  `;
+
+  const style = `
+    var style = document.createElement('style');
+    style.innerHTML = '#movieList > li { cursor: pointer; }'; 
+    document.head.appendChild(style);
+    true;
+  `;
+
+  webViewRef.current.injectJavaScript(style);
+  webViewRef.current.injectJavaScript(injectScrapScript);
+};

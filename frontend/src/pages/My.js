@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import { SafeAreaView, StyleSheet, Dimensions, Text, TouchableOpacity } from 'react-native';
 import WebView from 'react-native-webview';
 import { useNavigation } from '@react-navigation/native';
-import { scrapeCGVMovieDetails, injectCGVScrapButton, scrapeInterparkTicketDetails, scrapeLotteCinemaTicketDetails, injectLotteCinemaTicketDetails } from '../utils/scrapingUtils';
+import { scrapeCGVTicketDetails, injectCGVScrapButton, scrapeInterparkTicketDetails, scrapeLotteCinemaTicketDetails, injectMegaboxScrapButton, scrapeMegaboxTicketDetails } from '../utils/scrapingUtils';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -15,12 +15,13 @@ const My = () => {
   const [showCGVWebView, setShowCGVWebView] = useState(false);
   const [showInterparkWebView, setShowInterparkWebView] = useState(false);
   const [showLotteCinemaWebView, setShowLotteCinemaWebView] = useState(false);
+  const [showMegaboxWebView, setShowMegaboxWebView] = useState(false);
 
   const handleCGVNavigationStateChange = (state) => {
     if (state.url === 'https://movielog.cgv.co.kr/movielog/main') {
       injectCGVScrapButton(webViewRef);
     } else if (state.url === 'https://movielog.cgv.co.kr/movielog/watchMovieDetail') {
-      scrapeCGVMovieDetails(webViewRef);
+      scrapeCGVTicketDetails(webViewRef);
     }
   };
 
@@ -46,6 +47,19 @@ const My = () => {
     }
   };
 
+  const handleMegaboxNavigationStateChange = (state) => {
+    if (state.url === 'https://m.megabox.co.kr/') {
+      const redirectScript = `
+        window.location.href = 'https://m.megabox.co.kr/myMegabox';
+      `;
+      webViewRef.current.injectJavaScript(redirectScript);
+    } else if (state.url === 'https://m.megabox.co.kr/myMegabox') {
+      injectMegaboxScrapButton(webViewRef);
+    } else if (state.url === 'https://m.megabox.co.kr/mypage/moviestory?divCd=WATCHED') {
+      scrapeMegaboxTicketDetails(webViewRef);
+    }
+  }
+
 
   const handleScraping = ({platform}) => {
     if (platform === 'cgv') {
@@ -53,7 +67,9 @@ const My = () => {
     } else if (platform === 'interpark') {
       setShowInterparkWebView(true);
     } else if (platform === 'lottecinema') {
-      setShowLotteCinemaWebView(true);
+      setShowLotteCinemaWebView(true); 
+    } else if (platform === 'megabox') {
+      setShowMegaboxWebView(true);
     }
   };
 
@@ -62,13 +78,11 @@ const My = () => {
       const ticketInfo= JSON.parse(event.nativeEvent.data);
       console.log('Ticket Info:', ticketInfo);
       
-      // navigation.navigate('ScrapInfo', {ticketInfo: ticketInfo});
       navigation.navigate('ScrapInfo', { ticketInfo: ticketInfo, source: source });
     } 
   };
 
   
-
   return (
     <SafeAreaView style={styles.container}>
       {showCGVWebView ? (
@@ -95,6 +109,14 @@ const My = () => {
           onNavigationStateChange={handleLotteCinemaNavigationStateChange}
           onMessage={(event) => handleMessage(event, 'LotteCinema')}
         />
+      ) : showMegaboxWebView ? (
+        <WebView
+          ref={webViewRef}
+          style={styles.webview}
+          source={{ uri: 'https://m.megabox.co.kr' }}
+          onNavigationStateChange={handleMegaboxNavigationStateChange}
+          onMessage={(event) => handleMessage(event, 'megabox')}
+        />
       ) : 
         (
         <>
@@ -115,6 +137,12 @@ const My = () => {
             onPress={() => handleScraping({ platform: 'lottecinema' })}
           >
             <Text>롯데시네마 Scrap</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={{ padding: 25, margin: 25, backgroundColor: 'yellow' }}
+            onPress={() => handleScraping({ platform: 'megabox' })}
+          >
+            <Text>메가박스 Scrap</Text>
           </TouchableOpacity>
         </>
       )}

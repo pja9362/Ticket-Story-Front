@@ -3,6 +3,7 @@ import React, { useRef, useState } from 'react';
 import { SafeAreaView, StyleSheet, Dimensions, Text, TouchableOpacity } from 'react-native';
 import WebView from 'react-native-webview';
 import { useNavigation } from '@react-navigation/native';
+import { scrapeCGVTicketDetails, injectCGVScrapButton, scrapeInterparkTicketDetails, scrapeLotteCinemaTicketDetails, injectMegaboxScrapButton, scrapeMegaboxTicketDetails } from '../utils/scrapingUtils';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -11,103 +12,139 @@ const My = () => {
   const navigation = useNavigation();
 
   const webViewRef = useRef(null);
-  const [showWebView, setShowWebView] = useState(false);
+  const [showCGVWebView, setShowCGVWebView] = useState(false);
+  const [showInterparkWebView, setShowInterparkWebView] = useState(false);
+  const [showLotteCinemaWebView, setShowLotteCinemaWebView] = useState(false);
+  const [showMegaboxWebView, setShowMegaboxWebView] = useState(false);
 
-  const handleNavigationStateChange = (state) => {
-    // Check if the user is redirected to the desired page
+  const handleCGVNavigationStateChange = (state) => {
     if (state.url === 'https://movielog.cgv.co.kr/movielog/main') {
-      const script = `
-        var scrapButton = document.createElement('button');
-        scrapButton.innerHTML = '스크랩 하러가기';
-        scrapButton.onclick = function() {
-          // Redirect to the desired page
-          window.location.href = 'https://movielog.cgv.co.kr/movielog/watchMovie';
-        };
-        document.body.appendChild(scrapButton);
-        true;
-      `;
-      const style = `
-        var style = document.createElement('style');
-        style.innerHTML = 'button { position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%); width: 50%; background-color: red; color: white; padding: 15px; text-align: center; }';
-        document.head.appendChild(style);
-        true;
-      `;
-      webViewRef.current.injectJavaScript(style);
-      webViewRef.current.injectJavaScript(script);
+      injectCGVScrapButton(webViewRef);
     } else if (state.url === 'https://movielog.cgv.co.kr/movielog/watchMovieDetail') {
-        const injectScrapButtonScript = `
-          setTimeout(function() {
-            var movieInfoElement = document.querySelector('.movieLog_detail_movie_info_wrap .btn_movieInfo');
-            if (movieInfoElement) {
-              var title = movieInfoElement.childNodes[0].textContent.trim(); 
-              
-              var dateElement = document.querySelector('.movieLog_detail_movie_info_wrap .movieInfo_date');
-              var dateTime = dateElement.innerText.replace('관람', '').trim(); 
-
-              var locationElement = document.querySelector('.detail_info_list .map');
-              var location = locationElement.innerText.replace('map', '').trim();
-
-              var seatElement = document.querySelector('.detail_info_list .seat');
-              var seat = seatElement.innerText.replace('seat', '').trim();
-
-              var cinemaElement = document.querySelector('.detail_info_list .film');
-              var cinema = cinemaElement.innerText.replace('film', '').trim();
-
-              var memberElement = document.querySelector('.detail_info_list .member');
-              var seatCountText = memberElement.innerText.trim();
-              var seatCount = seatCountText.split(' ')[1];
-
-              var movieDetail = {
-                title: title,
-                date: dateTime,
-                image: document.querySelector('.movie_info_poster_wrap .img_wrap img').getAttribute('data-ng-src'),
-                location: location,
-                cinema: cinema,
-                seat: seat,
-                seatCount: seatCount
-              };
-
-              // Send movieDetail to React Native
-              window.ReactNativeWebView.postMessage(JSON.stringify(movieDetail));
-            }
-          }, 300); 
-          true;
-        `;
-        webViewRef.current.injectJavaScript(injectScrapButtonScript);
-      }
-  }; 
-
-  const handleScraping = () => {
-    setShowWebView(true);
+      scrapeCGVTicketDetails(webViewRef);
+    }
   };
 
-  const handleMessage = (event) => {
+  const handleInterparkNavigationStateChange = (state) => {
+    if (state.url === 'https://mticket.interpark.com/MyPage/BookedDetail') {
+      scrapeInterparkTicketDetails(webViewRef);
+    } else if (state.url === 'https://www.interpark.com/') {
+      const redirectScript = `
+        window.location.href = 'https://mticket.interpark.com/MyPage/BookedList?PeriodSearch=03#';
+      `;
+      webViewRef.current.injectJavaScript(redirectScript);
+    }
+  };
+
+  const handleLotteCinemaNavigationStateChange = (state) => {
+    if (state.url === 'https://www.lottecinema.co.kr/NLCMW/MyPage/MyMovieManageHistory?mTab=2') {
+      scrapeLotteCinemaTicketDetails(webViewRef);
+    } else if (state.url === 'https://www.lottecinema.co.kr/NLCMW/MyPage') {
+      const redirectScript = `
+        window.location.href = 'https://www.lottecinema.co.kr/NLCMW/MyPage/MyMovieManageHistory?mTab=2';
+      `;
+      webViewRef.current.injectJavaScript(redirectScript);
+    }
+  };
+
+  const handleMegaboxNavigationStateChange = (state) => {
+    if (state.url === 'https://m.megabox.co.kr/') {
+      const redirectScript = `
+        window.location.href = 'https://m.megabox.co.kr/myMegabox';
+      `;
+      webViewRef.current.injectJavaScript(redirectScript);
+    } else if (state.url === 'https://m.megabox.co.kr/myMegabox') {
+      injectMegaboxScrapButton(webViewRef);
+    } else if (state.url === 'https://m.megabox.co.kr/mypage/moviestory?divCd=WATCHED') {
+      scrapeMegaboxTicketDetails(webViewRef);
+    }
+  }
+
+
+  const handleScraping = ({platform}) => {
+    if (platform === 'cgv') {
+      setShowCGVWebView(true);
+    } else if (platform === 'interpark') {
+      setShowInterparkWebView(true);
+    } else if (platform === 'lottecinema') {
+      setShowLotteCinemaWebView(true); 
+    } else if (platform === 'megabox') {
+      setShowMegaboxWebView(true);
+    }
+  };
+
+  const handleMessage = (event, source) => {
     if (event.nativeEvent.data) {
-      // 전체 영화 스크랩
-      const movieList = JSON.parse(event.nativeEvent.data);
-      console.log('Movie Info:', movieList);
+      const ticketInfo= JSON.parse(event.nativeEvent.data);
+      console.log('Ticket Info:', ticketInfo);
       
-      navigation.navigate('ScrapInfo', {movieInfo: movieList});
+      navigation.navigate('ScrapInfo', { ticketInfo: ticketInfo, source: source });
     } 
   };
 
+  
   return (
     <SafeAreaView style={styles.container}>
-      {showWebView ? (
+      {showCGVWebView ? (
         <WebView
           ref={webViewRef}
           style={styles.webview}
           source={{ uri: 'https://m.cgv.co.kr/WebApp/Member/Login.aspx?RedirectURL=%2fWebApp%2fMobileMovieLog%2fGateway.aspx%3ftype%3d' }}
-          onNavigationStateChange={handleNavigationStateChange}
-          onMessage={handleMessage}
+          onNavigationStateChange={handleCGVNavigationStateChange}
+          onMessage={(event) => handleMessage(event, 'CGV')}
         />
-      ) : (
-        <TouchableOpacity
-          style={{ padding: 25, margin: 25, backgroundColor: 'red' }}
-          onPress={handleScraping}
-        >
-          <Text>CGV Scrap</Text>
-        </TouchableOpacity>
+      ) : showInterparkWebView ? (
+        <WebView
+          ref={webViewRef}
+          style={styles.webview}
+          source={{ uri: 'https://accounts.interpark.com/login/form' }}
+          onNavigationStateChange={handleInterparkNavigationStateChange}
+          onMessage={(event) => handleMessage(event, 'Interpark')}
+        />
+      ) : showLotteCinemaWebView ? (
+        <WebView
+          ref={webViewRef}
+          style={styles.webview}
+          source={{ uri: 'https://www.lottecinema.co.kr/NLCMW/member/login?hidUrlReferrer=/NLCMW/MyPage' }}
+          onNavigationStateChange={handleLotteCinemaNavigationStateChange}
+          onMessage={(event) => handleMessage(event, 'LotteCinema')}
+        />
+      ) : showMegaboxWebView ? (
+        <WebView
+          ref={webViewRef}
+          style={styles.webview}
+          source={{ uri: 'https://m.megabox.co.kr' }}
+          onNavigationStateChange={handleMegaboxNavigationStateChange}
+          onMessage={(event) => handleMessage(event, 'megabox')}
+        />
+      ) : 
+        (
+        <>
+          <TouchableOpacity
+            style={{ padding: 25, margin: 25, backgroundColor: 'red' }}
+            onPress={() => handleScraping({ platform: 'cgv' })}
+          >
+            <Text>CGV Scrap</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ padding: 25, margin: 25, backgroundColor: 'green' }}
+            onPress={() => handleScraping({ platform: 'interpark' })}
+          >
+            <Text>인터파크 Scrap</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ padding: 25, margin: 25, backgroundColor: 'orange' }}
+            onPress={() => handleScraping({ platform: 'lottecinema' })}
+          >
+            <Text>롯데시네마 Scrap</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={{ padding: 25, margin: 25, backgroundColor: 'yellow' }}
+            onPress={() => handleScraping({ platform: 'megabox' })}
+          >
+            <Text>메가박스 Scrap</Text>
+          </TouchableOpacity>
+        </>
       )}
     </SafeAreaView>
   );

@@ -51,6 +51,13 @@ const ScrapInfo = ({ route }) => {
           </>
         )
       }
+      {
+        source === 'timeticket' && (
+          <>
+            <Text>{ticketInfo.option}</Text>
+          </>
+        )
+      }
     </View>
   );
 };

@@ -304,3 +304,48 @@ export const scrapeYes24TicketDetails = (webViewRef) => {
     `;
   webViewRef.current.injectJavaScript(injectScrapButtonScript);
 };
+
+// TimeTicket
+export const scrapeTimeticketTicketDetails = (webViewRef) => {
+  const injectScrapScript = `
+    setTimeout(function() {
+      var ticketItems = document.querySelectorAll('.buy_rows_wrap');
+
+      ticketItems.forEach(function (ticketItem) {
+        ticketItem.style.cursor = 'pointer';
+
+        ticketItem.onclick = function() {
+          
+          var titleElement = ticketItem.querySelector('.product_title a');
+          var title = titleElement ? titleElement.innerText.trim() : '';
+
+          var optionElement = ticketItem.querySelector('.right_wrap .options');
+          var option = optionElement ? optionElement.innerText.trim() : '';
+
+          var imageElement = ticketItem.querySelector('.left img');
+          var imageUrlRelative = imageElement ? imageElement.getAttribute('src') : '';
+          var imageUrl = new URL(imageUrlRelative, window.location.origin).href;
+
+          var movieDetail = {
+            title: title,
+            option: option,
+            image: imageUrl,
+          };
+
+          window.ReactNativeWebView.postMessage(JSON.stringify(movieDetail));
+        };
+      });
+    }, 1500);
+    true;
+  `;
+
+  const style = `
+    var style = document.createElement('style');
+    style.innerHTML = '.buy_rows_wrap { cursor: pointer; }'; 
+    document.head.appendChild(style);
+    true;
+  `;
+
+  webViewRef.current.injectJavaScript(style);
+  webViewRef.current.injectJavaScript(injectScrapScript);
+};

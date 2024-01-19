@@ -4,6 +4,7 @@ import { SafeAreaView, StyleSheet, Dimensions, Text, TouchableOpacity } from 're
 import WebView from 'react-native-webview';
 import { useNavigation } from '@react-navigation/native';
 import { scrapeCGVTicketDetails, injectCGVScrapButton, scrapeInterparkTicketDetails, scrapeLotteCinemaTicketDetails, injectMegaboxScrapButton, scrapeMegaboxTicketDetails, scrapeYes24TicketDetails, injectTimeticketScript, scrapeTimeticketTicketDetails } from '../utils/scrapingUtils';
+import TicketlinkWebView from './Scrape/TicketlinkWebView';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -70,17 +71,10 @@ const My = () => {
     }
   }
 
+  // Ticket Link
   const handleTicketlinkNavigationStateChange = (state) => {
-    console.log('Current URL:', state.url);
-  
-    if (state.url === 'https://m.ticketlink.co.kr/auth/validate?selfRedirect=N') {
-      console.log('Reached validation page');
-      const redirectScript = `
-        window.location.href = 'https://m.ticketlink.co.kr/my';
-      `;
-      webViewRef.current.injectJavaScript(redirectScript);
-    } else if (state.url === 'https://m.ticketlink.co.kr/auth/logout') {
-      console.log('logout success');
+    if(state.url.startsWith('https://id.payco.com/oauth2.0/authorize')) {
+      navigation.navigate('OAuthWebView', { uri: state.url });
     }
   };
 
@@ -170,10 +164,7 @@ const My = () => {
           onMessage={(event) => handleMessage(event, 'yes24')}
         /> 
       ) : showTicketlinkWebView ? (
-        <WebView
-          ref={webViewRef}
-          style={styles.webview}
-          source={{ uri: 'https://m.ticketlink.co.kr/my' }}
+        <TicketlinkWebView
           onNavigationStateChange={handleTicketlinkNavigationStateChange}
           onMessage={(event) => handleMessage(event, 'ticketlink')}
         />

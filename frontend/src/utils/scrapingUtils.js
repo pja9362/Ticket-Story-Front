@@ -24,7 +24,7 @@ export const scrapeCGVTicketDetails = webViewRef => {
       setTimeout(function() {
         var movieInfoElement = document.querySelector('.movieLog_detail_movie_info_wrap .btn_movieInfo');
         if (movieInfoElement) {
-          var title = movieInfoElement.childNodes[0].innerText.trim(); 
+          var title = movieInfoElement.childNodes[0].textContent.trim(); 
           
           var dateElement = document.querySelector('.movieLog_detail_movie_info_wrap .movieInfo_date');
           var dateTime = dateElement.innerText.replace('관람', '').trim(); 
@@ -39,21 +39,23 @@ export const scrapeCGVTicketDetails = webViewRef => {
           var cinema = cinemaElement.innerText.replace('film', '').trim();
   
           var memberElement = document.querySelector('.detail_info_list .member');
-          var seatCountText = memberElement.innerText.replace('member', '').trim();
-          var seatCount = seatCountText.split(' ')[0];
+          var seatCountText = memberElement.innerText.trim();
+          var seatCount = seatCountText.split(' ')[1];
   
           var movieDetail = {
             title: title,
             date: dateTime,
             image: document.querySelector('.movie_info_poster_wrap .img_wrap img').getAttribute('data-ng-src'),
             location: location,
+            cinema: cinema,
             seat: seat,
             seatCount: seatCount
           };
   
+          // Send movieDetail to React Native
           window.ReactNativeWebView.postMessage(JSON.stringify(movieDetail));
         }
-      }, 500); 
+      }, 1000); 
       true;
     `;
   webViewRef.current.injectJavaScript(injectScrapButtonScript);
@@ -308,11 +310,18 @@ export const scrapeYes24TicketDetails = (webViewRef) => {
 export const injectTimeticketScript = (webViewRef) => {
   const injectScrapScript = `
     setTimeout(function() {
-      var ticketItems = document.querySelectorAll('.buy_rows_wrap');
+      var titleElement = document.querySelectorAll("div.rows_content > div > div.right_wrap > div > div.product_title > a");
+      if (titleElement) {
+        titleElement.forEach(function (title) {
+          title.removeAttribute('href');
+        });
+      }
 
+      var ticketItems = document.querySelectorAll('.buy_rows_wrap');
+      
       ticketItems.forEach(function (ticketItem) {
         ticketItem.style.cursor = 'pointer';
-        
+
         ticketItem.onclick = function() {
           var detailLinkElement = ticketItem.querySelector('.btn_pink');
           if (detailLinkElement) {

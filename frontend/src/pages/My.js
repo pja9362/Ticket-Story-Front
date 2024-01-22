@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { SafeAreaView, StyleSheet, Dimensions, Text, TouchableOpacity } from 'react-native';
 import WebView from 'react-native-webview';
 import { useNavigation } from '@react-navigation/native';
-import { scrapeCGVTicketDetails, injectCGVScrapButton, scrapeInterparkTicketDetails, scrapeLotteCinemaTicketDetails, injectMegaboxScrapButton, scrapeMegaboxTicketDetails, scrapeYes24TicketDetails, injectTimeticketScript, scrapeTimeticketTicketDetails } from '../utils/scrapingUtils';
+import { scrapeCGVTicketDetails, injectCGVScrapButton, scrapeInterparkTicketDetails, scrapeLotteCinemaTicketDetails, injectMegaboxScrapButton, scrapeMegaboxTicketDetails, scrapeYes24TicketDetails, scrapeTicketlinkTicketDetails, injectTimeticketScript, scrapeTimeticketTicketDetails } from '../utils/scrapingUtils';
 import TicketlinkWebView from './Scrape/TicketlinkWebView';
 
 const windowWidth = Dimensions.get('window').width;
@@ -71,12 +71,6 @@ const My = () => {
   }
 
   // Ticket Link
-  const handleTicketlinkNavigationStateChange = (state) => {
-    if(state.url.startsWith('https://id.payco.com/oauth2.0/authorize')) {
-      navigation.navigate('OAuthWebView', { uri: state.url });
-    }
-  };
-
   const handleTimeticketNavigationStateChange = (state) => {
     const targetURL = 'https://timeticket.co.kr/myticket.php?mode=detail&jp_number=';
 
@@ -113,7 +107,7 @@ const My = () => {
   const handleMessage = (event, source) => {
     if (event.nativeEvent.data) {
       const ticketInfo= JSON.parse(event.nativeEvent.data);
-      console.log('Ticket Info:', ticketInfo);
+      console.log(`${source} Ticket Info: `, ticketInfo);
       
       navigation.navigate('ScrapInfo', { ticketInfo: ticketInfo, source: source });
     } 
@@ -164,7 +158,6 @@ const My = () => {
         /> 
       ) : showTicketlinkWebView ? (
         <TicketlinkWebView
-          onNavigationStateChange={handleTicketlinkNavigationStateChange}
           onMessage={(event) => handleMessage(event, 'ticketlink')}
         />
       ) : showTimeticketWebView ? (

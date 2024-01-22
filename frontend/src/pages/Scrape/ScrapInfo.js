@@ -52,6 +52,21 @@ const ScrapInfo = ({ route }) => {
         )
       }
       {
+        source === 'ticketlink' && (
+          <>
+            <Text>{ticketInfo.seats.length}명</Text>
+            {
+              ticketInfo.seats.map((seat, index) => (
+                <View key={index}>
+                  <Text>[좌석 {index+1}]</Text>
+                  <Text>{seat}</Text>
+                </View>
+              ))
+            }
+          </>
+        )
+      }
+      {
         source === 'timeticket' && (
           <>
             <Text>{ticketInfo.address}</Text>

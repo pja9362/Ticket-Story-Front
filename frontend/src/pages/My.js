@@ -1,9 +1,9 @@
-// 개별 영화 스크랩
 import React, { useRef, useState } from 'react';
 import { SafeAreaView, StyleSheet, Dimensions, Text, TouchableOpacity } from 'react-native';
 import WebView from 'react-native-webview';
 import { useNavigation } from '@react-navigation/native';
-import { scrapeCGVTicketDetails, injectCGVScrapButton, scrapeInterparkTicketDetails, scrapeLotteCinemaTicketDetails, injectMegaboxScrapButton, scrapeMegaboxTicketDetails, scrapeYes24TicketDetails, injectTimeticketScript, scrapeTimeticketTicketDetails } from '../utils/scrapingUtils';
+import { scrapeCGVTicketDetails, injectCGVScrapButton, scrapeInterparkTicketDetails, scrapeLotteCinemaTicketDetails, injectMegaboxScrapButton, scrapeMegaboxTicketDetails, scrapeYes24TicketDetails, scrapeTicketlinkTicketDetails, injectTimeticketScript, scrapeTimeticketTicketDetails } from '../utils/scrapingUtils';
+import TicketlinkWebView from './Scrape/TicketlinkWebView';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -70,20 +70,7 @@ const My = () => {
     }
   }
 
-  const handleTicketlinkNavigationStateChange = (state) => {
-    console.log('Current URL:', state.url);
-  
-    if (state.url === 'https://m.ticketlink.co.kr/auth/validate?selfRedirect=N') {
-      console.log('Reached validation page');
-      const redirectScript = `
-        window.location.href = 'https://m.ticketlink.co.kr/my';
-      `;
-      webViewRef.current.injectJavaScript(redirectScript);
-    } else if (state.url === 'https://m.ticketlink.co.kr/auth/logout') {
-      console.log('logout success');
-    }
-  };
-
+  // Ticket Link
   const handleTimeticketNavigationStateChange = (state) => {
     const targetURL = 'https://timeticket.co.kr/myticket.php?mode=detail&jp_number=';
 
@@ -120,7 +107,7 @@ const My = () => {
   const handleMessage = (event, source) => {
     if (event.nativeEvent.data) {
       const ticketInfo= JSON.parse(event.nativeEvent.data);
-      console.log('Ticket Info:', ticketInfo);
+      console.log(`${source} Ticket Info: `, ticketInfo);
       
       navigation.navigate('ScrapInfo', { ticketInfo: ticketInfo, source: source });
     } 
@@ -170,11 +157,7 @@ const My = () => {
           onMessage={(event) => handleMessage(event, 'yes24')}
         /> 
       ) : showTicketlinkWebView ? (
-        <WebView
-          ref={webViewRef}
-          style={styles.webview}
-          source={{ uri: 'https://m.ticketlink.co.kr/my' }}
-          onNavigationStateChange={handleTicketlinkNavigationStateChange}
+        <TicketlinkWebView
           onMessage={(event) => handleMessage(event, 'ticketlink')}
         />
       ) : showTimeticketWebView ? (

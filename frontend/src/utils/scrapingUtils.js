@@ -24,7 +24,7 @@ export const scrapeCGVTicketDetails = webViewRef => {
       setTimeout(function() {
         var movieInfoElement = document.querySelector('.movieLog_detail_movie_info_wrap .btn_movieInfo');
         if (movieInfoElement) {
-          var title = movieInfoElement.childNodes[0].innerText.trim(); 
+          var title = movieInfoElement.childNodes[0].textContent.trim(); 
           
           var dateElement = document.querySelector('.movieLog_detail_movie_info_wrap .movieInfo_date');
           var dateTime = dateElement.innerText.replace('관람', '').trim(); 
@@ -37,23 +37,24 @@ export const scrapeCGVTicketDetails = webViewRef => {
   
           var cinemaElement = document.querySelector('.detail_info_list .film');
           var cinema = cinemaElement.innerText.replace('film', '').trim();
+
+          var seatElement = document.querySelector('li.member.ng-binding.ng-scope');
+          var seatCount = seatElement.innerText.replace('member', '').replace('관람', '').replace('같이 본 사람을 입력해보세요', '').trim();
   
-          var memberElement = document.querySelector('.detail_info_list .member');
-          var seatCountText = memberElement.innerText.replace('member', '').trim();
-          var seatCount = seatCountText.split(' ')[0];
-  
-          var movieDetail = {
+          var ticketDetail = {
             title: title,
             date: dateTime,
             image: document.querySelector('.movie_info_poster_wrap .img_wrap img').getAttribute('data-ng-src'),
             location: location,
+            cinema: cinema,
             seat: seat,
             seatCount: seatCount
           };
   
-          window.ReactNativeWebView.postMessage(JSON.stringify(movieDetail));
+          // Send ticketDetail to React Native
+          window.ReactNativeWebView.postMessage(JSON.stringify(ticketDetail));
         }
-      }, 500); 
+      }, 1000); 
       true;
     `;
   webViewRef.current.injectJavaScript(injectScrapButtonScript);
@@ -140,7 +141,7 @@ export const scrapeLotteCinemaTicketDetails = (webViewRef) => {
             var imageElement = movieItem.querySelector('div.bx_thm > a > img');
             var image = imageElement ? imageElement.getAttribute('src') : '';
   
-            var movieDetail = {
+            var ticketDetail = {
               title: title,
               location: location,
               date: date,
@@ -149,7 +150,7 @@ export const scrapeLotteCinemaTicketDetails = (webViewRef) => {
               image: image,
             };
 
-            window.ReactNativeWebView.postMessage(JSON.stringify(movieDetail));
+            window.ReactNativeWebView.postMessage(JSON.stringify(ticketDetail));
           };
         });
       }, 1500);
@@ -238,14 +239,14 @@ export const scrapeMegaboxTicketDetails = (webViewRef) => {
             var imageElement = movieItem.querySelector('div.poster-area > div > img');
             var image = imageElement ? imageElement.getAttribute('src') : '';
   
-            var movieDetail = {
+            var ticketDetail = {
               title: title,
               date: date,
               location: location,
               image: image,
             };
 
-            window.ReactNativeWebView.postMessage(JSON.stringify(movieDetail));
+            window.ReactNativeWebView.postMessage(JSON.stringify(ticketDetail));
           };
         });
       }, 1500);
@@ -286,7 +287,7 @@ export const scrapeYes24TicketDetails = (webViewRef) => {
           var imageElement = document.querySelector(".goods_img img");
           var image = imageElement ? imageElement.getAttribute("src") : '';
 
-          var movieDetail = {
+          var ticketDetail = {
             title: title,
             date: dateTime,
             image: image,
@@ -295,8 +296,8 @@ export const scrapeYes24TicketDetails = (webViewRef) => {
             seatCount: seatCount
           };
 
-          // Send movieDetail to React Native
-          window.ReactNativeWebView.postMessage(JSON.stringify(movieDetail));
+          // Send ticketDetail to React Native
+          window.ReactNativeWebView.postMessage(JSON.stringify(ticketDetail));
         }
       }, 500); 
       true;
@@ -304,15 +305,61 @@ export const scrapeYes24TicketDetails = (webViewRef) => {
   webViewRef.current.injectJavaScript(injectScrapButtonScript);
 };
 
+// Ticket Link
+export const scrapeTicketlinkTicketDetails = (webViewRef) => {
+  const injectScrapScript = `
+    setTimeout(function() {
+      var titleElement = document.querySelector("#m_content > div.mypage_cont.detail_page > div.mypage_tit_area > h2");
+      var title = titleElement ? titleElement.innerText.trim() : '';
+
+      var seatElements = document.querySelectorAll('.mypage_info_area .mypage_detail_info .info_lst li .stxt span.lb');
+      var seats = [];
+      
+      seatElements.forEach(function(seatElement) {
+        var seatInfo = seatElement.innerHTML.split('<br>')[0].trim();
+        seats.push(seatInfo);
+      });
+      
+      var ticketInfoElement = document.querySelector('#m_content > div.mypage_cont.detail_page > div.mypage_info_area > div:nth-child(1) > ul');
+      if (ticketInfoElement) {
+        var dateElement = ticketInfoElement.querySelector("li > ul > li:nth-child(4) > div.stxt > span");
+        var date = dateElement ? dateElement.innerText.trim() : '';
+
+        var locationElement = ticketInfoElement.querySelector("li > ul > li:nth-child(5) > div.stxt > span");
+        var location = locationElement ? locationElement.innerText.trim() : '';
+
+        var ticketDetail = {
+          title: title,
+          date: date,
+          location: location,
+          seats: seats
+        };
+
+        window.ReactNativeWebView.postMessage(JSON.stringify(ticketDetail));
+      }
+    }, 1500);
+    true;
+  `;
+
+  webViewRef.current && webViewRef.current.injectJavaScript(injectScrapScript);
+};
+
 // TimeTicket
 export const injectTimeticketScript = (webViewRef) => {
   const injectScrapScript = `
     setTimeout(function() {
-      var ticketItems = document.querySelectorAll('.buy_rows_wrap');
+      var titleElement = document.querySelectorAll("div.rows_content > div > div.right_wrap > div > div.product_title > a");
+      if (titleElement) {
+        titleElement.forEach(function (title) {
+          title.removeAttribute('href');
+        });
+      }
 
+      var ticketItems = document.querySelectorAll('.buy_rows_wrap');
+      
       ticketItems.forEach(function (ticketItem) {
         ticketItem.style.cursor = 'pointer';
-        
+
         ticketItem.onclick = function() {
           var detailLinkElement = ticketItem.querySelector('.btn_pink');
           if (detailLinkElement) {
@@ -352,14 +399,14 @@ export const scrapeTimeticketTicketDetails = webViewRef => {
         var optionElement = document.querySelector('.flex_left:nth-child(1) div p');
         var option = optionElement ? optionElement.innerText.trim() : '';
 
-        var movieDetail = {
+        var ticketDetail = {
           title: title,
           location: location,
           address: address,
           option: option,
         };
 
-        window.ReactNativeWebView.postMessage(JSON.stringify(movieDetail));
+        window.ReactNativeWebView.postMessage(JSON.stringify(ticketDetail));
       }
     }, 500);
     true;

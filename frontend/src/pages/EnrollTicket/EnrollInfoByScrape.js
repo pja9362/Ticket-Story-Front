@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
+import CategoryBtnContainer from '../../components/EnrollTicket/CategoryBtnContainer';
 
 const EnrollInfoByScrape = ({ route, navigation }) => {
   const { ticketInfo } = route.params;
@@ -23,7 +24,22 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   const [locationDetail, setLocationDetail] = useState(initialLocationDetail);
   const [seats, setSeats] = useState(initialSeats.join(', '));
   const [platform, setPlatform] = useState(initialPlatform);
-  const [category, setCategory] = useState(initialCategory);
+  const [category, setCategory] = useState(initialCategory === '뮤지컬' || initialCategory === '연극' ? '공연' : initialCategory);
+  const [categoryDetail, setCategoryDetail] = useState(initialCategory === '뮤지컬' || initialCategory === '연극' ? initialCategory : '');
+
+  const categories = ['영화', '공연', '스포츠', '기타'];
+  const detailCategories = {
+    공연: ['뮤지컬', '연극', '일반'],
+    스포츠: ['축구', '야구', '기타'],
+  }
+
+  const handleCategorySelect = (selectedCategory) => {
+    setCategory(selectedCategory);
+  };
+
+  const handleCategoryDetailSelect = (selectedCategoryDetail) => {
+    setCategoryDetail(selectedCategoryDetail);
+  };
 
   const handleNext = () => {
     console.log('Updated ticketInfo: ', {
@@ -35,6 +51,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
       seats: seats.split(',').map(seat => seat.trim()),
       platform,
       category,
+      categoryDetail,
     });
     
     navigation.navigate('EnrollReviewByHand', {name: title})
@@ -52,6 +69,28 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
         <Text style={styles.sectionText}>관람 작품</Text>
         <TextInput style={styles.inputBox} value={title} onChangeText={setTitle} />
 
+        {/* Category */}
+        <Text style={styles.sectionText}>관람 장르</Text>
+        <CategoryBtnContainer
+          categories={categories}
+          selectedCategory={category}
+          onSelectCategory={handleCategorySelect}
+        />
+
+        {/* Category Detail */}
+        {
+          detailCategories[category] && (
+            <>
+              <Text style={styles.sectionText}>관람 장르 상세</Text>
+              <CategoryBtnContainer
+                categories={detailCategories[category]}
+                selectedCategory={categoryDetail}
+                onSelectCategory={handleCategoryDetailSelect}
+              />
+            </>
+          )
+        }
+        
         {/* Date */}
         <Text style={styles.sectionText}>관람 날짜</Text>
         <TextInput style={styles.inputBox} value={date} onChangeText={setDate} />
@@ -65,16 +104,20 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
         <TextInput style={styles.inputBox} value={location} onChangeText={setLocation} />
 
         {/* Location Detail */}
-        <Text style={styles.sectionText}>관람 장소 상세</Text>
-        <TextInput style={styles.inputBox} value={locationDetail} onChangeText={setLocationDetail} />
+        {
+          initialLocationDetail !=='' && (
+            <>
+              <Text style={styles.sectionText}>관람 장소 상세</Text>
+              <TextInput style={styles.inputBox} value={locationDetail} onChangeText={setLocationDetail} />
+            </>
+          )
+        }
 
         {/* Seats */}
         <Text style={styles.sectionText}>관람 좌석</Text>
         <TextInput style={styles.inputBox} value={seats} onChangeText={setSeats} />
 
-        {/* Category */}
-        <Text style={styles.sectionText}>관람 장르</Text>
-        <TextInput style={styles.inputBox} value={category} onChangeText={setCategory} />
+        
       </View>
     </ScrollView>
   );

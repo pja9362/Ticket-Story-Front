@@ -369,7 +369,7 @@ export const scrapeTicketlinkTicketDetails = (webViewRef) => {
           window.ReactNativeWebView.postMessage(JSON.stringify(ticketDetail));
         }
       }
-    }, 1000);
+    }, 1500);
     true;
   `;
 

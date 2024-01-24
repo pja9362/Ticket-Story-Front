@@ -35,7 +35,7 @@ const TicketlinkWebView = ({ onMessage }) => {
         style={{ width: windowWidth, height: windowHeight }}
         source={{ uri: 'https://m.ticketlink.co.kr/my' }}
         onNavigationStateChange={handleTicketlinkNavigationStateChange}
-        onMessage={(event) => onMessage(event, 'ticketlink')}
+        onMessage={(event) => onMessage && onMessage(event, 'ticketlink')}
       />
     );
 };

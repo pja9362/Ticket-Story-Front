@@ -10,6 +10,7 @@ import EnrollInfoByHandAgreement from './src/pages/EnrollTicket/EnrollByHandAgre
 import EnrollByOCR from './src/pages/EnrollTicket/EnrollByOCR';
 import EnrollInfoByOCR from './src/pages/EnrollTicket/EnrollInfoByOCR';
 import EnrollInfoByHand from './src/pages/EnrollTicket/EnrollInfoByHand';
+import EnrollInfoByScrape from './src/pages/EnrollTicket/EnrollInfoByScrape';
 import EnrollReviewByOCR from './src/pages/EnrollTicket/EnrollReviewByOCR';
 import EnrollReviewByHand from './src/pages/EnrollTicket/EnrollReviewByHand';
 import EnrollFinish from './src/pages/EnrollTicket/EnrollFinish';
@@ -55,6 +56,7 @@ const App = () => {
             <Stack.Screen name="EnrollByOCR" component={EnrollByOCR} />
             <Stack.Screen name="EnrollInfoByOCR" component={EnrollInfoByOCR} />
             <Stack.Screen name="EnrollInfoByHand" component={EnrollInfoByHand} />
+            <Stack.Screen name="EnrollInfoByScrape" component={EnrollInfoByScrape} />
             <Stack.Screen name="EnrollReviewByOCR" component={EnrollReviewByOCR} />
             <Stack.Screen name="EnrollReviewByHand" component={EnrollReviewByHand} />
             <Stack.Screen name="EnrollFinish" component={EnrollFinish} />

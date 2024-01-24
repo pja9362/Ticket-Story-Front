@@ -27,31 +27,34 @@ export const scrapeCGVTicketDetails = webViewRef => {
           var title = movieInfoElement.childNodes[0].textContent.trim(); 
           
           var dateElement = document.querySelector('.movieLog_detail_movie_info_wrap .movieInfo_date');
-          var dateTime = dateElement.innerText.replace('관람', '').trim(); 
-  
-          var locationElement = document.querySelector('.detail_info_list .map');
-          var location = locationElement.innerText.replace('map', '').trim();
-  
-          var seatElement = document.querySelector('.detail_info_list .seat');
-          var seat = seatElement.innerText.replace('seat', '').trim();
-  
-          var cinemaElement = document.querySelector('.detail_info_list .film');
-          var cinema = cinemaElement.innerText.replace('film', '').trim();
+          var rawDateTime = dateElement.innerText.replace('관람', '').trim(); 
 
-          var seatElement = document.querySelector('li.member.ng-binding.ng-scope');
-          var seatCount = seatElement.innerText.replace('member', '').replace('관람', '').replace('같이 본 사람을 입력해보세요', '').trim();
-  
+          var date = rawDateTime.split(' ')[0];
+          var time = (rawDateTime.split(')')[1]).split('~')[0].trim();
+          
+          var locationElement = document.querySelector('.detail_info_list .map');
+          var rawLocation = locationElement.innerText.replace('map', '').trim();
+          
+          var location = rawLocation.split(' ')[0];
+          var locationDetail = rawLocation.split(' ')[1] ? rawLocation.split(' ')[1].trim() : '';
+
+          var seats = [];
+          var seatElement = document.querySelector('.detail_info_list .seat');
+          if (seatElement) {
+            seats.push(seatElement.innerText.replace('seat', '').trim());
+          }
+
           var ticketDetail = {
             title: title,
-            date: dateTime,
-            image: document.querySelector('.movie_info_poster_wrap .img_wrap img').getAttribute('data-ng-src'),
+            date: date,
+            time: time,
             location: location,
-            cinema: cinema,
-            seat: seat,
-            seatCount: seatCount
+            locationDetail: locationDetail,
+            seats: seats,
+            category: '영화',
+            platform: 'CGV',
           };
   
-          // Send ticketDetail to React Native
           window.ReactNativeWebView.postMessage(JSON.stringify(ticketDetail));
         }
       }, 1000); 
@@ -64,46 +67,55 @@ export const scrapeCGVTicketDetails = webViewRef => {
 export const scrapeInterparkTicketDetails = (webViewRef) => {
   const injectScrapTicketScript = `
     setTimeout(function() {
-      // Extracting image, title, and location
-      var imageElement = document.querySelector('.performDetailWrap .col.imgWrap img');
-      var relativeSrc = imageElement ? imageElement.getAttribute('src') : '';
-      var absoluteSrc = relativeSrc ? (window.location.protocol + relativeSrc) : '';
+      var category = document.querySelector("#KindOfGoods").innerText.trim();
 
-      var nameElement = document.querySelector('.performDetailWrap .prodInfoWrap .nameWrap .name');
-      var title = nameElement ? nameElement.innerText.trim() : '';
-
-      var locationElement = document.querySelector('.performDetailWrap .prodInfoWrap .theater span');
-      var location = locationElement ? locationElement.innerText.trim() : '';
+      var titleElement = document.querySelector('.performDetailWrap .prodInfoWrap .nameWrap .name');
+      var title = titleElement ? titleElement.innerText.trim() : '';
 
       var dateElement = document.querySelector("#dispPlayDate");
-      var date = dateElement ? dateElement.innerText.trim() : '';
+      var rawDateTime = dateElement ? dateElement.innerText.trim() : '';
       
-      var seatDetails = [];
+      var date = rawDateTime.split('(')[0];
+      var time = (rawDateTime.split(' ')[1]).split(' ')[0].trim();
 
-      // Extracting seat details
+      var seats = [];
+      var sportsLocationDetail = '';
+
       var seatDetailElements = document.querySelectorAll("#reserveDetail > main > div > section.seatInfoListWrapper > div > div.infoListWrap.checkboxChange > ul > li > div > label > div.checkData");
       seatDetailElements.forEach(seatDetailElement => {
-        var seatGrade = seatDetailElement.querySelector("dl:nth-child(2) > dd > span").innerText.trim();
-        var priceGrade = seatDetailElement.querySelector("dl:nth-child(3) > dd > span").innerText.trim();
         var seatNumber = seatDetailElement.querySelector("dl:nth-child(4) > dd > span").innerText.trim(); 
-      
-        seatDetails.push({
-          seatGrade: seatGrade,
-          priceGrade: priceGrade,
-          seatNumber: seatNumber,
-        });
+        seats.push(seatNumber);
+
+        if(category === '스포츠') {
+          var seatGrade = seatDetailElement.querySelector("dl:nth-child(2) > dd > span").innerText.trim();
+          if(sportsLocationDetail !== seatGrade) {
+            sportsLocationDetail += seatGrade;
+          }
+        }
       }); 
 
+      var locationElement = document.querySelector('.performDetailWrap .prodInfoWrap .theater span');
+      var rawLocation = locationElement ? locationElement.innerText.trim() : '';
+
+      var location = rawLocation.split(' ')[0];
+
+      if (category !== '스포츠') {
+        var locationDetail = rawLocation.split(' ')[1] ? rawLocation.split(' ')[1] : '';
+      } else {
+        var locationDetail = sportsLocationDetail !== '' ? sportsLocationDetail : '';
+      }
+
       var ticketDetail = {
-        image: absoluteSrc,
         title: title,
         location: location,
+        locationDetail: locationDetail,
         date: date,
-        seatCount: document.querySelector("#BSeatCnt").innerText.trim(),
-        seatDetails: seatDetails,
+        time: time,
+        seats: seats,
+        category: category,
+        platform: 'INTERPARK',
       };
 
-      // Send ticketDetail to React Native
       window.ReactNativeWebView.postMessage(JSON.stringify(ticketDetail));
     }, 1000);
     true;
@@ -127,33 +139,32 @@ export const scrapeLotteCinemaTicketDetails = (webViewRef) => {
             var title = titleElement ? titleElement.innerText.trim() : '';
 
             var locationElement = movieItem.querySelector('dl > dd.info_cont > dl > dd:nth-child(2)');
-            var location = locationElement ? locationElement.innerText.trim() : '';
+            var rawLocation = locationElement ? locationElement.innerText.trim() : '';
+
+            var location = rawLocation.split(' ')[0];
+            var locationDetail = rawLocation.split(' ')[1] ? rawLocation.split(' ')[1].trim() : '';
 
             var dateElement = movieItem.querySelector('dl > dd.info_cont > dl > dd:nth-child(4)');
-            var date = dateElement ? dateElement.innerText.trim() : '';
+            var date = dateElement ? dateElement.innerText.replaceAll('-','.').trim() : '';
 
             var timeElement = movieItem.querySelector('dl > dd.info_cont > dl > dd:nth-child(6)');
-            var time = timeElement ? timeElement.innerText.trim() : '';
+            var time = timeElement ? timeElement.innerText.split('~')[0].trim() : '';
 
-            var seatCountElement = movieItem.querySelector('dl > dd.info_cont > dl > dd:nth-child(8)');
-            var seatCount = seatCountElement ? seatCountElement.innerText.trim() : '';
-
-            var imageElement = movieItem.querySelector('div.bx_thm > a > img');
-            var image = imageElement ? imageElement.getAttribute('src') : '';
-  
             var ticketDetail = {
               title: title,
               location: location,
+              locationDetail: locationDetail,
               date: date,
               time: time,
-              seatCount: seatCount,
-              image: image,
+              seats: [],
+              platform: 'LOTTECINEMA',
+              category: '영화',
             };
 
             window.ReactNativeWebView.postMessage(JSON.stringify(ticketDetail));
           };
         });
-      }, 1500);
+      }, 1000);
     true;
   `;
 
@@ -231,25 +242,29 @@ export const scrapeMegaboxTicketDetails = (webViewRef) => {
             var title = titleElement ? titleElement.innerText.trim() : '';
 
             var dateElement = movieItem.querySelector('div.movie-info-area > div.info-detail > p:nth-child(1)');
-            var date = dateElement ? dateElement.innerText.trim() : '';
+            var date = dateElement ? dateElement.innerText.replace('관람일','').trim() : '';
 
             var locationElement = movieItem.querySelector('div.movie-info-area > div.info-detail > p:nth-child(2)');
-            var location = locationElement ? locationElement.innerText.trim() : '';
+            var rawLocation = locationElement ? locationElement.innerText.replace('상영관 ', '').trim() : '';
 
-            var imageElement = movieItem.querySelector('div.poster-area > div > img');
-            var image = imageElement ? imageElement.getAttribute('src') : '';
-  
+            var location = rawLocation.split(' ')[0];
+            var locationDetail = rawLocation.split(' ')[1] ? rawLocation.split(' ')[1].trim() : '';
+            
             var ticketDetail = {
               title: title,
               date: date,
+              time: '',
               location: location,
-              image: image,
+              locationDetail: locationDetail,
+              seats: [],
+              platform: 'MEGABOX',
+              category: '영화',
             };
 
             window.ReactNativeWebView.postMessage(JSON.stringify(ticketDetail));
           };
         });
-      }, 1500);
+      }, 1000);
     true;
   `;
 
@@ -275,31 +290,36 @@ export const scrapeYes24TicketDetails = (webViewRef) => {
           var dateTimeElement = document.querySelector("#ctl00_ContentPlaceHolder1_trPerfDateTime td.txt");
           var dateTime = dateTimeElement ? dateTimeElement.innerText.trim() : '';
 
-          var locationElement = document.querySelector(".goods_loca a");
-          var location = locationElement ? locationElement.innerText.replace('\>', '').trim() : '';
+          var date = dateTime.split(' ')[0];
+          var time = dateTime.split(' ')[1];
 
-          var seatElement = document.querySelector("#ctl00_ContentPlaceHolder1_trSeat > td");
-          var seat = seatElement ? seatElement.innerText.replace(' > ', '').trim() : '';
-          
-          var seatCountElement = document.querySelector("#ctl00_ContentPlaceHolder1_trSeat > th > strong")
-          var seatCount = seatCountElement ? seatCountElement.innerText.trim() : '';
-  
-          var imageElement = document.querySelector(".goods_img img");
-          var image = imageElement ? imageElement.getAttribute("src") : '';
+          var locationElement = document.querySelector(".goods_loca a");
+          var rawLocation = locationElement ? locationElement.innerText.replace('\>', '').trim() : '';
+
+          var location = rawLocation.split(' ')[0];
+          var locationDetail = rawLocation.split(' ')[1] ? rawLocation.split(' ')[1] : '';
+
+          var seats = [];
+          var seatElement = document.querySelectorAll("#ctl00_ContentPlaceHolder1_trSeat td");
+
+          seatElement.forEach(function (seat) {
+            seats.push(seat.innerText.replace(' > ', '').trim());
+          });
 
           var ticketDetail = {
             title: title,
-            date: dateTime,
-            image: image,
+            date: date,
+            time: time,
             location: location,
-            seat: seat,
-            seatCount: seatCount
+            locationDetail: locationDetail,
+            seats: seats,
+            platform: 'YES24',
+            category: '',
           };
 
-          // Send ticketDetail to React Native
           window.ReactNativeWebView.postMessage(JSON.stringify(ticketDetail));
         }
-      }, 500); 
+      }, 1000); 
       true;
     `;
   webViewRef.current.injectJavaScript(injectScrapButtonScript);
@@ -323,94 +343,35 @@ export const scrapeTicketlinkTicketDetails = (webViewRef) => {
       var ticketInfoElement = document.querySelector('#m_content > div.mypage_cont.detail_page > div.mypage_info_area > div:nth-child(1) > ul');
       if (ticketInfoElement) {
         var dateElement = ticketInfoElement.querySelector("li > ul > li:nth-child(4) > div.stxt > span");
-        var date = dateElement ? dateElement.innerText.trim() : '';
+        var rawDateTime = dateElement ? dateElement.innerText.trim() : '';
+
+        var date = rawDateTime.split('(')[0].trim();
+        var time = rawDateTime.split(')')[1].trim();
 
         var locationElement = ticketInfoElement.querySelector("li > ul > li:nth-child(5) > div.stxt > span");
-        var location = locationElement ? locationElement.innerText.trim() : '';
+        var rawLocation = locationElement ? locationElement.innerText.trim() : '';
+
+        var location = rawLocation.split(' ')[0];
+        var locationDetail = rawLocation.split(' ')[1] ? rawLocation.split(' ')[1].trim() : '';
 
         var ticketDetail = {
           title: title,
           date: date,
+          time: time,
           location: location,
-          seats: seats
+          locationDetail: locationDetail,
+          seats: seats,
+          platform: 'TICKETLINK',
+          category: '',
         };
 
-        window.ReactNativeWebView.postMessage(JSON.stringify(ticketDetail));
+        if(ticketDetail) {
+          window.ReactNativeWebView.postMessage(JSON.stringify(ticketDetail));
+        }
       }
-    }, 1500);
+    }, 1000);
     true;
   `;
 
   webViewRef.current && webViewRef.current.injectJavaScript(injectScrapScript);
-};
-
-// TimeTicket
-export const injectTimeticketScript = (webViewRef) => {
-  const injectScrapScript = `
-    setTimeout(function() {
-      var titleElement = document.querySelectorAll("div.rows_content > div > div.right_wrap > div > div.product_title > a");
-      if (titleElement) {
-        titleElement.forEach(function (title) {
-          title.removeAttribute('href');
-        });
-      }
-
-      var ticketItems = document.querySelectorAll('.buy_rows_wrap');
-      
-      ticketItems.forEach(function (ticketItem) {
-        ticketItem.style.cursor = 'pointer';
-
-        ticketItem.onclick = function() {
-          var detailLinkElement = ticketItem.querySelector('.btn_pink');
-          if (detailLinkElement) {
-            detailLinkElement.click();
-          }
-        };
-      });
-    }, 500);
-    true;
-  `;
-
-  const style = `
-    var style = document.createElement('style');
-    style.innerHTML = '.buy_rows_wrap { cursor: pointer; }'; 
-    document.head.appendChild(style);
-    true;
-  `;
-
-  webViewRef.current.injectJavaScript(style);
-  webViewRef.current.injectJavaScript(injectScrapScript);
-};
-
-export const scrapeTimeticketTicketDetails = webViewRef => {
-  const injectScrapScript = `
-    setTimeout(function() {
-      var ticketInfoElement = document.querySelector('.detail_row');
-      if (ticketInfoElement) {
-        var titleElement = ticketInfoElement.querySelector('.flex_left:nth-child(1) a');
-        var title = titleElement ? titleElement.innerText.trim() : '';
-
-        var locationElement = ticketInfoElement.querySelector('.flex_left:nth-child(3) div:nth-child(2)');
-        var location = locationElement ? locationElement.innerText.trim() : '';
-        
-        var addressElement = ticketInfoElement.querySelector('#address_text');
-        var address = addressElement ? addressElement.innerText.trim() : '';
-
-        var optionElement = document.querySelector('.flex_left:nth-child(1) div p');
-        var option = optionElement ? optionElement.innerText.trim() : '';
-
-        var ticketDetail = {
-          title: title,
-          location: location,
-          address: address,
-          option: option,
-        };
-
-        window.ReactNativeWebView.postMessage(JSON.stringify(ticketDetail));
-      }
-    }, 500);
-    true;
-  `;
-
-  webViewRef.current.injectJavaScript(injectScrapScript);
 };

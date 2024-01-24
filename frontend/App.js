@@ -16,7 +16,6 @@ import EnrollReviewByHand from './src/pages/EnrollTicket/EnrollReviewByHand';
 import EnrollFinish from './src/pages/EnrollTicket/EnrollFinish';
 import OCRFail from './src/pages/EnrollTicket/OCRFail';
 import MainStack from './src/navigation/MainStack';
-import ScrapInfo from './src/pages/Scrape/ScrapInfo';
 import OAuthWebView from './src/pages/Scrape/OAuthWebView';
 import TicketlinkWebView from './src/pages/Scrape/TicketlinkWebView';
 
@@ -61,7 +60,6 @@ const App = () => {
             <Stack.Screen name="EnrollReviewByHand" component={EnrollReviewByHand} />
             <Stack.Screen name="EnrollFinish" component={EnrollFinish} />
             <Stack.Screen name="OCRFail" component={OCRFail} />
-            <Stack.Screen name="ScrapInfo" component={ScrapInfo} />
             {/* Ticket Link */}
             <Stack.Screen name="OAuthWebView" component={OAuthWebView} />
             <Stack.Screen name="TicketlinkWebView" component={TicketlinkWebView} />

@@ -35,8 +35,9 @@ export const scrapeCGVTicketDetails = webViewRef => {
           var locationElement = document.querySelector('.detail_info_list .map');
           var rawLocation = locationElement.innerText.replace('map', '').trim();
           
-          var location = rawLocation.split(' ')[0];
-          var locationDetail = rawLocation.split(' ')[1] ? rawLocation.split(' ')[1].trim() : '';
+          var locationParts = rawLocation.split(' ');
+          var location = locationParts[0];
+          var locationDetail = locationParts.slice(1).join(' ').trim();
 
           var seats = [];
           var seatElement = document.querySelector('.detail_info_list .seat');
@@ -97,10 +98,11 @@ export const scrapeInterparkTicketDetails = (webViewRef) => {
       var locationElement = document.querySelector('.performDetailWrap .prodInfoWrap .theater span');
       var rawLocation = locationElement ? locationElement.innerText.trim() : '';
 
-      var location = rawLocation.split(' ')[0];
-
+      var locationParts = rawLocation.split(' ');
+      var location = locationParts[0];
+          
       if (category !== '스포츠') {
-        var locationDetail = rawLocation.split(' ')[1] ? rawLocation.split(' ')[1] : '';
+        var locationDetail = locationParts.slice(1).join(' ').trim();
       } else {
         var locationDetail = sportsLocationDetail !== '' ? sportsLocationDetail : '';
       }
@@ -141,9 +143,10 @@ export const scrapeLotteCinemaTicketDetails = (webViewRef) => {
             var locationElement = movieItem.querySelector('dl > dd.info_cont > dl > dd:nth-child(2)');
             var rawLocation = locationElement ? locationElement.innerText.trim() : '';
 
-            var location = rawLocation.split(' ')[0];
-            var locationDetail = rawLocation.split(' ')[1] ? rawLocation.split(' ')[1].trim() : '';
-
+            var locationParts = rawLocation.split(' ');
+            var location = locationParts[0];
+            var locationDetail = locationParts.slice(1).join(' ').trim();
+  
             var dateElement = movieItem.querySelector('dl > dd.info_cont > dl > dd:nth-child(4)');
             var date = dateElement ? dateElement.innerText.replaceAll('-','.').trim() : '';
 
@@ -247,8 +250,9 @@ export const scrapeMegaboxTicketDetails = (webViewRef) => {
             var locationElement = movieItem.querySelector('div.movie-info-area > div.info-detail > p:nth-child(2)');
             var rawLocation = locationElement ? locationElement.innerText.replace('상영관 ', '').trim() : '';
 
-            var location = rawLocation.split(' ')[0];
-            var locationDetail = rawLocation.split(' ')[1] ? rawLocation.split(' ')[1].trim() : '';
+            var locationParts = rawLocation.split(' ');
+            var location = locationParts[0];
+            var locationDetail = locationParts.slice(1).join(' ').trim();
             
             var ticketDetail = {
               title: title,
@@ -296,9 +300,10 @@ export const scrapeYes24TicketDetails = (webViewRef) => {
           var locationElement = document.querySelector(".goods_loca a");
           var rawLocation = locationElement ? locationElement.innerText.replace('\>', '').trim() : '';
 
-          var location = rawLocation.split(' ')[0];
-          var locationDetail = rawLocation.split(' ')[1] ? rawLocation.split(' ')[1] : '';
-
+          var locationParts = rawLocation.split(' ');
+          var location = locationParts[0];
+          var locationDetail = locationParts.slice(1).join(' ').trim();
+          
           var seats = [];
           var seatElement = document.querySelectorAll("#ctl00_ContentPlaceHolder1_trSeat td");
 
@@ -326,6 +331,44 @@ export const scrapeYes24TicketDetails = (webViewRef) => {
 };
 
 // Ticket Link
+export const injectTicketlinkScrapButton = (webViewRef) => {
+  setTimeout(function() {
+    const script = `
+      var loginElement = document.querySelector("#app > div > section")
+
+      if (!loginElement) {
+        var scrapButton = document.createElement('button');
+        scrapButton.innerHTML = '스크랩 하러가기';
+        scrapButton.style.backgroundColor = 'red';
+        scrapButton.style.padding = '15px';
+        scrapButton.style.color= 'white';
+        scrapButton.onclick = function() {
+          window.location.href = 'https://m.ticketlink.co.kr/my/reserve/gate/list?page=1&productClass=ALL&searchType=PERIOD&period=MONTH_3&targetDay=RESERVE&year=&month=';
+        };
+
+        var floatingDiv = document.createElement('div');
+        floatingDiv.classList.add('scrap-button-container'); 
+        document.body.appendChild(floatingDiv);
+
+        floatingDiv.appendChild(scrapButton);
+
+        var mainContent = document.querySelector('#m_content');
+        if (mainContent) {
+          mainContent.appendChild(floatingDiv);
+        }
+      }
+
+      var style = document.createElement('style');
+      style.innerHTML = '.scrap-button-container { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: 50%; padding: 15px; text-align: center; z-index: 9999; padding: 10px;}';
+      document.head.appendChild(style);
+
+      true;
+    `;
+
+    webViewRef.current.injectJavaScript(script);
+  }, 200);
+}
+
 export const scrapeTicketlinkTicketDetails = (webViewRef) => {
   const injectScrapScript = `
     setTimeout(function() {
@@ -351,8 +394,9 @@ export const scrapeTicketlinkTicketDetails = (webViewRef) => {
         var locationElement = ticketInfoElement.querySelector("li > ul > li:nth-child(5) > div.stxt > span");
         var rawLocation = locationElement ? locationElement.innerText.trim() : '';
 
-        var location = rawLocation.split(' ')[0];
-        var locationDetail = rawLocation.split(' ')[1] ? rawLocation.split(' ')[1].trim() : '';
+        var locationParts = rawLocation.split(' ');
+        var location = locationParts[0];
+        var locationDetail = locationParts.slice(1).join(' ').trim();
 
         var ticketDetail = {
           title: title,
@@ -365,13 +409,11 @@ export const scrapeTicketlinkTicketDetails = (webViewRef) => {
           category: '',
         };
 
-        if(ticketDetail) {
-          window.ReactNativeWebView.postMessage(JSON.stringify(ticketDetail));
-        }
+        window.ReactNativeWebView.postMessage(JSON.stringify(ticketDetail));
       }
-    }, 1500);
+    }, 800);
     true;
   `;
 
-  webViewRef.current && webViewRef.current.injectJavaScript(injectScrapScript);
+  webViewRef.current.injectJavaScript(injectScrapScript);
 };

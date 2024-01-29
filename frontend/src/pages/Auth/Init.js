@@ -1,17 +1,57 @@
-import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, Image, Linking} from 'react-native';
-// import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import React, { useState, useRef } from 'react';
+import {StyleSheet, Text, TouchableOpacity, View, Image, Dimensions} from 'react-native';
 import logo from '../../images/logo.png';
-import axios from 'axios';
+import api from '../../api/api';
+import WebView from 'react-native-webview';
+
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const Init = ({navigation}) => {
+  // kakao redirect uri에 ip 등록하기
+  // const apiUrl = '192.168.25.2';
+  const webViewRef = useRef(null);
+
+  const [webViewVisible, setWebViewVisible] = useState(false);
+  const [redirectUrl, setRedirectUrl] = useState(null);
 
   const handleKaKaoLogin = async () => {
-    console.log('handleKaKaoLogin');
+    try {
+      const response = await api.handleKaKaoLogin();
+      // const url = response.replace('localhost', apiUrl);
+      // setRedirectUrl(url);
+      setRedirectUrl(response);
+      setWebViewVisible(true);
+    } catch (error) {
+      console.error('KaKao Login error:', error);
+      throw error;
+    }
   };
+
+  const handleWebViewClose = () => {
+    setWebViewVisible(false);
+  }
+
+  const handleOAuthNavigationChange = (state) => {
+    console.log(state);
+    console.log('current state:', state.url);
+  }
 
   return (
     <View style={styles.container}>
+      {webViewVisible && (redirectUrl != null) ? (
+        <WebView
+          ref={webViewRef}
+          style={styles.webview}
+          source={{ uri: redirectUrl }} 
+          onNavigationStateChange={handleOAuthNavigationChange}
+          onClose={handleWebViewClose}
+        />
+      )
+    :
+     (
+      <>
       <View style={styles.title}>
         <Image source={logo} style={styles.image} />
       </View>
@@ -25,7 +65,6 @@ const Init = ({navigation}) => {
         <TouchableOpacity
           style={{...styles.snsBtn, backgroundColor: '#fff', borderWidth: 1}}
           onPress={handleKaKaoLogin}>
-          {/* <Icon name="chat" size={20} color="#000" /> */}
           <Text style={styles.text}>카카오톡 계정으로 시작하기</Text>
         </TouchableOpacity>
       </View>
@@ -47,6 +86,9 @@ const Init = ({navigation}) => {
         onPress={() => navigation.navigate('Login')}>
         <Text>로그인</Text>
       </TouchableOpacity>
+      </>
+     )
+    }
     </View>
   );
 };
@@ -56,6 +98,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 38,
+  },
+  webview: {
+    flex: 1,
+    width: windowWidth,
+    height: windowHeight,
   },
   text: {
     fontSize: 14,

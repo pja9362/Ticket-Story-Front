@@ -2,7 +2,7 @@ import axios from 'axios';
 import RNFS from 'react-native-fs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const apiUrl = 'http://192.168.25.5:8080'; 
+const apiUrl = 'http://192.168.25.2:8080'; 
 
 const checkIdDuplicate = async userId => {
   try {
@@ -44,10 +44,10 @@ const signUpRequest = async formData => {
 const signInRequest = async (userId, password) => {
   try {
     const response = await axios.post(
-      `${apiUrl}/auth/signIn`,
+      `${apiUrl}/api/v1/auth/login`,
       {
+        id: userId,
         password: password,
-        userId: userId,
       },
       {
         headers: {
@@ -94,4 +94,16 @@ const saveImageAndPerformOCR = async (scannedImage) => {
   }
 };
 
-export default {checkIdDuplicate, signUpRequest, signInRequest, saveImageAndPerformOCR};
+const handleKaKaoLogin = async () => {
+  try {
+    console.log('handleKaKaoLogin');
+    const response = await axios.get(`${apiUrl}/api/v1/auth/oauth/kakao/url`);
+    console.log('Kakao login response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Kakao login error:', error);
+    throw error;
+  }
+};
+
+export default {checkIdDuplicate, signUpRequest, signInRequest, saveImageAndPerformOCR, handleKaKaoLogin};

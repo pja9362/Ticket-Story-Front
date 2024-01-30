@@ -18,22 +18,26 @@ const Step1 = ({nextStep, handleChange, values}) => {
     console.log('Step1: ', values);
   }, []);
 
-  const handleIdCheck = async () => {
-    try {
-      const isIdDuplicated = await api.checkIdDuplicate(id);
+  // const handleIdCheck = async () => {
+  //   try {
+  //     const isIdDuplicated = await api.checkIdDuplicate(id);
   
-      if (isIdDuplicated === false) {
-        console.log('사용 가능한 아이디입니다.');
-        setIsIdCheck(true);
-        nextStep();
-      } else {
-        console.log('중복된 아이디입니다.');
-        setIsIdCheck(false);
-      }
-    } catch (error) {
-      console.error('id-check error:', error);
-    }
-  };
+  //     if (isIdDuplicated === false) {
+  //       console.log('사용 가능한 아이디입니다.');
+  //       setIsIdCheck(true);
+  //       nextStep();
+  //     } else {
+  //       console.log('중복된 아이디입니다.');
+  //       setIsIdCheck(false);
+  //     }
+  //   } catch (error) {
+  //     console.error('id-check error:', error);
+  //   }
+  // };
+
+  const handleNext = () => {
+    nextStep();
+  }
   
   return (
     <View style={styles.container}>
@@ -43,12 +47,12 @@ const Step1 = ({nextStep, handleChange, values}) => {
         value={id}
         onChangeText={text => {
           setId(text);
-          handleChange('userId', text);
+          handleChange('id', text);
         }}
       />
-      {!isIdCheck && <Text style={styles.alertText}>중복된 아이디예요.</Text>}
+      {/* {!isIdCheck && <Text style={styles.alertText}>중복된 아이디예요.</Text>} */}
       {/* 중복확인 버튼 */}
-      <NextButton onClick={handleIdCheck} isValid={isValid} />
+      <NextButton onClick={handleNext} isValid={isValid} />
     </View>
   );
 };

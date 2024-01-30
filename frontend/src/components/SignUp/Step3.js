@@ -18,7 +18,7 @@ const Step3 = ({nextStep, handleChange, values}) => {
   const handlePhoneNumChange = text => {
     const formattedPhoneNumber = formatPhoneNum(text);
     setPhoneNumber(formattedPhoneNumber);
-    handleChange('phoneNumber', formattedPhoneNumber);
+    handleChange('phoneNum', formattedPhoneNumber);
   };
 
   const handleFirstPartChange = text => {

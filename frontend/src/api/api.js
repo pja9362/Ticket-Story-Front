@@ -2,7 +2,7 @@ import axios from 'axios';
 import RNFS from 'react-native-fs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const apiUrl = 'http://192.168.25.2:8080'; 
+const apiUrl = 'http://192.168.0.10:8080'; 
 
 const checkIdDuplicate = async userId => {
   try {
@@ -17,14 +17,15 @@ const checkIdDuplicate = async userId => {
 
 const signUpRequest = async formData => {
   try {
+    console.log('Sign-up request:', formData);
     const response = await axios.post(
-      `${apiUrl}/auth/signUp`,
+      `${apiUrl}/api/v1/auth/signup`,
       {
-        birthday: 20001221,
-        gender: formData.gender.toUpperCase(),
+        id: formData.id,
         password: formData.password,
-        phoneNumber: formData.phoneNumber,
-        userId: formData.userId,
+        phoneNum: formData.phoneNum,
+        birthday: formData.birthday,
+        gender: formData.gender.toUpperCase(),
       },
       {
         headers: {

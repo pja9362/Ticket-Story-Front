@@ -8,8 +8,7 @@ const OAuthWebView = ({ route, navigation }) => {
 
   const handleNavigationStateChange = (state) => {
     if (state.url === 'https://m.ticketlink.co.kr/auth/validate?selfRedirect=N') {
-      console.log('OAuth process completed!');
-      navigation.navigate('TicketlinkWebView', { uri: 'https://m.ticketlink.co.kr/my' });
+      navigation.navigate('TicketlinkWebView');
     }
   };
 

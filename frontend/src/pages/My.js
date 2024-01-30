@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { SafeAreaView, StyleSheet, Dimensions, Text, TouchableOpacity } from 'react-native';
 import WebView from 'react-native-webview';
 import { useNavigation } from '@react-navigation/native';
-import { scrapeCGVTicketDetails, injectCGVScrapButton, scrapeInterparkTicketDetails, scrapeLotteCinemaTicketDetails, injectMegaboxScrapButton, scrapeMegaboxTicketDetails, scrapeYes24TicketDetails } from '../utils/scrapingUtils';
+import { scrapeCGVTicketDetails, injectCGVScrapButton, scrapeInterparkTicketDetails, scrapeLotteCinemaTicketDetails, injectMegaboxScrapButton, scrapeMegaboxTicketDetails, scrapeYes24TicketDetails, injectTicketlinkScrapButton, scrapeTicketlinkTicketDetails } from '../utils/scrapingUtils';
 import TicketlinkWebView from './Scrape/TicketlinkWebView';
 
 const windowWidth = Dimensions.get('window').width;
@@ -28,6 +28,7 @@ const My = () => {
   };
 
   const handleInterparkNavigationStateChange = (state) => {
+    console.log('current url: ', state.url);
     if (state.url === 'https://mticket.interpark.com/MyPage/BookedDetail') {
       scrapeInterparkTicketDetails(webViewRef);
     } else if (state.url === 'https://www.interpark.com/') {
@@ -39,6 +40,7 @@ const My = () => {
   };
 
   const handleLotteCinemaNavigationStateChange = (state) => {
+    console.log('current url: ', state.url);
     if (state.url === 'https://www.lottecinema.co.kr/NLCMW/MyPage/MyMovieManageHistory?mTab=2') {
       scrapeLotteCinemaTicketDetails(webViewRef);
     } else if (state.url === 'https://www.lottecinema.co.kr/NLCMW/MyPage') {
@@ -50,6 +52,7 @@ const My = () => {
   };
 
   const handleMegaboxNavigationStateChange = (state) => {
+    console.log('current url: ', state.url);
     if (state.url === 'https://m.megabox.co.kr/') {
       const redirectScript = `
         window.location.href = 'https://m.megabox.co.kr/myMegabox';
@@ -63,6 +66,7 @@ const My = () => {
   }
 
   const handleYes24NavigationStateChange = (state) => {
+    console.log('current url: ', state.url);
     const targetURL = 'https://m.ticket.yes24.com:442/MyPage/OrderDetail.aspx';
     if (state.url.startsWith(targetURL)) {
       scrapeYes24TicketDetails(webViewRef);
@@ -93,7 +97,6 @@ const My = () => {
       navigation.navigate('EnrollInfoByScrape', { ticketInfo: ticketInfo, source: source });
     } 
   };
-
   
   return (
     <SafeAreaView style={styles.container}>
@@ -138,9 +141,7 @@ const My = () => {
           onMessage={(event) => handleMessage(event, 'yes24')}
         /> 
       ) : showTicketlinkWebView ? (
-        <TicketlinkWebView
-          onMessage={(event) => handleMessage(event, 'ticketlink')}
-        />
+        <TicketlinkWebView />
       ) : (
         <>
           <TouchableOpacity

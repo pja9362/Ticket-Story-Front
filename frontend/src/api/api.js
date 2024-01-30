@@ -2,7 +2,7 @@ import axios from 'axios';
 import RNFS from 'react-native-fs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const apiUrl = 'http://192.168.25.2:8080'; 
+const apiUrl = 'http://10.221.81.154:8080'; 
 
 const checkIdDuplicate = async userId => {
   try {

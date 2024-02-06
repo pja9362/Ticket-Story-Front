@@ -1,90 +1,69 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, TextInput} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TextInput } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 
-const EnrollInfoByHand = ({navigation}) => {
-  const [name, setName] = useState('');
-  const [place, setPlace] = useState('');
-  const [hall, setHall] = useState('');
+const EnrollInfoByHand = ({ route, navigation }) => {
+  const { categoryInfo } = route.params;
+  const { category, categoryDetail } = categoryInfo;
 
-  const [seatRow, setSeatRow] = useState('');
-  const [seatNum, setSeatNum] = useState('');
+  console.log("CATEGORY: ", category);
+  console.log("CATEGORY DETAIL: ", categoryDetail);
 
-  const [year, setYear] = useState('');
-  const [month, setMonth] = useState('');
-  const [day, setDay] = useState('');
+  const [title, setTitle] = useState('');
+  const [date, setDate] = useState('');
   const [time, setTime] = useState('');
+  const [location, setLocation] = useState('');
+  const [locationDetail, setLocationDetail] = useState('');
+  const [seats, setSeats] = useState('');
 
   return (
     <>
-      <EnrollHeader title="티켓 정보 입력" onIconClick={()=> navigation.navigate('EnrollReview', {name})}/>
+      <EnrollHeader title="티켓 정보 입력" onIconClick={() => navigation.navigate('EnrollReview', { title })} />
       <View style={styles.container}>
-        <Text style={{fontSize: 16, fontWeight: 'bold', color: '#000'}}>
+        <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#000' }}>
           작품 정보를 입력해주세요.
         </Text>
 
         <Text style={styles.sectionText}>관람 작품</Text>
         <TextInput
           style={styles.inputBox}
-          value={name}
-          onChangeText={text => setName(text)}
+          value={title}
+          onChangeText={text => setTitle(text)}
         />
 
         <Text style={styles.sectionText}>관람 장소</Text>
         <TextInput
           style={styles.inputBox}
-          value={place}
-          onChangeText={text => setPlace(text)}
+          value={location}
+          onChangeText={text => setLocation(text)}
         />
 
         <Text style={styles.sectionText}>관람 상영관</Text>
         <TextInput
           style={styles.inputBox}
-          value={hall}
-          onChangeText={text => setHall(text)}
+          value={locationDetail}
+          onChangeText={text => setLocationDetail(text)}
         />
 
         <Text style={styles.sectionText}>관람 좌석</Text>
         <View style={styles.seatInputContainer}>
           <TextInput
-            style={[styles.inputBox, {marginRight: 5, width: 35}]}
-            value={seatRow}
-            onChangeText={text => setSeatRow(text)}
+            style={[styles.inputBox, { marginRight: 5,flex: 1 }]}
+            value={seats}
+            onChangeText={text => setSeats(text)}
           />
-          <Text style={styles.inputLabel}>열</Text>
-          <TextInput
-            style={[styles.inputBox , {width: 35}]}
-            value={seatNum}
-            onChangeText={text => setSeatNum(text)}
-          />
-          <Text style={styles.inputLabel}>번</Text>
         </View>
 
         <Text style={styles.sectionText}>관람 일시</Text>
         <View style={styles.dateInputContainer}>
           <TextInput
-            style={[styles.inputBox, {width: 65}]}
-            value={year}
-            onChangeText={text => setYear(text)}
+            style={[styles.inputBox, {flex: 3 }]}
+            value={date}
+            onChangeText={text => setDate(text)}
           />
 
-          <Text style={styles.inputLabel}>년</Text>
           <TextInput
-            style={[styles.inputBox, {width: 35}]}
-            value={month}
-            onChangeText={text => setMonth(text)}
-          />
-
-          <Text style={styles.inputLabel}>월</Text>
-          <TextInput
-            style={[styles.inputBox, {width: 35}]}
-            value={day}
-            onChangeText={text => setDay(text)}
-          />
-
-          <Text style={styles.inputLabel}>일</Text>
-          <TextInput
-            style={[styles.inputBox, {width: 65}]}
+            style={[styles.inputBox, { flex: 1 }]}
             value={time}
             onChangeText={text => setTime(text)}
           />
@@ -127,6 +106,7 @@ const styles = StyleSheet.create({
   dateInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 20
   },
 });
 

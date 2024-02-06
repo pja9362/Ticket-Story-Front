@@ -8,7 +8,6 @@ import {
   TextInput,
 } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
-import StarRating from '../../components/EnrollTicket/StarRating';
 import SliderRating from '../../components/EnrollTicket/SliderRating';
 import addPhoto from '../../images/icon_add_photo.png';
 
@@ -33,9 +32,13 @@ const EnrollReview = ({navigation, route}) => {
     }
   };
 
+  const handleNext = () => {
+    navigation.navigate('EnrollFinish');
+  }
+
   return (
     <>
-      <EnrollHeader title="티켓 후기 입력" onIconClick={()=> navigation.navigate('EnrollFinish')} />
+      <EnrollHeader title="티켓 후기 입력" onIconClick={handleNext} />
       <View style={styles.container}>
         <Text style={{fontSize: 16, fontWeight: 'bold', color: '#000'}}>
           관람한 <Text style={{color: '#6D6D6D'}}>{name}</Text>의 후기를 알려주세요.
@@ -78,12 +81,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 8,
     color: '#000',
-  },
-  inputBox: {
-    borderWidth: 1,
-    borderColor: '#000',
-    borderRadius: 5,
-    padding: 10,
   },
   image: {
     width: 48,

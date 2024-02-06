@@ -19,11 +19,11 @@ const BottomSheetMenu = ({closeBottomSheet, onClick}) => {
               <Text style={styles.btnText}>글쓰기</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => onClick('EnrollByOCRAgreement')}>
+              onPress={() => onClick('camera')}>
               <Text style={styles.btnText}>카메라로 티켓 등록하기</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => onClick('EnrollByHandAgreement')}>
+              onPress={() => onClick('hand')}>
               <Text style={styles.btnText}>직접 입력으로 티켓 등록하기</Text>
             </TouchableOpacity>
           </View>

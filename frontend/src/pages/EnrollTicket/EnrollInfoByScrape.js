@@ -54,7 +54,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
       categoryDetail,
     });
     
-    navigation.navigate('EnrollReviewByHand', {name: title})
+    navigation.navigate('EnrollReview', {name: title})
   }
 
   return (

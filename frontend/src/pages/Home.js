@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
 import HomeHeader from '../components/HomeHeader';
 import Swiper from 'react-native-swiper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = () => {
   // Dummy images
@@ -28,6 +29,15 @@ const Home = () => {
     '커뮤니티 인기글3',
     '커뮤니티 인기글4',
   ];
+
+  useEffect(() => {
+    const getAccessToken = async () => {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      console.log('accessToken:', accessToken);
+    };
+
+    getAccessToken();
+  });
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>

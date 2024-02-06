@@ -8,15 +8,22 @@ import {
 } from 'react-native';
 import Header from '../../components/Header';
 import api from '../../api/api';
+import { useNavigation } from '@react-navigation/native';
 
 const Login = () => {
-  const [userId, setUserId] = useState('');
+  const navigation = useNavigation();
+
+  const [id, setId] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
     try {
-      const result = await api.signInRequest(userId, password);
+      const result = await api.signInRequest(id, password);
       console.log('login result:', result);
+      if (result.accessToken) {
+        navigation.navigate('MainStack');
+      }
+      
     } catch (error) {
       console.error('login error:', error);
     }
@@ -29,8 +36,8 @@ const Login = () => {
       <View style={styles.formContainer}>
         <Text style={styles.sectionText}>아이디</Text>
         <TextInput
-          value={userId}
-          onChangeText={text => setUserId(text)}
+          value={id}
+          onChangeText={text => setId(text)}
           style={styles.inputBox}
         />
 

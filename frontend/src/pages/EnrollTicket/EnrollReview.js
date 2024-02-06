@@ -11,7 +11,7 @@ import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import StarRating from '../../components/EnrollTicket/StarRating';
 import addPhoto from '../../images/icon_add_photo.png';
 
-const EnrollReviewByHand = ({navigation, route}) => {
+const EnrollReview = ({navigation, route}) => {
   const { name } = route.params;
 
   const [artRating, setArtRating] = useState(0);
@@ -113,4 +113,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EnrollReviewByHand;
+export default EnrollReview;

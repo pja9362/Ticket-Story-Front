@@ -3,14 +3,14 @@ import {StyleSheet, Text, TouchableOpacity, View, Image, Dimensions} from 'react
 import logo from '../../images/logo.png';
 import api from '../../api/api';
 import WebView from 'react-native-webview';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+const apiUrl = 'http://192.168.0.10:8080';
+
 const Init = ({navigation}) => {
-  // kakao redirect uri에 ip 등록하기
-  // const apiUrl = '192.168.25.2';
   const webViewRef = useRef(null);
 
   const [webViewVisible, setWebViewVisible] = useState(false);
@@ -19,8 +19,7 @@ const Init = ({navigation}) => {
   const handleKaKaoLogin = async () => {
     try {
       const response = await api.handleKaKaoLogin();
-      // const url = response.replace('localhost', apiUrl);
-      // setRedirectUrl(url);
+
       setRedirectUrl(response);
       setWebViewVisible(true);
     } catch (error) {
@@ -32,11 +31,48 @@ const Init = ({navigation}) => {
   const handleWebViewClose = () => {
     setWebViewVisible(false);
   }
+  
+  // 수정 필요!
+  const handleOAuthNavigationChange = async (state) => {
+    console.log('현재 state:', state.url);
+    if (state.url.startsWith(`${apiUrl}/api/v1/auth/oauth/kakao?code=`) ) {
+      try {
+        const response = await fetch(state.url);
+        
+        if (!response.ok) {
+          const responseBody = await response.text();
+          console.error(`Error fetching HTML content. Status: ${response.status}, Response Body: ${responseBody}`);
+          throw new Error(`Error fetching HTML content. Status: ${response.status}`);
+        } 
 
-  const handleOAuthNavigationChange = (state) => {
-    console.log(state);
-    console.log('current state:', state.url);
-  }
+        const responseBody = await response.text();
+  
+        const startIndex = responseBody.indexOf('{');
+        const endIndex = responseBody.lastIndexOf('}') + 1;
+  
+        if (startIndex === -1 || endIndex === -1) {
+          throw new Error('JSON not found in HTML content');
+        }
+  
+        const jsonString = responseBody.slice(startIndex, endIndex);
+  
+        const tokenInfo = JSON.parse(jsonString);
+  
+        const accessToken = tokenInfo.accessToken;
+        const refreshToken = tokenInfo.refreshToken;
+  
+        console.log("토큰 정보! : ", tokenInfo);
+  
+        await AsyncStorage.setItem('accessToken', accessToken);
+        await AsyncStorage.setItem('refreshToken', refreshToken);
+  
+        handleWebViewClose();
+        navigation.navigate('MainStack');
+      } catch (error) {
+        console.error('Error extracting and storing tokens:', error);
+      }
+    }
+  };  
 
   return (
     <View style={styles.container}>

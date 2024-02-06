@@ -21,7 +21,8 @@ const Step1 = ({nextStep, handleChange, values}) => {
   const handleIdCheck = async () => {
     try {
       const isIdDuplicated = await api.checkIdDuplicate(id);
-  
+      console.log('isIdDuplicated:', isIdDuplicated);
+
       if (isIdDuplicated === false) {
         console.log('사용 가능한 아이디입니다.');
         setIsIdCheck(true);
@@ -34,6 +35,10 @@ const Step1 = ({nextStep, handleChange, values}) => {
       console.error('id-check error:', error);
     }
   };
+
+  const handleNext = () => {
+    handleIdCheck();
+  }
   
   return (
     <View style={styles.container}>
@@ -43,12 +48,12 @@ const Step1 = ({nextStep, handleChange, values}) => {
         value={id}
         onChangeText={text => {
           setId(text);
-          handleChange('userId', text);
+          handleChange('id', text);
         }}
       />
       {!isIdCheck && <Text style={styles.alertText}>중복된 아이디예요.</Text>}
       {/* 중복확인 버튼 */}
-      <NextButton onClick={handleIdCheck} isValid={isValid} />
+      <NextButton onClick={handleNext} isValid={isValid} />
     </View>
   );
 };

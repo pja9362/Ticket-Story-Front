@@ -6,10 +6,10 @@ import Agreement from './Agreement';
 import api from '../../api/api';
 
 const Step4 = ({nextStep, handleChange, values}) => {
-  const [nickname, setNickname] = useState('');
+  const [birthday, setBirthday] = useState('');
   const [gender, setGender] = useState('');
 
-  const isValid = nickname !== '' && gender !== '';
+  const isValid = birthday !== '' && gender !== '';
 
   const genderOptions = [
     {label: '여성', value: 'Female'},
@@ -31,15 +31,20 @@ const Step4 = ({nextStep, handleChange, values}) => {
     }
   };
 
+  const handleBirthdayChange = text => {
+    setBirthday(text);
+    handleChange('birthday', text);
+  }
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.formContainer}>
-        <Text style={styles.sectionText}>닉네임</Text>
+        <Text style={styles.sectionText}>생년월일</Text>
         <TextInput
           style={styles.inputBox}
-          value={nickname}
-          onChangeText={text => setNickname(text)}
+          value={birthday}
+          onChangeText={handleBirthdayChange}
+          placeholder="YYYYMMDD"
         />
       </View>
 

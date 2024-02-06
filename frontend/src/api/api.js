@@ -2,13 +2,18 @@ import axios from 'axios';
 import RNFS from 'react-native-fs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const apiUrl = 'http://10.221.81.154:8080'; 
+const apiUrl = 'http://10.5.1.208:8080'; 
 
 const checkIdDuplicate = async userId => {
   try {
-    const response = await axios.get(`${apiUrl}/auth/isIdDuplicate/${userId}`);
-    console.log('ID duplicate check response:', response.data);
-    return response.data;
+    const response = await axios.get(
+      `${apiUrl}/api/v1/auth/checkDuplicateId`, 
+      {
+        params: {
+          id: userId,
+        },
+      });
+    return response.data.result;
   } catch (error) {
     console.error('ID duplicate check error:', error);
     throw error;
@@ -17,14 +22,15 @@ const checkIdDuplicate = async userId => {
 
 const signUpRequest = async formData => {
   try {
+    console.log('Sign-up request:', formData);
     const response = await axios.post(
-      `${apiUrl}/auth/signUp`,
+      `${apiUrl}/api/v1/auth/signup`,
       {
-        birthday: 20001221,
-        gender: formData.gender.toUpperCase(),
+        id: formData.id,
         password: formData.password,
-        phoneNumber: formData.phoneNumber,
-        userId: formData.userId,
+        phoneNum: formData.phoneNum,
+        birthday: formData.birthday,
+        gender: formData.gender.toUpperCase(),
       },
       {
         headers: {
@@ -41,12 +47,14 @@ const signUpRequest = async formData => {
   }
 };
 
-const signInRequest = async (userId, password) => {
+const signInRequest = async (id, password) => {
   try {
+    console.log('Sign in request ', id, password);
+    
     const response = await axios.post(
       `${apiUrl}/api/v1/auth/login`,
       {
-        id: userId,
+        id: id,
         password: password,
       },
       {
@@ -56,6 +64,13 @@ const signInRequest = async (userId, password) => {
       },
     );
     console.log('Sign-in response:', response.data);
+    
+    // login success
+    if(response.data.accessToken !== null) {
+      await AsyncStorage.setItem('accessToken', response.data.accessToken);
+      await AsyncStorage.setItem('refreshToken', response.data.refreshToken);
+    }
+
     return response.data;
   } catch (error) {
     console.error('Sign-in error:', error);

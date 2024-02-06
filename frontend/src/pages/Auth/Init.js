@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {StyleSheet, Text, TouchableOpacity, View, Image, Dimensions} from 'react-native';
 import logo from '../../images/logo.png';
 import api from '../../api/api';
@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const apiUrl = 'http://192.168.0.10:8080';
+const apiUrl = 'http://10.5.1.208:8080';
 
 const Init = ({navigation}) => {
   const webViewRef = useRef(null);
@@ -34,7 +34,7 @@ const Init = ({navigation}) => {
   
   // 수정 필요!
   const handleOAuthNavigationChange = async (state) => {
-    console.log('현재 state:', state.url);
+    console.log('OAUTH 현재 state:', state.url);
     if (state.url.startsWith(`${apiUrl}/api/v1/auth/oauth/kakao?code=`) ) {
       try {
         const response = await fetch(state.url);
@@ -46,7 +46,6 @@ const Init = ({navigation}) => {
         } 
 
         const responseBody = await response.text();
-  
         const startIndex = responseBody.indexOf('{');
         const endIndex = responseBody.lastIndexOf('}') + 1;
   

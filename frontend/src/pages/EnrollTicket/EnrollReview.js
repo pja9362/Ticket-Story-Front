@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import StarRating from '../../components/EnrollTicket/StarRating';
+import SliderRating from '../../components/EnrollTicket/SliderRating';
 import addPhoto from '../../images/icon_add_photo.png';
 
 const EnrollReview = ({navigation, route}) => {
@@ -18,7 +19,7 @@ const EnrollReview = ({navigation, route}) => {
   const [seatRating, setSeatRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
 
-  const handleStarPress = (category, rating) => {
+  const handleSliderChange = (category, rating) => {
     if (category === 'art') {
       setArtRating(rating);
     } else if (category === 'seat') {
@@ -40,23 +41,10 @@ const EnrollReview = ({navigation, route}) => {
           관람한 <Text style={{color: '#6D6D6D'}}>{name}</Text>의 후기를 알려주세요.
         </Text>
 
-        <Text style={styles.sectionText}>작품 평점</Text>
-        <View style={styles.inputBox}>
-          <StarRating
-            category="art"
-            rating={artRating}
-            onPress={handleStarPress}
-          />
-        </View>
+        <SliderRating category="art" value={artRating} onValueChange={handleSliderChange} />
 
-        <Text style={styles.sectionText}>좌석 평점</Text>
-        <View style={styles.inputBox}>
-          <StarRating
-            category="seat"
-            rating={seatRating}
-            onPress={handleStarPress}
-          />
-        </View>
+        <SliderRating category="seat" value={seatRating} onValueChange={handleSliderChange} />
+        
         <Text style={styles.sectionText}>작품 후기</Text>
         <TouchableOpacity>
           <Image source={addPhoto} style={styles.image} />

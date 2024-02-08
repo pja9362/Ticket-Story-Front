@@ -9,7 +9,15 @@ import {
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const EnrollInfoByOCR = ({ navigation }) => {
+const EnrollInfoByOCR = ({ route, navigation }) => {
+  const { categoryInfo } = route.params;
+  const { category, categoryDetail } = categoryInfo;
+  
+  useEffect(() => {
+    console.log(category);
+    console.log(categoryDetail);
+  }, []);
+
   const [ocrResponse, setOcrResponse] = useState(null);
   const [loading, setLoading] = useState(true);
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 
@@ -6,8 +6,10 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   const { categoryInfo } = route.params;
   const { category, categoryDetail } = categoryInfo;
 
-  console.log("CATEGORY: ", category);
-  console.log("CATEGORY DETAIL: ", categoryDetail);
+  useEffect(() => {
+    console.log(category);
+    console.log(categoryDetail);
+  }, []);
 
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');

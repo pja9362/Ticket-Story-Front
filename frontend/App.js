@@ -5,8 +5,7 @@ import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import InitScreen from './src/pages/Auth/Init';
 import LoginScreen from './src/pages/Auth/Login';
 import SignUpScreen from './src/pages/Auth/SignUp';
-import EnrollByOCRAgreement from './src/pages/EnrollTicket/EnrollByOCRAgreement';
-import EnrollInfoByHandAgreement from './src/pages/EnrollTicket/EnrollByHandAgreement';
+import EnrollAgreement from './src/pages/EnrollTicket/EnrollAgreement';
 import EnrollByOCR from './src/pages/EnrollTicket/EnrollByOCR';
 import EnrollInfoByOCR from './src/pages/EnrollTicket/EnrollInfoByOCR';
 import EnrollInfoByHand from './src/pages/EnrollTicket/EnrollInfoByHand';
@@ -50,8 +49,7 @@ const App = () => {
             <Stack.Screen name="MainStack">
               {({navigation}) => <MainStack navigation={navigation} />}
             </Stack.Screen>
-            <Stack.Screen name="EnrollByOCRAgreement" component={EnrollByOCRAgreement} />
-            <Stack.Screen name="EnrollByHandAgreement" component={EnrollInfoByHandAgreement} />
+            <Stack.Screen name="EnrollAgreement" component={EnrollAgreement} />
             <Stack.Screen name="EnrollByOCR" component={EnrollByOCR} />
             <Stack.Screen name="EnrollInfoByOCR" component={EnrollInfoByOCR} />
             <Stack.Screen name="EnrollInfoByHand" component={EnrollInfoByHand} />

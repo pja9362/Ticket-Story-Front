@@ -12,7 +12,7 @@ const EnrollByOCR = ({navigation}) => {
   }
 
   const onNextStep = () => {
-    navigation.navigate('EnrollReviewByOCR');
+    navigation.navigate('EnrollReview', {name: '콘텐츠'});
   }
 
   return (

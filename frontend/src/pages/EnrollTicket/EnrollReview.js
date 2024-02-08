@@ -8,17 +8,17 @@ import {
   TextInput,
 } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
-import StarRating from '../../components/EnrollTicket/StarRating';
+import SliderRating from '../../components/EnrollTicket/SliderRating';
 import addPhoto from '../../images/icon_add_photo.png';
 
 const EnrollReview = ({navigation, route}) => {
-  const { name } = route.params;
+  const { name, action } = route.params;
 
   const [artRating, setArtRating] = useState(0);
   const [seatRating, setSeatRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
 
-  const handleStarPress = (category, rating) => {
+  const handleSliderChange = (category, rating) => {
     if (category === 'art') {
       setArtRating(rating);
     } else if (category === 'seat') {
@@ -32,31 +32,26 @@ const EnrollReview = ({navigation, route}) => {
     }
   };
 
+  const handleNext = () => {
+    if (action === 'camera') {
+      navigation.navigate('EnrollInfoByOCR');
+    } else {
+      navigation.navigate('EnrollFinish');
+    }
+  }
+
   return (
     <>
-      <EnrollHeader title="티켓 후기 입력" onIconClick={()=> navigation.navigate('EnrollFinish')} />
+      <EnrollHeader title="티켓 후기 입력" onIconClick={handleNext} />
       <View style={styles.container}>
         <Text style={{fontSize: 16, fontWeight: 'bold', color: '#000'}}>
-          관람한 <Text style={{color: '#6D6D6D'}}>{name}</Text>의 후기를 알려주세요.
+          관람한 <Text style={{color: '#6D6D6D'}}>{name || '콘텐츠'}</Text>의 후기를 알려주세요.
         </Text>
 
-        <Text style={styles.sectionText}>작품 평점</Text>
-        <View style={styles.inputBox}>
-          <StarRating
-            category="art"
-            rating={artRating}
-            onPress={handleStarPress}
-          />
-        </View>
+        <SliderRating category="art" value={artRating} onValueChange={handleSliderChange} />
 
-        <Text style={styles.sectionText}>좌석 평점</Text>
-        <View style={styles.inputBox}>
-          <StarRating
-            category="seat"
-            rating={seatRating}
-            onPress={handleStarPress}
-          />
-        </View>
+        <SliderRating category="seat" value={seatRating} onValueChange={handleSliderChange} />
+        
         <Text style={styles.sectionText}>작품 후기</Text>
         <TouchableOpacity>
           <Image source={addPhoto} style={styles.image} />
@@ -90,12 +85,6 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 8,
     color: '#000',
-  },
-  inputBox: {
-    borderWidth: 1,
-    borderColor: '#000',
-    borderRadius: 5,
-    padding: 10,
   },
   image: {
     width: 48,

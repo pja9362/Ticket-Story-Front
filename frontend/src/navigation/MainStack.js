@@ -43,8 +43,8 @@ const MainStack = ({navigation}) => {
     setBottomSheetVisible(false);
   };
 
-  const onClick = (page) => {
-    navigation.navigate(page);
+  const onClick = (action) => {
+    navigation.navigate('EnrollAgreement', { action });
     closeBottomSheet();
   }
 

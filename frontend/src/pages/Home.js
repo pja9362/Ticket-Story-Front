@@ -68,7 +68,7 @@ const Home = () => {
       </View>
 
       <View style={styles.contentContainer}>
-        <Text style={styles.sectionText}>티스님을 위한 문화생활 추천</Text>
+        <Text style={styles.sectionText}>티스조아 님을 위한 문화생활 추천</Text>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}

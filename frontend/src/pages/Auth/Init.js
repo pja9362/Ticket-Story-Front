@@ -35,6 +35,10 @@ const Init = ({navigation}) => {
   const handleSaveToken = async (url) => {
     try {
       const response = await api.saveTokens(url);
+
+      await AsyncStorage.setItem('accessToken', response.accessToken);
+      await AsyncStorage.setItem('refreshToken', response.refreshToken);
+
       navigation.navigate('MainStack');
     } catch (error) {
       console.error('Error storing tokens:', error);

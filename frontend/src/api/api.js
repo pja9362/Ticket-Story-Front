@@ -2,7 +2,7 @@ import axios from 'axios';
 import RNFS from 'react-native-fs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const apiUrl = 'http://10.5.1.208:8080'; 
+const apiUrl = 'http://192.168.25.2:8080'; 
 
 const checkIdDuplicate = async userId => {
   try {
@@ -121,4 +121,15 @@ const handleKaKaoLogin = async () => {
   }
 };
 
-export default {checkIdDuplicate, signUpRequest, signInRequest, saveImageAndPerformOCR, handleKaKaoLogin};
+const saveTokens = async (url) => {
+  try {
+    console.log('Saving tokens:', url)
+    const response = await axios.get(url);
+    return response.data;
+  } catch (error) {
+    console.error('Error extracting and storing tokens:', error);
+    throw error;
+  }
+};
+
+export default {checkIdDuplicate, signUpRequest, signInRequest, saveImageAndPerformOCR, handleKaKaoLogin, saveTokens};

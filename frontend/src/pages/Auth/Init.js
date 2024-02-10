@@ -31,54 +31,33 @@ const Init = ({navigation}) => {
   const handleWebViewClose = () => {
     setWebViewVisible(false);
   }
-  
-  // 수정 필요!
-  const handleOAuthNavigationChange = async (state) => {
-    console.log('OAUTH 현재 state:', state.url);
-    if (state.url.startsWith(`${apiUrl}/api/v1/auth/oauth/kakao?code=`) ) {
-      try {
-        const response = await fetch(state.url);
-        
-        if (!response.ok) {
-          const responseBody = await response.text();
-          console.error(`Error fetching HTML content. Status: ${response.status}, Response Body: ${responseBody}`);
-          throw new Error(`Error fetching HTML content. Status: ${response.status}`);
-        } 
 
-        const responseBody = await response.text();
-        const startIndex = responseBody.indexOf('{');
-        const endIndex = responseBody.lastIndexOf('}') + 1;
-  
-        if (startIndex === -1 || endIndex === -1) {
-          throw new Error('JSON not found in HTML content');
-        }
-  
-        const jsonString = responseBody.slice(startIndex, endIndex);
-  
-        const tokenInfo = JSON.parse(jsonString);
-  
-        const accessToken = tokenInfo.accessToken;
-        const refreshToken = tokenInfo.refreshToken;
-  
-        console.log("토큰 정보! : ", tokenInfo);
-  
-        await AsyncStorage.setItem('accessToken', accessToken);
-        await AsyncStorage.setItem('refreshToken', refreshToken);
-  
-        handleWebViewClose();
-        navigation.navigate('MainStack');
-      } catch (error) {
-        console.error('Error extracting and storing tokens:', error);
-      }
+  const handleSaveToken = async (url) => {
+    try {
+      const response = await api.saveTokens(url);
+
+      await AsyncStorage.setItem('accessToken', response.accessToken);
+      await AsyncStorage.setItem('refreshToken', response.refreshToken);
+
+      navigation.navigate('MainStack');
+    } catch (error) {
+      console.error('Error storing tokens:', error);
     }
-  };  
+  };
+
+  const handleOAuthNavigationChange = (state) => {
+    if (state.url.startsWith(`${apiUrl}/api/v1/auth/oauth/kakao?code=`)) {
+      handleWebViewClose();
+      handleSaveToken(state.url);
+    }
+  }
 
   return (
     <View style={styles.container}>
       {webViewVisible && (redirectUrl != null) ? (
         <WebView
           ref={webViewRef}
-          style={styles.webview}
+          style={{... styles.webview, margin: 0, padding: 0}}
           source={{ uri: redirectUrl }} 
           onNavigationStateChange={handleOAuthNavigationChange}
           onClose={handleWebViewClose}
@@ -86,7 +65,7 @@ const Init = ({navigation}) => {
       )
     :
      (
-      <>
+      <View style={{padding: 38, flex: 1}}>
       <View style={styles.title}>
         <Image source={logo} style={styles.image} />
       </View>
@@ -121,7 +100,7 @@ const Init = ({navigation}) => {
         onPress={() => navigation.navigate('Login')}>
         <Text>로그인</Text>
       </TouchableOpacity>
-      </>
+      </View>
      )
     }
     </View>
@@ -130,9 +109,8 @@ const Init = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#fff',
-    padding: 38,
+    flex: 1,
   },
   webview: {
     flex: 1,

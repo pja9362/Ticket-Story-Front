@@ -16,7 +16,7 @@ const BottomSheetMenu = ({closeBottomSheet, onClick}) => {
           }}>
           <View style={styles.contentContainer}>
             <TouchableOpacity>
-              <Text style={styles.btnText}>글쓰기</Text>
+              <Text style={styles.btnText}>내 티켓북 보기</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => onClick('camera')}>

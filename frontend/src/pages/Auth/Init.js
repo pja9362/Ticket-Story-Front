@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const apiUrl = 'http://192.168.25.2:8080';
+const apiUrl = 'http://192.168.219.134:8080';
 
 const Init = ({navigation}) => {
   const webViewRef = useRef(null);

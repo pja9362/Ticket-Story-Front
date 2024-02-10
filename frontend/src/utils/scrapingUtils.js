@@ -250,9 +250,18 @@ export const scrapeMegaboxTicketDetails = (webViewRef) => {
             var locationElement = movieItem.querySelector('div.movie-info-area > div.info-detail > p:nth-child(2)');
             var rawLocation = locationElement ? locationElement.innerText.replace('상영관 ', '').trim() : '';
 
+
             var locationParts = rawLocation.split(' ');
-            var location = locationParts[0];
-            var locationDetail = locationParts.slice(1).join(' ').trim();
+            var location = '';
+            var locationDetail = '';
+            
+            if (locationParts.length > 0) {
+              location = locationParts[0];
+            
+              if (locationParts.length > 1) {
+                locationDetail = locationParts[locationParts.length - 1];
+              }
+            }
             
             var ticketDetail = {
               title: title,

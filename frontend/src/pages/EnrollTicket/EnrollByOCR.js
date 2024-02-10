@@ -4,7 +4,9 @@ import ticket from '../../images/ticket_white.png';
 import closeIcon from '../../images/icon_close_white.png';
 import OCR from '../../components/EnrollTicket/OCR';
 
-const EnrollByOCR = ({navigation}) => {
+const EnrollByOCR = ({route, navigation}) => {
+  const {categoryInfo} = route.params;
+
   const [showGuide, setShowGuide] = useState(true);
 
   const onCloseGuide = () => {
@@ -12,7 +14,7 @@ const EnrollByOCR = ({navigation}) => {
   }
 
   const onNextStep = () => {
-    navigation.navigate('EnrollReview', {name: '콘텐츠'});
+    navigation.navigate('EnrollReview', {name: '콘텐츠', action: 'camera', categoryInfo});
   }
 
   return (

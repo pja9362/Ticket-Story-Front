@@ -5,13 +5,13 @@ const CategoryBtn = ({ title, onPress, isSelected, isDisabled }) => {
   return (
     <TouchableOpacity
       style={[
-        styles.button,
-        { backgroundColor: isSelected ? '#007AFF' : '#FFFFFF' },
+        styles.categoryBox,
+        { backgroundColor: isSelected ? '#5D70F9' : '#B6B6B6' },
       ]}
       onPress={onPress}
       disabled={isDisabled}
     >
-      <Text style={[styles.buttonText, { color: isSelected ? '#FFFFFF' : '#000000' }]}>
+      <Text style={styles.categoryText}>
         {title}
       </Text>
     </TouchableOpacity>
@@ -19,17 +19,17 @@ const CategoryBtn = ({ title, onPress, isSelected, isDisabled }) => {
 };
 
 const styles = StyleSheet.create({
-  button: {
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: '#007AFF',
+  categoryBox: {
+    backgroundColor: '#B6B6B6',
+    borderRadius: 10,
+    paddingVertical: 12,
+    flex: 1,
+    alignItems: 'center',
   },
-  buttonText: {
+  categoryText: {
     fontSize: 16,
     fontWeight: 'bold',
-    textAlign: 'center',
+    color: '#fff',
   },
 });
 

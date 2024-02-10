@@ -20,7 +20,7 @@ const SelectType = ({onClick}) => {
       return (
         <>
           <Text style={[styles.sectionText, {marginTop: 30}]}>
-            영화를 관람한 멀티플렉스를 선택해주세요.
+            관람한 멀티플렉스를 선택해 주세요.
           </Text>
           <View style={styles.row}>
             <TouchableOpacity
@@ -54,7 +54,7 @@ const SelectType = ({onClick}) => {
       return (
         <>
           <Text style={[styles.sectionText, {marginTop: 30}]}>
-            스포츠 카테고리 디테일을 선택해주세요.
+            관람한 스포츠 종목을 선택해 주세요.
           </Text>
           <View style={styles.row}>
             <TouchableOpacity
@@ -88,7 +88,7 @@ const SelectType = ({onClick}) => {
       return (
         <>
           <Text style={[styles.sectionText, {marginTop: 30}]}>
-            공연 카테고리 디테일을 선택해주세요.
+            관람한 공연 종류를 선택해 주세요.
           </Text>
           <View style={styles.row}>
             <TouchableOpacity
@@ -125,7 +125,7 @@ const SelectType = ({onClick}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.sectionText}>
-        관람한 문화콘텐츠의 종류를 선택 후{'\n'}티켓을 등록해 주세요.
+        관람한 콘텐츠의 분야를 선택해 주세요.
       </Text>
       <View style={styles.row}>
         <TouchableOpacity
@@ -134,14 +134,14 @@ const SelectType = ({onClick}) => {
           <Text style={styles.categoryText}>영화</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.categoryBox, category === '스포츠' && styles.category]}
-          onPress={() => handleCategoryClick('스포츠')}>
-          <Text style={styles.categoryText}>스포츠</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
           style={[styles.categoryBox, category === '공연' && styles.category]}
           onPress={() => handleCategoryClick('공연')}>
           <Text style={styles.categoryText}>공연</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.categoryBox, category === '스포츠' && styles.category]}
+          onPress={() => handleCategoryClick('스포츠')}>
+          <Text style={styles.categoryText}>스포츠</Text>
         </TouchableOpacity>
       </View>
       {renderSubCategories()}
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     gap: 25,
   },
   categoryBox: {
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#B6B6B6',
     borderRadius: 10,
     paddingVertical: 15,
     flex: 1,
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   category: {
-    backgroundColor: '#565656',
+    backgroundColor: '#5D70F9',
   },
 });
 

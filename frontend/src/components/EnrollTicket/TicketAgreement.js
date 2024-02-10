@@ -65,7 +65,7 @@ const TicketAgreement = ({isModalVisible, onClick}) => {
 
           <TouchableOpacity
             onPress={onClick}
-            style={[styles.button, isChecked && {backgroundColor: '#565656'}]}
+            style={[styles.button, isChecked && {backgroundColor: '#5D70F9'}]}
             disabled={!isChecked}>
             <Text style={styles.buttonText}>티켓 등록하기</Text>
           </TouchableOpacity>

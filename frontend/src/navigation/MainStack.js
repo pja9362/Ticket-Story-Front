@@ -5,6 +5,7 @@ import HomeScreen from '../pages/Home';
 import MyScreen from '../pages/My';
 import BottomSheetMenu from '../components/EnrollTicket/BottomSheetMenu';
 import {useRoute} from '@react-navigation/native';
+import { act } from 'react-test-renderer';
 
 const Tab = createBottomTabNavigator();
 
@@ -44,7 +45,10 @@ const MainStack = ({navigation}) => {
   };
 
   const onClick = (action) => {
-    navigation.navigate('EnrollAgreement', { action });
+    if(action === 'scrape') {
+      console.log('scrape 화면으로 이동');
+    }
+    else navigation.navigate('EnrollAgreement', { action });
     closeBottomSheet();
   }
 

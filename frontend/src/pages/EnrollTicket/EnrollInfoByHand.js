@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
+import NextBtn from '../../components/EnrollTicket/NextBtn';
 
 const EnrollInfoByHand = ({ route, navigation }) => {
   const { categoryInfo } = route.params;
@@ -14,9 +15,16 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   const [locationDetail, setLocationDetail] = useState('');
   const [seats, setSeats] = useState('');
 
+  const isFormValid = () => {
+    return title.trim() !== '' && date.trim() !== '' && time.trim() !== '' && location.trim() !== '';
+  };
+
   return (
     <>
-      <EnrollHeader title="티켓 정보 입력" onIconClick={() => navigation.navigate('EnrollReview', { title })} />
+      <EnrollHeader 
+        title="티켓 정보 입력" 
+        onIconClick={() => isFormValid() ? navigation.navigate('EnrollReview', { title }) : alert('필수 입력 항목을 모두 입력해주세요!')} 
+      />
       <View style={styles.container}>
         <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', gap: 5}}>
           <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#000' }}>
@@ -98,6 +106,16 @@ const EnrollInfoByHand = ({ route, navigation }) => {
           />
         </View>
       </View>
+      <View style={styles.floatingButtonContainer}>
+        <NextBtn
+          isDisabled={!isFormValid()}
+          onPress={() => {
+            if (isFormValid()) {
+              navigation.navigate('EnrollReview', { title })
+            }
+          }}
+        />
+      </View>
     </>
   );
 };
@@ -107,7 +125,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     paddingHorizontal: 27,
-    paddingVertical: 24,
+    paddingVertical: 28,
   },
   inputBox: {
     borderWidth: 1,
@@ -140,6 +158,12 @@ const styles = StyleSheet.create({
   },
   requiredIndicator: {
     color: '#5D70F9',
+  },
+  floatingButtonContainer: {
+    position: 'absolute',
+    bottom: 100,
+    width: '100%',
+    alignItems: 'center',
   },
 });
 

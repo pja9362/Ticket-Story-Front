@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import CategoryBtnContainer from '../../components/EnrollTicket/CategoryBtnContainer';
+import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
+import NextBtn from '../../components/EnrollTicket/NextBtn';
 
 const EnrollInfoByScrape = ({ route, navigation }) => {
   const { ticketInfo } = route.params;
@@ -27,10 +29,10 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   const [category, setCategory] = useState(initialCategory === '뮤지컬' || initialCategory === '연극' ? '공연' : initialCategory);
   const [categoryDetail, setCategoryDetail] = useState(initialCategory === '뮤지컬' || initialCategory === '연극' ? initialCategory : '');
 
-  const categories = ['영화', '공연', '스포츠', '기타'];
+  const categories = ['영화', '공연', '스포츠'];
   const detailCategories = {
-    공연: ['뮤지컬', '연극', '일반'],
-    스포츠: ['축구', '야구', '기타'],
+    공연: ['뮤지컬', '연극', '기타'],
+    스포츠: ['야구', '축구', '기타'],
   }
 
   const handleCategorySelect = (selectedCategory) => {
@@ -39,6 +41,10 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
 
   const handleCategoryDetailSelect = (selectedCategoryDetail) => {
     setCategoryDetail(selectedCategoryDetail);
+  };
+
+  const isFormValid = () => {
+    return title.trim() !== '' && date.trim() !== '' && time.trim() !== '' && location.trim() !== '';
   };
 
   const handleNext = () => {
@@ -54,72 +60,115 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
       categoryDetail,
     });
     
-    navigation.navigate('EnrollReview', {name: title})
+    if (isFormValid()) {
+      navigation.navigate('EnrollReview', {title})
+    } else {
+      alert('필수 입력 항목을 모두 입력해주세요!');
+    }
   }
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <EnrollHeader title="티켓 정보 입력" onIconClick={handleNext}/>
-      <View style={styles.container}>
-        <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#000' }}>
-            작품 정보를 입력해주세요.
-        </Text>
+    <>
+      <ScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
+        <EnrollHeader title="티켓 정보 입력" onIconClick={handleNext}/>
+        <View style={styles.container}>
 
-        {/* Title */}
-        <Text style={styles.sectionText}>관람 작품</Text>
-        <TextInput style={styles.inputBox} value={title} onChangeText={setTitle} />
+          <Text style={styles.sectionText}>
+            관람한 콘텐츠의 분야를 선택해 주세요.
+          </Text>
+          {/* Category */}
+          <CategoryBtnContainer
+            categories={categories}
+            selectedCategory={category}
+            onSelectCategory={handleCategorySelect}
+          />
 
-        {/* Category */}
-        <Text style={styles.sectionText}>관람 장르</Text>
-        <CategoryBtnContainer
-          categories={categories}
-          selectedCategory={category}
-          onSelectCategory={handleCategorySelect}
-        />
+          {/* Category Detail */}
+          {
+            detailCategories[category] && (
+              <>
+                <Text style={styles.sectionText}>관람한 {category == '공연' ? '공연 종류를' : '스포츠 종목을'} 선택해 주세요.</Text>
+                <CategoryBtnContainer
+                  categories={detailCategories[category]}
+                  selectedCategory={categoryDetail}
+                  onSelectCategory={handleCategoryDetailSelect}
+                />
+              </>
+            )
+          }
 
-        {/* Category Detail */}
-        {
-          detailCategories[category] && (
-            <>
-              <Text style={styles.sectionText}>관람 장르 상세</Text>
-              <CategoryBtnContainer
-                categories={detailCategories[category]}
-                selectedCategory={categoryDetail}
-                onSelectCategory={handleCategoryDetailSelect}
-              />
-            </>
-          )
-        }
-        
-        {/* Date */}
-        <Text style={styles.sectionText}>관람 날짜</Text>
-        <TextInput style={styles.inputBox} value={date} onChangeText={setDate} />
+          <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', gap: 5}}>
+            <Text style={styles.sectionText}>
+              입력된 정보를 확인해주세요.
+            </Text>
+            <Text style={{ fontSize: 12, color: '#939393' }}>
+              *표시는 필수 항목입니다.
+            </Text>
+          </View>
 
-        {/* Time */}
-        <Text style={styles.sectionText}>시작 시간</Text>
-        <TextInput style={styles.inputBox} value={time} onChangeText={setTime} />
+          {/* Date */}
+          <Text style={styles.subsectionText}>
+            관람 일시
+            <Text style={styles.requiredIndicator}>*</Text>
+          </Text>
+          <View style={styles.dateInputContainer}>
+            <TextInput
+              style={[styles.inputBox, {flex: 2 }]}
+              value={date}
+              onChangeText={text => setDate(text)}
+              placeholder='YYYY.MM.DD'
+            />
 
-        {/* Location */}
-        <Text style={styles.sectionText}>관람 장소</Text>
-        <TextInput style={styles.inputBox} value={location} onChangeText={setLocation} />
+            <TextInput
+              style={[styles.inputBox, { flex: 1 }]}
+              value={time}
+              onChangeText={text => setTime(text)}
+              placeholder='HH:MM'
+            />
+          </View>
+          
+          {/* Title */}
+          <Text style={styles.subsectionText}>
+            관람 콘텐츠
+            <Text style={styles.requiredIndicator}>*</Text>
+          </Text>
+          <TextInput style={styles.inputBox} value={title} onChangeText={setTitle} placeholder='콘텐츠 제목'/>
 
-        {/* Location Detail */}
-        {
-          initialLocationDetail !=='' && (
-            <>
-              <Text style={styles.sectionText}>관람 장소 상세</Text>
-              <TextInput style={styles.inputBox} value={locationDetail} onChangeText={setLocationDetail} />
-            </>
-          )
-        }
+          {/* Location */}
+          <Text style={styles.subsectionText}>
+            관람 장소
+            <Text style={styles.requiredIndicator}>*</Text>
+          </Text>
+          <TextInput style={styles.inputBox} value={location} onChangeText={setLocation} placeholder={getCategoryPlaceholder(category, 'location')} />
 
-        {/* Seats */}
-        <Text style={styles.sectionText}>관람 좌석</Text>
-        <TextInput style={styles.inputBox} value={seats} onChangeText={setSeats} />
+          {/* Location Detail */}
+          {
+            initialLocationDetail !=='' && (
+              <>
+                <Text style={styles.subsectionText}>관람 장소 (세부)</Text>
+                <TextInput style={styles.inputBox} value={locationDetail} onChangeText={setLocationDetail} placeholder={getCategoryPlaceholder(category, 'locationDetail')}/>
+              </>
+            )
+          }
 
-        
-      </View>
-    </ScrollView>
+          {/* Seats */}
+          <Text style={styles.subsectionText}>관람 좌석</Text>
+          <TextInput style={styles.inputBox} value={seats} onChangeText={setSeats} placeholder={getCategoryPlaceholder(category, 'seats')}/>
+          
+        </View>
+
+        <View style={styles.floatingButtonContainer}>
+            <NextBtn
+              isDisabled={!isFormValid()}
+              onPress={() => {
+                if (isFormValid()) {
+                  navigation.navigate('EnrollReview', { title })
+                }
+              }}
+            />
+        </View>
+      </ScrollView>
+    </>
   );
 };
 
@@ -127,9 +176,19 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
       paddingHorizontal: 27,
-      paddingVertical: 24,
+      paddingVertical: 30,
+    },
+    sectionText: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: '#525252',
+    },
+    subsectionText: {
+      fontSize: 16,
+      marginTop: 15,
+      marginBottom: 8,
+      color: '#000',
     },
     inputBox: {
       borderWidth: 1,
@@ -138,11 +197,18 @@ const styles = StyleSheet.create({
       height: 40,
       paddingHorizontal: 10,
     },
-    sectionText: {
-      fontSize: 16,
-      marginTop: 15,
-      marginBottom: 8,
-      color: '#000',
+    dateInputContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 15,
+      width: '70%',
+    },
+    requiredIndicator: {
+      color: '#5D70F9',
+    },
+    floatingButtonContainer: {
+      width: '100%',
+      alignItems: 'center',
     },
 });
 

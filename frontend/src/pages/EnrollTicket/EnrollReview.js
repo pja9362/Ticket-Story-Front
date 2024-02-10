@@ -12,7 +12,7 @@ import SliderRating from '../../components/EnrollTicket/SliderRating';
 import addPhoto from '../../images/icon_add_photo.png';
 
 const EnrollReview = ({navigation, route}) => {
-  const { name, action } = route.params;
+  const { title, action } = route.params;
 
   const [artRating, setArtRating] = useState(0);
   const [seatRating, setSeatRating] = useState(0);
@@ -34,7 +34,8 @@ const EnrollReview = ({navigation, route}) => {
 
   const handleNext = () => {
     if (action === 'camera') {
-      navigation.navigate('EnrollInfoByOCR');
+      const { categoryInfo } = route.params;
+      navigation.navigate('EnrollInfoByOCR', {categoryInfo});
     } else {
       navigation.navigate('EnrollFinish');
     }
@@ -45,7 +46,7 @@ const EnrollReview = ({navigation, route}) => {
       <EnrollHeader title="티켓 후기 입력" onIconClick={handleNext} />
       <View style={styles.container}>
         <Text style={{fontSize: 16, fontWeight: 'bold', color: '#000'}}>
-          관람한 <Text style={{color: '#6D6D6D'}}>{name || '콘텐츠'}</Text>의 후기를 알려주세요.
+          관람한 <Text style={{color: '#6D6D6D'}}>{title || '콘텐츠'}</Text>의 후기를 알려주세요.
         </Text>
 
         <SliderRating category="art" value={artRating} onValueChange={handleSliderChange} />

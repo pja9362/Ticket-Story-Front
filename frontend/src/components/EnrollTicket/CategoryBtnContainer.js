@@ -4,7 +4,7 @@ import CategoryBtn from './CategoryBtn';
 
 const CategoryBtnContainer = ({ categories, selectedCategory, onSelectCategory, showPerformanceButton }) => {
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }}>
+    <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 10, marginBottom: 20, gap: 25}}>
       {categories.map((category) => (
         <CategoryBtn
           key={category}

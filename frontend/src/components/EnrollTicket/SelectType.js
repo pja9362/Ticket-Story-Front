@@ -60,18 +60,18 @@ const SelectType = ({onClick}) => {
             <TouchableOpacity
               style={[
                 styles.categoryBox,
-                categoryDetail === '축구' && styles.selectedCategory,
-              ]}
-              onPress={() => handleCategoryDetailClick('축구')}>
-              <Text style={styles.categoryText}>축구</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                styles.categoryBox,
                 categoryDetail === '야구' && styles.selectedCategory,
               ]}
               onPress={() => handleCategoryDetailClick('야구')}>
               <Text style={styles.categoryText}>야구</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.categoryBox,
+                categoryDetail === '축구' && styles.selectedCategory,
+              ]}
+              onPress={() => handleCategoryDetailClick('축구')}>
+              <Text style={styles.categoryText}>축구</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
@@ -154,13 +154,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     paddingHorizontal: 32,
-    paddingVertical: 40,
+    paddingVertical: 28,
   },
   sectionText: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#000',
-    marginBottom: 25,
+    marginBottom: 20,
   },
   row: {
     flexDirection: 'row',
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   categoryBox: {
     backgroundColor: '#B6B6B6',
     borderRadius: 10,
-    paddingVertical: 15,
+    paddingVertical: 12,
     flex: 1,
     alignItems: 'center',
   },

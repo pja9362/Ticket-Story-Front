@@ -2,10 +2,11 @@ import axios from 'axios';
 import RNFS from 'react-native-fs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const apiUrl = 'http://192.168.219.134:8080'; 
+const apiUrl = 'http://172.30.1.47:8080'; 
 
 const checkIdDuplicate = async userId => {
   try {
+    console.log('ID duplicate check:', userId); 
     const response = await axios.get(
       `${apiUrl}/api/v1/auth/checkDuplicateId`, 
       {
@@ -13,6 +14,7 @@ const checkIdDuplicate = async userId => {
           id: userId,
         },
       });
+    console.log('ID duplicate check response:', response.data);
     return response.data.result;
   } catch (error) {
     console.error('ID duplicate check error:', error);
@@ -28,7 +30,6 @@ const signUpRequest = async formData => {
       {
         id: formData.id,
         password: formData.password,
-        phoneNum: formData.phoneNum,
         birthday: formData.birthday,
         gender: formData.gender.toUpperCase(),
       },
@@ -38,8 +39,13 @@ const signUpRequest = async formData => {
         },
       },
     );
-
     console.log('Sign-up response:', response.data);
+
+    if(response.data.accessToken !== null) {
+      await AsyncStorage.setItem('accessToken', response.data.accessToken);
+      await AsyncStorage.setItem('refreshToken', response.data.refreshToken);
+    }
+    
     return response.data;
   } catch (error) {
     console.error('Sign-up error:', error);

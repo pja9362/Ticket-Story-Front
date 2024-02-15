@@ -5,6 +5,8 @@ import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import InitScreen from './src/pages/Auth/Init';
 import LoginScreen from './src/pages/Auth/Login';
 import SignUpScreen from './src/pages/Auth/SignUp';
+import FindPasswordScreen from './src/pages/Auth/FindPassword';
+import ChangePWScreen from './src/pages/Auth/ChangePW';
 import EnrollAgreement from './src/pages/EnrollTicket/EnrollAgreement';
 import EnrollByOCR from './src/pages/EnrollTicket/EnrollByOCR';
 import EnrollInfoByOCR from './src/pages/EnrollTicket/EnrollInfoByOCR';
@@ -45,6 +47,8 @@ const App = () => {
             <Stack.Screen name="Init" component={InitScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
+            <Stack.Screen name="FindPassword" component={FindPasswordScreen} />
+            <Stack.Screen name="ChangePW" component={ChangePWScreen} />
             <Stack.Screen name="MainStack">
               {({navigation}) => <MainStack navigation={navigation} />}
             </Stack.Screen>

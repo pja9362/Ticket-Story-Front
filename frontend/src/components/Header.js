@@ -22,7 +22,7 @@ const Header = ({title = '', icon, onIconClick}) => {
           <Text>Icon</Text>
         </TouchableOpacity>
       ) : (
-        <View width={24} />
+        <View width={20} />
       )}
     </View>
   );
@@ -36,8 +36,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   title: {
-    fontSize: 14,
-    color: '#000',
+    fontSize: 16,
+    color: '#525252',
+    fontWeight: 'bold',
   },
 });
 

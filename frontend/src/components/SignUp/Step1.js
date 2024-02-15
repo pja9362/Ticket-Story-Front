@@ -11,8 +11,15 @@ import api from '../../api/api';
 
 const Step1 = ({nextStep, handleChange, values}) => {
   const [id, setId] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [isIdCheck, setIsIdCheck] = useState(true);
+  
   const isValid = id !== '';
+
+  const isValidEmail = (email) => {
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$/;
+    return emailRegex.test(email);
+  };
 
   useEffect(() => {
     console.log('Step1: ', values);
@@ -20,6 +27,12 @@ const Step1 = ({nextStep, handleChange, values}) => {
 
   const handleIdCheck = async () => {
     try {
+      if (!isValidEmail(id)) {
+        setErrorMessage('이메일 형식으로 입력해주세요.');
+        return;
+      }
+
+      console.log('아이디 중복확인:', id);
       const isIdDuplicated = await api.checkIdDuplicate(id);
       console.log('isIdDuplicated:', isIdDuplicated);
 
@@ -28,7 +41,7 @@ const Step1 = ({nextStep, handleChange, values}) => {
         setIsIdCheck(true);
         nextStep();
       } else {
-        console.log('중복된 아이디입니다.');
+        setErrorMessage('중복된 아이디예요');
         setIsIdCheck(false);
       }
     } catch (error) {
@@ -38,6 +51,7 @@ const Step1 = ({nextStep, handleChange, values}) => {
 
   const handleNext = () => {
     handleIdCheck();
+    console.log('id:', id);
   }
   
   return (
@@ -46,14 +60,15 @@ const Step1 = ({nextStep, handleChange, values}) => {
       <TextInput
         style={styles.inputBox}
         value={id}
+        placeholder='example@naver.com'
         onChangeText={text => {
           setId(text);
           handleChange('id', text);
         }}
       />
-      {!isIdCheck && <Text style={styles.alertText}>중복된 아이디예요.</Text>}
+
       {/* 중복확인 버튼 */}
-      <NextButton onClick={handleNext} isValid={isValid} />
+      <NextButton onClick={handleNext} isValid={isValid} message={errorMessage !== '' ? errorMessage : null}/>
     </View>
   );
 };
@@ -76,7 +91,7 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     fontSize: 16,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#EEEEEE',
     borderRadius: 5,
     height: 50,
     paddingHorizontal: 12,
@@ -92,9 +107,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   alertText: {
-    color: '#000',
+    color: '#FF0000',
     fontSize: 12,
     lineHeight: 40,
+    textAlign: 'center',
   },
 });
 

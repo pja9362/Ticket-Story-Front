@@ -4,11 +4,14 @@ import logo from '../../images/logo.png';
 import api from '../../api/api';
 import WebView from 'react-native-webview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import icon_kakao from '../../images/icon_kakao.png';
+import icon_apple from '../../images/icon_apple.png';
+import logo_ticket_white from '../../images/logo_ticket_white.png';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const apiUrl = 'http://192.168.219.134:8080';
+const apiUrl = 'http://172.30.1.47:8080';
 
 const Init = ({navigation}) => {
   const webViewRef = useRef(null);
@@ -52,6 +55,10 @@ const Init = ({navigation}) => {
     }
   }
 
+  const handleAppleLogin = () => {
+    console.log('Apple Login');
+  }
+
   return (
     <View style={styles.container}>
       {webViewVisible && (redirectUrl != null) ? (
@@ -70,35 +77,36 @@ const Init = ({navigation}) => {
         <Image source={logo} style={styles.image} />
       </View>
 
-      <View style={styles.mainBtnContainer}>
-        <TouchableOpacity
+      <TouchableOpacity
           style={styles.snsBtn}
           onPress={() => navigation.navigate('SignUp')}>
-          <Text style={{...styles.text, color: '#fff'}}>회원가입</Text>
+          <View style={styles.signupContainer}>
+            <Image source={logo_ticket_white} style={styles.logo} />
+            <Text style={{...styles.text, color: '#fff'}}>티켓스토리 회원가입</Text>
+          </View> 
+      </TouchableOpacity>
+
+      <View style={styles.oauthBtnContainer}>
+        <TouchableOpacity
+          onPress={handleKaKaoLogin}>
+          <Image
+            source={icon_kakao}
+            style={{width: 48, height: 48}}
+          />
         </TouchableOpacity>
         <TouchableOpacity
-          style={{...styles.snsBtn, backgroundColor: '#fff', borderWidth: 1}}
-          onPress={handleKaKaoLogin}>
-          <Text style={styles.text}>카카오톡 계정으로 시작하기</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.tmpBtnContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('MainStack')}>
-          <View style={styles.tempBtn}></View>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <View style={styles.tempBtn}></View>
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <View style={styles.tempBtn}></View>
+          onPress={handleAppleLogin}>
+          <Image
+            source={icon_apple}
+            style={{width: 48, height: 48}}
+          />
         </TouchableOpacity>
       </View>
 
       <TouchableOpacity
         style={styles.authBtnContainer}
         onPress={() => navigation.navigate('Login')}>
-        <Text>로그인</Text>
+        <Text style={{textDecorationLine: 'underline', fontSize: 16, lineHeight: 40}}>로그인</Text>
       </TouchableOpacity>
       </View>
      )
@@ -125,45 +133,41 @@ const styles = StyleSheet.create({
   title: {
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 5,
+    flex: 4
   },
   image: {
-    width: 140,
-    height: 140,
-  },
-  mainBtnContainer: {
-    marginTop: 20,
-    flex: 1.5,
+    width: 114,
+    height: 105,
   },
   snsBtn: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 10,
-    backgroundColor: '#000',
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 50,
+    backgroundColor: '#525252',
+    padding: 8,
+    marginBottom: 20,
+    borderRadius: 6,
+  },
+  signupContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5
+  },
+  logo: {
+    width: 30,  
+    height: 30, 
   },
   authBtnContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    flex: 1,
-    gap: 10,
+    marginBottom: '35%',
   },
-
-  // 임시 버튼
-  tmpBtnContainer: {
+  oauthBtnContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     flex: 1,
     gap: 25,
-  },
-  tempBtn: {
-    height: 30,
-    width: 30,
-    borderRadius: 15,
-    backgroundColor: '#D9D9D9',
   },
 });
 

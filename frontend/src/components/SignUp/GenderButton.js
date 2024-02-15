@@ -5,7 +5,7 @@ const GenderButton = ({label, isActive, onPress}) => (
   <TouchableOpacity
     style={[
       styles.genderBtn,
-      isActive && {backgroundColor: 'rgba(149, 149, 149, 1)'},
+      isActive && {backgroundColor: '#B6B6B6'},
     ]}
     onPress={onPress}>
     <Text style={isActive ? styles.activeText : styles.optionText}>
@@ -20,12 +20,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 5,
     borderWidth: 1,
-    borderColor: 'rgba(217, 217, 217, 1)',
-    borderRadius: 15,
+    borderColor: '#D9D9D9',
+    borderRadius: 5,
   },
   optionText: {
     fontSize: 14,
-    color: '#000',
+    color: '#525252',
     lineHeight: 22,
   },
   activeText: {

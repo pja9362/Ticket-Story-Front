@@ -5,7 +5,6 @@ import Step1 from '../../components/SignUp/Step1';
 import Step2 from '../../components/SignUp/Step2';
 import Step3 from '../../components/SignUp/Step3';
 import Step4 from '../../components/SignUp/Step4';
-import Step5 from '../../components/SignUp/Step5';
 import LineIndicator from '../../components/SignUp/LineIndicator';
 
 const SignUp = ({navigation}) => {
@@ -26,7 +25,7 @@ const SignUp = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Header title="계정 생성" />
+      <Header title="회원가입" />
       <LineIndicator step={step} />
       {step === 1 && (
         <Step1
@@ -50,13 +49,8 @@ const SignUp = ({navigation}) => {
         />
       )}
       {step === 4 && (
-        <Step4
-          nextStep={nextStep}
-          handleChange={(name, value) => updateFormData(name, value)}
-          values={formData}
-        />
+         <Step4 nextStep={goLogin}/>
       )}
-      {step === 5 && <Step5 nextStep={goLogin}/>}
     </View>
   );
 };

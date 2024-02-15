@@ -1,92 +1,121 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, TextInput, StyleSheet} from 'react-native';
-import formatPhoneNum from '../../utils/formatPhoneNum';
+import {View, Text, StyleSheet, TextInput, ScrollView} from 'react-native';
 import NextButton from './NextButton';
+import GenderButton from './GenderButton';
+import Agreement from './Agreement';
+import api from '../../api/api';
 
 const Step3 = ({nextStep, handleChange, values}) => {
-  const [name, setName] = useState('');
-  const [firstPartIdentityNum, setFirstPartIdentityNum] = useState('');
-  const [secondPartIdentityNum, setSecondPartIdentityNum] = useState('');
-  const [telecom, setTelecom] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [verifyCode, setVerifyCode] = useState('');
+  const [year, setYear] = useState('2000');
+  const [month, setMonth] = useState('01');
+  const [day, setDay] = useState('01');
+
+  const birthday = `${year}.${month}.${day}`;
+
+  const [gender, setGender] = useState('');
+  const [requiredAgreements, setRequiredAgreements] = useState({
+    terms: false,
+    personalInfo: false,
+    thirdPartyInfo: false,
+  });
+
+  useEffect(() => {
+    handleChange('birthday', birthday);
+  }, [year, month, day]);
+
+  const isValid =
+    year !== '' &&
+    month !== '' &&
+    day !== '' &&
+    gender !== '' &&
+    requiredAgreements.terms &&
+    requiredAgreements.personalInfo &&
+    requiredAgreements.thirdPartyInfo;
+
+  const genderOptions = [
+    {label: '남성', value: 'MALE'},
+    {label: '여성', value: 'FEMALE'},
+  ];
+
+  const updateAgreementStatus = key => {
+    setRequiredAgreements(prevAgreements => ({
+      ...prevAgreements,
+      [key]: !prevAgreements[key],
+    }));
+  };
 
   useEffect(() => {
     console.log('Step3: ', values);
   }, []);
 
-  const handlePhoneNumChange = text => {
-    const formattedPhoneNumber = formatPhoneNum(text);
-    setPhoneNumber(formattedPhoneNumber);
-    handleChange('phoneNum', formattedPhoneNumber);
-  };
+  const handleSignUp = async () => {
+    try {
+      const signUpResponse = await api.signUpRequest(values);
+      console.log('Sign-up response:', signUpResponse);
 
-  const handleFirstPartChange = text => {
-    setFirstPartIdentityNum(text.slice(0, 6));
-  };
-
-  const handleSecondPartChange = text => {
-    setSecondPartIdentityNum(text.slice(0, 1));
+      nextStep();
+    } catch (error) {
+      console.error('Sign-up error:', error);
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.sectionText}>본인인증</Text>
-      <TextInput
-        style={styles.inputBox}
-        value={name}
-        placeholder="이름"
-        placeholderTextColor="gray"
-        onChangeText={text => setName(text)}
-      />
-      <View style={styles.identityNumContainer}>
-        <TextInput
-          style={styles.inputBox}
-          value={firstPartIdentityNum}
-          placeholder="주민번호 앞 6자리"
-          placeholderTextColor="gray"
-          keyboardType="numeric"
-          onChangeText={handleFirstPartChange}
-        />
-        <Text style={{alignSelf: 'center', fontSize: 24}}>-</Text>
-        <View style={styles.secondIdentity}>
-          <TextInput
-            style={[styles.inputBox, styles.singleDigitInput]}
-            value={secondPartIdentityNum}
-            placeholder="●"
-            placeholderTextColor="gray"
-            keyboardType="numeric"
-            onChangeText={handleSecondPartChange}
-          />
-          <Text style={styles.maskedText}>●●●●●●</Text>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+
+    <View style={styles.formContainer}>
+        <Text style={styles.sectionText}>성별</Text>
+        <View style={styles.genderContainer}>
+          {genderOptions.map(option => (
+            <GenderButton
+              key={option.value}
+              label={option.label}
+              isActive={gender === option.value}
+              onPress={() => {
+                setGender(option.value);
+                handleChange('gender', option.value);
+              }}
+            />
+          ))}
         </View>
       </View>
 
-      <TextInput
-        style={styles.inputBox}
-        value={telecom}
-        placeholder="통신사"
-        placeholderTextColor="gray"
-        onChangeText={text => setTelecom(text)}
-      />
-      <TextInput
-        style={styles.inputBox}
-        value={phoneNumber}
-        onChangeText={handlePhoneNumChange}
-        keyboardType="numeric"
-        placeholder="전화번호"
-        placeholderTextColor="gray"
-      />
-      <TextInput
-        style={styles.inputBox}
-        value={verifyCode}
-        keyboardType="numeric"
-        placeholder="인증번호"
-        placeholderTextColor="gray"
-        onChangeText={text => setVerifyCode(text)}
-      />
-      <NextButton onClick={nextStep} isValid={phoneNumber.length === 13} />
-    </View>
+      <View style={styles.formContainer}>
+        <Text style={styles.sectionText}>생년월일</Text>
+        <View style={styles.dateContainer}>
+          <View style={styles.dateItem}>
+            <TextInput
+              style={{...styles.inputBox, width: 'auto'}}
+              value={year}
+              onChangeText={text => setYear(text)}
+              placeholder="YYYY"
+            />
+            <Text>년</Text>
+          </View>
+          <View style={styles.dateItem}>
+            <TextInput
+              style={{...styles.inputBox, width: 'auto'}}
+              value={month}
+              onChangeText={text => setMonth(text)}
+              placeholder="MM"
+            />
+            <Text>월</Text>
+          </View>
+          <View style={styles.dateItem}>
+            <TextInput
+              style={{...styles.inputBox, width: 'auto'}}
+              value={day}
+              onChangeText={text => setDay(text)}
+              placeholder="DD"
+            />
+            <Text>일</Text>
+          </View>
+        </View>
+      </View>
+
+      <Agreement updateAgreementStatus={updateAgreementStatus} />
+
+      <NextButton isLast={true} isValid={isValid} onClick={handleSignUp}/>
+    </ScrollView>
   );
 };
 
@@ -94,7 +123,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     margin: 16,
-    paddingVertical: 10,
+    paddingTop: 10,
+    marginBottom: 0,
   },
   sectionText: {
     fontSize: 16,
@@ -102,36 +132,30 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     color: '#000',
   },
+  formContainer: {
+    marginBottom: 20,
+  },
   inputBox: {
     fontSize: 16,
-    backgroundColor: '#D9D9D9',
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
     borderRadius: 5,
-    height: 50,
+    paddingVertical: 9,
     paddingHorizontal: 12,
-    marginBottom: 20,
+    textAlign: 'center',
   },
-  identityNumContainer: {
+  genderContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: 'red',
-    height: 50,
-    marginBottom: 20,
-    backgroundColor: '#D9D9D9',
-    borderRadius: 5,
+    gap: 16,
   },
-  identityInputBox: {
-    flex: 1,
-  },
-  secondIdentity: {
-    flex: 1,
+  dateContainer: {
     flexDirection: 'row',
+    gap: 16,
   },
-  singleDigitInput: {
-    width: 'auto',
-  },
-  maskedText: {
-    fontSize: 16,
-    lineHeight: 50,
+  dateItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
 });
 

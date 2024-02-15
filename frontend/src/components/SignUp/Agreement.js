@@ -2,8 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import noCheck from '../../images/no_check.png';
 import check from '../../images/check.png';
-
-const Agreement = () => {
+const Agreement = ({updateAgreementStatus}) => {
   const [agreements, setAgreements] = useState({
     terms: false,
     personalInfo: false,
@@ -16,7 +15,10 @@ const Agreement = () => {
       ...prevAgreements,
       [key]: !prevAgreements[key],
     }));
+    
+    updateAgreementStatus(key);
   };
+
 
   return (
     <View>

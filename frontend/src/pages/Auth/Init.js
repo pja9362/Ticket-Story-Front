@@ -7,11 +7,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import icon_kakao from '../../images/icon_kakao.png';
 import icon_apple from '../../images/icon_apple.png';
 import logo_ticket_white from '../../images/logo_ticket_white.png';
+import { API_URL } from '@env';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
-const apiUrl = 'http://172.30.1.47:8080';
 
 const Init = ({navigation}) => {
   const webViewRef = useRef(null);
@@ -49,7 +48,7 @@ const Init = ({navigation}) => {
   };
 
   const handleOAuthNavigationChange = (state) => {
-    if (state.url.startsWith(`${apiUrl}/api/v1/auth/oauth/kakao?code=`)) {
+    if (state.url.startsWith(`${API_URL}/api/v1/auth/oauth/kakao?code=`)) {
       handleWebViewClose();
       handleSaveToken(state.url);
     }
@@ -57,6 +56,7 @@ const Init = ({navigation}) => {
 
   const handleAppleLogin = () => {
     console.log('Apple Login');
+    console.log(API_URL);
   }
 
   return (

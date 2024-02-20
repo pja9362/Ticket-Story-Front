@@ -1,14 +1,15 @@
 import axios from 'axios';
 import RNFS from 'react-native-fs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const apiUrl = 'http://172.30.1.47:8080'; 
+import { API_URL } from '@env';
 
 const checkIdDuplicate = async userId => {
   try {
     console.log('ID duplicate check:', userId); 
+    console.log('API_URL:', API_URL);
+    console.log('Endpoint:', `${API_URL}/api/v1/auth/checkDuplicateId`);
     const response = await axios.get(
-      `${apiUrl}/api/v1/auth/checkDuplicateId`, 
+      `${API_URL}/api/v1/auth/checkDuplicateId`, 
       {
         params: {
           id: userId,
@@ -26,7 +27,7 @@ const signUpRequest = async formData => {
   try {
     console.log('Sign-up request:', formData);
     const response = await axios.post(
-      `${apiUrl}/api/v1/auth/signup`,
+      `${API_URL}/api/v1/auth/signup`,
       {
         id: formData.id,
         password: formData.password,
@@ -58,7 +59,7 @@ const signInRequest = async (id, password) => {
     console.log('Sign in request ', id, password);
     
     const response = await axios.post(
-      `${apiUrl}/api/v1/auth/login`,
+      `${API_URL}/api/v1/auth/login`,
       {
         id: id,
         password: password,
@@ -84,41 +85,67 @@ const signInRequest = async (id, password) => {
   }
 };
 
+// const saveImageAndPerformOCR = async (scannedImage) => {
+//   try {
+//     await AsyncStorage.removeItem('ticket');
+//     console.log('Saving image to file...');
+//     const path = `${RNFS.CachesDirectoryPath}/scannedImage.jpg`;
+
+//     // Decode base64 and save as a file
+//     await RNFS.writeFile(path, scannedImage, 'base64');
+
+//     console.log('Image saved to:', path);
+
+//     const formData = new FormData();
+//     formData.append('img', {
+//       uri: `file://${path}`,
+//       name: 'scannedImage.jpg',
+//       type: 'image/jpeg',
+//     });
+
+//     const response = await axios.post(`${API_URL}/ocr/ocr-api`, formData, {
+//       headers: {
+//         'Content-Type': 'multipart/form-data',
+//       },
+//     });
+
+//     console.log('OCR response:', response.data);
+//     await AsyncStorage.setItem('ticket', JSON.stringify(response.data));
+//   } catch (error) {
+//     console.error('Error saving image to file or performing OCR:', error);
+//   }
+// };
+
 const saveImageAndPerformOCR = async (scannedImage) => {
   try {
+    // 이전 티켓 정보 제거
     await AsyncStorage.removeItem('ticket');
-    console.log('Saving image to file...');
-    const path = `${RNFS.CachesDirectoryPath}/scannedImage.jpg`;
-
-    // Decode base64 and save as a file
-    await RNFS.writeFile(path, scannedImage, 'base64');
-
-    console.log('Image saved to:', path);
-
+    
+    // FormData 생성
     const formData = new FormData();
-    formData.append('img', {
-      uri: `file://${path}`,
-      name: 'scannedImage.jpg',
-      type: 'image/jpeg',
-    });
+    formData.append('category', 'your_category'); // 카테고리 설정 (실제 카테고리 값으로 대체)
+    formData.append('img', scannedImage); // 스캔된 이미지를 FormData에 추가
 
-    const response = await axios.post(`${apiUrl}/ocr/ocr-api`, formData, {
+    // OCR API에 이미지 전송
+    const response = await axios.post(`${API_URL}/ocr/ocr-api`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
 
-    console.log('OCR response:', response.data);
+    console.log('OCR 응답:', response.data);
+
+    // OCR 결과를 AsyncStorage에 저장
     await AsyncStorage.setItem('ticket', JSON.stringify(response.data));
   } catch (error) {
-    console.error('Error saving image to file or performing OCR:', error);
+    console.error('OCR 수행 중 오류:', error);
   }
 };
 
 const handleKaKaoLogin = async () => {
   try {
     console.log('handleKaKaoLogin');
-    const response = await axios.get(`${apiUrl}/api/v1/auth/oauth/kakao/url`);
+    const response = await axios.get(`${API_URL}/api/v1/auth/oauth/kakao/url`);
     console.log('Kakao login response:', response.data);
     return response.data;
   } catch (error) {

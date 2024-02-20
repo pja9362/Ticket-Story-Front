@@ -9,7 +9,8 @@ const OCR = ({ onNextStep }) => {
   const scanDocument = async () => {
     try {
       const { scannedImages } = await DocumentScanner.scanDocument({
-        responseType: 'base64',
+        // responseType: 'base64',
+        responseType: 'imageFilePath',
         letUserAdjustCrop: true,
       });
 

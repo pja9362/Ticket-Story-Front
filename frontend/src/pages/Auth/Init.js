@@ -30,10 +30,6 @@ const Init = ({navigation}) => {
     }
   };
 
-  const handleWebViewClose = () => {
-    setWebViewVisible(false);
-  }
-
   const handleSaveToken = async (url) => {
     try {
       const response = await api.saveTokens(url);
@@ -49,7 +45,7 @@ const Init = ({navigation}) => {
 
   const handleOAuthNavigationChange = (state) => {
     if (state.url.startsWith(`${API_URL}/api/v1/auth/oauth/kakao?code=`)) {
-      handleWebViewClose();
+      setWebViewVisible(false);
       handleSaveToken(state.url);
     }
   }
@@ -67,7 +63,7 @@ const Init = ({navigation}) => {
           style={{... styles.webview, margin: 0, padding: 0}}
           source={{ uri: redirectUrl }} 
           onNavigationStateChange={handleOAuthNavigationChange}
-          onClose={handleWebViewClose}
+          onClose={() => setWebViewVisible(false)}
         />
       )
     :

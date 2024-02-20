@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
@@ -18,6 +18,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   const isFormValid = () => {
     return title.trim() !== '' && date.trim() !== '' && time.trim() !== '' && location.trim() !== '';
   };
+
 
   return (
     <>

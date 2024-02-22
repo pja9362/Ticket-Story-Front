@@ -140,8 +140,16 @@ const saveTokens = async (url) => {
 
 const saveNewTicket = async (ticket) => {
   try {
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    console.log('Access token:', accessToken);
     console.log('Saving new ticket:', ticket);
-    const response = await axios.post(`${API_URL}/api/v1/ticket/saveNewTicket`, ticket);
+    const response = await axios.post(`${API_URL}/api/v1/ticket/saveNewTicket`, ticket, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
     console.log('Save new ticket response:', response.data);
     return response.data;
   } catch (error) {

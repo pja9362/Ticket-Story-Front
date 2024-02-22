@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     padding: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#fff',
   },
   title: {
     fontSize: 16,

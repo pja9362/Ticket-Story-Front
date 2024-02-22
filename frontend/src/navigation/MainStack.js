@@ -45,9 +45,7 @@ const MainStack = ({navigation}) => {
   };
 
   const onClick = (action) => {
-    if(action === 'scrape') {
-      console.log('scrape 화면으로 이동');
-    }
+    if (action === 'scrape') navigation.navigate('EnrollByScrape', {action});
     else navigation.navigate('EnrollAgreement', { action });
     closeBottomSheet();
   }

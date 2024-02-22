@@ -10,11 +10,44 @@ const SelectType = ({onClick}) => {
     setCategoryDetail('');
   };
 
-  const handleCategoryDetailClick = categoryDetail => {
-    setCategoryDetail(categoryDetail);
-    onClick({category, categoryDetail: categoryDetail});
-  };
+  // const handleCategoryDetailClick = categoryDetail => {
+  //   setCategoryDetail(categoryDetail);
+  //   onClick({category, categoryDetail: categoryDetail});
+  // };
 
+  const handleCategoryDetailClick = (selectedCategoryDetail) => {
+    let mappedCategory = category;
+    let mappedCategoryDetail = selectedCategoryDetail;
+  
+    if (category === '영화') {
+      mappedCategory = 'MOVIE';
+      mappedCategoryDetail = selectedCategoryDetail;
+    } else if (category === '공연') {
+      if (selectedCategoryDetail === '뮤지컬') {
+        mappedCategory = 'MUSICAL';
+        mappedCategoryDetail = 'MUSICAL';
+      } else if (selectedCategoryDetail === '연극') {
+        mappedCategory = 'PLAY';
+        mappedCategoryDetail = 'PLAY';
+      } else {
+        mappedCategory = 'PERFORMANCE';
+        mappedCategoryDetail = 'PERFORMANCE';
+      }
+    } else if (category === '스포츠') {
+      mappedCategory = 'SPORTS';
+      if (selectedCategoryDetail === '야구') {
+        mappedCategoryDetail = 'BASEBALL';
+      } else if (selectedCategoryDetail === '축구') {
+        mappedCategoryDetail = 'SOCCER';
+      } else {
+        mappedCategoryDetail = 'ETC';
+      }
+    }
+    setCategory(mappedCategory);
+    setCategoryDetail(mappedCategoryDetail);
+    onClick({ category: mappedCategory, categoryDetail: mappedCategoryDetail });
+  };
+  
   const renderSubCategories = () => {
     if (category === '영화') {
       return (
@@ -121,6 +154,7 @@ const SelectType = ({onClick}) => {
     }
     return null;
   };
+  
 
   return (
     <View style={styles.container}>

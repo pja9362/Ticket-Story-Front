@@ -9,6 +9,7 @@ import FindPasswordScreen from './src/pages/Auth/FindPassword';
 import ChangePWScreen from './src/pages/Auth/ChangePW';
 import EnrollAgreement from './src/pages/EnrollTicket/EnrollAgreement';
 import EnrollByOCR from './src/pages/EnrollTicket/EnrollByOCR';
+import EnrollByScrape from './src/pages/EnrollTicket/EnrollByScrape';
 import EnrollInfoByOCR from './src/pages/EnrollTicket/EnrollInfoByOCR';
 import EnrollInfoByHand from './src/pages/EnrollTicket/EnrollInfoByHand';
 import EnrollInfoByScrape from './src/pages/EnrollTicket/EnrollInfoByScrape';
@@ -54,6 +55,7 @@ const App = () => {
             </Stack.Screen>
             <Stack.Screen name="EnrollAgreement" component={EnrollAgreement} />
             <Stack.Screen name="EnrollByOCR" component={EnrollByOCR} />
+            <Stack.Screen name="EnrollByScrape" component={EnrollByScrape} />
             <Stack.Screen name="EnrollInfoByOCR" component={EnrollInfoByOCR} />
             <Stack.Screen name="EnrollInfoByHand" component={EnrollInfoByHand} />
             <Stack.Screen name="EnrollInfoByScrape" component={EnrollInfoByScrape} />

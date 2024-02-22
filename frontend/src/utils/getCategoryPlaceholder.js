@@ -1,6 +1,6 @@
 const getCategoryPlaceholder = (category, placeholderType) => {
   switch (category) {
-    case '영화':
+    case 'MOVIE':
       switch (placeholderType) {
         case 'location':
           return '용산아이파크몰';
@@ -11,7 +11,8 @@ const getCategoryPlaceholder = (category, placeholderType) => {
         default:
           return '';
       }
-    case '공연':
+    case 'MUSICAL':
+    case 'PLAY':
       switch (placeholderType) {
         case 'location':
           return '블루스퀘어';
@@ -22,7 +23,7 @@ const getCategoryPlaceholder = (category, placeholderType) => {
         default:
           return '';
       }
-    case '스포츠':
+    case 'SPORTS':
       switch (placeholderType) {
         case 'location':
           return '서울종합운동장 야구장';

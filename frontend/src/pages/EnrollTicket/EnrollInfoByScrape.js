@@ -4,6 +4,7 @@ import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import CategoryBtnContainer from '../../components/EnrollTicket/CategoryBtnContainer';
 import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
 import NextBtn from '../../components/EnrollTicket/NextBtn';
+import api from '../../api/api';
 
 const EnrollInfoByScrape = ({ route, navigation }) => {
   const { ticketInfo } = route.params;
@@ -47,25 +48,72 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     return title.trim() !== '' && date.trim() !== '' && time.trim() !== '' && location.trim() !== '';
   };
 
-  const handleNext = () => {
-    console.log('Updated ticketInfo: ', {
-      title,
-      date,
-      time,
-      location,
-      locationDetail,
-      seats: seats.split(',').map(seat => seat.trim()),
-      platform,
-      category,
-      categoryDetail,
-    });
+  const handleNext = async () => {
+    // Map category and categoryDetail values here
+    let mappedCategory = category;
+    let mappedCategoryDetail = categoryDetail;
     
+    if (category === '영화') {
+      mappedCategory = 'MOVIE';
+      mappedCategoryDetail = 'MOVIE';
+    } else if (category === '공연') {
+      if (categoryDetail === '뮤지컬') {
+        mappedCategory = 'MUSICAL';
+        mappedCategoryDetail = 'MUSICAL';
+      } else if (categoryDetail === '연극') {
+        mappedCategory = 'PLAY';
+        mappedCategoryDetail = 'PLAY';
+      } else {
+        mappedCategory = 'PERFORMANCE';
+        mappedCategoryDetail = 'PERFORMANCE';
+      }
+    } else if (category === '스포츠') {
+      if (categoryDetail === '야구') {
+        mappedCategory = 'SPORTS';
+        mappedCategoryDetail = 'BASEBALL';
+      } else if (categoryDetail === '축구') {
+        mappedCategory = 'SPORTS';
+        mappedCategoryDetail = 'SOCCER';
+      } else {
+        mappedCategory = 'SPORTS';
+        mappedCategoryDetail = 'ETC';
+      }
+    }
+  
+    const ticketData = {
+      registerBy: 'SCRAPE',
+      category: mappedCategory,
+      categoryDetail: mappedCategoryDetail,
+      platform,
+      ticketImg: '',
+      contentDetails: {
+        date,
+        location,
+        locationDetail,
+        seats: seats.split(',').map(seat => seat.trim()),
+        time,
+        title,
+        contentId: 0,
+        locationId: 0,
+      }
+    }
+  
+    console.log('Updated ticketInfo: ', ticketData);
+  
     if (isFormValid()) {
-      navigation.navigate('EnrollReview', {title})
+      try {
+        const savedTicket = await api.saveNewTicket(ticketData);
+        console.log('Saved ticket:', savedTicket);
+  
+        navigation.navigate('EnrollReview', { title })
+      } catch (error) {
+        console.error('Error handling new ticket:', error);
+      }
     } else {
       alert('필수 입력 항목을 모두 입력해주세요!');
     }
   }
+  
 
   return (
     <>

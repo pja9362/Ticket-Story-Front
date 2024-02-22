@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TextInput } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
 import NextBtn from '../../components/EnrollTicket/NextBtn';
+import api from '../../api/api';
 
 const EnrollInfoByHand = ({ route, navigation }) => {
   const { categoryInfo } = route.params;
@@ -18,7 +19,35 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   const isFormValid = () => {
     return title.trim() !== '' && date.trim() !== '' && time.trim() !== '' && location.trim() !== '';
   };
-
+  
+  const handleEnrollTicket = async () => {
+    const seatsArray = seats.split(/,|-/).map(seat => seat.trim());
+  
+    const ticketData = {
+      registerBy: 'BASIC',
+      category,
+      categoryDetail: categoryDetail === '메가박스' || categoryDetail === 'CGV' || categoryDetail === '롯데시네마' ? 'MOVIE' : categoryDetail,
+      platform: '',
+      ticketImg: '',
+      contentDetails: {
+        date,
+        location: categoryDetail ? `${categoryDetail}${location}` : location,
+        locationDetail,
+        seats: seatsArray,
+        time,
+        title,
+        contentId: 0,
+        locationId: 0,
+      }
+    };
+  
+    try {
+      const savedTicket = await api.saveNewTicket(ticketData);
+      console.log('Saved ticket:', savedTicket);
+    } catch (error) {
+      console.error('Error handling new ticket:', error);
+    }
+  };
 
   return (
     <>
@@ -73,7 +102,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
         </Text>
         <View style={styles.inputBoxContainer}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 }}>
-            {category === '영화' ? (
+            {category === 'MOVIE' ? (
               <TextInput
                 style={[styles.inputBox, { flex: 1, fontWeight: 'bold', color: '#525252', textAlign: 'center'}]}
                 value={categoryDetail}
@@ -112,6 +141,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
           isDisabled={!isFormValid()}
           onPress={() => {
             if (isFormValid()) {
+              handleEnrollTicket();
               navigation.navigate('EnrollReview', { title })
             }
           }}

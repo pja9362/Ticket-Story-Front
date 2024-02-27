@@ -4,38 +4,57 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  ActivityIndicator,
 } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LoadingScreen from '../../components/LoadingScreen';
 
 const EnrollInfoByOCR = ({ route, navigation }) => {
   const { categoryInfo } = route.params;
   const { category, categoryDetail } = categoryInfo;
-  
-  useEffect(() => {
-    console.log(category);
-    console.log(categoryDetail);
-  }, []);
+
+  const [title, setTitle] = useState('');
+  const [location, setLocation] = useState('');
+  const [locationDetail, setLocationDetail] = useState('');
+  const [seatRow, setSeatRow] = useState('');
+  const [seatNum, setSeatNum] = useState('');
+  const [year, setYear] = useState('');
+  const [month, setMonth] = useState('');
+  const [day, setDay] = useState('');
+  const [time, setTime] = useState('');
 
   const [ocrResponse, setOcrResponse] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadingIcon, setLoadingIcon] = useState(1); 
+
+  const initValues = () => {
+    if (ocrResponse) {
+
+      let ocrResult = ocrResponse.ocr_result;
+      setTitle(ocrResult.title);
+      setLocation(ocrResult.location);
+      setLocationDetail(ocrResult.locationDetail);
+      console.log(ocrResult.title, ocrResult.location, ocrResult.locationDetail)
+    }
+  };
 
   useEffect(() => {
     const getOcrResponse = async () => {
       try {
         const response = await AsyncStorage.getItem('ticket');
+        
         if (response && response.trim() !== '') {
           setOcrResponse(JSON.parse(response));
           console.log('ocrResponse: ', JSON.parse(response));
+          initValues();
           setLoading(false);
         } else {
           const intervalId = setInterval(async () => {
             const updatedResponse = await AsyncStorage.getItem('ticket');
             if (updatedResponse && updatedResponse.trim() !== '') {
               setOcrResponse(JSON.parse(updatedResponse));
-              console.log('!! ocrResponse: ', JSON.parse(updatedResponse));
               clearInterval(intervalId);
+              initValues();
               setLoading(false);
             }
           }, 2000);
@@ -58,10 +77,6 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
     if (ocrResponse && ocrResponse.seat) {
       const seatInfo = ocrResponse.seat.trim();
   
-      // Check if there is a hall and extract it
-      const hallMatch = seatInfo.match(/\d+관/);
-      const hall = hallMatch ? hallMatch[0] : '';
-  
       // Extract seatRow and seatNum using regex
       const seatRowMatch = seatInfo.match(/(\w+)열/);
       const seatRow = seatRowMatch ? seatRowMatch[1] : '';
@@ -69,8 +84,6 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
       const seatNumMatch = seatInfo.match(/\d+-\d+|\d+(?=(번|$))/g);
       const seatNum = seatNumMatch ? seatNumMatch.join(', ') : '';
 
-      // Set the state values
-      setHall(hall.trim());
       setSeatRow(seatRow.trim());
       setSeatNum(seatNum.trim());
     }
@@ -92,95 +105,92 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
     parseTimeInfo();
   }, [ocrResponse]);
 
-  const [name, setName] = useState('');
-  const [place, setPlace] = useState('');
-  const [hall, setHall] = useState('');
-  const [seatRow, setSeatRow] = useState('');
-  const [seatNum, setSeatNum] = useState('');
-  const [year, setYear] = useState('');
-  const [month, setMonth] = useState('');
-  const [day, setDay] = useState('');
-  const [time, setTime] = useState('');
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setLoadingIcon((prevIcon) => (prevIcon % 4) + 1); 
+    }, 200);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <>
-      <EnrollHeader
-        title="티켓 정보 입력"
-        onIconClick={() => navigation.navigate('EnrollFinish')}
-      />
-      <View style={styles.container}>
-        {loading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#000" />
-          </View>
-        ) : (
-          <>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#000' }}>
-              작품 정보를 입력해주세요.
-            </Text>
+      {loading ? (
+          <LoadingScreen iconId={loadingIcon}/>
+      ) : (
+        <>
+        <EnrollHeader
+          title="티켓 정보 입력"
+          onIconClick={() => { navigation.navigate('EnrollReview', {title: title}) }}
+        />
+        <View style={styles.container}>
+              <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#000' }}>
+                작품 정보를 입력해주세요.
+              </Text>
 
-            <Text style={styles.sectionText}>관람 작품</Text>
-            <TextInput
-              style={styles.inputBox}
-              value={ocrResponse?.title || name}
-              onChangeText={(text) => setName(text)}
-            />
+              <Text style={styles.sectionText}>관람 작품</Text>
+              <TextInput
+                style={styles.inputBox}
+                value={title}
+                onChangeText={(text) => setTitle(text)}
+              />
 
-            <Text style={styles.sectionText}>관람 장소</Text>
-            <TextInput
-              style={styles.inputBox}
-              value={ocrResponse?.theater || place}
-              onChangeText={(text) => setPlace(text)}
-            />
+              <Text style={styles.sectionText}>관람 장소</Text>
+              <TextInput
+                style={styles.inputBox}
+                value={location}
+                onChangeText={(text) => setLocation(text)}
+              />
 
-            <Text style={styles.sectionText}>관람 상영관</Text>
-            <TextInput style={styles.inputBox} value={hall} onChangeText={(text) => setHall(text)} />
+              <Text style={styles.sectionText}>관람 상영관</Text>
+              <TextInput style={styles.inputBox} value={locationDetail} onChangeText={(text) => setLocationDetail(text)} />
 
-            <Text style={styles.sectionText}>관람 좌석</Text>
-            <View style={styles.seatInputContainer}>
-              <TextInput
-                style={[styles.inputBox, { marginRight: 5, width: 35 }]}
-                value={seatRow}
-                onChangeText={(text) => setSeatRow(text)}
-              />
-              <Text style={styles.inputLabel}>열</Text>
-              <TextInput
-                style={[styles.inputBox, { width: 'max-content' }]}
-                value={seatNum}
-                onChangeText={(text) => setSeatNum(text)}
-              />
-              <Text style={styles.inputLabel}>번</Text>
-            </View>
+              <Text style={styles.sectionText}>관람 좌석</Text>
+              <View style={styles.seatInputContainer}>
+                <TextInput
+                  style={[styles.inputBox, { marginRight: 5, width: 35 }]}
+                  value={seatRow}
+                  onChangeText={(text) => setSeatRow(text)}
+                />
+                <Text style={styles.inputLabel}>열</Text>
+                <TextInput
+                  style={[styles.inputBox, { width: 'max-content' }]}
+                  value={seatNum}
+                  onChangeText={(text) => setSeatNum(text)}
+                />
+                <Text style={styles.inputLabel}>번</Text>
+              </View>
 
-            <Text style={styles.sectionText}>관람 일시</Text>
-            <View style={styles.dateInputContainer}>
-              <TextInput
-                style={[styles.inputBox, { width: 65 }]}
-                value={year}
-                onChangeText={(text) => setYear(text)}
-              />
-              <Text style={styles.inputLabel}>년</Text>
-              <TextInput
-                style={[styles.inputBox, { width: 45 }]}
-                value={month}
-                onChangeText={(text) => setMonth(text)}
-              />
-              <Text style={styles.inputLabel}>월</Text>
-              <TextInput
-                style={[styles.inputBox, { width: 45 }]}
-                value={day}
-                onChangeText={(text) => setDay(text)}
-              />
-              <Text style={styles.inputLabel}>일</Text>
-              <TextInput
-                style={[styles.inputBox, { width: 65 }]}
-                value={time}
-                onChangeText={(text) => setTime(text)}
-              />
-            </View>
-          </>
-        )}
-      </View>
+              <Text style={styles.sectionText}>관람 일시</Text>
+              <View style={styles.dateInputContainer}>
+                <TextInput
+                  style={[styles.inputBox, { width: 65 }]}
+                  value={year}
+                  onChangeText={(text) => setYear(text)}
+                />
+                <Text style={styles.inputLabel}>년</Text>
+                <TextInput
+                  style={[styles.inputBox, { width: 45 }]}
+                  value={month}
+                  onChangeText={(text) => setMonth(text)}
+                />
+                <Text style={styles.inputLabel}>월</Text>
+                <TextInput
+                  style={[styles.inputBox, { width: 45 }]}
+                  value={day}
+                  onChangeText={(text) => setDay(text)}
+                />
+                <Text style={styles.inputLabel}>일</Text>
+                <TextInput
+                  style={[styles.inputBox, { width: 65 }]}
+                  value={time}
+                  onChangeText={(text) => setTime(text)}
+                />
+              </View>
+          </View> 
+        </>
+        )
+      }
     </>
   );
 };

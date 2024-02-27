@@ -40,12 +40,7 @@ const EnrollReview = ({navigation, route}) => {
   };
 
   const handleNext = () => {
-    if (action === 'camera') {
-      const { categoryInfo } = route.params;
-      navigation.navigate('EnrollInfoByOCR', {categoryInfo});
-    } else {
-      navigation.navigate('EnrollFinish');
-    }
+    navigation.navigate('EnrollFinish');
   }
 
   const handleImagePicker = () => {

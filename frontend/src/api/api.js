@@ -107,7 +107,8 @@ const saveImageAndPerformOCR = async (scannedImageUri) => {
 
     console.log('OCR response:', response.data);
     
-    await AsyncStorage.setItem(category, JSON.stringify(response.data));
+    await AsyncStorage.setItem('ticket', JSON.stringify(response.data));
+    
   } catch (error) {
     console.error('Error saving image to file or performing OCR:', error);
   }

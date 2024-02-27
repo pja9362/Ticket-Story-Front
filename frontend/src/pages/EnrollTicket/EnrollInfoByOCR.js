@@ -8,6 +8,8 @@ import {
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingScreen from '../../components/LoadingScreen';
+import NextBtn from '../../components/EnrollTicket/NextBtn';
+import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
 
 const EnrollInfoByOCR = ({ route, navigation }) => {
   const { categoryInfo } = route.params;
@@ -16,27 +18,18 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
   const [title, setTitle] = useState('');
   const [location, setLocation] = useState('');
   const [locationDetail, setLocationDetail] = useState('');
-  const [seatRow, setSeatRow] = useState('');
-  const [seatNum, setSeatNum] = useState('');
-  const [year, setYear] = useState('');
-  const [month, setMonth] = useState('');
-  const [day, setDay] = useState('');
+  const [seats, setSeats] = useState('');
+  const [date, setDate] = useState('');
   const [time, setTime] = useState('');
 
   const [ocrResponse, setOcrResponse] = useState(null);
+
   const [loading, setLoading] = useState(true);
   const [loadingIcon, setLoadingIcon] = useState(1); 
 
-  const initValues = () => {
-    if (ocrResponse) {
-
-      let ocrResult = ocrResponse.ocr_result;
-      setTitle(ocrResult.title);
-      setLocation(ocrResult.location);
-      setLocationDetail(ocrResult.locationDetail);
-      console.log(ocrResult.title, ocrResult.location, ocrResult.locationDetail)
-    }
-  };
+  const isFormValid = () => {
+    return title.trim() !== '' && location.trim() !== '';
+  }
 
   useEffect(() => {
     const getOcrResponse = async () => {
@@ -46,7 +39,6 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
         if (response && response.trim() !== '') {
           setOcrResponse(JSON.parse(response));
           console.log('ocrResponse: ', JSON.parse(response));
-          initValues();
           setLoading(false);
         } else {
           const intervalId = setInterval(async () => {
@@ -54,7 +46,6 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
             if (updatedResponse && updatedResponse.trim() !== '') {
               setOcrResponse(JSON.parse(updatedResponse));
               clearInterval(intervalId);
-              initValues();
               setLoading(false);
             }
           }, 2000);
@@ -73,38 +64,6 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
     getOcrResponse();
   }, []);
 
-  const parseSeatInfo = () => {
-    if (ocrResponse && ocrResponse.seat) {
-      const seatInfo = ocrResponse.seat.trim();
-  
-      // Extract seatRow and seatNum using regex
-      const seatRowMatch = seatInfo.match(/(\w+)열/);
-      const seatRow = seatRowMatch ? seatRowMatch[1] : '';
-  
-      const seatNumMatch = seatInfo.match(/\d+-\d+|\d+(?=(번|$))/g);
-      const seatNum = seatNumMatch ? seatNumMatch.join(', ') : '';
-
-      setSeatRow(seatRow.trim());
-      setSeatNum(seatNum.trim());
-    }
-  };  
-
-  const parseTimeInfo = () => {
-    if (ocrResponse && ocrResponse.time) {
-      const [date, time] = ocrResponse.time.split(' ');
-      const [year, month, day] = date.split('-');
-      setYear(year || '');
-      setMonth(month || '');
-      setDay(day || '');
-      setTime(time || '');
-    }
-  };
-
-  useEffect(() => {
-    parseSeatInfo();
-    parseTimeInfo();
-  }, [ocrResponse]);
-
   useEffect(() => {
     const intervalId = setInterval(() => {
       setLoadingIcon((prevIcon) => (prevIcon % 4) + 1); 
@@ -112,6 +71,18 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
 
     return () => clearInterval(intervalId);
   }, []);
+
+  useEffect(() => {
+    if (ocrResponse) {
+      const { ocr_result } = ocrResponse;
+      setTitle(ocr_result.title || '');
+      setLocation(ocr_result.location || '');
+      setLocationDetail(ocr_result.location_detail || '');
+      setSeats(ocr_result.seat || '');
+      setDate(ocr_result.time.split(' ')[0] || '');
+      setTime(ocr_result.time.split(' ')[1] || '');
+    }
+  }, [ocrResponse]);
 
   return (
     <>
@@ -124,73 +95,99 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
           onIconClick={() => { navigation.navigate('EnrollReview', {title: title}) }}
         />
         <View style={styles.container}>
-              <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#000' }}>
-                작품 정보를 입력해주세요.
-              </Text>
+              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', gap: 5}}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#000' }}>
+                  작품 정보를 입력해주세요.
+                </Text>
+                <Text style={{ fontSize: 12, color: '#939393' }}>
+                  *표시는 필수 항목입니다.
+                </Text>
+              </View>
 
-              <Text style={styles.sectionText}>관람 작품</Text>
+              <Text style={styles.sectionText}>
+                관람 일시
+                <Text style={styles.requiredIndicator}>*</Text>
+              </Text>
+              <View style={styles.dateInputContainer}>
+                <TextInput
+                  style={[styles.inputBox, {flex: 2 }]}
+                  value={date}
+                  onChangeText={text => setDate(text)}
+                  placeholder='YYYY.MM.DD'
+                />
+
+                <TextInput
+                  style={[styles.inputBox, { flex: 1 }]}
+                  value={time}
+                  onChangeText={text => setTime(text)}
+                  placeholder='HH:MM'
+                />
+              </View>
+
+              <Text style={styles.sectionText}>
+                관람 콘텐츠
+                <Text style={styles.requiredIndicator}>*</Text>
+              </Text>
               <TextInput
                 style={styles.inputBox}
                 value={title}
-                onChangeText={(text) => setTitle(text)}
+                onChangeText={text => setTitle(text)}
+                placeholder='콘텐츠 제목'
               />
 
-              <Text style={styles.sectionText}>관람 장소</Text>
+              <Text style={styles.sectionText}>
+                  관람 장소
+                  <Text style={styles.requiredIndicator}>*</Text>
+              </Text>
+              <View style={styles.inputBoxContainer}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 }}>
+                  {category === 'MOVIE' ? (
+                    <TextInput
+                      style={[styles.inputBox, { flex: 1, fontWeight: 'bold', color: '#525252', textAlign: 'center'}]}
+                      value={categoryDetail}
+                      editable={false}
+                    />
+                  ) : null}
+                  <TextInput
+                    style={[styles.inputBox, { flex: 3 }]}
+                    value={location}
+                    onChangeText={text => setLocation(text)}
+                    placeholder={getCategoryPlaceholder(category, 'location')}
+                  />
+                </View>
+              </View>
+
+              <Text style={styles.sectionText}>관람 장소 (세부)</Text>
               <TextInput
                 style={styles.inputBox}
-                value={location}
-                onChangeText={(text) => setLocation(text)}
+                value={locationDetail}
+                onChangeText={text => setLocationDetail(text)}
+                placeholder={getCategoryPlaceholder(category, 'locationDetail')}
               />
-
-              <Text style={styles.sectionText}>관람 상영관</Text>
-              <TextInput style={styles.inputBox} value={locationDetail} onChangeText={(text) => setLocationDetail(text)} />
 
               <Text style={styles.sectionText}>관람 좌석</Text>
               <View style={styles.seatInputContainer}>
                 <TextInput
-                  style={[styles.inputBox, { marginRight: 5, width: 35 }]}
-                  value={seatRow}
-                  onChangeText={(text) => setSeatRow(text)}
-                />
-                <Text style={styles.inputLabel}>열</Text>
-                <TextInput
-                  style={[styles.inputBox, { width: 'max-content' }]}
-                  value={seatNum}
-                  onChangeText={(text) => setSeatNum(text)}
-                />
-                <Text style={styles.inputLabel}>번</Text>
-              </View>
-
-              <Text style={styles.sectionText}>관람 일시</Text>
-              <View style={styles.dateInputContainer}>
-                <TextInput
-                  style={[styles.inputBox, { width: 65 }]}
-                  value={year}
-                  onChangeText={(text) => setYear(text)}
-                />
-                <Text style={styles.inputLabel}>년</Text>
-                <TextInput
-                  style={[styles.inputBox, { width: 45 }]}
-                  value={month}
-                  onChangeText={(text) => setMonth(text)}
-                />
-                <Text style={styles.inputLabel}>월</Text>
-                <TextInput
-                  style={[styles.inputBox, { width: 45 }]}
-                  value={day}
-                  onChangeText={(text) => setDay(text)}
-                />
-                <Text style={styles.inputLabel}>일</Text>
-                <TextInput
-                  style={[styles.inputBox, { width: 65 }]}
-                  value={time}
-                  onChangeText={(text) => setTime(text)}
+                  style={[styles.inputBox, { flex: 1 }]}
+                  value={seats}
+                  onChangeText={text => setSeats(text)}
+                  placeholder={getCategoryPlaceholder(category, 'seats')}
                 />
               </View>
-          </View> 
+          {/* <View style={styles.floatingButtonContainer}>
+            <NextBtn
+              isDisabled={!isFormValid()}
+              onPress={() => {
+                if (isFormValid()) {
+                  handleEnrollTicket();
+                  navigation.navigate('EnrollReview', { title })
+                }
+              }}
+            />
+          </View> */}
+        </View>
         </>
-        )
-      }
+      )}
     </>
   );
 };
@@ -228,6 +225,15 @@ const styles = StyleSheet.create({
   dateInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  dateInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 15,
+    width: '70%',
+  },
+  requiredIndicator: {
+    color: '#5D70F9',
   },
 });
 

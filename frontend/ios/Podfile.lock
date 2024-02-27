@@ -506,6 +506,8 @@ PODS:
     - React-Core
   - RNFS (2.20.0):
     - React-Core
+  - RNPermissions (4.1.4):
+    - React-Core
   - RNScreens (3.27.0):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
@@ -588,6 +590,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNFS (from `../node_modules/react-native-fs`)
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -703,6 +706,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-async-storage/async-storage"
   RNFS:
     :path: "../node_modules/react-native-fs"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNVectorIcons:
@@ -769,12 +774,13 @@ SPEC CHECKSUMS:
   ReactCommon: dd03c17275c200496f346af93a7b94c53f3093a4
   RNCAsyncStorage: 687bb9e85dd3d45b966662440dcfc0cd962347e6
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
+  RNPermissions: 3674eeb8484aa39a18c3685963731f2ad7409c6c
   RNScreens: 3c2d122f5e08c192e254c510b212306da97d2581
   RNVectorIcons: ace237de89f1574ef3c963ae9d5da3bd6fbeb02a
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: b76f1acfda8212aa16b7e26bcce3983230c82603
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: c16c8b27bef6a107332e6bc1fd783f450e731f0e
+PODFILE CHECKSUM: 8e3067fc66a094328dc5be94c5ee91aacae17dfe
 
 COCOAPODS: 1.14.3

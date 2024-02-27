@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   checkboxText: {
-    fontSize: '10px',
+    fontSize: 12,
     fontWeight: 'bold',
     color: '#525252',
   },

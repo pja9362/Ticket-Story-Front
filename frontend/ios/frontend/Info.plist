@@ -33,7 +33,7 @@
 		<true/>
 	</dict> -->
 	<key>NSCameraUsageDescription</key>
-	<string>We need access to your camera to scan documents.</string>
+	<string>We need access to your camera to scan your ticket.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>UILaunchStoryboardName</key>
@@ -79,7 +79,7 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>AccessPhotoLibrary</string>
 	<key>NSCameraUsageDescription</key>
-	<string>CameraUsage</string>
+	<string>OCR 티켓 등록을 위해 카메라 접근이 필요합니다. </string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
     <string>$(PRODUCT_NAME) would like to save photos to your photo gallery</string>
 </dict>

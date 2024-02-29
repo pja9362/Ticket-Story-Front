@@ -37,16 +37,27 @@ const Step3 = ({nextStep, handleChange, values}) => {
     {label: '여성', value: 'FEMALE'},
   ];
 
-  const updateAgreementStatus = key => {
-    setRequiredAgreements(prevAgreements => ({
-      ...prevAgreements,
-      [key]: !prevAgreements[key],
-    }));
+  const updateAgreementStatus = (key, isAllAgreed) => {
+    if(key === 'all' && !isAllAgreed) {
+      setRequiredAgreements({
+        terms: true,
+        personalInfo: true,
+        thirdPartyInfo: true,
+      })
+    } else if(key === 'all' && isAllAgreed) {
+      setRequiredAgreements({
+        terms: false,
+        personalInfo: false,
+        thirdPartyInfo: false,
+      })
+    }
+    else {
+      setRequiredAgreements(prevAgreements => ({
+        ...prevAgreements,
+        [key]: !prevAgreements[key],
+      }));
+    }
   };
-
-  useEffect(() => {
-    console.log('Step3: ', values);
-  }, []);
 
   const handleSignUp = async () => {
     try {
@@ -84,7 +95,7 @@ const Step3 = ({nextStep, handleChange, values}) => {
         <View style={styles.dateContainer}>
           <View style={styles.dateItem}>
             <TextInput
-              style={{...styles.inputBox, width: 'auto'}}
+              style={{...styles.inputBox, width: 80}}
               value={year}
               onChangeText={text => setYear(text)}
               placeholder="YYYY"
@@ -93,7 +104,7 @@ const Step3 = ({nextStep, handleChange, values}) => {
           </View>
           <View style={styles.dateItem}>
             <TextInput
-              style={{...styles.inputBox, width: 'auto'}}
+              style={{...styles.inputBox, width: 50}}
               value={month}
               onChangeText={text => setMonth(text)}
               placeholder="MM"
@@ -112,6 +123,7 @@ const Step3 = ({nextStep, handleChange, values}) => {
         </View>
       </View>
 
+      <Text style={[styles.sectionText, { marginBottom: 0 }]}>약관 동의</Text>
       <Agreement updateAgreementStatus={updateAgreementStatus} />
 
       <NextButton isLast={true} isValid={isValid} onClick={handleSignUp}/>

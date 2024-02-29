@@ -1,20 +1,44 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import Header from '../../components/Header';
 import api from '../../api/api';
+import { startCountdown, formatTime } from '../../utils/countdownUtils';
 
 const FindPassword = () => {
   const [id, setId] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [showGuideText, setShowGuideText] = useState(false);
+  const [firstBtnText, setFirstBtnText] = useState('인증번호 받기');
+  const [isEmailSent, setIsEmailSent] = useState(false);
 
-  const isValid = id !== '';    
+  const [validationNumber, setValidationNumber] = useState(''); 
+  const [isNumberValid, setIsNumberValid] = useState(false);
+  const [secondBtnClicked, setSecondBtnClicked] = useState(false);
+
+  const [countdown, setCountdown] = useState(300); 
+  useEffect(() => {
+    let timer;
+  
+    if (isEmailSent && countdown > 0) {
+      timer = startCountdown(countdown, newSeconds => setCountdown(newSeconds));
+    } else if (countdown === 0) {
+      console.log('인증번호가 만료되었습니다. 다시 인증번호를 받아주세요.');
+    }
+  
+    return () => {
+      clearInterval(timer);
+    };
+  }, [isEmailSent, countdown]);
+
+  const formattedTime = () => {
+    return formatTime(countdown);
+  };
+
 
   const isValidEmail = (email) => {
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$/;
@@ -25,7 +49,6 @@ const FindPassword = () => {
     try {
       if (!isValidEmail(id)) {
         setErrorMessage('이메일 형식의 아이디를 입력해주세요.');
-        setShowGuideText(false);
         return;
       }
       const isIdDuplicated = await api.checkIdDuplicate(id);
@@ -33,10 +56,10 @@ const FindPassword = () => {
 
       if (isIdDuplicated === false) {
         setErrorMessage('입력한 아이디를 찾을 수 없어요.')
-        setShowGuideText(false);
       } else {
         setErrorMessage('');
-        setShowGuideText(true);
+        setFirstBtnText('인증번호 발송됨');
+        setIsEmailSent(true);
       }
 
     } catch (error) {
@@ -44,18 +67,15 @@ const FindPassword = () => {
     }
   };
 
+  const handleValidateNumber = () => {
+    setSecondBtnClicked(true);
+    console.log('인증번호 확인');
+  }
+
   return (
     <View style={styles.container}>
-      <Header title='비밀번호 찾기'/>
+      <Header title='비밀번호 재설정'/>
       <View style={{paddingHorizontal: 18}}>
-        <View style={{...styles.guideContainer, marginTop: 24}}>
-          <Text style={styles.guideText}>
-            가입한 이메일 아이디를 입력해주세요.
-          </Text>
-          <Text style={styles.guideText}>
-            입력한 이메일로 비밀번호 재설정 링크를 보내드립니다.
-          </Text>
-        </View>
 
         <View style={styles.formContainer}>
           <Text style={styles.sectionText}>아이디</Text>
@@ -67,27 +87,50 @@ const FindPassword = () => {
               placeholder='example@naver.com'
             />
           </View>
-          {
-            !showGuideText && errorMessage !== '' ? 
-            <Text style={{color: '#FF0000', textAlign: 'center', lineHeight: 40, fontSize: 12}}>{errorMessage}</Text> : <View height={40}></View>
-          }
 
           {
-            showGuideText? 
-            <Text style={styles.guideText}>
-              이메일로 비밀번호 재설정 링크를 보내드렸어요. {'\n'}
-              링크를 통해서 비밀번호 재설정을 진행해주세요.
-            </Text> : (
+            errorMessage !== '' ? 
+            <Text style={{color: '#FF0000', textAlign: 'center', lineHeight: 36, fontSize: 12}}>{errorMessage}</Text> : <View height={20}></View>
+          }
+
+          <TouchableOpacity
+              onPress={()=> handleFindPW()}
+              disabled={id === '' || isEmailSent}
+              style={{ ...styles.findBtn, backgroundColor: id !== '' && !isEmailSent ? '#5D70F9' : '#BDBDBD' }}
+          >
+            <Text style={styles.btnText}>{firstBtnText}</Text>
+          </TouchableOpacity>
+
+          {
+            isEmailSent ? 
+            <View style={styles.formContainer}>
+              <Text style={styles.sectionText}>인증번호</Text>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  value={validationNumber}
+                  onChangeText={text => setValidationNumber(text)}
+                  style={styles.inputBox}
+                  placeholder='인증번호를 입력해주세요'
+                />
+                <Text style={{ marginLeft: 10, color: '#FE5757' }}>{formattedTime()}</Text>
+              </View>
+              {
+                secondBtnClicked && isNumberValid === false ? 
+                <Text style={{color: '#FF0000', textAlign: 'center', lineHeight: 36, fontSize: 12}}>인증번호가 일치하지 않아요</Text> : 
+                <Text style={{color: '#B6B6B6', fontSize: 10, textAlign: 'center', lineHeight: 36}}>
+                  메일이 오지 않는다면 스팸 메일함이나 프로모션 메일함을 확인해주세요.
+                </Text>
+              }
+
               <TouchableOpacity
-                onPress={()=> handleFindPW()}
-                disabled={!isValid}
-                style={{ ...styles.findBtn, backgroundColor: isValid ? '#5D70F9' : '#BDBDBD' }}
+                onPress={()=> handleValidateNumber()}
+                disabled={ validationNumber === '' }
+                style={{ ...styles.findBtn, backgroundColor: validationNumber !== '' ? '#5D70F9' : '#BDBDBD' }}
               >
-                <Text style={styles.btnText}>비밀번호 찾기</Text>
+                <Text style={styles.btnText}>인증번호 확인</Text>
               </TouchableOpacity>
-            )
+            </View> : null
           }
-
         </View>
         </View>
     </View>
@@ -104,23 +147,10 @@ const styles = StyleSheet.create({
   sectionText: {
     fontSize: 16,
     marginBottom: 12,
-    color: '#000',
-  },
-  guideContainer: {
-    paddingHorizontal: 15,
-    paddingVertical: 5,
-    borderWidth: 1,
-    borderColor: '#525252',
-    borderRadius: 5,
-  },
-  guideText: {
-    fontSize: 12,
-    lineHeight: 20,
     color: '#525252',
-    textAlign: 'center',
+    fontWeight: 'bold',
   },
   formContainer: {
-    marginTop: 20,
     paddingVertical: 10,
   },
   inputContainer: {
@@ -128,23 +158,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#EEEEEE',
     borderRadius: 5,
-    marginBottom: 22
+    justifyContent: 'space-between',
+    paddingRight: 20,
   },
   inputBox: {
     fontSize: 16,
     borderRadius: 5,
     height: 50,
     paddingHorizontal: 12,
-    flex: 1,
+    width: '100%',
   },
   findBtn: {
     margin: 30,
     marginTop: 0,
     paddingVertical: 10,
-    width: 138,
-    borderRadius: 20,
+    borderRadius: 5,
     alignItems: 'center',
     alignSelf: 'center',
+    width: '100%'
   },
   btnText: {
     color: '#fff',

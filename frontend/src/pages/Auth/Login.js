@@ -74,10 +74,7 @@ const Login = () => {
 
         <View style={styles.findBtnContainer}>
           <TouchableOpacity onPress={handleFindPW} style={styles.findBtn}>
-            <Text>비밀번호 찾기</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('ChangePW')} style={styles.findBtn}>
-            <Text>비밀번호 변경</Text>
+            <Text style={{fontSize: 13, color: '#525252'}}>비밀번호가 기억나지 않아요</Text>
           </TouchableOpacity>
         </View>
 
@@ -126,11 +123,12 @@ const styles = StyleSheet.create({
   findBtnContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 10,
+    marginTop: 10,
+    marginBottom: 15,
   },
   findBtn: {
     borderBottomWidth: 1,
-    borderBottomColor: '#000',
+    borderBottomColor: '#525252',
   },
   loginBtn: {
     margin: 30,

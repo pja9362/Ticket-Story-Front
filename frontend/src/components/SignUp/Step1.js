@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 12,
-    color: '#000',
+    color: '#525252',
   },
   formContainer: {
     flexDirection: 'row',

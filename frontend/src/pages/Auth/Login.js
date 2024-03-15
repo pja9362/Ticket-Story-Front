@@ -8,11 +8,13 @@ import {
 } from 'react-native';
 import Header from '../../components/Header';
 import Icon from 'react-native-vector-icons/Ionicons';
-import api from '../../api/api';
+import { signInRequest } from '../../actions/auth/auth';
+import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 
 const Login = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
@@ -20,9 +22,9 @@ const Login = () => {
 
   const isValid = id !== '' && password !== '';
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
     try {
-      const result = await api.signInRequest(id, password);
+      const result = dispatch(signInRequest(id, password));
       console.log('login result:', result);
       if (result.accessToken) {
         navigation.navigate('MainStack');
@@ -30,7 +32,8 @@ const Login = () => {
     } catch (error) {
       console.error('login error:', error);
     }
-  };
+  
+  }
 
   useEffect(() => {
     console.log('isValid:', isValid);

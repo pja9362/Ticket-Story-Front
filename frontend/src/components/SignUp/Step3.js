@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, TextInput, ScrollView} from 'react-native';
 import NextButton from './NextButton';
 import GenderButton from './GenderButton';
 import Agreement from './Agreement';
-import api from '../../api/api';
+import { signUpRequest } from '../../actions/auth/auth';
 
 const Step3 = ({nextStep, handleChange, values}) => {
   const [year, setYear] = useState('2000');
@@ -61,7 +61,7 @@ const Step3 = ({nextStep, handleChange, values}) => {
 
   const handleSignUp = async () => {
     try {
-      const signUpResponse = await api.signUpRequest(values);
+      const signUpResponse = await signUpRequest(values);
       console.log('Sign-up response:', signUpResponse);
 
       nextStep();

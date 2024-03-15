@@ -1,4 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
+import { Provider } from 'react-redux';
+import store from './src/store';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
@@ -43,30 +45,32 @@ const App = () => {
   return (
     <SafeAreaProvider>
       <SafeAreaView edges={['top']} style={{flex: 1}}>
-        <NavigationContainer theme={customTheme}>
-          <Stack.Navigator screenOptions={screenOptions}>
-            <Stack.Screen name="Init" component={InitScreen} />
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="SignUp" component={SignUpScreen} />
-            <Stack.Screen name="FindPassword" component={FindPasswordScreen} />
-            <Stack.Screen name="ChangePW" component={ChangePWScreen} />
-            <Stack.Screen name="MainStack">
-              {({navigation}) => <MainStack navigation={navigation} />}
-            </Stack.Screen>
-            <Stack.Screen name="EnrollAgreement" component={EnrollAgreement} />
-            <Stack.Screen name="EnrollByOCR" component={EnrollByOCR} />
-            <Stack.Screen name="EnrollByScrape" component={EnrollByScrape} />
-            <Stack.Screen name="EnrollInfoByOCR" component={EnrollInfoByOCR} />
-            <Stack.Screen name="EnrollInfoByHand" component={EnrollInfoByHand} />
-            <Stack.Screen name="EnrollInfoByScrape" component={EnrollInfoByScrape} />
-            <Stack.Screen name="EnrollReview" component={EnrollReview} />
-            <Stack.Screen name="EnrollFinish" component={EnrollFinish} />
-            <Stack.Screen name="OCRFail" component={OCRFail} />
-            {/* Ticket Link */}
-            <Stack.Screen name="OAuthWebView" component={OAuthWebView} />
-            <Stack.Screen name="TicketlinkWebView" component={TicketlinkWebView} />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <Provider store={store}>
+          <NavigationContainer theme={customTheme}>
+            <Stack.Navigator screenOptions={screenOptions}>
+              <Stack.Screen name="Init" component={InitScreen} />
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="SignUp" component={SignUpScreen} />
+              <Stack.Screen name="FindPassword" component={FindPasswordScreen} />
+              <Stack.Screen name="ChangePW" component={ChangePWScreen} />
+              <Stack.Screen name="MainStack">
+                {({navigation}) => <MainStack navigation={navigation} />}
+              </Stack.Screen>
+              <Stack.Screen name="EnrollAgreement" component={EnrollAgreement} />
+              <Stack.Screen name="EnrollByOCR" component={EnrollByOCR} />
+              <Stack.Screen name="EnrollByScrape" component={EnrollByScrape} />
+              <Stack.Screen name="EnrollInfoByOCR" component={EnrollInfoByOCR} />
+              <Stack.Screen name="EnrollInfoByHand" component={EnrollInfoByHand} />
+              <Stack.Screen name="EnrollInfoByScrape" component={EnrollInfoByScrape} />
+              <Stack.Screen name="EnrollReview" component={EnrollReview} />
+              <Stack.Screen name="EnrollFinish" component={EnrollFinish} />
+              <Stack.Screen name="OCRFail" component={OCRFail} />
+              {/* Ticket Link */}
+              <Stack.Screen name="OAuthWebView" component={OAuthWebView} />
+              <Stack.Screen name="TicketlinkWebView" component={TicketlinkWebView} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </Provider>
       </SafeAreaView>
     </SafeAreaProvider>
   );

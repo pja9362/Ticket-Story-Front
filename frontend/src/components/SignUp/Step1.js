@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import NextButton from './NextButton';
-import api from '../../api/api';
+import { checkIdDuplicate } from '../../actions/auth/auth';
 
 const Step1 = ({nextStep, handleChange, values}) => {
   const [id, setId] = useState('');
@@ -33,7 +33,7 @@ const Step1 = ({nextStep, handleChange, values}) => {
       }
 
       console.log('아이디 중복확인:', id);
-      const isIdDuplicated = await api.checkIdDuplicate(id);
+      const isIdDuplicated = await checkIdDuplicate(id);
       console.log('isIdDuplicated:', isIdDuplicated);
 
       if (isIdDuplicated === false) {

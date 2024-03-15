@@ -7,7 +7,7 @@ import {
   View
 } from 'react-native';
 import Header from '../../components/Header';
-import api from '../../api/api';
+import { checkIdDuplicate } from '../../actions/auth/auth';
 import { startCountdown, formatTime } from '../../utils/countdownUtils';
 
 const FindPassword = () => {
@@ -51,7 +51,7 @@ const FindPassword = () => {
         setErrorMessage('이메일 형식의 아이디를 입력해주세요.');
         return;
       }
-      const isIdDuplicated = await api.checkIdDuplicate(id);
+      const isIdDuplicated = await checkIdDuplicate(id);
       console.log('isIdDuplicated:', isIdDuplicated);
 
       if (isIdDuplicated === false) {

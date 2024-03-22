@@ -6,6 +6,7 @@ import {
   REFRESH_FAIL,
 } from './types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 export const checkIdDuplicate = async userId => {
   try {
@@ -56,7 +57,7 @@ export const signUpRequest = async formData => {
   }
 };
 
-export const signInRequest = (id, password) => async dispatch => {
+export const signInRequest = (id, password, callback) => async dispatch => {
   const body = JSON.stringify({ id, password });
 
   try {
@@ -78,17 +79,18 @@ export const signInRequest = (id, password) => async dispatch => {
         type: LOGIN_SUCCESS,
         payload: response.data,
       });
+      if(callback) callback([true, response.data]);
+    } else {
+      if(callback) callback([false, response.data]);
     }
-
-    return response.data;
   }
   catch (error) {
     console.error('Sign-in error:', error);
-    throw error;
+    if(callback) callback([false, error]);
   }
 }
 
-export const handleKaKaoLogin = async () => {
+export const handleOAuthKaKaoLogin = async () => {
   try {
     console.log('handleKaKaoLogin');
     const response = await axios.get(`${API_URL}/api/v1/auth/oauth/kakao/url`);
@@ -104,6 +106,7 @@ export const saveTokens = async (url) => {
   try {
     console.log('Saving tokens:', url)
     const response = await axios.get(url);
+    console.log('Token response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error extracting and storing tokens:', error);

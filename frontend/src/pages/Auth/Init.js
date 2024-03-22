@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {StyleSheet, Text, TouchableOpacity, View, Image, Dimensions} from 'react-native';
 import logo from '../../images/logo.png';
-import api from '../../api/api';
 import WebView from 'react-native-webview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import icon_kakao from '../../images/icon_kakao.png';
 import icon_apple from '../../images/icon_apple.png';
 import logo_ticket_white from '../../images/logo_ticket_white.png';
 import { API_URL } from '@env';
+import { handleOAuthKaKaoLogin, saveTokens } from '../../actions/auth/auth';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -20,7 +20,7 @@ const Init = ({navigation}) => {
 
   const handleKaKaoLogin = async () => {
     try {
-      const response = await api.handleKaKaoLogin();
+      const response = await handleOAuthKaKaoLogin();
 
       setRedirectUrl(response);
       setWebViewVisible(true);
@@ -32,7 +32,7 @@ const Init = ({navigation}) => {
 
   const handleSaveToken = async (url) => {
     try {
-      const response = await api.saveTokens(url);
+      const response = await saveTokens(url);
 
       await AsyncStorage.setItem('accessToken', response.accessToken);
       await AsyncStorage.setItem('refreshToken', response.refreshToken);
@@ -52,7 +52,6 @@ const Init = ({navigation}) => {
 
   const handleAppleLogin = () => {
     console.log('Apple Login');
-    console.log(API_URL);
   }
 
   return (

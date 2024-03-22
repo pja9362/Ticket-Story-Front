@@ -23,16 +23,15 @@ const Login = () => {
   const isValid = id !== '' && password !== '';
 
   const handleLogin = () => {
-    try {
-      const result = dispatch(signInRequest(id, password));
+    dispatch(signInRequest(id, password, ([result, response]) => {
       console.log('login result:', result);
-      if (result.accessToken) {
+      console.log('login response:', response);
+      if(result) {
         navigation.navigate('MainStack');
+      } else {
+        console.log('login error:', response);
       }
-    } catch (error) {
-      console.error('login error:', error);
-    }
-  
+    }))
   }
 
   useEffect(() => {

@@ -1,28 +1,53 @@
 import React, {useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {View, Text} from 'react-native';
+import {View, Text, Image} from 'react-native';
 import HomeScreen from '../pages/Home';
-import MyScreen from '../pages/My';
+import TicketBookScreen from '../pages/TicketBook/TicketBook';
+import MyScreen from '../pages/My/My';
 import BottomSheetMenu from '../components/EnrollTicket/BottomSheetMenu';
 import {useRoute} from '@react-navigation/native';
-import { act } from 'react-test-renderer';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Octicons from 'react-native-vector-icons/Octicons';
+import navIcon from '../images/navIcon_ticket.png';
 
 const Tab = createBottomTabNavigator();
 
-const CustomTabIcon = ({ focused, width = 22, height = 22 }) => {
+const CustomTabIcon = ({ focused}) => {
   const route = useRoute();
   const isMainTab = route.name === 'Main';
+
+  let iconName;
+
+  if (route.name === 'Home') {
+    iconName = focused ? 'home-filled' : 'home';
+  } else if (route.name === 'Profile') {
+    iconName = focused ? 'person' : 'person-outline';
+  } else {
+    iconName = 'ticketIcon';
+  }
 
   return (
     <View
       style={{
-        width: isMainTab ? 50 : width,
-        height: isMainTab ? 50 : height,
-        borderRadius: isMainTab ? 25 : height / 2,
-        backgroundColor: focused ? '#565656' : '#B6B6B6',
-        marginTop: isMainTab ? 15 : 0,
+        width: isMainTab ? 76 : 24,
+        height: isMainTab ? 76 : 24,
+        borderRadius: isMainTab ? 38 : 0,
+        backgroundColor: isMainTab ? '#565656' : 'transparent',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
-    />
+    >
+      {
+        iconName === 'ticketIcon' ?
+          <Image source={navIcon} color={'#fff'} style={{width: 51, height: 51, marginBottom: 12}} />
+        :
+        (
+          iconName === 'home' ?
+          <Octicons name={iconName} size={21} color={'#525252'} /> :
+          <Icon name={iconName} size={24} color={'#525252'} />
+        )
+      }
+    </View>
   );
 };
 
@@ -53,35 +78,40 @@ const MainStack = ({navigation}) => {
   return (
     <>
       <Tab.Navigator
-        screenOptions={() => ({
+        screenOptions={({ route }) => ({
           tabBarStyle: {
-            height: 100,
-            backgroundColor: '#EAEAEA',
+            height: 90,
+            backgroundColor: '#fff',
+            padding: 5,
           },
           tabBarLabelStyle: {
-            fontSize: 14,
-            color: '#000',
+            fontSize: 12,
+            fontWeight: 'bold',
+            color: route.name == 'Main' ? '#fff' : '#525252',
+            paddingBottom: 10,
           },
           tabBarIcon: ({ focused }) => (
-            <CustomTabIcon focused={focused}/>
+            <CustomTabIcon focused={focused} />
           ),
           tabBarLabel: ({focused, color}) => (
             <Text style={{color}}>{focused ? 'Active' : 'Inactive'}</Text>
           ),
         })}>
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Home"
           options={{headerShown: false, tabBarLabel: '홈'}}
           component={HomeScreen}
-        />
+        /> */}
+        {/* Icon : home-filled */}
         <Tab.Screen
-          name="TicketBook"
-          options={{headerShown: false, tabBarLabel: '티켓북'}}
-          component={HomeScreen}
+          name="Home"
+          options={{headerShown: false, tabBarLabel: '홈'}}
+          component={TicketBookScreen}
         />
+
         <Tab.Screen
           name="Main"
-          options={{headerShown: false, tabBarLabel: ''}}
+          options={{headerShown: false, tabBarLabel: '티켓 등록'}}
           component={MainBackground}
           listeners={() => ({
             tabPress: e => {
@@ -90,14 +120,11 @@ const MainStack = ({navigation}) => {
             },
           })}
         />
-        <Tab.Screen
-          name="Community"
-          options={{headerShown: false, tabBarLabel: '게시판'}}
-          component={HomeScreen}
-        />
+
+        {/* Icon : person-outline*/}
         <Tab.Screen
           name="Profile"
-          options={{headerShown: false, tabBarLabel: '프로필'}}
+          options={{headerShown: false, tabBarLabel: '나의 통계'}}
           component={MyScreen}
         />
       </Tab.Navigator>

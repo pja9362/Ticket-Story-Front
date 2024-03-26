@@ -52,6 +52,7 @@ const Init = ({navigation}) => {
 
   const handleAppleLogin = () => {
     console.log('Apple Login');
+    navigation.navigate('MainStack');
   }
 
   return (

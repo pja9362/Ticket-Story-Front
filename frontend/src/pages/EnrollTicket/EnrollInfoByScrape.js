@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import CategoryBtnContainer from '../../components/EnrollTicket/CategoryBtnContainer';
 import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
 import NextBtn from '../../components/EnrollTicket/NextBtn';
 import api from '../../api/api';
+import { searchContent } from '../../actions/enrollTicketSearch/search';
+import { useDispatch } from 'react-redux';
 
 const EnrollInfoByScrape = ({ route, navigation }) => {
+  const dispatch = useDispatch();
+
   const { ticketInfo } = route.params;
 
   const {
@@ -113,7 +117,13 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
       alert('필수 입력 항목을 모두 입력해주세요!');
     }
   }
-  
+
+  useEffect(() => {
+    if(initialTitle.trim() !== '') {
+      console.log("검색 요청");
+      dispatch(searchContent(initialTitle, initialDate, 'MOVIE', 'SCRAPE'));
+    }
+  }, []);
 
   return (
     <>

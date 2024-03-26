@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, Text} from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import TicketItem from '../../components/TicketBook/TicketItem';
 
 // 더미 데이터
@@ -25,18 +25,42 @@ const dummyData = [
     date: '2024.03.31',
     location: 'CGV순천신대',
     seat: '1관 E열8-9번',
-  }
+  },
+  {
+    type: 'bronze',
+    review: '그냥 그랬어요',
+    photo: '',
+    contentRating: 93,
+    seatRating: 88,
+    category: 'MOVIE',
+    date: '2024.05.31',
+    location: 'CGV순천신대',
+    seat: '1관 E열8-9번',
+  },
+  {
+    type: 'basic',
+    review: '좋아요',
+    photo: '',
+    contentRating: 93,
+    seatRating: 88,
+    category: 'MOVIE',
+    date: '2024.07.31',
+    location: 'CGV순천신대',
+    seat: '1관 E열8-9번',
+  },
 ];
 
 const TicketBook = () => {
   
   return (
     <SafeAreaView style={styles.container}>
-      {/* <ScrollView> */}
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
         {dummyData.map((ticket, index) => (
-            <TicketItem key={index} {...ticket} />
+          <View key={index}>
+            <TicketItem {...ticket}/>
+          </View>
         ))}
-      {/* </ScrollView> */}
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -45,8 +69,12 @@ const TicketBook = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'space-between',
+  },
+  scrollViewContent: {
+    width: '100%',
+    alignItems: 'center',
   },
 });
 

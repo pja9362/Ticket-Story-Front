@@ -4,7 +4,6 @@ import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import CategoryBtnContainer from '../../components/EnrollTicket/CategoryBtnContainer';
 import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
 import NextBtn from '../../components/EnrollTicket/NextBtn';
-import api from '../../api/api';
 import { searchContent } from '../../actions/enrollTicketSearch/search';
 import { useDispatch } from 'react-redux';
 
@@ -53,7 +52,6 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   };
 
   const handleNext = async () => {
-    // Map category and categoryDetail values here
     let mappedCategory = category;
     let mappedCategoryDetail = categoryDetail;
     
@@ -105,14 +103,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     console.log('Updated ticketInfo: ', ticketData);
   
     if (isFormValid()) {
-      try {
-        const savedTicket = await api.saveNewTicket(ticketData);
-        console.log('Saved ticket:', savedTicket);
-  
-        navigation.navigate('EnrollReview', { title })
-      } catch (error) {
-        console.error('Error handling new ticket:', error);
-      }
+        navigation.navigate('EnrollReview', { title, ticketData })
     } else {
       alert('필수 입력 항목을 모두 입력해주세요!');
     }
@@ -220,7 +211,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
               isDisabled={!isFormValid()}
               onPress={() => {
                 if (isFormValid()) {
-                  navigation.navigate('EnrollReview', { title })
+                  handleNext();
                 }
               }}
             />

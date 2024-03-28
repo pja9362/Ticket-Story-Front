@@ -15,6 +15,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   const [location, setLocation] = useState('');
   const [locationDetail, setLocationDetail] = useState('');
   const [seats, setSeats] = useState('');
+  const [ticketData, setTicketData] = useState(null);
 
   const isFormValid = () => {
     return title.trim() !== '' && date.trim() !== '' && time.trim() !== '' && location.trim() !== '';
@@ -40,13 +41,11 @@ const EnrollInfoByHand = ({ route, navigation }) => {
         locationId: 0,
       }
     };
-  
-    try {
-      const savedTicket = await api.saveNewTicket(ticketData);
-      console.log('Saved ticket:', savedTicket);
-    } catch (error) {
-      console.error('Error handling new ticket:', error);
-    }
+
+    console.log('Ticket data:', ticketData);
+    setTicketData(ticketData);
+
+    navigation.navigate('EnrollReview', { title, ticketData })
   };
 
   return (
@@ -142,7 +141,6 @@ const EnrollInfoByHand = ({ route, navigation }) => {
           onPress={() => {
             if (isFormValid()) {
               handleEnrollTicket();
-              navigation.navigate('EnrollReview', { title })
             }
           }}
         />

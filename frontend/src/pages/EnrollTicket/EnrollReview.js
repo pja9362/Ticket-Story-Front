@@ -16,9 +16,10 @@ import deleteIcon from '../../images/icon_delete_photo.png';
 import {launchImageLibrary} from 'react-native-image-picker';
 import NextButton from '../../components/EnrollTicket/NextBtn';
 import CustomCheckbox from '../../components/EnrollTicket/CustomCheckbox';
+import {saveNewTicket} from '../../actions/ticket/ticket';
 
 const EnrollReview = ({navigation, route}) => {
-  const { title, action } = route.params;
+  const { title, ticketData } = route.params;
 
   const [sliderTouched, setSliderTouched] = useState(false);
 
@@ -39,9 +40,38 @@ const EnrollReview = ({navigation, route}) => {
     setSliderTouched(true);
   };
 
-  const handleNext = () => {
-    navigation.navigate('EnrollFinish');
-  }
+  const handleNext = async () => {
+    console.log("전달 받은 ticketData" , ticketData);
+    const reviewDetails = {
+      isPublic: !privateChecked,
+      isSpoiler: spoilerChecked,
+      reviewTitle,
+      reviewDetails: reviewContent,
+      reviewImages: selectedImages
+    };
+
+    const ratingDetails = {
+      contentsRating: artRating,
+      seatRating: seatRating
+    };
+
+    const requestData = {
+      ticket: {
+        ...ticketData,
+        ratingDetails,
+        reviewDetails
+      }
+    };
+
+    try {
+      console.log("티켓 등록 요청", requestData);
+      // const savedTicket = await saveNewTicket(requestData);
+      // console.log('Saved ticket:', savedTicket);
+      // navigation.navigate('EnrollFinish');
+    } catch (error) {
+      console.error('Error saving review:', error);
+    }
+  };
 
   const handleImagePicker = () => {
     const options = {

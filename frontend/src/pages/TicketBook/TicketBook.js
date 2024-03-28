@@ -1,6 +1,7 @@
 import React from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import TicketItem from '../../components/TicketBook/TicketItem';
+import NavHeader from '../../components/NavHeader';
 
 // 더미 데이터
 const dummyData = [
@@ -58,6 +59,7 @@ const TicketBook = () => {
   
   return (
     <SafeAreaView style={styles.container}>
+      <NavHeader />
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         {dummyData.map((ticket, index) => (
           <View key={index}>

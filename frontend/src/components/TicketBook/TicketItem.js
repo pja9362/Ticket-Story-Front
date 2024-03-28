@@ -10,6 +10,7 @@ import iconReviewOn from '../../images/icon_ReviewOn.png';
 import iconReviewOff from '../../images/icon_ReviewOff.png';
 import iconPhotoOn from '../../images/icon_PhotoOn.png';
 import iconPhotoOff from '../../images/icon_PhotoOff.png';
+import iconEdit from '../../images/icon_edit.png';
 
 const TicketItem = ({ type, title, review, photo, contentRating, seatRating, date, category, location, seat }) => {
   let ticketImageSource;
@@ -62,6 +63,9 @@ const TicketItem = ({ type, title, review, photo, contentRating, seatRating, dat
           <Text style={styles.infoText}>장소: {location}</Text>
           <Text style={styles.infoText}>좌석: {seat}</Text>
         </View>
+      </View>
+      <View style={{position: 'absolute', bottom: 10, right: 28}}>
+        <Image source={iconEdit} style={{width: 20, height: 20}}/>
       </View>
     </ImageBackground>
   );

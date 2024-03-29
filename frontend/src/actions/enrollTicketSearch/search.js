@@ -7,16 +7,13 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-const API_URL = 'http://ticketstory.shop/api/v1/search/autoComplete';
+const API_URL = 'https://ticketstory.shop/api/v1/search/autoComplete';
 
 export const searchContent = (keyword, date, category, registerBy) => async dispatch => {
     const token = await AsyncStorage.getItem('accessToken');
     console.log('Token:', token);
-    console.log('Search content request:',token, keyword, date, category, registerBy);
-
 
     try {
-        console.log("요청 시작! TRY 구문 실행!");
         const response = await axios.get(
             `${API_URL}`,
             {
@@ -31,17 +28,24 @@ export const searchContent = (keyword, date, category, registerBy) => async disp
                 }
             }
         );          
-        console.log('Search content response:', response.data);
+        console.log("RESPONSE", response.data);
 
-        dispatch({
-            type: SEARCH_CONTENT_SUCCESS,
-            payload: response.data 
-        });
-
-        return response.data;
+        if(response.status == 200) {
+            dispatch({
+                type: SEARCH_CONTENT_SUCCESS,
+                payload: response.data 
+            });
+            return response.data;
+        } else {
+            dispatch({
+                type: SEARCH_CONTENT_FAIL
+            });
+            return [];
+        }
     } catch (error) {
         dispatch({
             type: SEARCH_CONTENT_FAIL
         });
+        return [];
     }
 };

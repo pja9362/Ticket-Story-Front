@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import CategoryBtnContainer from '../../components/EnrollTicket/CategoryBtnContainer';
 import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
 import NextBtn from '../../components/EnrollTicket/NextBtn';
 import { searchContent } from '../../actions/enrollTicketSearch/search';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getMappedDetailCategory, getMappedCategory } from '../../utils/getMappedCategory';
 
 const EnrollInfoByScrape = ({ route, navigation }) => {
   const dispatch = useDispatch();
+
+  const contentLists = useSelector(state => state.enrollTicketSearch.contentLists);
+
+  const [showContentDropdown, setShowContentDropdown] = useState(true);
 
   const { ticketInfo } = route.params;
 
@@ -52,35 +57,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   };
 
   const handleNext = async () => {
-    let mappedCategory = category;
-    let mappedCategoryDetail = categoryDetail;
-    
-    if (category === '영화') {
-      mappedCategory = 'MOVIE';
-      mappedCategoryDetail = 'MOVIE';
-    } else if (category === '공연') {
-      if (categoryDetail === '뮤지컬') {
-        mappedCategory = 'MUSICAL';
-        mappedCategoryDetail = 'MUSICAL';
-      } else if (categoryDetail === '연극') {
-        mappedCategory = 'PLAY';
-        mappedCategoryDetail = 'PLAY';
-      } else {
-        mappedCategory = 'PERFORMANCE';
-        mappedCategoryDetail = 'PERFORMANCE';
-      }
-    } else if (category === '스포츠') {
-      if (categoryDetail === '야구') {
-        mappedCategory = 'SPORTS';
-        mappedCategoryDetail = 'BASEBALL';
-      } else if (categoryDetail === '축구') {
-        mappedCategory = 'SPORTS';
-        mappedCategoryDetail = 'SOCCER';
-      } else {
-        mappedCategory = 'SPORTS';
-        mappedCategoryDetail = 'ETC';
-      }
-    }
+    const { category: mappedCategory, categoryDetail: mappedCategoryDetail } = getMappedDetailCategory(category, categoryDetail);
   
     const ticketData = {
       registerBy: 'SCRAPE',
@@ -110,12 +87,12 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   }
 
   useEffect(() => {
-    if(initialTitle.trim() !== '') {
-      console.log("검색 요청");
-      dispatch(searchContent(initialTitle, initialDate, 'MOVIE', 'SCRAPE'));
+    if (initialTitle.trim() !== '') {
+      let mappedCategory = getMappedCategory(category);
+      dispatch(searchContent(initialTitle, initialDate, mappedCategory, 'SCRAPE'));
     }
   }, []);
-
+  
   return (
     <>
       <ScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
@@ -182,6 +159,36 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
             <Text style={styles.requiredIndicator}>*</Text>
           </Text>
           <TextInput style={styles.inputBox} value={title} onChangeText={setTitle} placeholder='콘텐츠 제목'/>
+
+          {/* Content Lists Dropdown */}
+          {
+            showContentDropdown && (
+              <View style={styles.dropdownContainer}>
+                <View style={styles.dropdown}>
+                  {contentLists.map((content, index) => (
+                    <View key={index} style={styles.dropdownItem}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setTitle(content.title);
+                          setShowContentDropdown(false);
+                        }}
+                        style={styles.dropdownItemTouchable}
+                      >
+                        <Image
+                          style={styles.posterImage}
+                          source={{ uri: 'https://file.koreafilm.or.kr/thm/02/00/04/29/tn_DPF012851.jpg' }}
+                        />
+                        <View style={styles.contentDetails}>
+                          <Text style={styles.title}>{content.title}</Text>
+                          <Text>{content.detail.join(', ')}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )
+          }
 
           {/* Location */}
           <Text style={styles.subsectionText}>
@@ -258,6 +265,34 @@ const styles = StyleSheet.create({
     floatingButtonContainer: {
       width: '100%',
       alignItems: 'center',
+    },
+    dropdownContainer: {
+      marginVertical: 10,
+    },
+    dropdown: {
+      borderWidth: 1,
+      borderColor: '#ccc',
+      borderRadius: 5,
+      padding: 10,
+    },
+    dropdownItem: {
+      marginBottom: 10,
+    },
+    dropdownItemTouchable: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    posterImage: {
+      width: 28,
+      height: 40,
+      borderRadius: 2,
+      marginRight: 10
+    },
+    contentDetails: {
+      flex: 1,
+    },
+    title: {
+      fontWeight: 'bold',
     },
 });
 

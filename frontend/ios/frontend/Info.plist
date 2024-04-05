@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSAllowsArbitraryLoads</key>
-	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -27,13 +25,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<!-- App Transport Security Error -->
-	<!-- <key>NSAppTransportSecurity</key>
+	<key>NSAppTransportSecurity</key>
 	<dict>
-		<key>NSAllowsArbitraryLoadsInWebContent</key>
-		<true/>
+		<!-- <key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/> -->
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
-	</dict> -->
+	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to your camera to scan your ticket.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

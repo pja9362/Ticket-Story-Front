@@ -7,6 +7,7 @@ import NextBtn from '../../components/EnrollTicket/NextBtn';
 import { searchContent } from '../../actions/enrollTicketSearch/search';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMappedDetailCategory, getMappedCategory } from '../../utils/getMappedCategory';
+import checkIcon from '../../images/icon_circleCheck.png';
 
 const EnrollInfoByScrape = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -28,6 +29,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     category: initialCategory = '',
   } = ticketInfo;
 
+  const [contentsId, setContentsId] = useState(null);
+  const [locationId, setLocationId] = useState(null);
   const [title, setTitle] = useState(initialTitle);
   const [date, setDate] = useState(initialDate);
   const [time, setTime] = useState(initialTime);
@@ -158,25 +161,31 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
             관람 콘텐츠
             <Text style={styles.requiredIndicator}>*</Text>
           </Text>
-          <TextInput style={styles.inputBox} value={title} onChangeText={setTitle} placeholder='콘텐츠 제목'/>
-
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            { contentsId !== null &&
+                  <Image style={styles.checkIcon} source={checkIcon} />
+            }
+            <TextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={setTitle} placeholder='콘텐츠 제목'/>
+          </View>
           {/* Content Lists Dropdown */}
           {
             showContentDropdown && (
-              <View style={styles.dropdownContainer}>
+              <View style={{marginVertical: 10}}>
                 <View style={styles.dropdown}>
-                  {contentLists.map((content, index) => (
+                  {contentLists && contentLists.slice(0, 5).map((content, index) => (
                     <View key={index} style={styles.dropdownItem}>
                       <TouchableOpacity
                         onPress={() => {
                           setTitle(content.title);
+                          setContentsId(content.content_id);
+                          setLocationId(content.location_id);
                           setShowContentDropdown(false);
                         }}
                         style={styles.dropdownItemTouchable}
                       >
                         <Image
                           style={styles.posterImage}
-                          source={{ uri: 'https://file.koreafilm.or.kr/thm/02/00/04/29/tn_DPF012851.jpg' }}
+                          source={{ uri: content.imageUrl[0] }}
                         />
                         <View style={styles.contentDetails}>
                           <Text style={styles.title}>{content.title}</Text>
@@ -266,9 +275,6 @@ const styles = StyleSheet.create({
       width: '100%',
       alignItems: 'center',
     },
-    dropdownContainer: {
-      marginVertical: 10,
-    },
     dropdown: {
       borderWidth: 1,
       borderColor: '#ccc',
@@ -293,6 +299,12 @@ const styles = StyleSheet.create({
     },
     title: {
       fontWeight: 'bold',
+    },
+    checkIcon: {
+      width: 12,
+      height: 12,
+      position: 'absolute',
+      right: 10,
     },
 });
 

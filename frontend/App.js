@@ -21,6 +21,8 @@ import OCRFail from './src/pages/EnrollTicket/OCRFail';
 import MainStack from './src/navigation/MainStack';
 import OAuthWebView from './src/pages/Scrape/OAuthWebView';
 import TicketlinkWebView from './src/pages/Scrape/TicketlinkWebView';
+// dummy
+import ShowImageScreen from './src/pages/ShowImage';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -68,6 +70,9 @@ const App = () => {
               {/* Ticket Link */}
               <Stack.Screen name="OAuthWebView" component={OAuthWebView} />
               <Stack.Screen name="TicketlinkWebView" component={TicketlinkWebView} />
+
+              {/* Dummy */}
+              <Stack.Screen name="ShowImageView" component={ShowImageScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         </Provider>

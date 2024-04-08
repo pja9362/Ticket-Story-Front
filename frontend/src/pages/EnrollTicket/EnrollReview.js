@@ -13,9 +13,10 @@ import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import SliderRating from '../../components/EnrollTicket/SliderRating';
 import addPhoto from '../../images/icon_add_photo.png';
 import deleteIcon from '../../images/icon_delete_photo.png';
-import {launchImageLibrary} from 'react-native-image-picker';
+// import {launchImageLibrary} from 'react-native-image-picker';
 import NextButton from '../../components/EnrollTicket/NextBtn';
 import CustomCheckbox from '../../components/EnrollTicket/CustomCheckbox';
+import ImagePicker from 'react-native-image-crop-picker';
 
 const EnrollReview = ({navigation, route}) => {
   const { title, ticketData } = route.params;
@@ -72,33 +73,22 @@ const EnrollReview = ({navigation, route}) => {
     }
   };
 
-  const handleImagePicker = () => {
-    const options = {
-      mediaType: 'photo',
-      cameraType: 'back',
-      selectionLimit: 3,
-      title: 'Select Images',
-      mediaType: 'photo',
-      quality: 0.8,
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-
-    launchImageLibrary(options, response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      } else {
-        const images = response.assets.map(asset => asset.uri);
-        setSelectedImages(images);
-      }
+  const handleImagePicker = async () => {
+    if (selectedImages.length >= 3) {
+      alert('이미지는 최대 3개까지 등록할 수 있습니다.');
+      return; 
     }
-    );
+    try {
+      const image = await ImagePicker.openPicker({
+        cropping: true,
+        mediaType: 'photo',
+      });
+      
+      const images = [image.path]; 
+      setSelectedImages(prevImages => [...prevImages, ...images]); 
+    } catch (error) {
+      console.log('ImagePicker Error: ', error);
+    }
   };
 
   const handleImageDelete = index => {

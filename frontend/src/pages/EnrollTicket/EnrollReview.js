@@ -16,7 +16,6 @@ import deleteIcon from '../../images/icon_delete_photo.png';
 import {launchImageLibrary} from 'react-native-image-picker';
 import NextButton from '../../components/EnrollTicket/NextBtn';
 import CustomCheckbox from '../../components/EnrollTicket/CustomCheckbox';
-import {saveNewTicket} from '../../actions/ticket/ticket';
 
 const EnrollReview = ({navigation, route}) => {
   const { title, ticketData } = route.params;

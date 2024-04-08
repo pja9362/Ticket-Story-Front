@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingScreen from '../../components/LoadingScreen';
 import NextBtn from '../../components/EnrollTicket/NextBtn';
 import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
+import checkIcon from '../../images/icon_circleCheck.png';
 
 const EnrollInfoByOCR = ({ route, navigation }) => {
   const { categoryInfo } = route.params;

@@ -1,26 +1,42 @@
-import React from 'react';
-import { SafeAreaView, StyleSheet, Text, Image, TouchableOpacity, View } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
+import { SafeAreaView, StyleSheet, Text, Image, TouchableOpacity, View, Platform, PermissionsAndroid, Alert } from 'react-native';
+import { captureRef } from 'react-native-view-shot';
+import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 
 const dummyImageUrl = 'https://source.unsplash.com/random/400x400';
 
 const ShowImage = () => {
+    const viewRef = useRef();
     const handleShareBtn = () => {
         console.log('공유하기')
     }
 
-    const handleSaveBtn = () => {
-        console.log('저장하기')
-    }
+    const handleSaveBtn = async () => {
+        console.log('저장하기');
+        try {
+
+            const uri = await captureRef(viewRef, {
+                format: 'jpg',
+                quality: 0.8,
+                result: Platform.OS === 'ios' ? 'tmpfile' : 'base64',
+            });
+            await CameraRoll.saveAsset(uri);
+            console.log('이미지가 저장되었습니다.');
+        } catch (error) {
+            console.error('이미지 저장 중 오류가 발생했습니다.', error);
+        }
+    };
     
     return (
         <SafeAreaView style={styles.container}>
             <Text>사진 보기</Text>
-            <View style={styles.imageContainer}>
-                <Image source={{ uri: dummyImageUrl }} style={styles.rawImage} />
+            <View ref={viewRef} collapsable={false} style={styles.imageContainer}>
+                <Image source={{ uri: dummyImageUrl }} style={styles.rawImage}/>
                 <View style={styles.overlay}>
                     <Text style={styles.overlayText}>콘텐츠 제목이지롱</Text>
                     <Text style={styles.overlayText}>Date도 적고</Text>
                     <Text style={styles.overlayText}>Time도 적을거야!</Text>
+                    <Text style={styles.overlayText}>저장된다고? 짱 신기해</Text>
                 </View>
             </View>
 
@@ -35,7 +51,6 @@ const ShowImage = () => {
         </SafeAreaView>
     )
 }
-
 
 const styles = StyleSheet.create({
     container: {

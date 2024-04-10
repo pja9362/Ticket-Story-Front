@@ -81,6 +81,6 @@
 	<key>NSCameraUsageDescription</key>
 	<string>OCR 티켓 등록을 위해 카메라 접근이 필요합니다. </string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-    <string>$(PRODUCT_NAME) would like to save photos to your photo gallery</string>
+    <string>카메라 및 갤러리 접근이 필요합니다.</string>
 </dict>
 </plist>

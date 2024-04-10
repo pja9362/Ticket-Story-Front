@@ -1,14 +1,33 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, Text, Image, TouchableOpacity, View, Platform, PermissionsAndroid, Alert } from 'react-native';
+import React, { useRef } from 'react';
+import { SafeAreaView, StyleSheet, Text, Image, TouchableOpacity, View, Platform, Alert } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
+import Share from 'react-native-share';
 
 const dummyImageUrl = 'https://source.unsplash.com/random/400x400';
 
 const ShowImage = () => {
     const viewRef = useRef();
-    const handleShareBtn = () => {
-        console.log('공유하기')
+
+    const handleShareBtn = async () => {
+        console.log('공유하기');
+        try {
+            const uri = await captureRef(viewRef, {
+                format: 'jpg',
+                quality: 0.8,
+                result: Platform.OS === 'ios' ? 'tmpfile' : 'base64',
+            });
+
+            const shareOptions = {
+                title: '공유하기',
+                // url: `data:image/jpeg;base64,${uri}`,
+                url: Platform.OS === 'ios' ? `file://${uri}` : uri,
+            };
+            await Share.open(shareOptions);
+            console.log('이미지가 공유되었습니다.');
+        } catch (error) {
+            console.error('이미지 공유 중 오류가 발생했습니다.', error);
+        }
     }
 
     const handleSaveBtn = async () => {
@@ -22,6 +41,7 @@ const ShowImage = () => {
             });
             await CameraRoll.saveAsset(uri);
             console.log('이미지가 저장되었습니다.');
+            Alert.alert('저장 완료', '이미지가 저장되었습니다.');
         } catch (error) {
             console.error('이미지 저장 중 오류가 발생했습니다.', error);
         }
@@ -30,7 +50,7 @@ const ShowImage = () => {
     return (
         <SafeAreaView style={styles.container}>
             <Text>사진 보기</Text>
-            <View ref={viewRef} collapsable={false} style={styles.imageContainer}>
+            <View ref={viewRef} style={styles.imageContainer} collapsable={false}>
                 <Image source={{ uri: dummyImageUrl }} style={styles.rawImage}/>
                 <View style={styles.overlay}>
                     <Text style={styles.overlayText}>콘텐츠 제목이지롱</Text>

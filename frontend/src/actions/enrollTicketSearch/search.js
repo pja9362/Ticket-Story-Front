@@ -7,7 +7,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-const API_URL = 'https://ticketstory.shop/api/v1/search/autoComplete';
+const API_URL = 'https://ticketstory.shop/api/v1/search';
 
 export const searchContent = (keyword, date, category, registerBy) => async dispatch => {
     const token = await AsyncStorage.getItem('accessToken');
@@ -15,7 +15,7 @@ export const searchContent = (keyword, date, category, registerBy) => async disp
 
     try {
         const response = await axios.get(
-            `${API_URL}`,
+            `${API_URL}/autoComplete`,
             {
                 params: {
                     keyword: keyword,
@@ -49,3 +49,42 @@ export const searchContent = (keyword, date, category, registerBy) => async disp
         return [];
     }
 };
+
+export const searchLocation = (keyword) => async dispatch => {
+    const token = await AsyncStorage.getItem('accessToken');
+
+    console.log("장소 검색", keyword)
+
+    try {
+        const response = await axios.get(
+            `${API_URL}/autoCompleteLocation`,
+            {
+                params: {
+                    keyword: keyword
+                },
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );          
+        console.log("RESPONSE", response.data);
+
+        if(response.status == 200) {
+            dispatch({
+                type: SEARCH_LOCATION_SUCCESS,
+                payload: response.data 
+            });
+            return response.data;
+        } else {
+            dispatch({
+                type: SEARCH_LOCATION_FAIL
+            });
+            return [];
+        }
+    } catch (error) {
+        dispatch({
+            type: SEARCH_LOCATION_FAIL
+        });
+        return [];
+    }
+}

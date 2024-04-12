@@ -4,7 +4,7 @@ import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import CategoryBtnContainer from '../../components/EnrollTicket/CategoryBtnContainer';
 import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
 import NextBtn from '../../components/EnrollTicket/NextBtn';
-import { searchContent } from '../../actions/enrollTicketSearch/search';
+import { searchContent, searchLocation } from '../../actions/enrollTicketSearch/search';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMappedDetailCategory, getMappedCategory } from '../../utils/getMappedCategory';
 import checkIcon from '../../images/icon_circleCheck.png';
@@ -13,8 +13,10 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   const dispatch = useDispatch();
 
   const contentLists = useSelector(state => state.enrollTicketSearch.contentLists);
+  const locationLists = useSelector(state => state.enrollTicketSearch.locationLists);
 
   const [showContentDropdown, setShowContentDropdown] = useState(true);
+  const [showLocationDropdown, setShowLocationDropdown] = useState(false);
 
   const { ticketInfo } = route.params;
 
@@ -89,6 +91,17 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     }
   }
 
+  const handleLocationSearch = (location) => {
+    console.log('Location search: ', locationId);
+    if(locationId !== null) {
+      console.log('Location already selected');
+    }
+    else {
+      dispatch(searchLocation(location));
+      setShowLocationDropdown(true);
+    }
+  }
+
   useEffect(() => {
     if (initialTitle.trim() !== '') {
       let mappedCategory = getMappedCategory(category);
@@ -96,6 +109,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     }
   }, []);
   
+
   return (
     <>
       <ScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
@@ -180,6 +194,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                           setContentsId(content.content_id);
                           setLocationId(content.location_id);
                           setShowContentDropdown(false);
+                          content.location_id == null && handleLocationSearch(location);
                         }}
                         style={styles.dropdownItemTouchable}
                       >
@@ -204,7 +219,38 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
             관람 장소
             <Text style={styles.requiredIndicator}>*</Text>
           </Text>
-          <TextInput style={styles.inputBox} value={location} onChangeText={setLocation} placeholder={getCategoryPlaceholder(category, 'location')} />
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            { locationId !== null &&
+                  <Image style={styles.checkIcon} source={checkIcon} />
+            }
+            <TextInput style={{...styles.inputBox, flex: 1}} value={location} onChangeText={setLocation} placeholder={getCategoryPlaceholder(category, 'location')} />
+          </View>
+          {/* Location Dropdown */}
+          {
+            showLocationDropdown && (
+              <View style={{marginVertical: 10}}>
+                <View style={styles.dropdown}>
+                  {locationLists && locationLists.slice(0, 5).map((location, index) => (
+                    <View key={index} style={styles.dropdownItem}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setLocation(location.name);
+                          setLocationId(location.location_id);
+                          setShowLocationDropdown(false);
+                        }}
+                        style={styles.dropdownItemTouchable}
+                      >
+                        <View style={styles.locationDetails}>
+                          <Text style={styles.title}>{location.name}</Text>
+                          <Text style={styles.subText}>{location.address}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )
+          }
 
           {/* Location Detail */}
           {
@@ -255,6 +301,10 @@ const styles = StyleSheet.create({
       marginBottom: 8,
       color: '#000',
     },
+    subText: {
+      fontSize: 12,
+      color: '#8A8A8A'
+    },
     inputBox: {
       borderWidth: 1,
       borderColor: '#000',
@@ -282,7 +332,10 @@ const styles = StyleSheet.create({
       padding: 10,
     },
     dropdownItem: {
-      marginBottom: 10,
+      padding: 5,
+      marginBottom: 5,
+      borderBottomColor: '#EEEEEE',
+      borderBottomWidth: 1,
     },
     dropdownItemTouchable: {
       flexDirection: 'row',
@@ -296,6 +349,11 @@ const styles = StyleSheet.create({
     },
     contentDetails: {
       flex: 1,
+    },
+    locationDetails: {
+      flexDirection: 'row',
+      gap: 8,
+      alignItems: 'center',
     },
     title: {
       fontWeight: 'bold',

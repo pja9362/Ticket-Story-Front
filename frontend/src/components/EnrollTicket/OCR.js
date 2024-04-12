@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Alert, Platform } from 'react-native';
 import DocumentScanner from 'react-native-document-scanner-plugin';
-import api from '../../api/api';
+import { saveImageAndPerformOCR } from '../../actions/ticket/ticket';
 import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 
 const OCR = ({ onNextStep }) => {
@@ -66,7 +66,7 @@ const OCR = ({ onNextStep }) => {
 
   useEffect(() => {
     if (scannedImage) {
-      api.saveImageAndPerformOCR(scannedImage);
+      saveImageAndPerformOCR(scannedImage);
     }
   }, [scannedImage]);
 

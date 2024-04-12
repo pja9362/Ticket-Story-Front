@@ -21,3 +21,38 @@ export const saveNewTicket = async (data) => {
     throw error;
   }
 }
+
+export const saveImageAndPerformOCR = async (scannedImageUri) => {
+  try {    
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    console.log('Access token:', accessToken);
+
+    const category = "MOVIE";
+
+    console.log('Saving image and performing OCR:', scannedImageUri);
+    
+    await AsyncStorage.removeItem('ticket');
+    
+    const formData = new FormData();
+    formData.append('category', category);
+    formData.append('img', {
+      uri: scannedImageUri,
+      name: 'image.jpg',
+      type: 'image/jpeg',
+    });
+
+    const response = await axios.post(`${API_URL}/api/v1/ocr/ocr`, formData, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    console.log('OCR response:', response.data);
+    
+    await AsyncStorage.setItem('ticket', JSON.stringify(response.data));
+    
+  } catch (error) {
+    console.error('Error saving image to file or performing OCR:', error);
+  }
+};

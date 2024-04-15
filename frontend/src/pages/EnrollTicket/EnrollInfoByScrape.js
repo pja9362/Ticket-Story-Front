@@ -77,8 +77,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
         seats: seats.split(',').map(seat => seat.trim()),
         time,
         title,
-        contentId: 0,
-        locationId: 0,
+        contentId: contentsId,
+        locationId: locationId,
       }
     }
   
@@ -91,11 +91,17 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     }
   }
 
+  const handleContentSelect = (content) => {
+    setTitle(content.title);
+    setContentsId(content.content_id);
+    setLocationId(content.location_id);
+    setShowContentDropdown(false);
+    content.location_id == null && handleLocationSearch(location);
+  }
+
   const handleLocationSearch = (location) => {
     console.log('Location search: ', locationId);
-    if(locationId !== null) {
-      console.log('Location already selected');
-    }
+    if(locationId !== null) return;
     else {
       dispatch(searchLocation(location));
       setShowLocationDropdown(true);
@@ -189,13 +195,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                   {contentLists && contentLists.slice(0, 5).map((content, index) => (
                     <View key={index} style={styles.dropdownItem}>
                       <TouchableOpacity
-                        onPress={() => {
-                          setTitle(content.title);
-                          setContentsId(content.content_id);
-                          setLocationId(content.location_id);
-                          setShowContentDropdown(false);
-                          content.location_id == null && handleLocationSearch(location);
-                        }}
+                        onPress={() => handleContentSelect(content)}
                         style={styles.dropdownItemTouchable}
                       >
                         <Image
@@ -325,6 +325,7 @@ const styles = StyleSheet.create({
       width: '100%',
       alignItems: 'center',
     },
+    // dropdown
     dropdown: {
       borderWidth: 1,
       borderColor: '#ccc',

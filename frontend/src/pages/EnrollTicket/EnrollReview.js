@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -13,10 +13,10 @@ import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import SliderRating from '../../components/EnrollTicket/SliderRating';
 import addPhoto from '../../images/icon_add_photo.png';
 import deleteIcon from '../../images/icon_delete_photo.png';
-// import {launchImageLibrary} from 'react-native-image-picker';
 import NextButton from '../../components/EnrollTicket/NextBtn';
 import CustomCheckbox from '../../components/EnrollTicket/CustomCheckbox';
 import ImagePicker from 'react-native-image-crop-picker';
+import { saveNewTicket } from '../../actions/ticket/ticket';
 
 const EnrollReview = ({navigation, route}) => {
   const { title, ticketData } = route.params;
@@ -65,8 +65,8 @@ const EnrollReview = ({navigation, route}) => {
 
     try {
       console.log("티켓 등록 요청", requestData);
-      // const savedTicket = await saveNewTicket(requestData);
-      // console.log('Saved ticket:', savedTicket);
+      const savedTicket = await saveNewTicket(requestData);
+      console.log('Saved ticket:', savedTicket);
       // navigation.navigate('EnrollFinish');
     } catch (error) {
       console.error('Error saving review:', error);

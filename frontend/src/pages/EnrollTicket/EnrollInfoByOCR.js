@@ -9,10 +9,20 @@ import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingScreen from '../../components/LoadingScreen';
 import NextBtn from '../../components/EnrollTicket/NextBtn';
-import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
+import { searchContent, searchLocation } from '../../actions/enrollTicketSearch/search';
+import { useDispatch, useSelector } from 'react-redux';
+import { getMappedDetailCategory, getMappedCategory } from '../../utils/getMappedCategory';
 import checkIcon from '../../images/icon_circleCheck.png';
 
 const EnrollInfoByOCR = ({ route, navigation }) => {
+  const dispatch = useDispatch();
+
+  const contentLists = useSelector(state => state.enrollTicketSearch.contentLists);
+  const locationLists = useSelector(state => state.enrollTicketSearch.locationLists);
+
+  const [showContentDropdown, setShowContentDropdown] = useState(true);
+  const [showLocationDropdown, setShowLocationDropdown] = useState(false);
+
   const { categoryInfo } = route.params;
   const { category, categoryDetail } = categoryInfo;
 
@@ -85,6 +95,13 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
     }
   }, [ocrResponse]);
 
+  useEffect(() => {
+    if(title.trim() !== '') {
+      let mappedCategory = getMappedCategory(category);
+      dispatch(searchContent(title, date, mappedCategory));
+    }
+  }, [title]);
+
   return (
     <>
       {loading ? (
@@ -135,7 +152,33 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                 onChangeText={text => setTitle(text)}
                 placeholder='콘텐츠 제목'
               />
-
+              {/* Content Lists Dropdown */}
+              {
+                showContentDropdown && (
+                  <View style={{marginVertical: 10}}>
+                    <View style={styles.dropdown}>
+                      {contentLists && contentLists.slice(0, 5).map((content, index) => (
+                        <View key={index} style={styles.dropdownItem}>
+                          <TouchableOpacity
+                            onPress={() => handleContentSelect(content)}
+                            style={styles.dropdownItemTouchable}
+                          >
+                            <Image
+                              style={styles.posterImage}
+                              source={{ uri: content.imageUrl[0] }}
+                            />
+                            <View style={styles.contentDetails}>
+                              <Text style={styles.title}>{content.title}</Text>
+                              <Text>{content.detail.join(', ')}</Text>
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                      ))}
+                    </View>
+                  </View>
+                )
+              }
+              
               <Text style={styles.sectionText}>
                   관람 장소
                   <Text style={styles.requiredIndicator}>*</Text>
@@ -235,6 +278,46 @@ const styles = StyleSheet.create({
   },
   requiredIndicator: {
     color: '#5D70F9',
+  },
+  // dropdown
+  dropdown: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+  },
+  dropdownItem: {
+    padding: 5,
+    marginBottom: 5,
+    borderBottomColor: '#EEEEEE',
+    borderBottomWidth: 1,
+  },
+  dropdownItemTouchable: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  posterImage: {
+    width: 28,
+    height: 40,
+    borderRadius: 2,
+    marginRight: 10
+  },
+  contentDetails: {
+    flex: 1,
+  },
+  locationDetails: {
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+  },
+  title: {
+    fontWeight: 'bold',
+  },
+  checkIcon: {
+    width: 12,
+    height: 12,
+    position: 'absolute',
+    right: 10,
   },
 });
 

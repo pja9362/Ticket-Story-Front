@@ -197,7 +197,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                     <View key={index} style={styles.dropdownItem}>
                       <TouchableOpacity
                         onPress={() => {
-                          setLocation(location.name);
+                          setLocation(location.name || location.location_name);
                           setLocationId(location.location_id);
                           setShowLocationDropdown(false);
                           setIsLocationSelected(true);

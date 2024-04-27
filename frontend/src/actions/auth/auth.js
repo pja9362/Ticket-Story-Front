@@ -10,6 +10,7 @@ import axios from 'axios';
 
 export const checkIdDuplicate = async userId => {
   try {
+    console.log(API_URL)
     const response = await axios.get(
       `${API_URL}/api/v1/auth/checkDuplicateId`, 
       {

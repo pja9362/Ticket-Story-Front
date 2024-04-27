@@ -35,6 +35,7 @@ const Init = ({navigation}) => {
       const response = await saveTokens(url);
 
       await AsyncStorage.setItem('accessToken', response.accessToken);
+      console.log('Access token:', response.accessToken);
       await AsyncStorage.setItem('refreshToken', response.refreshToken);
 
       navigation.navigate('MainStack');

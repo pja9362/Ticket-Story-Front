@@ -2,7 +2,9 @@ import {
     SEARCH_CONTENT_SUCCESS,
     SEARCH_CONTENT_FAIL,
     SEARCH_LOCATION_SUCCESS,
-    SEARCH_LOCATION_FAIL
+    SEARCH_LOCATION_FAIL,
+    SEARCH_CONTENT_CLEAR,
+    SEARCH_LOCATION_CLEAR
 } from './types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -87,4 +89,16 @@ export const searchLocation = (keyword) => async dispatch => {
         });
         return [];
     }
+}
+
+export const clearContent = () => async dispatch => {
+    dispatch({
+        type: SEARCH_CONTENT_CLEAR  
+    });
+}
+
+export const clearLocation = () => async dispatch => {
+    dispatch({
+        type: SEARCH_LOCATION_CLEAR  
+    });
 }

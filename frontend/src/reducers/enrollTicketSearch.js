@@ -2,7 +2,9 @@ import {
     SEARCH_CONTENT_SUCCESS,
     SEARCH_CONTENT_FAIL,
     SEARCH_LOCATION_SUCCESS,
-    SEARCH_LOCATION_FAIL
+    SEARCH_LOCATION_FAIL,
+    SEARCH_CONTENT_CLEAR,
+    SEARCH_LOCATION_CLEAR
 } from '../actions/enrollTicketSearch/types';
 
 const initialState = {
@@ -30,6 +32,16 @@ const enrollTicketSearchReducer = (state = initialState, action) => {
                 locationLists: payload,
             };
         case SEARCH_LOCATION_FAIL:
+            return {
+                ...state,
+                locationLists: [],
+            };
+        case SEARCH_CONTENT_CLEAR:
+            return {
+                ...state,
+                contentLists: [],
+            };
+        case SEARCH_LOCATION_CLEAR:
             return {
                 ...state,
                 locationLists: [],

@@ -56,11 +56,9 @@ const EnrollReview = ({navigation, route}) => {
     };
 
     const requestData = {
-      ticket: {
         ...ticketData,
         ratingDetails,
         reviewDetails
-      }
     };
 
     try {

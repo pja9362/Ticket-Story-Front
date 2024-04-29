@@ -20,12 +20,11 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
   const contentLists = useSelector(state => state.enrollTicketSearch.contentLists);
   const locationLists = useSelector(state => state.enrollTicketSearch.locationLists);
 
-  const [showContentDropdown, setShowContentDropdown] = useState(true);
-  const [showLocationDropdown, setShowLocationDropdown] = useState(false);
-
   const { categoryInfo } = route.params;
   const { category, categoryDetail } = categoryInfo;
 
+  const [contentsId, setContentsId] = useState(null);
+  const [locationId, setLocationId] = useState(null);
   const [title, setTitle] = useState('');
   const [location, setLocation] = useState('');
   const [locationDetail, setLocationDetail] = useState('');
@@ -38,9 +37,10 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const [loadingIcon, setLoadingIcon] = useState(1); 
 
-  const isFormValid = () => {
-    return title.trim() !== '' && location.trim() !== '';
-  }
+  const [showContentDropdown, setShowContentDropdown] = useState(true);
+  const [isContentSelected, setIsContentSelected] = useState(false);
+  const [showLocationDropdown, setShowLocationDropdown] = useState(false);
+  const [isLocationSelected, setIsLocationSelected] = useState(false);
 
   useEffect(() => {
     const getOcrResponse = async () => {
@@ -102,6 +102,57 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
     }
   }, [title]);
 
+  const handleContentSelect = (content) => {
+    setTitle(content.title);
+    setContentsId(content.content_id);
+    setLocationId(content.location_id);
+    content.location_id !== null && setLocation(content.location_name);
+    setShowContentDropdown(false);
+    content.location_id == null && handleLocationSearch(location);
+    handleClearList('content');
+  }
+
+
+  const handleLocationSearch = (location) => {
+    if(locationId !== null) return;
+    else {
+      dispatch(searchLocation(location));
+      setShowLocationDropdown(true);
+    }
+  }
+
+  const isFormValid = () => {
+    return title !== '' && date !== '' && time !== '' && location !== '';
+  };
+
+  const handleNext = async () => {
+    const { category: mappedCategory, categoryDetail: mappedCategoryDetail } = getMappedDetailCategory(category, categoryDetail);
+  
+    const ticketData = {
+      registerBy: 'OCR',
+      category: mappedCategory,
+      categoryDetail: mappedCategoryDetail,
+      platform,
+      ticketImg: '',
+      contentsDetails: {
+        date,
+        location,
+        locationDetail,
+        seats: seats.split(',').map(seat => seat.trim()),
+        time,
+        title,
+        contentsId: contentsId,
+        locationId: locationId,
+      }
+    }
+  
+    if (isFormValid()) {
+        navigation.navigate('EnrollReview', { title, ticketData })
+    } else {
+      alert('필수 입력 항목을 모두 입력해주세요!');
+    }
+  }
+
   return (
     <>
       {loading ? (
@@ -146,12 +197,12 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                 관람 콘텐츠
                 <Text style={styles.requiredIndicator}>*</Text>
               </Text>
-              <TextInput
-                style={styles.inputBox}
-                value={title}
-                onChangeText={text => setTitle(text)}
-                placeholder='콘텐츠 제목'
-              />
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                { contentsId !== null &&
+                      <Image style={styles.checkIcon} source={checkIcon} />
+                }
+                <TextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={setTitle} placeholder='콘텐츠 제목'/>
+              </View>
               {/* Content Lists Dropdown */}
               {
                 showContentDropdown && (
@@ -184,22 +235,52 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                   <Text style={styles.requiredIndicator}>*</Text>
               </Text>
               <View style={styles.inputBoxContainer}>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 15 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  { locationId !== null &&
+                    <Image style={styles.checkIcon} source={checkIcon} />
+                  }
                   {category === 'MOVIE' ? (
                     <TextInput
-                      style={[styles.inputBox, { flex: 1, fontWeight: 'bold', color: '#525252', textAlign: 'center'}]}
+                      style={[styles.inputBox, { fontWeight: 'bold', color: '#525252', textAlign: 'center'}]}
                       value={categoryDetail}
                       editable={false}
                     />
                   ) : null}
                   <TextInput
-                    style={[styles.inputBox, { flex: 3 }]}
+                    style={[styles.inputBox, { flex: 1 }]}
                     value={location}
                     onChangeText={text => setLocation(text)}
                     placeholder={getCategoryPlaceholder(category, 'location')}
                   />
                 </View>
               </View>
+              {/* Location Dropdown */}
+              {
+                showLocationDropdown && (
+                  <View style={{marginVertical: 10}}>
+                    <View style={styles.dropdown}>
+                      {locationLists && locationLists.slice(0, 5).map((location, index) => (
+                        <View key={index} style={styles.dropdownItem}>
+                          <TouchableOpacity
+                            onPress={() => {
+                              setLocation(location.name);
+                              setLocationId(location.location_id);
+                              setShowLocationDropdown(false);
+                              handleClearList('location');
+                            }}
+                            style={styles.dropdownItemTouchable}
+                          >
+                            <View style={styles.locationDetails}>
+                              <Text style={styles.title}>{location.name}</Text>
+                              <Text style={styles.subText}>{location.address}</Text>
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                      ))}
+                    </View>
+                  </View>
+                )
+              }
 
               <Text style={styles.sectionText}>관람 장소 (세부)</Text>
               <TextInput
@@ -218,17 +299,16 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                   placeholder={getCategoryPlaceholder(category, 'seats')}
                 />
               </View>
-          {/* <View style={styles.floatingButtonContainer}>
+          <View style={styles.floatingButtonContainer}>
             <NextBtn
               isDisabled={!isFormValid()}
               onPress={() => {
                 if (isFormValid()) {
-                  handleEnrollTicket();
-                  navigation.navigate('EnrollReview', { title })
+                  handleNext();
                 }
               }}
             />
-          </View> */}
+          </View>
         </View>
         </>
       )}

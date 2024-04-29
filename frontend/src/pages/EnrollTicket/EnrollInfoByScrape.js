@@ -82,8 +82,6 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
       }
     }
   
-    console.log('Updated ticketInfo: ', ticketData);
-  
     if (isFormValid()) {
         navigation.navigate('EnrollReview', { title, ticketData })
     } else {
@@ -124,7 +122,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
       console.log('Initial title:', title);
       let mappedCategory = getMappedCategory(category);
       let mappedCategoryDetail = getMappedDetailCategory(category, categoryDetail);
-      console.log(title, date, mappedCategory, mappedCategoryDetail.category, 'SCRAPE')
+      console.log(title, date, mappedCategory, mappedCategoryDetail.categoryDetail, 'SCRAPE')
       dispatch(searchContent(title, date, mappedCategory, 'SCRAPE'));
     }
   }, [category, categoryDetail]);

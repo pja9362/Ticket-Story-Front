@@ -6,10 +6,10 @@ export const getMappedDetailCategory = (category, categoryDetail) => {
         switch (categoryDetail) {
           case '뮤지컬':
           case 'MUSICAL':
-            return { category: 'MUSICAL', categoryDetail: 'MUSICAL' };
+            return { category: 'PERFORMANCE', categoryDetail: 'MUSICAL' };
           case '연극':
           case 'PLAY':
-            return { category: 'PLAY', categoryDetail: 'PLAY' };
+            return { category: 'PERFORMANCE', categoryDetail: 'PLAY' };
           default:
             return { category: 'PERFORMANCE', categoryDetail: 'PERFORMANCE' };
         }
@@ -30,10 +30,13 @@ export const getMappedDetailCategory = (category, categoryDetail) => {
 export const getMappedCategory = (category) => {
     switch (category) {
       case '영화':
+      case 'MOVIE':
         return 'MOVIE';
       case '공연':
+      case 'PERFORMANCE':
         return 'PERFORMANCE';
       case '스포츠':
+      case 'SPORTS':
         return 'SPORTS';
       default:
         return '';

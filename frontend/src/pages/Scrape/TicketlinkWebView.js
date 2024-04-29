@@ -14,7 +14,7 @@ const TicketlinkWebView = () => {
     const navigation = useNavigation();
     
     const handleTicketlinkNavigationStateChange = (state) => {   
-      console.log("current url: ", state.url);
+      // console.log("current url: ", state.url);
 
       const targetPattern = /^https:\/\/m\.ticketlink\.co\.kr\/my\/reserve\/\d+$/;
 

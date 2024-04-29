@@ -114,3 +114,49 @@ export const saveTokens = async (url) => {
     throw error;
   }
 };
+
+export const sendPasswordResetEmail = async (email) => {
+  const accessToken = await AsyncStorage.getItem('accessToken');
+
+  try {
+    console.log('Sending password reset email:', email);
+    const response = await axios.post(
+      `${API_URL}/api/v1/auth/password/sendPasswordCertification`,
+      { email },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      },
+    );
+    console.log('Password reset email response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+    throw error;
+  }
+}
+
+export const verfiyPasswordResetCode = async (userId, code) => {
+  const token = await AsyncStorage.getItem('accessToken');
+  const body = JSON.stringify({ userId, code });
+  try {
+    console.log('Verifying password reset code:', code);
+    const response = await axios.post(
+      `${API_URL}/api/v1/auth/password/verifyCertificationCode`,
+      body,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      },
+    );
+    console.log('Password reset code verification response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error verifying password reset code:', error);
+    throw error;
+  }
+}

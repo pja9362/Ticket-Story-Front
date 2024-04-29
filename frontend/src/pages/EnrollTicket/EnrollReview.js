@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -21,6 +21,10 @@ import { saveNewTicket } from '../../actions/ticket/ticket';
 const EnrollReview = ({navigation, route}) => {
   const { title, ticketData } = route.params;
 
+  useEffect(() => {
+    console.log("TICKET DATA", ticketData);
+  }, []);
+  
   const [sliderTouched, setSliderTouched] = useState(false);
 
   const [artRating, setArtRating] = useState(0);
@@ -41,7 +45,6 @@ const EnrollReview = ({navigation, route}) => {
   };
 
   const handleNext = async () => {
-    console.log("전달 받은 ticketData" , ticketData);
     const reviewDetails = {
       isPublic: !privateChecked,
       isSpoiler: spoilerChecked,

@@ -14,7 +14,6 @@ const EnrollByOCR = ({route, navigation}) => {
   }
 
   const onNextStep = () => {
-    // navigation.navigate('EnrollReview', {name: '콘텐츠', action: 'camera', categoryInfo});
     navigation.navigate('EnrollInfoByOCR', {categoryInfo})
   }
 

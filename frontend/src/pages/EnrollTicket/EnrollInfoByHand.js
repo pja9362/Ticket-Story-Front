@@ -24,7 +24,6 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   const [location, setLocation] = useState('');
   const [locationDetail, setLocationDetail] = useState('');
   const [seats, setSeats] = useState('');
-  const [ticketData, setTicketData] = useState(null);
 
   const [showContentDropdown, setShowContentDropdown] = useState(false);
   const [isContentSelected, setIsContentSelected] = useState(false);
@@ -63,7 +62,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     return title.trim() !== '' && date.trim() !== '' && time.trim() !== '' && location.trim() !== '';
   };
   
-  const handleEnrollTicket = async () => {
+  const handleNext = async () => {
     const seatsArray = seats.split(/,|-/).map(seat => seat.trim());
   
     const ticketData = {
@@ -82,12 +81,14 @@ const EnrollInfoByHand = ({ route, navigation }) => {
         contentsId: contentsId,
         locationId: locationId,
       }
-    };
+    }
 
-    console.log('Ticket data:', ticketData);
-    setTicketData(ticketData);
-
-    navigation.navigate('EnrollReview', { title, ticketData })
+    console.log('Ticket:', ticketData);
+    if (isFormValid()) {
+      navigation.navigate('EnrollReview', { title, ticketData })
+    } else {
+      alert('필수 입력 항목을 모두 입력해주세요!');
+    }
   };
 
 
@@ -239,7 +240,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
           isDisabled={!isFormValid()}
           onPress={() => {
             if (isFormValid()) {
-              handleEnrollTicket();
+              handleNext();
             }
           }}
         />

@@ -1,6 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {API_URL} from '@env';
+import {
+  LOAD_MY_TICKETS_SUCCESS,
+  LOAD_MY_TICKETS_FAIL,
+} from './types';
 
 export const saveNewTicket = async (data) => {
   try {
@@ -56,3 +60,31 @@ export const saveImageAndPerformOCR = async (scannedImageUri) => {
     console.error('Error saving image to file or performing OCR:', error);
   }
 };
+
+export const getMyTickets  = () => async dispatch => {
+  try {
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    console.log('Access token:', accessToken);
+    const response = await axios.get(`${API_URL}/api/v1/ticket/getUserTicketBook`, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+    if (response.data != null) {
+      console.log('My tickets:', response.data);
+      dispatch({
+        type: LOAD_MY_TICKETS_SUCCESS,
+        payload: response.data,
+      });
+    }
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching my tickets:', error);
+    dispatch({
+      type: LOAD_MY_TICKETS_FAIL,
+    });
+    throw error;
+  }
+}

@@ -104,7 +104,7 @@ const Step3 = ({nextStep, handleChange, values}) => {
           </View>
           <View style={styles.dateItem}>
             <TextInput
-              style={{...styles.inputBox, width: 50}}
+              style={{...styles.inputBox, width: 60}}
               value={month}
               onChangeText={text => setMonth(text)}
               placeholder="MM"
@@ -113,7 +113,7 @@ const Step3 = ({nextStep, handleChange, values}) => {
           </View>
           <View style={styles.dateItem}>
             <TextInput
-              style={{...styles.inputBox, width: 'auto'}}
+              style={{...styles.inputBox, width: 60}}
               value={day}
               onChangeText={text => setDay(text)}
               placeholder="DD"

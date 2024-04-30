@@ -37,7 +37,7 @@ const EnrollByScrape = () => {
   };
 
   const handleInterparkNavigationStateChange = (state) => {
-    console.log('current url: ', state.url);
+    // console.log('current url: ', state.url);
     if (state.url === 'https://mticket.interpark.com/MyPage/BookedDetail') {
       scrapeInterparkTicketDetails(webViewRef);
     } else if (state.url === 'https://www.interpark.com/') {
@@ -49,7 +49,7 @@ const EnrollByScrape = () => {
   };
 
   const handleLotteCinemaNavigationStateChange = (state) => {
-    console.log('current url: ', state.url);
+    // console.log('current url: ', state.url);
     if (state.url === 'https://www.lottecinema.co.kr/NLCMW/MyPage/MyMovieManageHistory?mTab=2') {
       scrapeLotteCinemaTicketDetails(webViewRef);
     } else if (state.url === 'https://www.lottecinema.co.kr/NLCMW/MyPage') {
@@ -61,7 +61,7 @@ const EnrollByScrape = () => {
   };
 
   const handleMegaboxNavigationStateChange = (state) => {
-    console.log('current url: ', state.url);
+    // console.log('current url: ', state.url);
     if (state.url === 'https://m.megabox.co.kr/') {
       const redirectScript = `
         window.location.href = 'https://m.megabox.co.kr/myMegabox';
@@ -75,7 +75,7 @@ const EnrollByScrape = () => {
   }
 
   const handleYes24NavigationStateChange = (state) => {
-    console.log('current url: ', state.url);
+    // console.log('current url: ', state.url);
     const targetURL = 'https://m.ticket.yes24.com:442/MyPage/OrderDetail.aspx';
     if (state.url.startsWith(targetURL)) {
       scrapeYes24TicketDetails(webViewRef);
@@ -101,7 +101,7 @@ const EnrollByScrape = () => {
   const handleMessage = (event, source) => {
     if (event.nativeEvent.data) {
       const ticketInfo= JSON.parse(event.nativeEvent.data);
-      console.log(`${source} Ticket Info: `, ticketInfo);
+      // console.log(`${source} Ticket Info: `, ticketInfo);
       
       navigation.navigate('EnrollInfoByScrape', { ticketInfo: ticketInfo, source: source });
     } 

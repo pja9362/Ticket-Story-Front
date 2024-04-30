@@ -4,14 +4,17 @@ import {
   Text,
   StyleSheet,
   TextInput,
+  TouchableOpacity,
+  Image,
 } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingScreen from '../../components/LoadingScreen';
 import NextBtn from '../../components/EnrollTicket/NextBtn';
-import { searchContent, searchLocation } from '../../actions/enrollTicketSearch/search';
+import { searchContent, searchLocation, clearContent, clearLocation } from '../../actions/enrollTicketSearch/search';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMappedDetailCategory, getMappedCategory } from '../../utils/getMappedCategory';
+import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
 import checkIcon from '../../images/icon_circleCheck.png';
 
 const EnrollInfoByOCR = ({ route, navigation }) => {
@@ -98,9 +101,18 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
   useEffect(() => {
     if(title.trim() !== '') {
       let mappedCategory = getMappedCategory(category);
-      dispatch(searchContent(title, date, mappedCategory));
+      dispatch(searchContent(title, date, mappedCategory, "OCR"));
+      console.log('searchContent: ', title, date, mappedCategory);
     }
   }, [title]);
+
+  const handleClearList = (type) => {
+    if(type === 'content') {
+      dispatch(clearContent());
+    } else if(type === 'location') {
+      dispatch(clearLocation());
+    }
+  }
 
   const handleContentSelect = (content) => {
     setTitle(content.title);
@@ -132,7 +144,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
       registerBy: 'OCR',
       category: mappedCategory,
       categoryDetail: mappedCategoryDetail,
-      platform,
+      platform: '',
       ticketImg: '',
       contentsDetails: {
         date,
@@ -159,11 +171,11 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
           <LoadingScreen iconId={loadingIcon}/>
       ) : (
         <>
-        <EnrollHeader
-          title="티켓 정보 입력"
-          onIconClick={() => { navigation.navigate('EnrollReview', {title: title}) }}
-        />
-        <View style={styles.container}>
+          <EnrollHeader
+            title="티켓 정보 입력"
+            onIconClick={() => { navigation.navigate('EnrollReview', {title: title}) }}
+          />
+          <View style={styles.container}>
               <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', gap: 5}}>
                 <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#000' }}>
                   작품 정보를 입력해주세요.
@@ -241,7 +253,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                   }
                   {category === 'MOVIE' ? (
                     <TextInput
-                      style={[styles.inputBox, { fontWeight: 'bold', color: '#525252', textAlign: 'center'}]}
+                      style={[styles.inputBox, { fontWeight: 'bold', color: '#525252', textAlign: 'center', marginRight: 15}]}
                       value={categoryDetail}
                       editable={false}
                     />
@@ -299,17 +311,18 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                   placeholder={getCategoryPlaceholder(category, 'seats')}
                 />
               </View>
-          <View style={styles.floatingButtonContainer}>
-            <NextBtn
-              isDisabled={!isFormValid()}
-              onPress={() => {
-                if (isFormValid()) {
-                  handleNext();
-                }
-              }}
-            />
           </View>
-        </View>
+
+          <View style={styles.floatingButtonContainer}>
+              <NextBtn
+                isDisabled={!isFormValid()}
+                onPress={() => {
+                  if (isFormValid()) {
+                    handleNext();
+                  }
+                }}
+              />
+            </View>
         </>
       )}
     </>
@@ -358,6 +371,12 @@ const styles = StyleSheet.create({
   },
   requiredIndicator: {
     color: '#5D70F9',
+  },
+  floatingButtonContainer: {
+    position: 'absolute',
+    bottom: 100,
+    width: '100%',
+    alignItems: 'center',
   },
   // dropdown
   dropdown: {

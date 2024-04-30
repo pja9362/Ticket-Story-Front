@@ -13,7 +13,6 @@ const dummyData = [
     photo: 'link',
     contentRating: 92,
     seatRating: 84,
-    category: 'MUSICAL',
     date: '2024.01.31',
     time: '19:30',
     location: '국립정동극장',
@@ -26,7 +25,6 @@ const dummyData = [
     photo: '',
     contentRating: 93,
     seatRating: 88,
-    category: 'SPORTS',
     date: '2024.03.31',
     time: '15:30',
     location: '대전한화생명이글스파크',
@@ -39,7 +37,6 @@ const dummyData = [
     photo: '',
     contentRating: 93,
     seatRating: 88,
-    category: 'MOVIE',
     date: '2024.05.31',
     time: '22:00',
     location: '대전한화생명이글스파크',
@@ -52,7 +49,6 @@ const dummyData = [
     photo: 'link',
     contentRating: 93,
     seatRating: 88,
-    category: 'PLAY',
     date: '2024.07.31',
     time: '19:30',
     location: '대학로 소극장',
@@ -66,27 +62,28 @@ const TicketBook = () => {
   const auth = useSelector((state) => state.auth.isAuthenticated);
   const myTickets = useSelector((state) => state.ticket.myTickets);
 
-  useEffect(() => {
-    console.log('Auth:', auth);
-    if (auth) {
-      dispatch(getMyTickets());
-    }
-  }, []);
+  // useEffect(() => {
+  //   console.log('Auth:', auth);
+  //   if (auth) {
+  //     dispatch(getMyTickets());
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    console.log('My tickets:', myTickets);
-  }, [myTickets]);
-
+  // useEffect(() => {
+  //   console.log('My tickets:', myTickets);
+  // }, [myTickets]);
 
   return (
     <SafeAreaView style={styles.container}>
       <NavHeader />
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
-        {dummyData.map((ticket, index) => (
-          <View key={index}>
-            <TicketItem {...ticket}/>
-          </View>
-        ))}
+        <View style={styles.rowContainer}>
+          {dummyData.map((ticket, index) => (
+            <View key={index}>
+              <TicketItem {...ticket}/>
+            </View>
+          ))}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -101,6 +98,11 @@ const styles = StyleSheet.create({
   },
   scrollViewContent: {
     width: '100%',
+  },
+  rowContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
     alignItems: 'center',
   },
 });

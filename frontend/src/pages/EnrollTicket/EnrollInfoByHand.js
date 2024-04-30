@@ -35,7 +35,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
       const timeoutId = setTimeout(() => {
         dispatch(searchContent(title, date, category, 'BASIC'));
         setShowContentDropdown(true);
-      }, 1000);
+      }, 500);
       return () => clearTimeout(timeoutId);
     }
   }, [title]);
@@ -45,7 +45,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
       const timeoutId = setTimeout(() => {
         dispatch(searchLocation(location));
         setShowLocationDropdown(true);
-      }, 1000);
+      }, 500);
       return () => clearTimeout(timeoutId);
     }
   }, [location]);

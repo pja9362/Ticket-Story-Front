@@ -60,8 +60,7 @@ export const saveImageAndPerformOCR = async (scannedImageUri) => {
     console.error('Error saving image to file or performing OCR:', error);
   }
 };
-
-export const getMyTickets  = () => async dispatch => {
+export const getMyTickets = (page, size, order, orderBy) => async dispatch => {
   try {
     const accessToken = await AsyncStorage.getItem('accessToken');
     console.log('Access token:', accessToken);
@@ -71,6 +70,12 @@ export const getMyTickets  = () => async dispatch => {
         'Content-Type': 'application/json;charset=UTF-8',
         'Authorization': `Bearer ${accessToken}`,
       },
+      params: {
+        page: page,
+        size: size,
+        order: order,
+        orderBy: orderBy,
+      }
     });
     if (response.data != null) {
       console.log('My tickets:', response.data);

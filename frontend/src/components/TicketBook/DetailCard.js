@@ -1,63 +1,40 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
-import { captureRef } from 'react-native-view-shot';
-import { CameraRoll } from '@react-native-camera-roll/camera-roll';
-import Share from 'react-native-share';
+import { handleShareBtn, handleSaveBtn } from '../../utils/shareAndSaveUtils';
 import iconLeft from '../../images/icon_left_pagination.png';
 import iconRight from '../../images/icon_right_pagination.png';
 import iconLogo from '../../images/logo_navHeader.png';
 import iconShare from '../../images/icon_share.png';
 import iconSave from '../../images/icon_save.png';
 
+// 더미 데이터
+const dummyImages = [
+    'https://source.unsplash.com/random/356x356',
+    'https://source.unsplash.com/random/356x356',
+    'https://source.unsplash.com/random/356x356',
+];
+
+const dummyReview = [
+    '한화는 \"류현진은 2006년 한화이글스 소속으로 KBO리그에 데뷔해 그해 18승 6패 1세이브 204탈삼진 평균자책점 2.23을 기록하며 신인왕과 MVP를 동시에 획득했다. 이후 2012년까지 통산 98승 52패 1세이브 1238탈삼진 평균자책점 2.80을 기록하며 국내 최고의 투수로 우뚝 섰다"고 돌아온 에이스를 설명했다. 이어 \"2013년부터는 메이저리그에 진출해 지난해까지 78승 48패 1세이브 934탈삼진 평균자책점 3.27를 기록, 세계 최고의 무대에서도 수준급 선발투수로 활약을 펼쳤다. 특히 2019년에는 LA다저스 소속으로 14승 5패 163탈삼진 평균자책점 2.32의 성적으로 내셔널리그 사이영상 투표 2위에 오르며 최고의 시즌을 보냈다"고 되돌아봤다. 한 이정도 쓰면 적당한 길이일 것 같다.'
+];
+
 const DetailCard = ({ ticket }) => {
     const viewRef = useRef();
+    const navigation = useNavigation();
 
-    const handleShareBtn = async () => {
-        console.log('공유하기');
-        try {
-            const uri = await captureRef(viewRef, {
-                format: 'jpg',
-                quality: 0.8,
-                result: Platform.OS === 'ios' ? 'tmpfile' : 'base64',
-            });
-
-            const shareOptions = {
-                title: '공유하기',
-                url: Platform.OS === 'ios' ? `file://${uri}` : uri,
-            };
-            await Share.open(shareOptions);
-            console.log('이미지가 공유되었습니다.');
-        } catch (error) {
-            console.error('이미지 공유 중 오류가 발생했습니다.', error);
-        }
+    const handleShareBtnPress = () => {
+        handleShareBtn(viewRef);
     }
 
-    const handleSaveBtn = async () => {
-        console.log('저장하기');
-        try {
+    const handleSaveBtnPress = () => {
+        handleSaveBtn(viewRef);
+    }
 
-            const uri = await captureRef(viewRef, {
-                format: 'jpg',
-                quality: 0.8,
-                result: Platform.OS === 'ios' ? 'tmpfile' : 'base64',
-            });
-            await CameraRoll.saveAsset(uri);
-            console.log('이미지가 저장되었습니다.');
-        } catch (error) {
-            console.error('이미지 저장 중 오류가 발생했습니다.', error);
-        }
-    };
-
-    const dummyImages = [
-        'https://source.unsplash.com/random/356x356',
-        'https://source.unsplash.com/random/356x356',
-        'https://source.unsplash.com/random/356x356',
-    ];
-    
-    const dummyReview = [
-        '한화는 \"류현진은 2006년 한화이글스 소속으로 KBO리그에 데뷔해 그해 18승 6패 1세이브 204탈삼진 평균자책점 2.23을 기록하며 신인왕과 MVP를 동시에 획득했다. 이후 2012년까지 통산 98승 52패 1세이브 1238탈삼진 평균자책점 2.80을 기록하며 국내 최고의 투수로 우뚝 섰다"고 돌아온 에이스를 설명했다. 이어 \"2013년부터는 메이저리그에 진출해 지난해까지 78승 48패 1세이브 934탈삼진 평균자책점 3.27를 기록, 세계 최고의 무대에서도 수준급 선발투수로 활약을 펼쳤다. 특히 2019년에는 LA다저스 소속으로 14승 5패 163탈삼진 평균자책점 2.32의 성적으로 내셔널리그 사이영상 투표 2위에 오르며 최고의 시즌을 보냈다"고 되돌아봤다. 한 이정도 쓰면 적당한 길이일 것 같다.'
-    ];
+    const handleImagePress = () => {
+        navigation.navigate('ShowImageView', {images: dummyImages, index: 0, ticket: ticket});
+    }
 
     return (
         ticket &&
@@ -73,19 +50,21 @@ const DetailCard = ({ ticket }) => {
                         prevButton={<Image source={iconLeft} style={styles.arrowImage}/>}
                     >
                         {dummyImages.map((image, index) => (
-                            <View key={index} style={styles.slide}>
-                                <Image source={{uri: image}} style={styles.image} />
-                                {/* Overlay Text */}
-                                <View style={styles.overlay}>
-                                    <Text style={{...styles.overlayText, fontSize: 20}}>{ticket.title}</Text>
-                                    <Text style={styles.overlayGuideText}>Date</Text>
-                                    <Text style={styles.overlayText}>{ticket.date}</Text>
-                                    <Text style={styles.overlayGuideText}>Time</Text>
-                                    <Text style={styles.overlayText}>18:00</Text>
-                                    <Text style={styles.overlayGuideText}>Place</Text>
-                                    <Text style={styles.overlayText}>{ticket.location}</Text>
-                                </View>
-                            </View>
+                            <TouchableOpacity key={index} style={styles.slide} onPress={handleImagePress}>
+                                <>
+                                    <Image source={{uri: image}} style={styles.image} />
+                                    {/* Overlay Text */}
+                                    <View style={styles.overlay}>
+                                        <Text style={{...styles.overlayText, fontSize: 20}}>{ticket.title}</Text>
+                                        <Text style={styles.overlayGuideText}>Date</Text>
+                                        <Text style={styles.overlayText}>{ticket.date}</Text>
+                                        <Text style={styles.overlayGuideText}>Time</Text>
+                                        <Text style={styles.overlayText}>18:00</Text>
+                                        <Text style={styles.overlayGuideText}>Place</Text>
+                                        <Text style={styles.overlayText}>{ticket.location}</Text>
+                                    </View>
+                                </>
+                            </TouchableOpacity>
                         ))}
                     </Swiper>
                 </View>
@@ -103,10 +82,10 @@ const DetailCard = ({ ticket }) => {
                 </View>
             </View>
             <View style={styles.btnContainer}>
-                <TouchableOpacity onPress={handleShareBtn}>
+                <TouchableOpacity onPress={handleShareBtnPress}>
                     <Image source={iconShare} style={{width: 45, height: 45}} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleSaveBtn}>
+                <TouchableOpacity onPress={handleSaveBtnPress}>
                     <Image source={iconSave} style={{width: 45, height: 45}} />
                 </TouchableOpacity>
             </View>

@@ -21,6 +21,7 @@ import OCRFail from './src/pages/EnrollTicket/OCRFail';
 import MainStack from './src/navigation/MainStack';
 import OAuthWebView from './src/pages/Scrape/OAuthWebView';
 import TicketlinkWebView from './src/pages/Scrape/TicketlinkWebView';
+import TicketDetail from './src/pages/TicketBook/TicketDetail';
 // dummy
 import ShowImageScreen from './src/pages/ShowImage';
 
@@ -67,6 +68,7 @@ const App = () => {
               <Stack.Screen name="EnrollReview" component={EnrollReview} />
               <Stack.Screen name="EnrollFinish" component={EnrollFinish} />
               <Stack.Screen name="OCRFail" component={OCRFail} />
+              <Stack.Screen name="TicketDetail" component={TicketDetail} />
               {/* Ticket Link */}
               <Stack.Screen name="OAuthWebView" component={OAuthWebView} />
               <Stack.Screen name="TicketlinkWebView" component={TicketlinkWebView} />

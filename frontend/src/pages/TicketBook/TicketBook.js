@@ -15,10 +15,8 @@ const TicketBook = () => {
 
   const auth = useSelector((state) => state.auth.isAuthenticated);
   const myTickets = useSelector((state) => state.ticket.myTickets.content);
-  // const myTickets = []
 
   useEffect(() => {
-    console.log('Auth:', auth);
     if (auth) {
       dispatch(getMyTickets(0, 10, 'DESC', 'registerTime'));
     }

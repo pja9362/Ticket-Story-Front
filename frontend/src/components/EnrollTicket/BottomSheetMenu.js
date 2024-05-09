@@ -15,10 +15,6 @@ const BottomSheetMenu = ({closeBottomSheet, onClick}) => {
             backgroundColor: 'rgba(0, 0, 0, 0.3)',
           }}>
           <View style={styles.contentContainer}>
-            <TouchableOpacity>
-              <Text style={styles.btnText}>내 티켓북 보기</Text>
-            </TouchableOpacity>
-            <View style={styles.separator}></View>
             <TouchableOpacity
               onPress={() => onClick('scrape')}>
               <Text style={styles.btnText}>온라인 티켓 등록하기</Text>

@@ -73,7 +73,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
       ticketImg: '',
       contentsDetails: {
         date,
-        location: categoryDetail ? `${categoryDetail}${location}` : location,
+        location: location,
         locationDetail,
         seats: seatsArray,
         time,

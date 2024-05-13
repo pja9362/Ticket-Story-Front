@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, Text, ImageBackground, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, TouchableOpacity, } from 'react-native';
+import { View, Text, ImageBackground, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, TouchableOpacity, Image, } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import movieTicket from '../../images/ticekt_info_movie.png';
@@ -14,13 +14,15 @@ import sportsBasicTicket from '../../images/ticket_default_poster_sports.png';
 
 import iconReviewOn from '../../images/icon_ReviewOn.png';
 import iconReviewOff from '../../images/icon_ReviewOff.png';
+import iconEdit from '../../images/icon_dots.png';
 
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
 const imageWidth = Dimensions.get('window').width * 0.45;
 
-const TicketItem = ({ category, title, date, time, location, seat, rating, imageUrl, ticketId }) => {
+const TicketItem = ({ category, title, date, time, location, seat, contentsRating, seatRating, imageUrl = null, ticketId, reviewId }) => {
   const navigation = useNavigation();
 
+  console.log (category, title, date, time, location, seat, contentsRating, seatRating, imageUrl, "ticketId: ", ticketId, "reviewId: ", reviewId )
   let ticketImageSource;
   let basicTicketImageSource;
   switch (category) {
@@ -89,32 +91,41 @@ const TicketItem = ({ category, title, date, time, location, seat, rating, image
     <>
       <TouchableWithoutFeedback onPress={handlePress}>
         <View style={styles.card}>
-          <Animated.View style={[styles.cardContainer, frontAnimatedStyle]}>
+          <Animated.View style={[styles.cardContainer, frontAnimatedStyle, imageUrl && styles.imageCard]}>
+          <ImageBackground 
+              source={imageUrl ? { uri: imageUrl } : basicTicketImageSource} 
+              style={styles.imageBackground}
+            >              
+             { imageUrl == null || imageUrl == "" ? 
+                <Text style={styles.backTitle}>{title}</Text> 
+                : <Image source={iconEdit} style={{width: 30, height: 30, position: 'absolute', top: 7, right: 10}} />
+              }
+            </ImageBackground>
+          </Animated.View>
+          <Animated.View style={[styles.cardContainer, styles.back, backAnimatedStyle]}>
             <ImageBackground source={ticketImageSource} style={styles.imageBackground}>
               <View style={styles.overlay}>
                 <Text numberOfLines={2} style={styles.title}>{title}</Text>
                 <View style={styles.infoContainer}>
                   <Text numberOfLines={1} style={styles.info}>{date}</Text>
-                  <Text numberOfLines={1} style={[styles.info, { marginTop: 2.5 }]}>{time}</Text>
-                  <Text numberOfLines={1} style={[styles.info, { marginTop: 2.5 }]}>{location}</Text>
-                  <Text numberOfLines={1} style={[styles.info, { marginTop: 2.5 }]}>{seat}</Text>
+                  <Text numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{time}</Text>
+                  <Text numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{location}</Text>
+                  <Text numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{seat}</Text>
                 </View>
                 <View style={styles.bottomContainer}>
-                  <Text numberOfLines={1} style={[styles.info, { marginTop: 2.5, textAlign: 'center' }]}>{rating}</Text>
+                  <Text numberOfLines={1} style={[styles.info, { marginTop: 5, textAlign: 'center' }]}>{contentsRating}</Text>
+                </View>
+                <View style={styles.bottomContainer}>
+                  <Text numberOfLines={1} style={[styles.info, { marginTop: 12, textAlign: 'center' }]}>{contentsRating}</Text>
                 </View>
               </View>
-            </ImageBackground>
-          </Animated.View>
-          <Animated.View style={[styles.cardContainer, styles.back, backAnimatedStyle]}>
-            <ImageBackground source={basicTicketImageSource} style={styles.imageBackground}>
-              <Text style={styles.backTitle}>{title}</Text>
             </ImageBackground>
           </Animated.View>
         </View>
       </TouchableWithoutFeedback>
       {
-        isFront &&
-        <TouchableOpacity onPress={handleReviewClick} style={styles.reviewButton}>
+        !isFront &&
+        <TouchableOpacity onPress={handleReviewClick} style={[styles.reviewButton, { opacity: reviewId === null ? 0.5 : 1 }]}>
           <View style={{backgroundColor: 'transparent', width: 50, height: 50}}></View>
         </TouchableOpacity>
       }
@@ -127,6 +138,13 @@ const styles = StyleSheet.create({
     width: imageWidth,
     height: imageHeight,
     resizeMode: 'cover',
+  },
+  imageCard: {
+    borderRadius: 10,
+    overflow: 'hidden',
+    width: imageWidth - 10,
+    height: imageHeight - 18,
+    margin: 5,
   },
   overlay: {
     flex: 1,
@@ -149,7 +167,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     marginLeft: imageWidth*0.22,
-    marginVertical: 10,
+    marginVertical: 8,
     height: imageHeight*0.3,
   },
   bottomContainer: {

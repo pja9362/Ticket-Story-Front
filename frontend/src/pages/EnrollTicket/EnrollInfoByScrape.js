@@ -122,8 +122,6 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     if (title !== '' && isContentVisible) {
       console.log('Initial title:', title);
       let mappedCategory = getMappedCategory(category);
-      // let mappedCategoryDetail = getMappedDetailCategory(category, categoryDetail);
-      // console.log(title, date, mappedCategory, mappedCategoryDetail.categoryDetail, 'SCRAPE')
       dispatch(searchContent(title, date, mappedCategory, 'SCRAPE'));
     }
   }, [category, categoryDetail]);

@@ -15,8 +15,20 @@ export const handleShareBtn = async (viewRef) => {
             title: '공유하기',
             url: Platform.OS === 'ios' ? `file://${uri}` : uri,
         };
-        await Share.open(shareOptions);
-        console.log('이미지가 공유되었습니다.');
+
+        const sharePromise = Share.open(shareOptions);
+
+        if (!sharePromise) {
+            console.log('이미지 공유가 취소되었습니다.');
+            return;
+        }
+
+        await sharePromise.then(() => {
+            console.log('이미지가 공유되었습니다.');
+        }).catch((error) => {
+            console.log('공유 취소', error);
+        });
+
     } catch (error) {
         console.error('이미지 공유 중 오류가 발생했습니다.', error);
     }

@@ -14,16 +14,16 @@ const TicketBook = () => {
   const dispatch = useDispatch();
 
   const auth = useSelector((state) => state.auth.isAuthenticated);
-  const myTickets = useSelector((state) => state.ticket.myTickets.content);
+  const myTickets = useSelector((state) => state.ticket.myTickets.contents);
 
   useEffect(() => {
-    if (auth) {
-      dispatch(getMyTickets(0, 10, 'DESC', 'registerTime'));
-    }
-  }, []);
+    console.log('auth:', auth)
+    if (auth) dispatch(getMyTickets(0, 10, 'DESC', 'registerTime'));
+  }, [auth]);
 
   useEffect(() => {
-    console.log('My tickets:', myTickets);
+    myTickets &&
+    console.log('myTickets:', myTickets, "myTickets.length: ", myTickets.length)
   }, [myTickets]);
 
   return (
@@ -39,8 +39,6 @@ const TicketBook = () => {
           : (
             <View style={styles.noTicketContainer}>
               <Image source={noTicket} style={styles.ticketCard} />
-              {/* onPress add Icon, console.log */}
-              {/* <Image source={addIcon} style={styles.addIcon} /> */}
               <TouchableOpacity onPress={() => console.log('Add ticket')}>
                 <Image source={addIcon} style={styles.addIcon} />
               </TouchableOpacity>

@@ -6,16 +6,18 @@ import { useSelector } from 'react-redux';
 
 const TicketDetail = ({ route, navigation }) => {
 
-  const myTickets = useSelector((state) => state.ticket.myTickets.content);
+  const myTickets = useSelector((state) => state.ticket.myTickets.contents);
 
   const { ticketId } = route.params;
 
+  console.log('ticketId:', ticketId);
   const [ticket, setTicket] = useState(null);
 
   useEffect(() => {
     if(myTickets) {
       const ticket = myTickets.find((ticket) => ticket.ticketId == ticketId);
       setTicket(ticket);
+      console.log('ticket:', ticket);
     }
   }, [myTickets]);
 

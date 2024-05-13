@@ -4,7 +4,7 @@ import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
 import NextBtn from '../../components/EnrollTicket/NextBtn';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchContent, searchLocation } from '../../actions/enrollTicketSearch/search';
+import { searchContent, searchLocation, clearContent, clearLocation } from '../../actions/enrollTicketSearch/search';
 import checkIcon from '../../images/icon_circleCheck.png';
 import defaultImage from '../../images/ticket_default_poster_movie.png'
 
@@ -17,6 +17,8 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   const { categoryInfo } = route.params;
   const { category, categoryDetail } = categoryInfo;
   
+  console.log('Category:', category, categoryDetail);
+
   const [contentsId, setContentsId] = useState(null);
   const [locationId, setLocationId] = useState(null);
   const [title, setTitle] = useState('');
@@ -55,8 +57,18 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     setTitle(content.title);
     setContentsId(content.content_id);
     setLocationId(content.location_id);
+    content.location_id !== null && setLocation(content.location_name);
     setShowContentDropdown(false);
+    handleClearList('content');
     setIsContentSelected(true);
+  };
+  
+  const handleClearList = (type) => {
+    if (type === 'content') {
+      dispatch(clearContent());
+    } else if (type === 'location') {
+      dispatch(clearLocation());
+    }
   };
 
   const isFormValid = () => {

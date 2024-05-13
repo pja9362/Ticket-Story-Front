@@ -120,7 +120,6 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
 
   useEffect(() => {
     if (title !== '' && isContentVisible) {
-      console.log('Initial title:', title);
       let mappedCategory = getMappedCategory(category);
       dispatch(searchContent(title, date, mappedCategory, 'SCRAPE'));
     }
@@ -216,7 +215,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                                   content.imageUrl.map((url, imageIndex) => (
                                     <Image
                                       key={imageIndex}
-                                      style={styles.posterImage}
+                                      style={[styles.posterImage, category == '스포츠' && { width: 50, height: 40, resizeMode: 'contain'}]}
                                       source={{ uri: url }}
                                     />
                                   ))

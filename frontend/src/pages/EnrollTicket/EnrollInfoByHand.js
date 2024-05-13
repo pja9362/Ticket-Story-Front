@@ -104,11 +104,6 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     }
   };
 
-
-  // useEffect(() => {
-  //   if(contentLists) console.log(contentLists[0].imageUrl)
-  // } , [contentLists])
-
   return (
     <>
       <EnrollHeader 
@@ -172,7 +167,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                                 content.imageUrl.map((url, imageIndex) => (
                                   <Image
                                     key={imageIndex}
-                                    style={styles.posterImage}
+                                    style={[styles.posterImage, category == 'SPORTS' && { width: 50, height: 40, resizeMode: 'contain'}]}
                                     source={{ uri: url }}
                                   />
                                 ))

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View, Image, Dimensions, TouchableOpacity } from 'react-native';
 import TicketItem from '../../components/TicketBook/TicketItem';
 import NavHeader from '../../components/NavHeader';
@@ -15,25 +15,54 @@ const TicketBook = () => {
 
   const auth = useSelector((state) => state.auth.isAuthenticated);
   const myTickets = useSelector((state) => state.ticket.myTickets.contents);
+  const ticketData = useSelector((state) => state.ticket.myTickets);
+  const totalPages = useSelector((state) => state.ticket.myTickets.totalPages);
+
+  const [page, setPage] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [allTickets, setAllTickets] = useState([]);
 
   useEffect(() => {
-    console.log('auth:', auth)
-    if (auth) dispatch(getMyTickets(0, 10, 'DESC', 'registerTime'));
-  }, [auth]);
+    if (auth) {
+      console.log('page:', page, 'totalPages:', totalPages, 'ticketData.last:', ticketData.last);
+      dispatch(getMyTickets(page, 6, 'DESC', 'registerTime', (newTickets) => {
+        setAllTickets((prevTickets) => [...prevTickets, ...newTickets]);
+      }));
+    }
+  }, [auth, page]);
 
   useEffect(() => {
-    myTickets &&
-    console.log('myTickets:', myTickets, "myTickets.length: ", myTickets.length)
+    console.log("TICKET DATA", ticketData)
+    myTickets && console.log('myTickets:', myTickets, "myTickets.length: ", myTickets.length)
   }, [myTickets]);
+
+  const handleScroll = (event) => {
+    const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+    const paddingToBottom = 20;
+    if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom && !loading) {
+      if (page <= totalPages) {
+        setLoading(true);
+        setPage(page + 1);
+      }
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <NavHeader />
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView 
+        contentContainerStyle={styles.scrollViewContent}
+        onScroll={handleScroll}
+        scrollEventThrottle={400}>
         <View style={styles.rowContainer}>
-          {myTickets && myTickets.length !=0 ? myTickets.map((ticket, index) => (
+          {/* {myTickets && myTickets.length !=0 ? myTickets.map((ticket, index) => (
             <View key={index}>
               <TicketItem {...ticket}/>
+            </View>
+          )) */}
+          {allTickets && allTickets.length !== 0 ? allTickets.map((ticket, index) => (
+            <View key={index}>
+              <TicketItem {...ticket} />
             </View>
           ))
           : (

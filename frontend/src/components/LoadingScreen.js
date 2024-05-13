@@ -6,7 +6,7 @@ import loadingIcon2 from '../images/icon_loading2.png';
 import loadingIcon3 from '../images/icon_loading3.png';
 import loadingIcon4 from '../images/icon_loading4.png';
 
-const LoadingScreen = ({ iconId }) => {
+const LoadingScreen = ({ iconId, showText = true }) => {
     useEffect(() => {
         console.log('LoadingScreen rendered');
     }, []);
@@ -16,10 +16,14 @@ const LoadingScreen = ({ iconId }) => {
     return (
       <View style={styles.loadingContainer}>
             <Image source={loadingIcons[iconId - 1]} style={styles.loadingIcon} />
-            <View style={{height: 120}}>
-                <Text style={styles.mainText} >열심히 티켓을 읽는 중이에요.</Text>
-                <Text style={styles.subText}>인터넷 연결 상태에 따라 10초 이상 소요될 수 있어요.</Text>
-            </View>
+            {
+                showText && (
+                <View style={{height: 120}}>
+                    <Text style={styles.mainText} >열심히 티켓을 읽는 중이에요.</Text>
+                    <Text style={styles.subText}>인터넷 연결 상태에 따라 10초 이상 소요될 수 있어요.</Text>
+                </View>
+                )
+            }
       </View>
     );
 };

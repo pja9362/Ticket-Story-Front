@@ -6,9 +6,9 @@ import Agreement from './Agreement';
 import { signUpRequest } from '../../actions/auth/auth';
 
 const Step3 = ({nextStep, handleChange, values}) => {
-  const [year, setYear] = useState('2000');
-  const [month, setMonth] = useState('01');
-  const [day, setDay] = useState('01');
+  const [year, setYear] = useState('');
+  const [month, setMonth] = useState('');
+  const [day, setDay] = useState('');
 
   const birthday = `${year}.${month}.${day}`;
 
@@ -18,6 +18,18 @@ const Step3 = ({nextStep, handleChange, values}) => {
     personalInfo: false,
     thirdPartyInfo: false,
   });
+
+  const handleMonthBlur = () => {
+    // 두 자릿수로 변환
+    const formattedMonth = month.length === 1 ? `0${month}` : month;
+    setMonth(formattedMonth);
+  };
+
+  const handleDayBlur = () => {
+    // 두 자릿수로 변환
+    const formattedDay = day.length === 1 ? `0${day}` : day;
+    setDay(formattedDay);
+  };
 
   useEffect(() => {
     handleChange('birthday', birthday);
@@ -98,7 +110,9 @@ const Step3 = ({nextStep, handleChange, values}) => {
               style={{...styles.inputBox, width: 80}}
               value={year}
               onChangeText={text => setYear(text)}
+              keyboardType='numeric'
               placeholder="YYYY"
+              placeholderTextColor="#ccc"
             />
             <Text>년</Text>
           </View>
@@ -107,7 +121,10 @@ const Step3 = ({nextStep, handleChange, values}) => {
               style={{...styles.inputBox, width: 60}}
               value={month}
               onChangeText={text => setMonth(text)}
+              onBlur={handleMonthBlur}
+              keyboardType='numeric'
               placeholder="MM"
+              placeholderTextColor="#ccc"
             />
             <Text>월</Text>
           </View>
@@ -116,7 +133,10 @@ const Step3 = ({nextStep, handleChange, values}) => {
               style={{...styles.inputBox, width: 60}}
               value={day}
               onChangeText={text => setDay(text)}
+              onBlur={handleDayBlur}
+              keyboardType='numeric'
               placeholder="DD"
+              placeholderTextColor="#ccc"
             />
             <Text>일</Text>
           </View>

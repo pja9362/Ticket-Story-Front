@@ -3,6 +3,7 @@ import {
   View,
   Text,
   StyleSheet,
+  ScrollView,
   TextInput,
   TouchableOpacity,
   Image,
@@ -16,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getMappedDetailCategory, getMappedCategory } from '../../utils/getMappedCategory';
 import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
 import checkIcon from '../../images/icon_circleCheck.png';
+import defaultImage from '../../images/ticket_default_poster_movie.png'
 
 const EnrollInfoByOCR = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -175,154 +177,168 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
             title="티켓 정보 입력"
             onIconClick={() => { navigation.navigate('EnrollReview', {title: title}) }}
           />
-          <View style={styles.container}>
-              <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', gap: 5}}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#000' }}>
-                  작품 정보를 입력해주세요.
-                </Text>
-                <Text style={{ fontSize: 12, color: '#939393' }}>
-                  *표시는 필수 항목입니다.
-                </Text>
-              </View>
+            <ScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
+              <View style={styles.container}>
+                  <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', gap: 5}}>
+                    <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#000' }}>
+                      작품 정보를 입력해주세요.
+                    </Text>
+                    <Text style={{ fontSize: 12, color: '#939393' }}>
+                      *표시는 필수 항목입니다.
+                    </Text>
+                  </View>
 
-              <Text style={styles.sectionText}>
-                관람 일시
-                <Text style={styles.requiredIndicator}>*</Text>
-              </Text>
-              <View style={styles.dateInputContainer}>
-                <TextInput
-                  style={[styles.inputBox, {flex: 2 }]}
-                  value={date}
-                  onChangeText={text => setDate(text)}
-                  placeholder='YYYY.MM.DD'
-                />
+                  <Text style={styles.sectionText}>
+                    관람 일시
+                    <Text style={styles.requiredIndicator}>*</Text>
+                  </Text>
+                  <View style={styles.dateInputContainer}>
+                    <TextInput
+                      style={[styles.inputBox, {flex: 2 }]}
+                      value={date}
+                      onChangeText={text => setDate(text)}
+                      placeholder='YYYY.MM.DD'
+                    />
 
-                <TextInput
-                  style={[styles.inputBox, { flex: 1 }]}
-                  value={time}
-                  onChangeText={text => setTime(text)}
-                  placeholder='HH:MM'
-                />
-              </View>
+                    <TextInput
+                      style={[styles.inputBox, { flex: 1 }]}
+                      value={time}
+                      onChangeText={text => setTime(text)}
+                      placeholder='HH:MM'
+                    />
+                  </View>
 
-              <Text style={styles.sectionText}>
-                관람 콘텐츠
-                <Text style={styles.requiredIndicator}>*</Text>
-              </Text>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                { contentsId !== null &&
-                      <Image style={styles.checkIcon} source={checkIcon} />
-                }
-                <TextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={setTitle} placeholder='콘텐츠 제목'/>
-              </View>
-              {/* Content Lists Dropdown */}
-              {
-                showContentDropdown && (
-                  <View style={{marginVertical: 10}}>
-                    <View style={styles.dropdown}>
-                      {contentLists && contentLists.slice(0, 5).map((content, index) => (
-                        <View key={index} style={styles.dropdownItem}>
-                          <TouchableOpacity
-                            onPress={() => handleContentSelect(content)}
-                            style={styles.dropdownItemTouchable}
-                          >
-                            <Image
-                              style={styles.posterImage}
-                              source={{ uri: content.imageUrl[0] }}
-                            />
-                            <View style={styles.contentDetails}>
-                              <Text style={styles.title}>{content.title}</Text>
-                              <Text>{content.detail.join(', ')}</Text>
+                  <Text style={styles.sectionText}>
+                    관람 콘텐츠
+                    <Text style={styles.requiredIndicator}>*</Text>
+                  </Text>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    { contentsId !== null &&
+                          <Image style={styles.checkIcon} source={checkIcon} />
+                    }
+                    <TextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={setTitle} placeholder='콘텐츠 제목'/>
+                  </View>
+                  {/* Content Lists Dropdown */}
+                  {
+                    showContentDropdown && (
+                      <View style={{marginVertical: 10}}>
+                        <View style={styles.dropdown}>
+                          {contentLists && contentLists.slice(0, 5).map((content, index) => (
+                            <View key={index} style={styles.dropdownItem}>
+                              <TouchableOpacity
+                                onPress={() => handleContentSelect(content)}
+                                style={styles.dropdownItemTouchable}
+                              >
+                                <View style={styles.imageContainer}>
+                                  {content.imageUrl.length > 0 ? (
+                                    content.imageUrl.map((url, imageIndex) => (
+                                      <Image
+                                        key={imageIndex}
+                                        style={styles.posterImage}
+                                        source={{ uri: url }}
+                                      />
+                                    ))
+                                  ) : (
+                                    <Image
+                                      style={styles.posterImage}
+                                      source={{ defaultImage }}
+                                    />
+                                  )}
+                                </View>
+                                <View style={styles.contentDetails}>
+                                  <Text style={styles.title}>{content.title}</Text>
+                                  <Text>{content.detail.join(', ')}</Text>
+                                </View>
+                              </TouchableOpacity>
                             </View>
-                          </TouchableOpacity>
+                          ))}
                         </View>
-                      ))}
+                      </View>
+                    )
+                  }
+                  
+                  <Text style={styles.sectionText}>
+                      관람 장소
+                      <Text style={styles.requiredIndicator}>*</Text>
+                  </Text>
+                  <View style={styles.inputBoxContainer}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      { locationId !== null &&
+                        <Image style={styles.checkIcon} source={checkIcon} />
+                      }
+                      {category === 'MOVIE' ? (
+                        <TextInput
+                          style={[styles.inputBox, { fontWeight: 'bold', color: '#525252', textAlign: 'center', marginRight: 15}]}
+                          value={categoryDetail}
+                          editable={false}
+                        />
+                      ) : null}
+                      <TextInput
+                        style={[styles.inputBox, { flex: 1 }]}
+                        value={location}
+                        onChangeText={text => setLocation(text)}
+                        placeholder={getCategoryPlaceholder(category, 'location')}
+                      />
                     </View>
                   </View>
-                )
-              }
-              
-              <Text style={styles.sectionText}>
-                  관람 장소
-                  <Text style={styles.requiredIndicator}>*</Text>
-              </Text>
-              <View style={styles.inputBoxContainer}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  { locationId !== null &&
-                    <Image style={styles.checkIcon} source={checkIcon} />
+                  {/* Location Dropdown */}
+                  {
+                    showLocationDropdown && (
+                      <View style={{marginVertical: 10}}>
+                        <View style={styles.dropdown}>
+                          {locationLists && locationLists.slice(0, 5).map((location, index) => (
+                            <View key={index} style={styles.dropdownItem}>
+                              <TouchableOpacity
+                                onPress={() => {
+                                  setLocation(location.name);
+                                  setLocationId(location.location_id);
+                                  setShowLocationDropdown(false);
+                                  handleClearList('location');
+                                }}
+                                style={styles.dropdownItemTouchable}
+                              >
+                                <View style={styles.locationDetails}>
+                                  <Text style={styles.title}>{location.name}</Text>
+                                  <Text style={styles.subText}>{location.address}</Text>
+                                </View>
+                              </TouchableOpacity>
+                            </View>
+                          ))}
+                        </View>
+                      </View>
+                    )
                   }
-                  {category === 'MOVIE' ? (
-                    <TextInput
-                      style={[styles.inputBox, { fontWeight: 'bold', color: '#525252', textAlign: 'center', marginRight: 15}]}
-                      value={categoryDetail}
-                      editable={false}
-                    />
-                  ) : null}
+
+                  <Text style={styles.sectionText}>관람 장소 (세부)</Text>
                   <TextInput
-                    style={[styles.inputBox, { flex: 1 }]}
-                    value={location}
-                    onChangeText={text => setLocation(text)}
-                    placeholder={getCategoryPlaceholder(category, 'location')}
+                    style={styles.inputBox}
+                    value={locationDetail}
+                    onChangeText={text => setLocationDetail(text)}
+                    placeholder={getCategoryPlaceholder(category, 'locationDetail')}
+                  />
+
+                  <Text style={styles.sectionText}>관람 좌석</Text>
+                  <View style={styles.seatInputContainer}>
+                    <TextInput
+                      style={[styles.inputBox, { flex: 1 }]}
+                      value={seats}
+                      onChangeText={text => setSeats(text)}
+                      placeholder={getCategoryPlaceholder(category, 'seats')}
+                    />
+                  </View>
+              </View>
+
+              <View style={styles.floatingButtonContainer}>
+                  <NextBtn
+                    isDisabled={!isFormValid()}
+                    onPress={() => {
+                      if (isFormValid()) {
+                        handleNext();
+                      }
+                    }}
                   />
                 </View>
-              </View>
-              {/* Location Dropdown */}
-              {
-                showLocationDropdown && (
-                  <View style={{marginVertical: 10}}>
-                    <View style={styles.dropdown}>
-                      {locationLists && locationLists.slice(0, 5).map((location, index) => (
-                        <View key={index} style={styles.dropdownItem}>
-                          <TouchableOpacity
-                            onPress={() => {
-                              setLocation(location.name);
-                              setLocationId(location.location_id);
-                              setShowLocationDropdown(false);
-                              handleClearList('location');
-                            }}
-                            style={styles.dropdownItemTouchable}
-                          >
-                            <View style={styles.locationDetails}>
-                              <Text style={styles.title}>{location.name}</Text>
-                              <Text style={styles.subText}>{location.address}</Text>
-                            </View>
-                          </TouchableOpacity>
-                        </View>
-                      ))}
-                    </View>
-                  </View>
-                )
-              }
-
-              <Text style={styles.sectionText}>관람 장소 (세부)</Text>
-              <TextInput
-                style={styles.inputBox}
-                value={locationDetail}
-                onChangeText={text => setLocationDetail(text)}
-                placeholder={getCategoryPlaceholder(category, 'locationDetail')}
-              />
-
-              <Text style={styles.sectionText}>관람 좌석</Text>
-              <View style={styles.seatInputContainer}>
-                <TextInput
-                  style={[styles.inputBox, { flex: 1 }]}
-                  value={seats}
-                  onChangeText={text => setSeats(text)}
-                  placeholder={getCategoryPlaceholder(category, 'seats')}
-                />
-              </View>
-          </View>
-
-          <View style={styles.floatingButtonContainer}>
-              <NextBtn
-                isDisabled={!isFormValid()}
-                onPress={() => {
-                  if (isFormValid()) {
-                    handleNext();
-                  }
-                }}
-              />
-            </View>
+            </ScrollView>
         </>
       )}
     </>
@@ -417,6 +433,9 @@ const styles = StyleSheet.create({
     height: 12,
     position: 'absolute',
     right: 10,
+  },
+  imageContainer: {
+    flexDirection: 'row',
   },
 });
 

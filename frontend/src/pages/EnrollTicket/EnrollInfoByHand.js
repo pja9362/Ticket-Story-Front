@@ -16,8 +16,6 @@ const EnrollInfoByHand = ({ route, navigation }) => {
 
   const { categoryInfo } = route.params;
   const { category, categoryDetail } = categoryInfo;
-  
-  console.log('Category:', category, categoryDetail);
 
   const [contentsId, setContentsId] = useState(null);
   const [locationId, setLocationId] = useState(null);
@@ -27,6 +25,8 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   const [location, setLocation] = useState('');
   const [locationDetail, setLocationDetail] = useState('');
   const [seats, setSeats] = useState('');
+
+  const isDateTimeInputFinish = date.trim() !== '' && time.trim() !== '';
 
   const [showContentDropdown, setShowContentDropdown] = useState(false);
   const [isContentSelected, setIsContentSelected] = useState(false);
@@ -57,7 +57,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     setTitle(content.title);
     setContentsId(content.content_id);
     setLocationId(content.location_id);
-    content.location_id !== null && setLocation(content.location_name);
+    content.location_id !== null && setLocation(content.location_name); setIsLocationSelected(true);
     setShowContentDropdown(false);
     handleClearList('content');
     setIsContentSelected(true);
@@ -72,7 +72,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   };
 
   const isFormValid = () => {
-    return title.trim() !== '' && date.trim() !== '' && time.trim() !== '' && location.trim() !== '';
+    return title.trim() !== '' && isDateTimeInputFinish && isContentSelected && isLocationSelected;
   };
   
   const handleNext = async () => {
@@ -95,8 +95,6 @@ const EnrollInfoByHand = ({ route, navigation }) => {
         locationId: locationId,
       }
     }
-
-    console.log('Ticket:', ticketData);
     if (isFormValid()) {
       navigation.navigate('EnrollReview', { title, ticketData })
     } else {
@@ -140,137 +138,145 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                 placeholder='HH:MM'
               />
             </View>
-            
-            <Text style={styles.sectionText}>
-              관람 콘텐츠
-              <Text style={styles.requiredIndicator}>*</Text>
-            </Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                { contentsId !== null &&
-                      <Image style={styles.checkIcon} source={checkIcon} />
-                }
-                <TextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={setTitle} placeholder='콘텐츠 제목'/>
-              </View>
-            {/* Content Lists Dropdown */}
             {
-                showContentDropdown && (
-                  <View style={{marginVertical: 10}}>
-                    <View style={styles.dropdown}>
-                      {contentLists && contentLists.slice(0, 5).map((content, index) => (
-                        <View key={index} style={styles.dropdownItem}>
-                          <TouchableOpacity
-                            onPress={() => handleContentSelect(content)}
-                            style={styles.dropdownItemTouchable}
-                          >
-                            <View style={styles.imageContainer}>
-                              {content.imageUrl.length > 0 ? (
-                                content.imageUrl.map((url, imageIndex) => (
-                                  <Image
-                                    key={imageIndex}
-                                    style={[styles.posterImage, category == 'SPORTS' && { width: 50, height: 40, resizeMode: 'contain'}]}
-                                    source={{ uri: url }}
-                                  />
-                                ))
-                              ) : (
-                                <Image
-                                  style={styles.posterImage}
-                                  source={{ defaultImage }}
-                                />
-                              )}
-                            </View>
-                            <View style={styles.contentDetails}>
-                              <Text style={styles.title}>{content.title}</Text>
-                              <Text>{content.detail.join(', ')}</Text>
-                            </View>
-                          </TouchableOpacity>
+              isDateTimeInputFinish && (
+                <>
+                  <Text style={styles.sectionText}>
+                    관람 콘텐츠
+                    <Text style={styles.requiredIndicator}>*</Text>
+                  </Text>
+                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    { contentsId !== null &&
+                          <Image style={styles.checkIcon} source={checkIcon} />
+                    }
+                    <TextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={setTitle} placeholder='콘텐츠 제목'/>
+                  </View>
+                  {/* Content Lists Dropdown */}
+                  {
+                      showContentDropdown && (
+                        <View style={{marginVertical: 10}}>
+                          <View style={styles.dropdown}>
+                            {contentLists && contentLists.slice(0, 5).map((content, index) => (
+                              <View key={index} style={styles.dropdownItem}>
+                                <TouchableOpacity
+                                  onPress={() => handleContentSelect(content)}
+                                  style={styles.dropdownItemTouchable}
+                                >
+                                  <View style={styles.imageContainer}>
+                                    {content.imageUrl.length > 0 ? (
+                                      content.imageUrl.map((url, imageIndex) => (
+                                        <Image
+                                          key={imageIndex}
+                                          style={[styles.posterImage, category == 'SPORTS' && { width: 50, height: 40, resizeMode: 'contain'}]}
+                                          source={{ uri: url }}
+                                        />
+                                      ))
+                                    ) : (
+                                      <Image
+                                        style={styles.posterImage}
+                                        source={{ defaultImage }}
+                                      />
+                                    )}
+                                  </View>
+                                  <View style={styles.contentDetails}>
+                                    <Text style={styles.title}>{content.title}</Text>
+                                    <Text>{content.detail.join(', ')}</Text>
+                                  </View>
+                                </TouchableOpacity>
+                              </View>
+                            ))}
+                          </View>
                         </View>
-                      ))}
+                    )
+                  }
+                </>
+              )
+            }
+            {
+              isDateTimeInputFinish && isContentSelected && (
+                <>
+                  <Text style={styles.sectionText}>
+                    관람 장소
+                    <Text style={styles.requiredIndicator}>*</Text>
+                  </Text>
+                  <View style={styles.inputBoxContainer}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      { locationId !== null &&
+                            <Image style={styles.checkIcon} source={checkIcon} />
+                      }
+                      {category === 'MOVIE' ? (
+                        <TextInput
+                          style={[styles.inputBox, { fontWeight: 'bold', color: '#525252', textAlign: 'center', paddingHorizontal: 15, marginRight: 15}]}
+                          value={categoryDetail}
+                          editable={false}
+                        />
+                      ) : null}
+                      <TextInput
+                        style={[styles.inputBox, { flex: 1 }]}
+                        value={location}
+                        onChangeText={text => setLocation(text)}
+                        placeholder={getCategoryPlaceholder(category, 'location')}
+                      />
                     </View>
                   </View>
-
-                )
-              }
-
-            <Text style={styles.sectionText}>
-              관람 장소
-              <Text style={styles.requiredIndicator}>*</Text>
-            </Text>
-            <View style={styles.inputBoxContainer}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                { locationId !== null &&
-                      <Image style={styles.checkIcon} source={checkIcon} />
-                }
-                {category === 'MOVIE' ? (
-                  <TextInput
-                    style={[styles.inputBox, { fontWeight: 'bold', color: '#525252', textAlign: 'center', paddingHorizontal: 15, marginRight: 15}]}
-                    value={categoryDetail}
-                    editable={false}
-                  />
-                ) : null}
-                <TextInput
-                  style={[styles.inputBox, { flex: 1 }]}
-                  value={location}
-                  onChangeText={text => setLocation(text)}
-                  placeholder={getCategoryPlaceholder(category, 'location')}
-                />
-              </View>
-            </View>
-            {/* Location Dropdown */}
-            {
-                showLocationDropdown && (
-                  <View style={{marginVertical: 10}}>
-                    <View style={styles.dropdown}>
-                      {locationLists && locationLists.slice(0, 5).map((location, index) => (
-                        <View key={index} style={styles.dropdownItem}>
-                          <TouchableOpacity
-                            onPress={() => {
-                              setLocation(location.name || location.location_name);
-                              setLocationId(location.location_id);
-                              setShowLocationDropdown(false);
-                              setIsLocationSelected(true);
-                            }}
-                            style={styles.dropdownItemTouchable}
-                          >
-                            <View style={styles.locationDetails}>
-                              <Text style={styles.title}>{location.name}</Text>
-                              <Text style={styles.subText}>{location.address}</Text>
-                            </View>
-                          </TouchableOpacity>
+                  {/* Location Dropdown */}
+                  {
+                      showLocationDropdown && (
+                        <View style={{marginVertical: 10}}>
+                          <View style={styles.dropdown}>
+                            {locationLists && locationLists.slice(0, 5).map((location, index) => (
+                              <View key={index} style={styles.dropdownItem}>
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    setLocation(location.name || location.location_name);
+                                    setLocationId(location.location_id);
+                                    setShowLocationDropdown(false);
+                                    setIsLocationSelected(true);
+                                  }}
+                                  style={styles.dropdownItemTouchable}
+                                >
+                                  <View style={styles.locationDetails}>
+                                    <Text style={styles.title}>{location.name}</Text>
+                                    <Text style={styles.subText}>{location.address}</Text>
+                                  </View>
+                                </TouchableOpacity>
+                              </View>
+                            ))}
+                          </View>
                         </View>
-                      ))}
+                      )
+                    }
+                    <Text style={styles.sectionText}>관람 장소 (세부)</Text>
+                    <TextInput
+                      style={styles.inputBox}
+                      value={locationDetail}
+                      onChangeText={text => setLocationDetail(text)}
+                      placeholder={getCategoryPlaceholder(category, 'locationDetail')}
+                    />
+
+                    <Text style={styles.sectionText}>관람 좌석</Text>
+                    <View style={styles.seatInputContainer}>
+                      <TextInput
+                        style={[styles.inputBox, { flex: 1 }]}
+                        value={seats}
+                        onChangeText={text => setSeats(text)}
+                        placeholder={getCategoryPlaceholder(category, 'seats')}
+                      />
                     </View>
-                  </View>
-                )
-              }
-
-            <Text style={styles.sectionText}>관람 장소 (세부)</Text>
-            <TextInput
-              style={styles.inputBox}
-              value={locationDetail}
-              onChangeText={text => setLocationDetail(text)}
-              placeholder={getCategoryPlaceholder(category, 'locationDetail')}
-            />
-
-            <Text style={styles.sectionText}>관람 좌석</Text>
-            <View style={styles.seatInputContainer}>
-              <TextInput
-                style={[styles.inputBox, { flex: 1 }]}
-                value={seats}
-                onChangeText={text => setSeats(text)}
-                placeholder={getCategoryPlaceholder(category, 'seats')}
+                </>
+              )
+            }
+          </View>
+          {
+            isFormValid() && (
+              <View style={styles.floatingButtonContainer}>
+              <NextBtn
+                isDisabled={!isFormValid()}
+                onPress={() => { handleNext(); }}
               />
             </View>
-          </View>
-          <View style={styles.floatingButtonContainer}>
-            <NextBtn
-              isDisabled={!isFormValid()}
-              onPress={() => {
-                if (isFormValid()) {
-                  handleNext();
-                }
-              }}
-            />
-          </View>
+            )
+          }
         </ScrollView>
     </>
   );

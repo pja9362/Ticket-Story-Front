@@ -14,34 +14,27 @@ const TicketBook = () => {
   const dispatch = useDispatch();
 
   const auth = useSelector((state) => state.auth.isAuthenticated);
-  const myTickets = useSelector((state) => state.ticket.myTickets.contents);
   const ticketData = useSelector((state) => state.ticket.myTickets);
   const totalPages = useSelector((state) => state.ticket.myTickets.totalPages);
 
   const [page, setPage] = useState(0);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [allTickets, setAllTickets] = useState([]);
 
   useEffect(() => {
     if (auth) {
-      console.log('page:', page, 'totalPages:', totalPages, 'ticketData.last:', ticketData.last);
+      console.log('Ticket Data', ticketData, "Length", allTickets.length);
       dispatch(getMyTickets(page, 6, 'DESC', 'registerTime', (newTickets) => {
         setAllTickets((prevTickets) => [...prevTickets, ...newTickets]);
       }));
     }
   }, [auth, page]);
 
-  useEffect(() => {
-    console.log("TICKET DATA", ticketData)
-    myTickets && console.log('myTickets:', myTickets, "myTickets.length: ", myTickets.length)
-  }, [myTickets]);
-
   const handleScroll = (event) => {
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-    const paddingToBottom = 20;
-    if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom && !loading) {
-      if (page <= totalPages) {
-        setLoading(true);
+    const paddingToBottom = 30;
+    if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
+      if (page <= totalPages - 1) {
         setPage(page + 1);
       }
     }
@@ -53,13 +46,8 @@ const TicketBook = () => {
       <ScrollView 
         contentContainerStyle={styles.scrollViewContent}
         onScroll={handleScroll}
-        scrollEventThrottle={400}>
+        scrollEventThrottle={300}>
         <View style={styles.rowContainer}>
-          {/* {myTickets && myTickets.length !=0 ? myTickets.map((ticket, index) => (
-            <View key={index}>
-              <TicketItem {...ticket}/>
-            </View>
-          )) */}
           {allTickets && allTickets.length !== 0 ? allTickets.map((ticket, index) => (
             <View key={index}>
               <TicketItem {...ticket} />

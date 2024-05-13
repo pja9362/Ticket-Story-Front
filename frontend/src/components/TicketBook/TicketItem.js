@@ -22,7 +22,6 @@ const imageWidth = Dimensions.get('window').width * 0.45;
 const TicketItem = ({ category, title, date, time, location, seat, contentsRating, seatRating, imageUrl = null, ticketId, reviewId }) => {
   const navigation = useNavigation();
 
-  console.log (category, title, date, time, location, seat, contentsRating, seatRating, imageUrl, "ticketId: ", ticketId, "reviewId: ", reviewId )
   let ticketImageSource;
   let basicTicketImageSource;
   switch (category) {

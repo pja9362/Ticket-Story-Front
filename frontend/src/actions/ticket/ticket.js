@@ -63,7 +63,6 @@ export const saveImageAndPerformOCR = async (scannedImageUri) => {
 export const getMyTickets = (page, size, order, orderBy, callback) => async dispatch => {
   try {
     const accessToken = await AsyncStorage.getItem('accessToken');
-    console.log('Access token:', accessToken);
     const response = await axios.get(`${API_URL}/api/v1/ticket/getTicketBookTickets`, {
       headers: {
         'Accept': 'application/json',
@@ -79,7 +78,6 @@ export const getMyTickets = (page, size, order, orderBy, callback) => async disp
       }
     });
     if (response.data != null) {
-      console.log('My tickets:', response.data);
       dispatch({
         type: LOAD_MY_TICKETS_SUCCESS,
         payload: response.data,

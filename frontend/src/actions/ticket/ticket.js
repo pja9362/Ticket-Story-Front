@@ -64,7 +64,7 @@ export const getMyTickets = (page, size, order, orderBy) => async dispatch => {
   try {
     const accessToken = await AsyncStorage.getItem('accessToken');
     console.log('Access token:', accessToken);
-    const response = await axios.get(`${API_URL}/api/v1/ticket/getUserTicketBook`, {
+    const response = await axios.get(`${API_URL}/api/v1/ticket/getTicketBookTickets`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json;charset=UTF-8',
@@ -72,9 +72,10 @@ export const getMyTickets = (page, size, order, orderBy) => async dispatch => {
       },
       params: {
         page: page,
-        size: size,
+        pageSize: size,
         order: order,
         orderBy: orderBy,
+        category: ""
       }
     });
     if (response.data != null) {

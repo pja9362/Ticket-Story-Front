@@ -4,7 +4,7 @@ import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
 import NextBtn from '../../components/EnrollTicket/NextBtn';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchContent, searchLocation } from '../../actions/enrollTicketSearch/search';
+import { searchContent, searchLocation, clearContent, clearLocation } from '../../actions/enrollTicketSearch/search';
 import checkIcon from '../../images/icon_circleCheck.png';
 
 const EnrollInfoByHand = ({ route, navigation }) => {
@@ -16,6 +16,8 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   const { categoryInfo } = route.params;
   const { category, categoryDetail } = categoryInfo;
   
+  console.log('Category:', category, categoryDetail);
+
   const [contentsId, setContentsId] = useState(null);
   const [locationId, setLocationId] = useState(null);
   const [title, setTitle] = useState('');
@@ -54,8 +56,18 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     setTitle(content.title);
     setContentsId(content.content_id);
     setLocationId(content.location_id);
+    content.location_id !== null && setLocation(content.location_name);
     setShowContentDropdown(false);
+    handleClearList('content');
     setIsContentSelected(true);
+  };
+  
+  const handleClearList = (type) => {
+    if (type === 'content') {
+      dispatch(clearContent());
+    } else if (type === 'location') {
+      dispatch(clearLocation());
+    }
   };
 
   const isFormValid = () => {
@@ -174,13 +186,6 @@ const EnrollInfoByHand = ({ route, navigation }) => {
             { locationId !== null &&
                   <Image style={styles.checkIcon} source={checkIcon} />
             }
-            {category === 'MOVIE' ? (
-              <TextInput
-                style={[styles.inputBox, { fontWeight: 'bold', color: '#525252', textAlign: 'center', paddingHorizontal: 15, marginRight: 15}]}
-                value={categoryDetail}
-                editable={false}
-              />
-            ) : null}
             <TextInput
               style={[styles.inputBox, { flex: 1 }]}
               value={location}

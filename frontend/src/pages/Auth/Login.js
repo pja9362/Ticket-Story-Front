@@ -52,6 +52,10 @@ const Login = () => {
         <View style={styles.inputContainer}>
           <TextInput
             value={id}
+            placeholder='example@naver.com'
+            placeholderTextColor="#ccc"
+            keyboardType='email-address'
+            autoCapitalize='none'
             onChangeText={text => setId(text)}
             style={styles.inputBox}
           />

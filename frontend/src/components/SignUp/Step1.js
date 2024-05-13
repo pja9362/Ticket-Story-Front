@@ -61,6 +61,9 @@ const Step1 = ({nextStep, handleChange, values}) => {
         style={styles.inputBox}
         value={id}
         placeholder='example@naver.com'
+        placeholderTextColor="#ccc"
+        keyboardType='email-address'
+        autoCapitalize='none'
         onChangeText={text => {
           setId(text);
           handleChange('id', text);

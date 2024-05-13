@@ -59,11 +59,11 @@ const ShowImage = ({ route }) => {
                         !hideTicketInfo && (
                             <>
                                 <Text style={styles.overlayGuideText}>Date</Text>
-                                <Text style={styles.overlayText}>{ticket.date}</Text>
+                                <Text style={styles.overlayText}>2024.04.30</Text>
                                 <Text style={styles.overlayGuideText}>Time</Text>
                                 <Text style={styles.overlayText}>18:00</Text>
                                 <Text style={styles.overlayGuideText}>Place</Text>
-                                <Text style={styles.overlayText}>{ticket.location}</Text>
+                                <Text style={styles.overlayText}>콘텐츠 관람 장소</Text>
                             </>
                         )
                     }

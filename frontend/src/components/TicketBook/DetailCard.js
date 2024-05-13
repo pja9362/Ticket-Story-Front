@@ -10,12 +10,6 @@ import iconShare from '../../images/icon_share.png';
 import iconSave from '../../images/icon_save.png';
 
 // 더미 데이터
-const dummyImages = [
-    'https://source.unsplash.com/random/356x356',
-    'https://source.unsplash.com/random/356x356',
-    'https://source.unsplash.com/random/356x356',
-];
-
 const dummyReview = [
     '한화는 \"류현진은 2006년 한화이글스 소속으로 KBO리그에 데뷔해 그해 18승 6패 1세이브 204탈삼진 평균자책점 2.23을 기록하며 신인왕과 MVP를 동시에 획득했다. 이후 2012년까지 통산 98승 52패 1세이브 1238탈삼진 평균자책점 2.80을 기록하며 국내 최고의 투수로 우뚝 섰다"고 돌아온 에이스를 설명했다. 이어 \"2013년부터는 메이저리그에 진출해 지난해까지 78승 48패 1세이브 934탈삼진 평균자책점 3.27를 기록, 세계 최고의 무대에서도 수준급 선발투수로 활약을 펼쳤다. 특히 2019년에는 LA다저스 소속으로 14승 5패 163탈삼진 평균자책점 2.32의 성적으로 내셔널리그 사이영상 투표 2위에 오르며 최고의 시즌을 보냈다"고 되돌아봤다. 한 이정도 쓰면 적당한 길이일 것 같다.'
 ];
@@ -33,7 +27,7 @@ const DetailCard = ({ ticket }) => {
     }
 
     const handleImagePress = () => {
-        navigation.navigate('ShowImageView', {images: dummyImages, index: 0, ticket: ticket});
+        navigation.navigate('ShowImageView', {images: ticket.reviewImages, index: 0, ticket: ticket});
     }
 
     return (
@@ -49,19 +43,19 @@ const DetailCard = ({ ticket }) => {
                         nextButton={<Image source={iconRight} style={styles.arrowImage}/>}
                         prevButton={<Image source={iconLeft} style={styles.arrowImage}/>}
                     >
-                        {dummyImages.map((image, index) => (
+                        {ticket.reviewImages.map((image, index) => (
                             <TouchableOpacity key={index} style={styles.slide} onPress={handleImagePress}>
                                 <>
                                     <Image source={{uri: image}} style={styles.image} />
                                     {/* Overlay Text */}
                                     <View style={styles.overlay}>
-                                        <Text style={{...styles.overlayText, fontSize: 20}}>{ticket.title}</Text>
+                                        <Text style={{...styles.overlayText, fontSize: 20}}>티켓 제목</Text>
                                         <Text style={styles.overlayGuideText}>Date</Text>
-                                        <Text style={styles.overlayText}>{ticket.date}</Text>
+                                        <Text style={styles.overlayText}>2024.04.30</Text>
                                         <Text style={styles.overlayGuideText}>Time</Text>
                                         <Text style={styles.overlayText}>18:00</Text>
                                         <Text style={styles.overlayGuideText}>Place</Text>
-                                        <Text style={styles.overlayText}>{ticket.location}</Text>
+                                        <Text style={styles.overlayText}>콘텐츠 관람 장소</Text>
                                     </View>
                                 </>
                             </TouchableOpacity>
@@ -76,8 +70,8 @@ const DetailCard = ({ ticket }) => {
                     <Text style={styles.subText}>{ticket.date}</Text>
                     <Text style={styles.subText}>{ticket.location}</Text>
                     <View style={styles.reviewContainer}>
-                        <Text style={{...styles.mainText, color: '#000', fontSize: 16}}> 제목제목이다</Text>
-                        <Text style={styles.text}>{dummyReview[0]}</Text>
+                        <Text style={{...styles.mainText, color: '#000', fontSize: 16}}> {ticket.reviewTitle}</Text>
+                        <Text style={styles.text}>{ticket.reviewDetails}</Text>
                     </View>
                 </View>
             </View>

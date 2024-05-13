@@ -57,7 +57,8 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     setTitle(content.title);
     setContentsId(content.content_id);
     setLocationId(content.location_id);
-    content.location_id !== null && setLocation(content.location_name); setIsLocationSelected(true);
+    content.location_id !== null && setLocation(content.location_name); 
+    content.location_name !== null && setIsLocationSelected(true);
     setShowContentDropdown(false);
     handleClearList('content');
     setIsContentSelected(true);

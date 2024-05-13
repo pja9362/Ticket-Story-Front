@@ -18,7 +18,6 @@ const TicketBook = () => {
   const totalPages = useSelector((state) => state.ticket.myTickets.totalPages);
 
   const [page, setPage] = useState(0);
-  // const [loading, setLoading] = useState(false);
   const [allTickets, setAllTickets] = useState([]);
 
   useEffect(() => {

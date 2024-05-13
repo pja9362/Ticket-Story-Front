@@ -4,6 +4,8 @@ import {API_URL} from '@env';
 import {
   LOAD_MY_TICKETS_SUCCESS,
   LOAD_MY_TICKETS_FAIL,
+  LOAD_TICKET_DETAIL_SUCCESS,
+  LOAD_TICKET_DETAIL_FAIL,
 } from './types';
 
 export const saveNewTicket = async (data) => {
@@ -89,6 +91,35 @@ export const getMyTickets = (page, size, order, orderBy, callback) => async disp
     console.error('Error fetching my tickets:', error);
     dispatch({
       type: LOAD_MY_TICKETS_FAIL,
+    });
+    throw error;
+  }
+}
+
+export const getTicketDetail = (ticketId) => async dispatch => {
+  try {
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    const response = await axios.get(`${API_URL}/api/v1/reviews/getReviewDetails`, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+      params: {
+        ticketId: ticketId,
+      }
+    });
+    if (response.data != null) {
+      dispatch({
+        type: LOAD_TICKET_DETAIL_SUCCESS,
+        payload: response.data,
+      });
+    }
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching ticket detail:', error);
+    dispatch({
+      type: LOAD_TICKET_DETAIL_FAIL,
     });
     throw error;
   }

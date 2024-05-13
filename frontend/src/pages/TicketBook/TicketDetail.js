@@ -1,25 +1,23 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {SafeAreaView, StyleSheet, Text, TouchableOpacity, View, ScrollView} from 'react-native';
 import Header from '../../components/Header';
 import DetailCard from '../../components/TicketBook/DetailCard';
-import { useSelector } from 'react-redux';
+import { getTicketDetail } from '../../actions/ticket/ticket';
 
 const TicketDetail = ({ route, navigation }) => {
-
-  const myTickets = useSelector((state) => state.ticket.myTickets.contents);
+  const dispatch = useDispatch();
 
   const { ticketId } = route.params;
 
-  console.log('ticketId:', ticketId);
   const [ticket, setTicket] = useState(null);
 
   useEffect(() => {
-    if(myTickets) {
-      const ticket = myTickets.find((ticket) => ticket.ticketId == ticketId);
-      setTicket(ticket);
-      console.log('ticket:', ticket);
-    }
-  }, [myTickets]);
+    dispatch(getTicketDetail(ticketId))
+      .then((response) => {
+        setTicket(response);
+      });
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -27,7 +25,10 @@ const TicketDetail = ({ route, navigation }) => {
           <Header title="스토리 카드 보기" />
         </View> 
         <ScrollView style={styles.cardContainer}>
-          <DetailCard ticket={ticket} />
+          {
+            ticket === null ? <Text>Loading...</Text> : 
+            <DetailCard ticket={ticket} />
+          }
         </ScrollView>
     </SafeAreaView>
   );

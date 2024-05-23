@@ -62,6 +62,7 @@ export const saveImageAndPerformOCR = async (scannedImageUri) => {
     console.error('Error saving image to file or performing OCR:', error);
   }
 };
+
 export const getMyTickets = (page, size, order, orderBy, callback) => async dispatch => {
   try {
     const accessToken = await AsyncStorage.getItem('accessToken');
@@ -124,3 +125,28 @@ export const getTicketDetail = (ticketId) => async dispatch => {
     throw error;
   }
 }
+
+
+export const uploadImage = async (imageUri) => {
+  try {
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    const formData = new FormData();
+    formData.append('images', {
+      uri: imageUri,
+      name: 'image.jpg',
+      type: 'image/jpeg',
+    });
+
+    const response = await axios.post(`${API_URL}/api/v1/file/upload/images`, formData, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return response.data[0]; 
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    throw error;
+  }
+};

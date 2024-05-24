@@ -98,6 +98,7 @@ export const getMyTickets = (page, size, order, orderBy, callback) => async disp
 
 export const getTicketDetail = (ticketId) => async dispatch => {
   try {
+    console.log('dd', ticketId);
     const accessToken = await AsyncStorage.getItem('accessToken');
     const response = await axios.get(`${API_URL}/api/v1/reviews/getReviewDetails`, {
       headers: {
@@ -110,6 +111,7 @@ export const getTicketDetail = (ticketId) => async dispatch => {
       }
     });
     if (response.data != null) {
+      console.log('??:', response.data);
       dispatch({
         type: LOAD_TICKET_DETAIL_SUCCESS,
         payload: response.data,
@@ -117,7 +119,7 @@ export const getTicketDetail = (ticketId) => async dispatch => {
     }
     return response.data;
   } catch (error) {
-    console.error('Error fetching ticket detail:', error);
+    console.error('Error fetching ticket detail:', error.response.data);
     dispatch({
       type: LOAD_TICKET_DETAIL_FAIL,
     });

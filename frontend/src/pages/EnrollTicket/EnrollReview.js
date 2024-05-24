@@ -16,7 +16,7 @@ import deleteIcon from '../../images/icon_delete_photo.png';
 import NextButton from '../../components/EnrollTicket/NextBtn';
 import CustomCheckbox from '../../components/EnrollTicket/CustomCheckbox';
 import ImagePicker from 'react-native-image-crop-picker';
-import { saveNewTicket } from '../../actions/ticket/ticket';
+import { saveNewTicket, uploadImage } from '../../actions/ticket/ticket';
 
 const EnrollReview = ({navigation, route}) => {
   const { title, ticketData } = route.params;
@@ -84,9 +84,9 @@ const EnrollReview = ({navigation, route}) => {
         cropping: true,
         mediaType: 'photo',
       });
-      
-      const images = [image.path]; 
-      setSelectedImages(prevImages => [...prevImages, ...images]); 
+
+      const uploadedImagePath = await uploadImage(image.path);
+      setSelectedImages(prevImages => [...prevImages, uploadedImagePath]);
     } catch (error) {
       console.log('ImagePicker Error: ', error);
     }

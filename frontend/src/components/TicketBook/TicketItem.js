@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { View, Text, ImageBackground, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, TouchableOpacity, Image, } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import movieTicket from '../../images/ticekt_info_movie.png';
+import movieTicket from '../../images/ticket_info_movie.png';
 import performanceTicket from '../../images/ticket_info_performance.png';
 import sportsTicket from '../../images/ticket_info_sports.png';
 import playTicket from '../../images/ticket_info_play.png';
@@ -117,17 +117,25 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
                 <View style={styles.bottomContainer}>
                   <Text numberOfLines={1} style={[styles.info, { marginTop: 12, textAlign: 'center' }]}>{contentsRating}</Text>
                 </View>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity 
+                    onPress={reviewId !== 0 ? handleReviewClick : null} 
+                    style={[styles.reviewButton, { opacity: !isFront ? 1 : 0 }]}
+                    activeOpacity={reviewId !== 0 ? 0.2 : 1} // 터치 가능한 경우 activeOpacity 적용
+                    disabled={isFront} // isFront이 true일 때 버튼 비활성화
+                  >
+                    <Image 
+                      source={reviewId === 0 ? iconReviewOff : iconReviewOn} 
+                      style={{width: 50, height: 50}}
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
             </ImageBackground>
           </Animated.View>
         </View>
       </TouchableWithoutFeedback>
-      {
-        !isFront &&
-        <TouchableOpacity onPress={handleReviewClick} style={[styles.reviewButton, { opacity: reviewId === null ? 0.5 : 1 }]}>
-          <View style={{backgroundColor: 'transparent', width: 50, height: 50}}></View>
-        </TouchableOpacity>
-      }
+
     </>
   );
 };
@@ -205,6 +213,11 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  buttonContainer: {
+    width: imageWidth*0.875,
+    height: imageHeight*0.1,
+    marginTop: imageHeight*0.03,
   },
 });
 

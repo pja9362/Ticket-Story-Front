@@ -28,6 +28,26 @@ export const saveNewTicket = async (data) => {
   }
 }
 
+export const deleteTicket = async (data) => {
+  try {
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    console.log('Access token:', accessToken);
+    console.log('Data:', data)
+    const response = await axios.delete(`${API_URL}/api/v1/ticket/deleteTicket`, data, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+    console.log('Delete ticket response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting ticket:', error);
+    throw error;
+  }
+}
+
 export const saveImageAndPerformOCR = async (scannedImageUri) => {
   try {    
     const accessToken = await AsyncStorage.getItem('accessToken');

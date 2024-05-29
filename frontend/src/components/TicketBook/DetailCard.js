@@ -32,6 +32,10 @@ const DetailCard = ({ ticket }) => {
         navigation.navigate('ShowImageView', {images: ticket.reviewImages, index: 0, ticket: ticket});
     }
 
+    const handleContentPress = () => {
+        navigation.navigate('ShowContentView', {ticket: ticket});
+    }
+
     return (
         ticket &&
         <View style={styles.container}>
@@ -66,16 +70,18 @@ const DetailCard = ({ ticket }) => {
                     </Swiper>
                 </View>
                 <View style={styles.contentContainer}>
-                    <View style={styles.titleContainer}>
-                        <Text style={{...styles.mainText, flex: 1}}>{ticket.title}</Text>
-                        <Image source={iconLogo} style={{width: 120, height: 40, margin: -15, marginBottom: 5}} />
-                    </View>
-                    <Text style={styles.subText}>{ticket.date}</Text>
-                    <Text style={styles.subText}>{ticket.location}</Text>
-                    <View style={styles.reviewContainer}>
-                        <Text style={{...styles.mainText, color: '#000', fontSize: 16}}> {ticket.reviewTitle}</Text>
-                        <Text style={styles.text}>{ticket.reviewDetails}</Text>
-                    </View>
+                    <TouchableOpacity onPress={handleContentPress}>
+                        <View style={styles.titleContainer}>
+                            <Text style={{...styles.mainText, flex: 1}}>{ticket.title}</Text>
+                            <Image source={iconLogo} style={{width: 120, height: 40, margin: -15, marginBottom: 5}} />
+                        </View>
+                        <Text style={styles.subText}>{ticket.date}</Text>
+                        <Text style={styles.subText}>{ticket.location}</Text>
+                        <View style={styles.reviewContainer}>
+                            <Text style={{...styles.mainText, color: '#000', fontSize: 16}}> {ticket.reviewTitle}</Text>
+                            <Text style={styles.text}>{ticket.reviewDetails}</Text>
+                        </View>
+                    </TouchableOpacity>
                 </View>
             </View>
             <View style={styles.btnContainer}>

@@ -8,16 +8,27 @@ import { getTicketDetail } from '../../actions/ticket/ticket';
 const TicketDetail = ({ route, navigation }) => {
   const dispatch = useDispatch();
 
-  const { ticketId } = route.params;
+  const { ticketId, title, date, time, location } = route.params; //
 
   const [ticket, setTicket] = useState(null);
 
   useEffect(() => {
     dispatch(getTicketDetail(ticketId))
       .then((response) => {
-        setTicket(response);
-      });
+
+        const updatedTicket = {
+          ...response, 
+          date: date,
+          location: location,
+          time: time,
+          title: title
+        };
+  
+        setTicket(updatedTicket);
+
+      })
   }, []);
+
 
   return (
     <SafeAreaView style={styles.container}>

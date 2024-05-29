@@ -75,7 +75,13 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
   
 
   const handleReviewClick = () => {
-    navigation.navigate('TicketDetail', { ticketId: ticketId });
+    navigation.navigate('TicketDetail', {
+      ticketId: ticketId,
+      title : title,
+      date : date,
+      time : time,
+      location : location
+     });
   };
 
   const handleIconEditClick = () => {

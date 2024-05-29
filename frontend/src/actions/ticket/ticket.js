@@ -33,13 +33,17 @@ export const deleteTicket = async (data) => {
     const accessToken = await AsyncStorage.getItem('accessToken');
     console.log('Access token:', accessToken);
     console.log('Data:', data)
-    const response = await axios.delete(`${API_URL}/api/v1/ticket/deleteTicket`, data, {
+    const response = await axios.delete(`${API_URL}/api/v1/ticket/deleteTicket`,  {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json;charset=UTF-8',
         'Authorization': `Bearer ${accessToken}`,
       },
+      params: {
+        ticketId: data.ticketId,
+      }
     });
+
     console.log('Delete ticket response:', response.data);
     return response.data;
   } catch (error) {

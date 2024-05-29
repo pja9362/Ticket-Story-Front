@@ -111,9 +111,9 @@ const styles = StyleSheet.create({
     },
     logo: {
         position: 'absolute',
-        top: 10,
+        top: 5,
         right: 10,
-        width: 120,
+        width: 100,
         height: 40,
     },    
     overlayText: {

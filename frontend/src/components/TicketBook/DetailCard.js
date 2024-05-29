@@ -8,6 +8,7 @@ import iconRight from '../../images/icon_right_pagination.png';
 import iconLogo from '../../images/logo_navHeader.png';
 import iconShare from '../../images/icon_share.png';
 import iconSave from '../../images/icon_save.png';
+import logo from '../../images/logo_white.png';
 
 // 더미 데이터
 const dummyReview = [
@@ -15,6 +16,7 @@ const dummyReview = [
 ];
 
 const DetailCard = ({ ticket }) => {
+
     const viewRef = useRef();
     const navigation = useNavigation();
 
@@ -47,15 +49,16 @@ const DetailCard = ({ ticket }) => {
                             <TouchableOpacity key={index} style={styles.slide} onPress={handleImagePress}>
                                 <>
                                     <Image source={{uri: image}} style={styles.image} />
+                                    <Image source={logo} style={styles.logo}/>
                                     {/* Overlay Text */}
                                     <View style={styles.overlay}>
-                                        <Text style={{...styles.overlayText, fontSize: 20}}>티켓 제목</Text>
+                                        <Text style={{...styles.overlayText, fontSize: 20}}>{ticket.title}</Text>
                                         <Text style={styles.overlayGuideText}>Date</Text>
-                                        <Text style={styles.overlayText}>2024.04.30</Text>
+                                        <Text style={styles.overlayText}>{ticket.date}</Text>
                                         <Text style={styles.overlayGuideText}>Time</Text>
-                                        <Text style={styles.overlayText}>18:00</Text>
+                                        <Text style={styles.overlayText}>{ticket.time}</Text>
                                         <Text style={styles.overlayGuideText}>Place</Text>
-                                        <Text style={styles.overlayText}>콘텐츠 관람 장소</Text>
+                                        <Text style={styles.overlayText}>{ticket.location}</Text>
                                     </View>
                                 </>
                             </TouchableOpacity>
@@ -177,6 +180,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginTop: 4,
     },
+    logo: {
+        position: 'absolute',
+        top: 5,
+        right: 10,
+        width: 100,
+        height: 40,
+    },  
 });
 
 export default DetailCard;

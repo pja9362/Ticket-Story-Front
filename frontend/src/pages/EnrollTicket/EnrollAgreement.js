@@ -1,19 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
-import TicketAgreement from '../../components/EnrollTicket/TicketAgreement';
+// import TicketAgreement from '../../components/EnrollTicket/TicketAgreement';
 import SelectType from '../../components/EnrollTicket/SelectType';
 
 const EnrollAgreement = ({route, navigation}) => {
   const { action } = route.params;
   console.log("ACTION : ", action);
 
-  const [isModalVisible, setModalVisible] = useState(true);
   const [showSelectType, setShowSelectType] = useState(false);
-
-  const closeModal = () => {
-    setModalVisible(false);
-    setShowSelectType(true);
-  };
 
   const onClick = (categoryInfo) => {
     console.log(categoryInfo);
@@ -34,11 +28,9 @@ const EnrollAgreement = ({route, navigation}) => {
         title={headerTitle}
         onIconClick={headerOnClick}
       />
-      {!showSelectType ? (
-        <TicketAgreement isModalVisible={isModalVisible} onClick={closeModal} />
-      ) : (
+
         <SelectType onClick={onClick}/>
-      )}
+
     </>
   );
 };

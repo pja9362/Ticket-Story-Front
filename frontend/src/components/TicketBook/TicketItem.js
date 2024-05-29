@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, Text, ImageBackground, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, TouchableOpacity, Image, } from 'react-native';
+import { View, Text, ImageBackground, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, TouchableOpacity, Image, Modal, Button} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import movieTicket from '../../images/ticket_info_movie.png';
@@ -15,6 +15,8 @@ import sportsBasicTicket from '../../images/ticket_default_poster_sports.png';
 import iconReviewOn from '../../images/icon_ReviewOn.png';
 import iconReviewOff from '../../images/icon_ReviewOff.png';
 import iconEdit from '../../images/icon_dots.png';
+
+import { deleteTicket } from '../../actions/ticket/ticket';
 
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
 const imageWidth = Dimensions.get('window').width * 0.45;
@@ -53,19 +55,70 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
   }
 
   const [isFront, setIsFront] = useState(true);
+  const [dropdownVisible, setDropdownVisible] = useState(false); //
+  const [modalVisible, setModalVisible] = useState(false); //
   const animation = useRef(new Animated.Value(0)).current;
 
+
   const handlePress = () => {
-    setIsFront(!isFront);
-    Animated.timing(animation, {
-      toValue: isFront ? 180 : 0,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
+    if (!dropdownVisible) {
+      setIsFront(!isFront);
+      Animated.timing(animation, {
+        toValue: isFront ? 180 : 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    } else {
+    setDropdownVisible(false);
+    }
   };
+  
 
   const handleReviewClick = () => {
-    navigation.navigate('TicketDetail', { ticketId: ticketId });
+    navigation.navigate('TicketDetail', {
+      ticketId: ticketId,
+      title : title,
+      date : date,
+      time : time,
+      location : location
+     });
+  };
+
+  const handleIconEditClick = () => {
+    setDropdownVisible(!dropdownVisible);
+    console.log('click');
+  };
+
+  //
+  const handleIconInfoEdit = () => {
+
+  };
+
+  //
+  const handleIconReviewEdit = () => {
+
+  };
+
+  //
+  const handleIconDelete = async() => {
+
+    const deleteTicketData = {
+      ticketId : ticketId
+    }
+
+    try {
+      console.log("티켓 삭제 요청", deleteTicketData);
+      const deletedTicket = await deleteTicket(deleteTicketData);
+      console.log('Deleted ticket:', deletedTicket);
+    } catch (error) {
+      console.error('Error deleting ticket?:', error.response);
+    }
+  };
+
+  const closeDropdown = () => {
+    if (dropdownVisible) {
+      setDropdownVisible(false);
+    }
   };
 
   const frontInterpolate = animation.interpolate({
@@ -86,53 +139,104 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
     transform: [{ rotateY: backInterpolate }],
   };
 
+
   return (
     <>
-      <TouchableWithoutFeedback onPress={handlePress}>
-        <View style={styles.card}>
-          <Animated.View style={[styles.cardContainer, frontAnimatedStyle, imageUrl && styles.imageCard]}>
-          <ImageBackground 
-              source={imageUrl ? { uri: imageUrl } : basicTicketImageSource} 
-              style={styles.imageBackground}
-            >              
-             { imageUrl == null || imageUrl == "" ? 
-                <Text style={styles.backTitle}>{title}</Text> 
-                : <Image source={iconEdit} style={{width: 30, height: 30, position: 'absolute', top: 7, right: 10}} />
-              }
-            </ImageBackground>
+      <TouchableWithoutFeedback onPress={closeDropdown}>
+        <View>
+          <TouchableWithoutFeedback onPress={handlePress}>
+            <View style={styles.card}>
+              <Animated.View style={[styles.cardContainer, frontAnimatedStyle, imageUrl && styles.imageCard]}>
+                <ImageBackground 
+                  source={imageUrl ? { uri: imageUrl } : basicTicketImageSource} 
+                  style={imageUrl ? styles.posterBackground : styles.imageBackground}
+                >          
+
+                  {imageUrl == null || imageUrl == "" && (
+                    <Text style={styles.backTitle}>{title}</Text>
+                  )}  
+
+                </ImageBackground>
+              </Animated.View>
+              <Animated.View style={[styles.cardContainer, styles.back, backAnimatedStyle]}>
+                <ImageBackground source={ticketImageSource} style={styles.imageBackground}>
+                  <View style={styles.overlay}>
+                    <Text numberOfLines={2} style={styles.title}>{title}</Text>
+                    <View style={styles.infoContainer}>
+                      <Text numberOfLines={1} style={styles.info}>{date}</Text>
+                      <Text numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{time}</Text>
+                      <Text numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{location}</Text>
+                      <Text numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{seat}</Text>
+                    </View>
+                    <View style={styles.bottomContainer}>
+                      <Text numberOfLines={1} style={[styles.info, { marginTop: 5, textAlign: 'center' }]}>{contentsRating}</Text>
+                    </View>
+                    <View style={styles.bottomContainer}>
+                      <Text numberOfLines={1} style={[styles.info, { marginTop: 12, textAlign: 'center' }]}>{contentsRating}</Text>
+                    </View>
+                    <View style={styles.buttonContainer}>
+                      <TouchableOpacity 
+                        onPress={reviewId !== 0 ? handleReviewClick : null} 
+                        style={[styles.reviewButton, { opacity: !isFront ? 1 : 0 }]}
+                        activeOpacity={reviewId !== 0 ? 0.2 : 1} // 터치 가능한 경우 activeOpacity 적용
+                        disabled={isFront} // isFront이 true일 때 버튼 비활성화
+                      >
+                        <Image 
+                          source={reviewId === 0 ? iconReviewOff : iconReviewOn} 
+                          style={{width: 50, height: 50}}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </ImageBackground>
+              </Animated.View>
+            </View>
+          </TouchableWithoutFeedback>
+
+          <Animated.View style={[styles.editButton, frontAnimatedStyle, { opacity: isFront ? 1 : 0 }]}>
+            <TouchableOpacity onPress={handleIconEditClick} disabled={!isFront}>
+              <Image 
+                source={iconEdit} 
+                style={{width: 30, height: 30, left: 18, bottom: 3}}
+              />
+            </TouchableOpacity>
           </Animated.View>
-          <Animated.View style={[styles.cardContainer, styles.back, backAnimatedStyle]}>
-            <ImageBackground source={ticketImageSource} style={styles.imageBackground}>
-              <View style={styles.overlay}>
-                <Text numberOfLines={2} style={styles.title}>{title}</Text>
-                <View style={styles.infoContainer}>
-                  <Text numberOfLines={1} style={styles.info}>{date}</Text>
-                  <Text numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{time}</Text>
-                  <Text numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{location}</Text>
-                  <Text numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{seat}</Text>
-                </View>
-                <View style={styles.bottomContainer}>
-                  <Text numberOfLines={1} style={[styles.info, { marginTop: 5, textAlign: 'center' }]}>{contentsRating}</Text>
-                </View>
-                <View style={styles.bottomContainer}>
-                  <Text numberOfLines={1} style={[styles.info, { marginTop: 12, textAlign: 'center' }]}>{contentsRating}</Text>
-                </View>
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity 
-                    onPress={reviewId !== 0 ? handleReviewClick : null} 
-                    style={[styles.reviewButton, { opacity: !isFront ? 1 : 0 }]}
-                    activeOpacity={reviewId !== 0 ? 0.2 : 1} // 터치 가능한 경우 activeOpacity 적용
-                    disabled={isFront} // isFront이 true일 때 버튼 비활성화
-                  >
-                    <Image 
-                      source={reviewId === 0 ? iconReviewOff : iconReviewOn} 
-                      style={{width: 50, height: 50}}
-                    />
+
+          {dropdownVisible && isFront && (
+            <View style={{position: 'absolute', right: 10, top: 10, backgroundColor: '#fff', borderRadius: 5, padding: 10, gap: 15}}>
+              <TouchableOpacity onPress={() => alert('정보 수정')}>
+                <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>정보 수정</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => alert('아이고..')}>
+                <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>리뷰 수정</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setModalVisible(true)}>
+                <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>삭제</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          <Modal  
+            // animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => setModalVisible(false)}
+          >
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+              <View style={{ backgroundColor: 'white', width: 280, padding: 18, borderRadius: 10 }}>
+                <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center'}}>선택한 티켓을 삭제합니다.</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
+                  <TouchableOpacity onPress={() => setModalVisible(false)} style={{ backgroundColor: '#E8ECEF', width: 100, padding: 10, borderRadius: 5 }}>
+                    <Text style={{ color: '#000', fontWeight: 'bold', textAlign : 'center'}}>취소</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleIconDelete} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5 }}>
+                    <Text style={{ color: 'white', fontWeight: 'bold', textAlign : 'center'}}>확인</Text>
                   </TouchableOpacity>
                 </View>
               </View>
-            </ImageBackground>
-          </Animated.View>
+            </View>
+          </Modal>
+
         </View>
       </TouchableWithoutFeedback>
 
@@ -144,6 +248,11 @@ const styles = StyleSheet.create({
   imageBackground: {
     width: imageWidth,
     height: imageHeight,
+    resizeMode: 'cover',
+  },
+  posterBackground: {
+    width: imageWidth-10,
+    height: imageHeight-10,
     resizeMode: 'cover',
   },
   imageCard: {
@@ -205,6 +314,20 @@ const styles = StyleSheet.create({
     top: imageHeight*0.58,
     paddingHorizontal: 15,
   },
+  editBtnContainer: {
+    width: imageWidth*1,
+    height: imageHeight*0.1,
+    backgroundColor: 'blue',
+    marginTop: 0,
+  },
+  editButton: {
+    position: 'absolute',
+    right: 28,
+    top: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backfaceVisibility: 'hidden',
+  },
   reviewButton: {
     position: 'absolute',
     right: 28,
@@ -218,6 +341,42 @@ const styles = StyleSheet.create({
     width: imageWidth*0.875,
     height: imageHeight*0.1,
     marginTop: imageHeight*0.03,
+  },
+  editPageContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  editPage: {
+    width: 200,
+    height: 100,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  dropdown: {
+    position: 'absolute',
+    top: 60,
+    right: 40,
+    width: 100,
+    backgroundColor: 'white',
+    borderRadius: 5,
+    padding: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
+  },
+  dropdownText: {
+    fontSize: 14,
+    marginBottom: 5,
   },
 });
 

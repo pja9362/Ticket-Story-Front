@@ -19,6 +19,8 @@ import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
 import checkIcon from '../../images/icon_circleCheck.png';
 import defaultImage from '../../images/ticket_default_poster_movie.png'
 
+import DateTimePickerModal from 'react-native-modal-datetime-picker'; //
+
 const EnrollInfoByOCR = ({ route, navigation }) => {
   const dispatch = useDispatch();
 
@@ -27,6 +29,40 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
 
   const { categoryInfo } = route.params;
   const { category, categoryDetail } = categoryInfo;
+
+    //
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
+  
+    const showDatePicker = () => {
+      setDatePickerVisibility(true);
+    };
+  
+    const hideDatePicker = () => {
+      setDatePickerVisibility(false);
+    };
+  
+    const handleConfirmDate = async (selectedDate) => {
+      const formattedDate = await selectedDate.toISOString().split('T')[0].replace(/-/g, '.');
+      setDate(formattedDate);
+      hideDatePicker();
+    };
+  
+    const showTimePicker = () => {
+      setTimePickerVisibility(true);
+    };
+  
+    const hideTimePicker = () => {
+      setTimePickerVisibility(false);
+    };
+  
+    const handleConfirmTime = (selectedTime) => {
+      const hours = selectedTime.getHours().toString().padStart(2, '0');
+      const minutes = selectedTime.getMinutes().toString().padStart(2, '0');
+      setTime(`${hours}:${minutes}`);
+      hideTimePicker();
+    };
+  //
 
   const [contentsId, setContentsId] = useState(null);
   const [locationId, setLocationId] = useState(null);
@@ -192,20 +228,49 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                     관람 일시
                     <Text style={styles.requiredIndicator}>*</Text>
                   </Text>
+
                   <View style={styles.dateInputContainer}>
-                    <TextInput
-                      style={[styles.inputBox, {flex: 2 }]}
-                      value={date}
-                      onChangeText={text => setDate(text)}
-                      placeholder='YYYY.MM.DD'
+
+                    <TouchableOpacity onPress={showDatePicker}>
+                      <View pointerEvents="none">
+                        <TextInput
+                          style={[styles.inputBox, { flex: 2}]}
+                          value={date}
+                          placeholder='YYYY.MM.DD'
+                          editable={false}
+                        />
+                      </View>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={showTimePicker}>
+                      <View pointerEvents="none">
+                        <TextInput
+                          style={[styles.inputBox, { flex: 1 }]}
+                          value={time}
+                          placeholder='HH:MM'
+                          editable={false}
+                        />
+                      </View>
+                    </TouchableOpacity>
+
+                    <DateTimePickerModal
+                      isVisible={isDatePickerVisible}
+                      mode="date"
+                      // date = {date != '' ? new Date('2014-6-4') : new Date()}
+                      onConfirm={handleConfirmDate}
+                      onCancel={hideDatePicker}
+                      locale="ko"
                     />
 
-                    <TextInput
-                      style={[styles.inputBox, { flex: 1 }]}
-                      value={time}
-                      onChangeText={text => setTime(text)}
-                      placeholder='HH:MM'
+                    <DateTimePickerModal
+                      isVisible={isTimePickerVisible}
+                      mode="time"
+                      onConfirm={handleConfirmTime}
+                      onCancel={hideTimePicker}
+                      locale="ko"
+                      minuteInterval={5}
                     />
+
                   </View>
 
                   <Text style={styles.sectionText}>

@@ -24,6 +24,7 @@ import TicketlinkWebView from './src/pages/Scrape/TicketlinkWebView';
 import TicketDetail from './src/pages/TicketBook/TicketDetail';
 // dummy
 import ShowImageScreen from './src/pages/ShowImage';
+import ShowContentScreen from './src/pages/ShowContent';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -75,6 +76,7 @@ const App = () => {
 
               {/* Dummy */}
               <Stack.Screen name="ShowImageView" component={ShowImageScreen} />
+              <Stack.Screen name="ShowContentView" component={ShowContentScreen} />
             </Stack.Navigator>
           </NavigationContainer>
         </Provider>

@@ -18,7 +18,7 @@ import { getMappedDetailCategory, getMappedCategory } from '../../utils/getMappe
 import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
 import checkIcon from '../../images/icon_circleCheck.png';
 import defaultImage from '../../images/ticket_default_poster_movie.png'
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DateTimePickerModal from 'react-native-modal-datetime-picker'; //
 
 const EnrollInfoByOCR = ({ route, navigation }) => {
@@ -136,13 +136,34 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
     }
   }, [ocrResponse]);
 
+  // useEffect(() => {
+  //   if(title.trim() !== '') {
+  //     let mappedCategory = getMappedCategory(category);
+  //     dispatch(searchContent(title, date, mappedCategory, "OCR"));
+  //     console.log('searchContent: ', title, date, mappedCategory);
+  //   }
+  // }, [title]);
+
   useEffect(() => {
-    if(title.trim() !== '') {
+    if (title.trim() !== '' && isContentSelected === false) {
       let mappedCategory = getMappedCategory(category);
-      dispatch(searchContent(title, date, mappedCategory, "OCR"));
-      console.log('searchContent: ', title, date, mappedCategory);
+      const timeoutId = setTimeout(() => {
+        dispatch(searchContent(title, date, mappedCategory, "OCR"));
+        setShowContentDropdown(true);
+      }, 300);
+      return () => clearTimeout(timeoutId);
     }
   }, [title]);
+
+  useEffect(() => {
+    if (location.trim() !== '' && isLocationSelected === false) {
+      const timeoutId = setTimeout(() => {
+        dispatch(searchLocation(location));
+        setShowLocationDropdown(true);
+      }, 300);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [location]);
 
     //
     const handleNoItemSelect = () => {
@@ -150,6 +171,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
       setIsContentSelected(true);
       setContentsId(null);
       handleLocationSearch(location);
+      setShowLocationDropdown(true);
     }
   
     const handleNoLocationSelect = () => {
@@ -170,7 +192,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
   const handleContentSelect = (content) => {
     setTitle(content.title);
     setContentsId(content.content_id);
-    setLocationId(content.location_id);
+    // setLocationId(content.location_id);
     content.location_id !== null && setLocation(content.location_name);
     setShowContentDropdown(false);
     content.location_id == null && handleLocationSearch(location);
@@ -229,7 +251,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
             title="티켓 정보 입력"
             onIconClick={() => { navigation.navigate('EnrollReview', {title: title}) }}
           />
-            <ScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
+            <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
               <View style={styles.container}>
                   <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', gap: 5}}>
                     <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#000' }}>
@@ -297,7 +319,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                     { contentsId !== null &&
                           <Image style={styles.checkIcon} source={checkIcon} />
                     }
-                    <TextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={setTitle} placeholder='콘텐츠 제목'/>
+                    <TextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 제목'/> 
                   </View>
                   {/* Content Lists Dropdown */}
                   {
@@ -367,7 +389,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                       <TextInput
                         style={[styles.inputBox, { flex: 1 }]}
                         value={location}
-                        onChangeText={text => setLocation(text)}
+                        onChangeText={(text) => {setLocation(text); setIsLocationSelected(false); setLocationId(null);}}
                         placeholder={getCategoryPlaceholder(category, 'location')}
                       />
                     </View>
@@ -440,7 +462,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                     }}
                   />
                 </View>
-            </ScrollView>
+            </KeyboardAwareScrollView>
         </>
       )}
     </>

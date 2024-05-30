@@ -25,7 +25,7 @@ const TicketBook = () => {
     if (auth) {
       setPage(0); // Reset page to 0 when refreshing
       setAllTickets([]); // Clear current tickets
-      dispatch(getMyTickets(0, 6, 'DESC', 'registerTime', (newTickets) => {
+      dispatch(getMyTickets(0, 10, 'DESC', 'registerTime', (newTickets) => {
         setAllTickets(newTickets);
       }));
     }

@@ -77,7 +77,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
       const timeoutId = setTimeout(() => {
         dispatch(searchContent(title, date, category, 'BASIC'));
         setShowContentDropdown(true);
-      }, 500);
+      }, 300);
       return () => clearTimeout(timeoutId);
     }
   }, [title]);
@@ -87,7 +87,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
       const timeoutId = setTimeout(() => {
         dispatch(searchLocation(location));
         setShowLocationDropdown(true);
-      }, 500);
+      }, 300);
       return () => clearTimeout(timeoutId);
     }
   }, [location]);
@@ -109,7 +109,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   const handleContentSelect = (content) => {
     setTitle(content.title);
     setContentsId(content.content_id);
-    setLocationId(content.location_id);
+    // setLocationId(content.location_id);
     content.location_id !== null && setLocation(content.location_name); 
     content.location_name !== null && setIsLocationSelected(true);
     setShowContentDropdown(false);

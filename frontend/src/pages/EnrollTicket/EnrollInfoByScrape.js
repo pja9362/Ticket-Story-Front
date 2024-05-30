@@ -157,7 +157,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   const handleContentSelect = (content) => {
     setTitle(content.title);
     setContentsId(content.content_id);
-    setLocationId(content.location_id);
+    // setLocationId(content.location_id);
     content.location_id !== null && setLocation(content.location_name);
     setShowContentDropdown(false);
     content.location_id == null && handleLocationSearch(location);
@@ -175,12 +175,34 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
 
   const isContentVisible = category !== '' && ((category != "영화" && categoryDetail !== '') || category == "영화");
 
+  // useEffect(() => {
+  //   if (title !== '' && isContentVisible) {
+  //     let mappedCategory = getMappedCategory(category);
+  //     dispatch(searchContent(title, date, mappedCategory, 'SCRAPE'));
+  //   }
+  // }, [category, categoryDetail]);
+
   useEffect(() => {
-    if (title !== '' && isContentVisible) {
+    if (title.trim() !== '' && isContentVisible && isContentSelected === false) {
       let mappedCategory = getMappedCategory(category);
-      dispatch(searchContent(title, date, mappedCategory, 'SCRAPE'));
+      const timeoutId = setTimeout(() => {
+        dispatch(searchContent(title, date, mappedCategory, 'SCRAPE'));
+        setShowContentDropdown(true);
+      }, 300);
+      return () => clearTimeout(timeoutId);
     }
-  }, [category, categoryDetail]);
+  }, [title]);
+
+  useEffect(() => {
+    if (location.trim() !== '' && isContentVisible && isLocationSelected === false) {
+      const timeoutId = setTimeout(() => {
+        dispatch(searchLocation(location));
+        setShowLocationDropdown(true);
+      }, 300);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [location]);
+
   
   return (
     <>
@@ -282,7 +304,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                   { contentsId !== null &&
                         <Image style={styles.checkIcon} source={checkIcon} />
                   }
-                  <TextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={setTitle} placeholder='콘텐츠 제목'/>
+                  <TextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 제목'/>
                 </View>
                 {/* Content Lists Dropdown */}
                 {
@@ -342,7 +364,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                   { locationId !== null &&
                         <Image style={styles.checkIcon} source={checkIcon} />
                   }
-                  <TextInput style={{...styles.inputBox, flex: 1}} value={location} onChangeText={setLocation} placeholder={getCategoryPlaceholder(category, 'location')} />
+                  <TextInput style={{...styles.inputBox, flex: 1}} value={location} onChangeText={(text) => {setLocation(text); setIsLocationSelected(false); setLocationId(null);}} placeholder={getCategoryPlaceholder(category, 'location')} />
                 </View>
                 {/* Location Dropdown */}
                 {

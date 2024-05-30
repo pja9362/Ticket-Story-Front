@@ -8,11 +8,13 @@ import icon_apple from '../../images/icon_apple.png';
 import logo_ticket_white from '../../images/logo_ticket_white.png';
 import { API_URL } from '@env';
 import { handleOAuthKaKaoLogin, saveTokens } from '../../actions/auth/auth';
+// import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const Init = ({navigation}) => {
+
   const webViewRef = useRef(null);
 
   const [webViewVisible, setWebViewVisible] = useState(false);
@@ -59,13 +61,13 @@ const Init = ({navigation}) => {
   return (
     <View style={styles.container}>
       {webViewVisible && (redirectUrl != null) ? (
-        <WebView
-          ref={webViewRef}
-          style={{... styles.webview, margin: 0, padding: 0}}
-          source={{ uri: redirectUrl }} 
-          onNavigationStateChange={handleOAuthNavigationChange}
-          onClose={() => setWebViewVisible(false)}
-        />
+          <WebView
+            ref={webViewRef}
+            style={{... styles.webview, margin: 0, padding: 0}}
+            source={{ uri: redirectUrl }} 
+            onNavigationStateChange={handleOAuthNavigationChange}
+            onClose={() => setWebViewVisible(false)}
+          />
       )
     :
      (

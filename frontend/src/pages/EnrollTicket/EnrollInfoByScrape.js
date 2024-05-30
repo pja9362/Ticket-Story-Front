@@ -24,6 +24,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     //
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
+
   
     const showDatePicker = () => {
       setDatePickerVisibility(true);
@@ -95,8 +96,9 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   };
 
   const isFormValid = () => {
-    return title !== '' && date !== '' && time !== '' && location !== '';
+    return title !== '' && date !== '' && time !== '' && location !== '' && isContentSelected == true && isLocationSelected == true; //
   };
+
 
   const handleNext = async () => {
     const { category: mappedCategory, categoryDetail: mappedCategoryDetail } = getMappedDetailCategory(category, categoryDetail);
@@ -126,6 +128,24 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     }
   }
 
+  //
+  const [isContentSelected, setIsContentSelected] = useState(false);
+  const [isLocationSelected, setIsLocationSelected] = useState(false);
+
+  const handleNoItemSelect = () => {
+    setShowContentDropdown(false);
+    setIsContentSelected(true);
+    setContentsId(null);
+    handleLocationSearch(location);
+  }
+
+  const handleNoLocationSelect = () => {
+    setShowLocationDropdown(false);
+    setIsLocationSelected(true);
+    setLocationId(null);
+  }
+  //
+
   const handleClearList = (type) => {
     if (type === 'content') {
       dispatch(clearContent());
@@ -142,6 +162,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     setShowContentDropdown(false);
     content.location_id == null && handleLocationSearch(location);
     handleClearList('content');
+    setIsContentSelected(true); //
   }
 
   const handleLocationSearch = (location) => {
@@ -297,6 +318,16 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                             </TouchableOpacity>
                           </View>
                         ))}
+                        <View style={styles.lastdropdownItem}>
+                          <TouchableOpacity
+                            onPress={handleNoItemSelect}
+                            style={styles.dropdownItemTouchable}
+                          >
+                            <View style={styles.contentDetails}>
+                              <Text style={styles.textDetails}> 콘텐츠 선택하지 않고 입력하기 </Text>
+                            </View>
+                          </TouchableOpacity>
+                        </View>
                       </View>
                     </View>
                   )
@@ -322,6 +353,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                           <View key={index} style={styles.dropdownItem}>
                             <TouchableOpacity
                               onPress={() => {
+                                setIsLocationSelected(true);
                                 setLocation(location.name);
                                 setLocationId(location.location_id);
                                 setShowLocationDropdown(false);
@@ -336,6 +368,16 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                             </TouchableOpacity>
                           </View>
                         ))}
+                        <View style={styles.lastdropdownLocation}>
+                          <TouchableOpacity
+                            onPress={handleNoLocationSelect}
+                            style={styles.dropdownItemTouchable}
+                          >
+                            <View style={styles.contentDetails}>
+                              <Text style={styles.textDetails}> 장소 선택하지 않고 입력하기 </Text>
+                            </View>
+                          </TouchableOpacity>
+                        </View>
                       </View>
                     </View>
                   )
@@ -358,8 +400,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
           }
           </View>
           {
-            isContentVisible &&
-            <View style={styles.floatingButtonContainer}>
+            isContentVisible && 
+            (<View style={styles.floatingButtonContainer}>
                 <NextBtn
                   isDisabled={!isFormValid()}
                   onPress={() => {
@@ -368,7 +410,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                     }
                   }}
                 />
-            </View>
+            </View>)
           }
         </ScrollView>
     </>
@@ -458,6 +500,22 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
       flexDirection: 'row',
+    },
+    lastdropdownItem: {
+      padding: 15,
+      marginBottom: 0,
+      borderBottomColor: '#EEEEEE',
+    },
+    lastdropdownLocation: {
+      padding: 12,
+      marginBottom: 0,
+      borderBottomColor: '#EEEEEE',
+    },
+    textDetails: {
+      textAlign: 'center',
+      fontSize: 15,
+      fontWeight: 'bold',
+      color: '#9A9A9A',
     },
 });
 

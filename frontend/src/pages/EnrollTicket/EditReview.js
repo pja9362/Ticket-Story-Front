@@ -18,7 +18,7 @@ import CustomCheckbox from '../../components/EnrollTicket/CustomCheckbox';
 import ImagePicker from 'react-native-image-crop-picker';
 import { saveNewTicket, uploadImage } from '../../actions/ticket/ticket';
 
-const EnrollReview = ({navigation, route}) => {
+const EditReview = ({navigation, route}) => {
   const { title, ticketData } = route.params;
 
   useEffect(() => {
@@ -32,8 +32,8 @@ const EnrollReview = ({navigation, route}) => {
   const [reviewTitle, setReviewTitle] = useState('');
   const [reviewContent, setReviewContent] = useState('');
   const [selectedImages, setSelectedImages] = useState([]);
-  // const [spoilerChecked, setSpoilerChecked] = useState(false);
-  // const [privateChecked, setPrivateChecked] = useState(false);
+  const [spoilerChecked, setSpoilerChecked] = useState(false);
+  const [privateChecked, setPrivateChecked] = useState(false);
 
   const handleSliderChange = (category, rating) => {
     if (category === 'art') {
@@ -46,8 +46,8 @@ const EnrollReview = ({navigation, route}) => {
 
   const handleNext = async () => {
     const reviewDetails = {
-      // isPublic: !privateChecked,
-      // isSpoiler: spoilerChecked,
+      isPublic: !privateChecked,
+      isSpoiler: spoilerChecked,
       reviewTitle,
       reviewDetails: reviewContent,
       reviewImages: selectedImages
@@ -151,7 +151,7 @@ const EnrollReview = ({navigation, route}) => {
           />
         </View>
 
-        {/* <View style={styles.checkboxContainer}>
+        <View style={styles.checkboxContainer}>
           <CustomCheckbox
             checked={spoilerChecked}
             onPress={() => setSpoilerChecked(!spoilerChecked)}
@@ -162,10 +162,10 @@ const EnrollReview = ({navigation, route}) => {
             onPress={() => setPrivateChecked(!privateChecked)}
             label="비공개"
           />
-        </View> */}
+        </View>
 
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 20}} >
-          <NextButton isDisabled={artRating === 0 || seatRating === 0 || !sliderTouched} onPress={handleNext} />
+          <NextButton  isDisabled={(artRating === 0 || seatRating === 0) && sliderTouched} onPress={handleNext} />
         </View>
       </ScrollView>
     </>
@@ -231,4 +231,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EnrollReview;
+export default EditReview;

@@ -144,6 +144,21 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
     }
   }, [title]);
 
+    //
+    const handleNoItemSelect = () => {
+      setShowContentDropdown(false);
+      setIsContentSelected(true);
+      setContentsId(null);
+      handleLocationSearch(location);
+    }
+  
+    const handleNoLocationSelect = () => {
+      setShowLocationDropdown(false);
+      setIsLocationSelected(true);
+      setLocationId(null);
+    }
+    //
+
   const handleClearList = (type) => {
     if(type === 'content') {
       dispatch(clearContent());
@@ -160,6 +175,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
     setShowContentDropdown(false);
     content.location_id == null && handleLocationSearch(location);
     handleClearList('content');
+    setIsContentSelected(true);
   }
 
 
@@ -172,7 +188,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
   }
 
   const isFormValid = () => {
-    return title !== '' && date !== '' && time !== '' && location !== '';
+    return title !== '' && date !== '' && time !== '' && location !== '' && isContentSelected == true && isLocationSelected == true;
   };
 
   const handleNext = async () => {
@@ -317,6 +333,16 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                               </TouchableOpacity>
                             </View>
                           ))}
+                          <View style={styles.lastdropdownItem}>
+                            <TouchableOpacity
+                              onPress={handleNoItemSelect}
+                              style={styles.dropdownItemTouchable}
+                            >
+                              <View style={styles.contentDetails}>
+                                <Text style={styles.textDetails}> 콘텐츠 선택하지 않고 입력하기 </Text>
+                              </View>
+                            </TouchableOpacity>
+                          </View>
                         </View>
                       </View>
                     )
@@ -355,6 +381,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                             <View key={index} style={styles.dropdownItem}>
                               <TouchableOpacity
                                 onPress={() => {
+                                  setIsLocationSelected(true);
                                   setLocation(location.name);
                                   setLocationId(location.location_id);
                                   setShowLocationDropdown(false);
@@ -369,6 +396,16 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                               </TouchableOpacity>
                             </View>
                           ))}
+                          <View style={styles.lastdropdownLocation}>
+                            <TouchableOpacity
+                              onPress={handleNoLocationSelect}
+                              style={styles.dropdownItemTouchable}
+                            >
+                              <View style={styles.contentDetails}>
+                                <Text style={styles.textDetails}> 장소 선택하지 않고 입력하기 </Text>
+                              </View>
+                            </TouchableOpacity>
+                          </View>
                         </View>
                       </View>
                     )
@@ -454,8 +491,10 @@ const styles = StyleSheet.create({
     color: '#5D70F9',
   },
   floatingButtonContainer: {
-    position: 'absolute',
-    bottom: 100,
+    // position: 'absolute',
+    // bottom: 100,
+    // width: '100%',
+    // alignItems: 'center',
     width: '100%',
     alignItems: 'center',
   },
@@ -501,6 +540,22 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flexDirection: 'row',
+  },
+  lastdropdownItem: {
+    padding: 15,
+    marginBottom: 0,
+    borderBottomColor: '#EEEEEE',
+  },
+  lastdropdownLocation: {
+    padding: 12,
+    marginBottom: 0,
+    borderBottomColor: '#EEEEEE',
+  },
+  textDetails: {
+    textAlign: 'center',
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#9A9A9A',
   },
 });
 

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
 import NextBtn from '../../components/EnrollTicket/NextBtn';
@@ -91,6 +92,20 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     }
   }, [location]);
 
+  //
+  const handleNoItemSelect = () => {
+    setShowContentDropdown(false);
+    setIsContentSelected(true);
+    setContentsId(null);
+  }
+
+  const handleNoLocationSelect = () => {
+    setShowLocationDropdown(false);
+    setIsLocationSelected(true);
+    setLocationId(null);
+  }
+  //
+
   const handleContentSelect = (content) => {
     setTitle(content.title);
     setContentsId(content.content_id);
@@ -147,7 +162,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
         title="티켓 정보 입력" 
         onIconClick={() => isFormValid() ? navigation.navigate('EnrollReview', { title }) : alert('필수 입력 항목을 모두 입력해주세요!')} 
       />
-        <ScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
+        <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
           <View style={styles.container}>
             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', gap: 5}}>
               <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#000' }}>
@@ -213,11 +228,12 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                     관람 콘텐츠
                     <Text style={styles.requiredIndicator}>*</Text>
                   </Text>
+
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     { contentsId !== null &&
                           <Image style={styles.checkIcon} source={checkIcon} />
                     }
-                    <TextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={setTitle} placeholder='콘텐츠 제목'/>
+                    <TextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 제목'/>
                   </View>
                   {/* Content Lists Dropdown */}
                   {
@@ -253,6 +269,17 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                                 </TouchableOpacity>
                               </View>
                             ))}
+
+                            <View style={styles.lastdropdownItem}>
+                              <TouchableOpacity
+                                onPress={handleNoItemSelect}
+                                style={styles.dropdownItemTouchable}
+                              >
+                                <View style={styles.contentDetails}>
+                                  <Text style={styles.textDetails}> 콘텐츠 선택하지 않고 입력하기 </Text>
+                                </View>
+                              </TouchableOpacity>
+                            </View>
                           </View>
                         </View>
                     )
@@ -282,7 +309,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                       <TextInput
                         style={[styles.inputBox, { flex: 1 }]}
                         value={location}
-                        onChangeText={text => setLocation(text)}
+                        onChangeText={(text) => {setLocation(text); setIsLocationSelected(false); setLocationId(null);}}
                         placeholder={getCategoryPlaceholder(category, 'location')}
                       />
                     </View>
@@ -293,7 +320,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                         <View style={{marginVertical: 10}}>
                           <View style={styles.dropdown}>
                             {locationLists && locationLists.slice(0, 5).map((location, index) => (
-                              <View key={index} style={styles.dropdownItem}>
+                              <View key={index} style={styles.dropdownLocation}>
                                 <TouchableOpacity
                                   onPress={() => {
                                     setLocation(location.name || location.location_name);
@@ -310,6 +337,16 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                                 </TouchableOpacity>
                               </View>
                             ))}
+                            <View style={styles.lastdropdownLocation}>
+                              <TouchableOpacity
+                                onPress={handleNoLocationSelect}
+                                style={styles.dropdownItemTouchable}
+                              >
+                                <View style={styles.contentDetails}>
+                                  <Text style={styles.textDetails}> 장소 선택하지 않고 입력하기 </Text>
+                                </View>
+                              </TouchableOpacity>
+                            </View>
                           </View>
                         </View>
                       )
@@ -345,7 +382,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
             </View>
             )
           }
-        </ScrollView>
+        </KeyboardAwareScrollView>
     </>
   );
 };
@@ -410,6 +447,22 @@ const styles = StyleSheet.create({
     borderBottomColor: '#EEEEEE',
     borderBottomWidth: 1,
   },
+  dropdownLocation: {
+    padding: 9,
+    marginBottom: 5,
+    borderBottomColor: '#EEEEEE',
+    borderBottomWidth: 1,
+  },
+  lastdropdownItem: {
+    padding: 15,
+    marginBottom: 0,
+    borderBottomColor: '#EEEEEE',
+  },
+  lastdropdownLocation: {
+    padding: 12,
+    marginBottom: 0,
+    borderBottomColor: '#EEEEEE',
+  },
   dropdownItemTouchable: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -439,6 +492,12 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flexDirection: 'row',
+  },
+  textDetails: {
+    textAlign: 'center',
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#9A9A9A',
   },
 });
 

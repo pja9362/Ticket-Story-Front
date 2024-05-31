@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
         bottom: 14,
         left: 8,
         gap: 40,
+        width: 200,
     },
     mainText: {
         color: '#525252',

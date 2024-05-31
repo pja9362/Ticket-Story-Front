@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getMappedDetailCategory, getMappedCategory } from '../../utils/getMappedCategory';
 import checkIcon from '../../images/icon_circleCheck.png';
 import defaultImage from '../../images/ticket_default_poster_movie.png'
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DateTimePickerModal from 'react-native-modal-datetime-picker'; //
 
 const EnrollInfoByScrape = ({ route, navigation }) => {
@@ -207,7 +207,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   return (
     <>
       <EnrollHeader title="티켓 정보 입력" onIconClick={handleNext}/>
-        <ScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
+        <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
           <View style={{...styles.container, paddingBottom: 0}}>
             <Text style={styles.sectionText}>
               관람한 콘텐츠의 분야를 선택해 주세요.
@@ -384,7 +384,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                               style={styles.dropdownItemTouchable}
                             >
                               <View style={styles.locationDetails}>
-                                <Text style={styles.title}>{location.name}</Text>
+                                <Text style={{...styles.title, flex: 1 }}>{location.name}</Text>
                                 <Text style={styles.subText}>{location.address}</Text>
                               </View>
                             </TouchableOpacity>
@@ -434,7 +434,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                 />
             </View>)
           }
-        </ScrollView>
+        </KeyboardAwareScrollView>
     </>
   );
 };

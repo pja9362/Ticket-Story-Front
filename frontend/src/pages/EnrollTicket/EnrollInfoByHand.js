@@ -331,7 +331,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                                   style={styles.dropdownItemTouchable}
                                 >
                                   <View style={styles.locationDetails}>
-                                    <Text style={styles.title}>{location.name}</Text>
+                                    <Text style={{...styles.title, flex: 1 }}>{location.name}</Text>
                                     <Text style={styles.subText}>{location.address}</Text>
                                   </View>
                                 </TouchableOpacity>

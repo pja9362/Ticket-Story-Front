@@ -34,8 +34,8 @@ const DetailCard = ({ ticket }) => {
         }
     }
 
-    const handleImagePress = () => {
-        navigation.navigate('ShowImageView', {images: ticket.reviewImages, index: 0, ticket: ticket});
+    const handleImagePress = (idx) => {
+        navigation.navigate('ShowImageView', {images: ticket.reviewImages, index: idx, ticket: ticket});
     }
 
     const handleContentPress = () => {
@@ -56,7 +56,7 @@ const DetailCard = ({ ticket }) => {
                         prevButton={<Image source={iconLeft} style={styles.arrowImage}/>}
                     >
                         {ticket.reviewImages.map((image, index) => (
-                            <TouchableOpacity key={index} style={styles.slide} onPress={handleImagePress}>
+                            <TouchableOpacity key={index} style={styles.slide} onPress={()=>handleImagePress(index)}>
                                 <>
                                     <Image source={{uri: image}} style={styles.image} />
                                     <Image source={logo} style={styles.logo}/>

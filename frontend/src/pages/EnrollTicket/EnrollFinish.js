@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Image, StyleSheet, Text, Button, TouchableOpacity} from 'react-native';
 import ticket from '../../images/ticket.png';
 const EnrollFinish = ({navigation}) => {
+
     return (
         <View style={styles.container}>
             <Image source={ticket} style={styles.image} />
@@ -12,11 +13,11 @@ const EnrollFinish = ({navigation}) => {
                 <TouchableOpacity style={{...styles.navButton, backgroundColor: '#5D70F9' }} onPress={() => navigation.navigate('MainStack')}>
                     <Text style={{...styles.btnText, color: '#fff'}}>홈으로 가기</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('TicketBook')}>
+                {/* <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('TicketBook')}>
                     <Text style={styles.btnText}>티켓북으로 가기</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('EnrollTicket')}>
-                    <Text style={styles.btnText}>티켓 등록하기</Text>
+                    <Text style={styles.btnText}>티켓 추가 등록하기</Text>
                 </TouchableOpacity>
             </View>
         </View>

@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getMappedDetailCategory, getMappedCategory } from '../../utils/getMappedCategory';
 import checkIcon from '../../images/icon_circleCheck.png';
 import defaultImage from '../../images/ticket_default_poster_movie.png'
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DateTimePickerModal from 'react-native-modal-datetime-picker'; //
 
 const EnrollInfoByScrape = ({ route, navigation }) => {
@@ -24,6 +24,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     //
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
+
   
     const showDatePicker = () => {
       setDatePickerVisibility(true);
@@ -95,8 +96,9 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   };
 
   const isFormValid = () => {
-    return title !== '' && date !== '' && time !== '' && location !== '';
+    return title !== '' && date !== '' && time !== '' && location !== '' && isContentSelected == true && isLocationSelected == true; //
   };
+
 
   const handleNext = async () => {
     const { category: mappedCategory, categoryDetail: mappedCategoryDetail } = getMappedDetailCategory(category, categoryDetail);
@@ -126,6 +128,24 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     }
   }
 
+  //
+  const [isContentSelected, setIsContentSelected] = useState(false);
+  const [isLocationSelected, setIsLocationSelected] = useState(false);
+
+  const handleNoItemSelect = () => {
+    setShowContentDropdown(false);
+    setIsContentSelected(true);
+    setContentsId(null);
+    handleLocationSearch(location);
+  }
+
+  const handleNoLocationSelect = () => {
+    setShowLocationDropdown(false);
+    setIsLocationSelected(true);
+    setLocationId(null);
+  }
+  //
+
   const handleClearList = (type) => {
     if (type === 'content') {
       dispatch(clearContent());
@@ -137,11 +157,12 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   const handleContentSelect = (content) => {
     setTitle(content.title);
     setContentsId(content.content_id);
-    setLocationId(content.location_id);
+    // setLocationId(content.location_id);
     content.location_id !== null && setLocation(content.location_name);
     setShowContentDropdown(false);
     content.location_id == null && handleLocationSearch(location);
     handleClearList('content');
+    setIsContentSelected(true); //
   }
 
   const handleLocationSearch = (location) => {
@@ -154,17 +175,39 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
 
   const isContentVisible = category !== '' && ((category != "영화" && categoryDetail !== '') || category == "영화");
 
+  // useEffect(() => {
+  //   if (title !== '' && isContentVisible) {
+  //     let mappedCategory = getMappedCategory(category);
+  //     dispatch(searchContent(title, date, mappedCategory, 'SCRAPE'));
+  //   }
+  // }, [category, categoryDetail]);
+
   useEffect(() => {
-    if (title !== '' && isContentVisible) {
+    if (title.trim() !== '' && isContentVisible && isContentSelected === false) {
       let mappedCategory = getMappedCategory(category);
-      dispatch(searchContent(title, date, mappedCategory, 'SCRAPE'));
+      const timeoutId = setTimeout(() => {
+        dispatch(searchContent(title, date, mappedCategory, 'SCRAPE'));
+        setShowContentDropdown(true);
+      }, 300);
+      return () => clearTimeout(timeoutId);
     }
-  }, [category, categoryDetail]);
+  }, [title]);
+
+  useEffect(() => {
+    if (location.trim() !== '' && isContentVisible && isLocationSelected === false) {
+      const timeoutId = setTimeout(() => {
+        dispatch(searchLocation(location));
+        setShowLocationDropdown(true);
+      }, 300);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [location]);
+
   
   return (
     <>
       <EnrollHeader title="티켓 정보 입력" onIconClick={handleNext}/>
-        <ScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
+        <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
           <View style={{...styles.container, paddingBottom: 0}}>
             <Text style={styles.sectionText}>
               관람한 콘텐츠의 분야를 선택해 주세요.
@@ -261,7 +304,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                   { contentsId !== null &&
                         <Image style={styles.checkIcon} source={checkIcon} />
                   }
-                  <TextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={setTitle} placeholder='콘텐츠 제목'/>
+                  <TextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 제목'/>
                 </View>
                 {/* Content Lists Dropdown */}
                 {
@@ -297,6 +340,16 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                             </TouchableOpacity>
                           </View>
                         ))}
+                        <View style={styles.lastdropdownItem}>
+                          <TouchableOpacity
+                            onPress={handleNoItemSelect}
+                            style={styles.dropdownItemTouchable}
+                          >
+                            <View style={styles.contentDetails}>
+                              <Text style={styles.textDetails}> 콘텐츠 선택하지 않고 입력하기 </Text>
+                            </View>
+                          </TouchableOpacity>
+                        </View>
                       </View>
                     </View>
                   )
@@ -311,7 +364,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                   { locationId !== null &&
                         <Image style={styles.checkIcon} source={checkIcon} />
                   }
-                  <TextInput style={{...styles.inputBox, flex: 1}} value={location} onChangeText={setLocation} placeholder={getCategoryPlaceholder(category, 'location')} />
+                  <TextInput style={{...styles.inputBox, flex: 1}} value={location} onChangeText={(text) => {setLocation(text); setIsLocationSelected(false); setLocationId(null);}} placeholder={getCategoryPlaceholder(category, 'location')} />
                 </View>
                 {/* Location Dropdown */}
                 {
@@ -322,6 +375,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                           <View key={index} style={styles.dropdownItem}>
                             <TouchableOpacity
                               onPress={() => {
+                                setIsLocationSelected(true);
                                 setLocation(location.name);
                                 setLocationId(location.location_id);
                                 setShowLocationDropdown(false);
@@ -330,12 +384,22 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                               style={styles.dropdownItemTouchable}
                             >
                               <View style={styles.locationDetails}>
-                                <Text style={styles.title}>{location.name}</Text>
+                                <Text style={{...styles.title, flex: 1 }}>{location.name}</Text>
                                 <Text style={styles.subText}>{location.address}</Text>
                               </View>
                             </TouchableOpacity>
                           </View>
                         ))}
+                        <View style={styles.lastdropdownLocation}>
+                          <TouchableOpacity
+                            onPress={handleNoLocationSelect}
+                            style={styles.dropdownItemTouchable}
+                          >
+                            <View style={styles.contentDetails}>
+                              <Text style={styles.textDetails}> 장소 선택하지 않고 입력하기 </Text>
+                            </View>
+                          </TouchableOpacity>
+                        </View>
                       </View>
                     </View>
                   )
@@ -358,8 +422,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
           }
           </View>
           {
-            isContentVisible &&
-            <View style={styles.floatingButtonContainer}>
+            isContentVisible && 
+            (<View style={styles.floatingButtonContainer}>
                 <NextBtn
                   isDisabled={!isFormValid()}
                   onPress={() => {
@@ -368,9 +432,9 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                     }
                   }}
                 />
-            </View>
+            </View>)
           }
-        </ScrollView>
+        </KeyboardAwareScrollView>
     </>
   );
 };
@@ -458,6 +522,22 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
       flexDirection: 'row',
+    },
+    lastdropdownItem: {
+      padding: 15,
+      marginBottom: 0,
+      borderBottomColor: '#EEEEEE',
+    },
+    lastdropdownLocation: {
+      padding: 12,
+      marginBottom: 0,
+      borderBottomColor: '#EEEEEE',
+    },
+    textDetails: {
+      textAlign: 'center',
+      fontSize: 15,
+      fontWeight: 'bold',
+      color: '#9A9A9A',
     },
 });
 

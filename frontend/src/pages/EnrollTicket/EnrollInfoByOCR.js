@@ -18,7 +18,7 @@ import { getMappedDetailCategory, getMappedCategory } from '../../utils/getMappe
 import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
 import checkIcon from '../../images/icon_circleCheck.png';
 import defaultImage from '../../images/ticket_default_poster_movie.png'
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DateTimePickerModal from 'react-native-modal-datetime-picker'; //
 
 const EnrollInfoByOCR = ({ route, navigation }) => {
@@ -136,13 +136,50 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
     }
   }, [ocrResponse]);
 
+  // useEffect(() => {
+  //   if(title.trim() !== '') {
+  //     let mappedCategory = getMappedCategory(category);
+  //     dispatch(searchContent(title, date, mappedCategory, "OCR"));
+  //     console.log('searchContent: ', title, date, mappedCategory);
+  //   }
+  // }, [title]);
+
   useEffect(() => {
-    if(title.trim() !== '') {
+    if (title.trim() !== '' && isContentSelected === false) {
       let mappedCategory = getMappedCategory(category);
-      dispatch(searchContent(title, date, mappedCategory, "OCR"));
-      console.log('searchContent: ', title, date, mappedCategory);
+      const timeoutId = setTimeout(() => {
+        dispatch(searchContent(title, date, mappedCategory, "OCR"));
+        setShowContentDropdown(true);
+      }, 300);
+      return () => clearTimeout(timeoutId);
     }
   }, [title]);
+
+  useEffect(() => {
+    if (location.trim() !== '' && isLocationSelected === false) {
+      const timeoutId = setTimeout(() => {
+        dispatch(searchLocation(location));
+        setShowLocationDropdown(true);
+      }, 300);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [location]);
+
+    //
+    const handleNoItemSelect = () => {
+      setShowContentDropdown(false);
+      setIsContentSelected(true);
+      setContentsId(null);
+      handleLocationSearch(location);
+      setShowLocationDropdown(true);
+    }
+  
+    const handleNoLocationSelect = () => {
+      setShowLocationDropdown(false);
+      setIsLocationSelected(true);
+      setLocationId(null);
+    }
+    //
 
   const handleClearList = (type) => {
     if(type === 'content') {
@@ -155,11 +192,12 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
   const handleContentSelect = (content) => {
     setTitle(content.title);
     setContentsId(content.content_id);
-    setLocationId(content.location_id);
+    // setLocationId(content.location_id);
     content.location_id !== null && setLocation(content.location_name);
     setShowContentDropdown(false);
     content.location_id == null && handleLocationSearch(location);
     handleClearList('content');
+    setIsContentSelected(true);
   }
 
 
@@ -172,7 +210,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
   }
 
   const isFormValid = () => {
-    return title !== '' && date !== '' && time !== '' && location !== '';
+    return title !== '' && date !== '' && time !== '' && location !== '' && isContentSelected == true && isLocationSelected == true;
   };
 
   const handleNext = async () => {
@@ -213,7 +251,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
             title="티켓 정보 입력"
             onIconClick={() => { navigation.navigate('EnrollReview', {title: title}) }}
           />
-            <ScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
+            <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
               <View style={styles.container}>
                   <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', gap: 5}}>
                     <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#000' }}>
@@ -281,7 +319,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                     { contentsId !== null &&
                           <Image style={styles.checkIcon} source={checkIcon} />
                     }
-                    <TextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={setTitle} placeholder='콘텐츠 제목'/>
+                    <TextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 제목'/> 
                   </View>
                   {/* Content Lists Dropdown */}
                   {
@@ -317,6 +355,16 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                               </TouchableOpacity>
                             </View>
                           ))}
+                          <View style={styles.lastdropdownItem}>
+                            <TouchableOpacity
+                              onPress={handleNoItemSelect}
+                              style={styles.dropdownItemTouchable}
+                            >
+                              <View style={styles.contentDetails}>
+                                <Text style={styles.textDetails}> 콘텐츠 선택하지 않고 입력하기 </Text>
+                              </View>
+                            </TouchableOpacity>
+                          </View>
                         </View>
                       </View>
                     )
@@ -341,7 +389,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                       <TextInput
                         style={[styles.inputBox, { flex: 1 }]}
                         value={location}
-                        onChangeText={text => setLocation(text)}
+                        onChangeText={(text) => {setLocation(text); setIsLocationSelected(false); setLocationId(null);}}
                         placeholder={getCategoryPlaceholder(category, 'location')}
                       />
                     </View>
@@ -355,6 +403,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                             <View key={index} style={styles.dropdownItem}>
                               <TouchableOpacity
                                 onPress={() => {
+                                  setIsLocationSelected(true);
                                   setLocation(location.name);
                                   setLocationId(location.location_id);
                                   setShowLocationDropdown(false);
@@ -363,12 +412,22 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                                 style={styles.dropdownItemTouchable}
                               >
                                 <View style={styles.locationDetails}>
-                                  <Text style={styles.title}>{location.name}</Text>
+                                  <Text style={{...styles.title, flex: 1 }}>{location.name}</Text>
                                   <Text style={styles.subText}>{location.address}</Text>
                                 </View>
                               </TouchableOpacity>
                             </View>
                           ))}
+                          <View style={styles.lastdropdownLocation}>
+                            <TouchableOpacity
+                              onPress={handleNoLocationSelect}
+                              style={styles.dropdownItemTouchable}
+                            >
+                              <View style={styles.contentDetails}>
+                                <Text style={styles.textDetails}> 장소 선택하지 않고 입력하기 </Text>
+                              </View>
+                            </TouchableOpacity>
+                          </View>
                         </View>
                       </View>
                     )
@@ -403,7 +462,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                     }}
                   />
                 </View>
-            </ScrollView>
+            </KeyboardAwareScrollView>
         </>
       )}
     </>
@@ -454,8 +513,10 @@ const styles = StyleSheet.create({
     color: '#5D70F9',
   },
   floatingButtonContainer: {
-    position: 'absolute',
-    bottom: 100,
+    // position: 'absolute',
+    // bottom: 100,
+    // width: '100%',
+    // alignItems: 'center',
     width: '100%',
     alignItems: 'center',
   },
@@ -501,6 +562,22 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     flexDirection: 'row',
+  },
+  lastdropdownItem: {
+    padding: 15,
+    marginBottom: 0,
+    borderBottomColor: '#EEEEEE',
+  },
+  lastdropdownLocation: {
+    padding: 12,
+    marginBottom: 0,
+    borderBottomColor: '#EEEEEE',
+  },
+  textDetails: {
+    textAlign: 'center',
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#9A9A9A',
   },
 });
 

@@ -24,8 +24,14 @@ const DetailCard = ({ ticket }) => {
         handleShareBtn(viewRef);
     }
 
-    const handleSaveBtnPress = () => {
-        handleSaveBtn(viewRef);
+    const handleSaveBtnPress = async() => {
+        try {
+            const response = await handleSaveBtn(viewRef);
+            console.log(response);
+            
+        } catch (error) {
+        console.error('Error Saving ticket?:', error.response);
+        }
     }
 
     const handleImagePress = () => {
@@ -92,6 +98,28 @@ const DetailCard = ({ ticket }) => {
                     <Image source={iconSave} style={{width: 45, height: 45}} />
                 </TouchableOpacity>
             </View>
+
+            {/* <Modal  
+            // animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+                <View style={{ backgroundColor: 'white', width: 280, padding: 18, borderRadius: 10 }}>
+                    <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center'}}>선택한 티켓을 삭제합니다.</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
+                    <TouchableOpacity onPress={() => setModalVisible(false)} style={{ backgroundColor: '#E8ECEF', width: 100, padding: 10, borderRadius: 5 }}>
+                        <Text style={{ color: '#000', fontWeight: 'bold', textAlign : 'center'}}>취소</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleIconDelete} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5 }}>
+                        <Text style={{ color: 'white', fontWeight: 'bold', textAlign : 'center'}}>확인</Text>
+                    </TouchableOpacity>
+                    </View>
+                </View>
+                </View>
+            </Modal> */}
+
         </View>
     );
 }

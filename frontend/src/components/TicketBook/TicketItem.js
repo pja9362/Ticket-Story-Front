@@ -21,7 +21,7 @@ import { deleteTicket } from '../../actions/ticket/ticket';
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
 const imageWidth = Dimensions.get('window').width * 0.45;
 
-const TicketItem = ({ category, title, date, time, location, seat, contentsRating, seatRating, imageUrl = null, ticketId, reviewId }) => {
+const TicketItem = ({ category, title, date, time, location, seat, contentsRating, seatRating, imageUrl = null, ticketId, reviewId, deleteTicketById }) => {
   const navigation = useNavigation();
 
   let ticketImageSource;
@@ -96,7 +96,19 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
 
   //
   const handleIconReviewEdit = () => {
-
+    // navigation.navigate('EditReview', {
+    //   category : category,
+    //   title : title,
+    //   date : date,
+    //   time : time,
+    //   location : location,
+    //   seat : seat,
+    //   contentRating : contentsRating,
+    //   seatRating : seatRating,
+    //   imageUrl : imageUrl,
+    //   ticketId : ticketId,
+    //   reviewId : reviewId
+    //  });
   };
 
   //
@@ -108,8 +120,16 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
 
     try {
       console.log("티켓 삭제 요청", deleteTicketData);
-      const deletedTicket = await deleteTicket(deleteTicketData);
-      console.log('Deleted ticket:', deletedTicket);
+      const response = await deleteTicket(deleteTicketData);
+      if (response.result) {
+        deleteTicketById(ticketId);
+        setDropdownVisible(false);
+        setModalVisible(false);
+        console.log("Dropdown and Modal visibility set to false");
+      } else {
+        alert('Fail');
+      }
+      console.log('Deleted ticket:', response);
     } catch (error) {
       console.error('Error deleting ticket?:', error.response);
     }
@@ -207,7 +227,7 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
               <TouchableOpacity onPress={() => alert('정보 수정')}>
                 <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>정보 수정</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => alert('아이고..')}>
+              <TouchableOpacity onPress={() => alert('리뷰 수정')}>
                 <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>리뷰 수정</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => setModalVisible(true)}>

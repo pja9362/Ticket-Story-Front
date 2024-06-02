@@ -34,6 +34,7 @@ export const handleShareBtn = async (viewRef) => {
     }
 };
 
+
 export const handleSaveBtn = async (viewRef) => {
     console.log('저장하기');
     try {
@@ -44,7 +45,9 @@ export const handleSaveBtn = async (viewRef) => {
         });
         await CameraRoll.saveAsset(uri);
         console.log('이미지가 저장되었습니다.');
+        return uri;
     } catch (error) {
         console.error('이미지 저장 중 오류가 발생했습니다.', error);
+        throw error;
     }
 };

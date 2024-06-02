@@ -3,6 +3,7 @@ import {View, Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import ticket from '../../images/ticket_white.png';
 import closeIcon from '../../images/icon_close_white.png';
 import OCR from '../../components/EnrollTicket/OCR';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EnrollByOCR = ({route, navigation}) => {
   const {categoryInfo} = route.params;
@@ -13,7 +14,8 @@ const EnrollByOCR = ({route, navigation}) => {
     setShowGuide(false);
   }
 
-  const onNextStep = () => {
+  const onNextStep = async() => {
+    await AsyncStorage.removeItem('ticket');
     navigation.navigate('EnrollInfoByOCR', {categoryInfo})
   }
 

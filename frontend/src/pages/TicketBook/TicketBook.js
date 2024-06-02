@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { SafeAreaView, ScrollView, StyleSheet, View, Image, Dimensions, TouchableOpacity } from 'react-native';
 import TicketItem from '../../components/TicketBook/TicketItem';
 import NavHeader from '../../components/NavHeader';
 import { useSelector, useDispatch } from 'react-redux';
 import { getMyTickets } from '../../actions/ticket/ticket';
+import { useFocusEffect } from '@react-navigation/native';
 import noTicket from '../../images/no_ticket.png';
 import addIcon from '../../images/icon_add_ticket.png';
 
@@ -20,9 +21,24 @@ const TicketBook = () => {
   const [page, setPage] = useState(0);
   const [allTickets, setAllTickets] = useState([]);
 
-  useEffect(() => {
+  const refreshTickets = useCallback(() => {
     if (auth) {
-      console.log('Ticket Data', ticketData, "Length", allTickets.length);
+      setPage(0); // Reset page to 0 when refreshing
+      setAllTickets([]); // Clear current tickets
+      dispatch(getMyTickets(0, 10, 'DESC', 'registerTime', (newTickets) => {
+        setAllTickets(newTickets);
+      }));
+    }
+  }, [auth, dispatch]);
+
+  useFocusEffect(
+    useCallback(() => {
+      refreshTickets();
+    }, [refreshTickets])
+  );
+
+  useEffect(() => {
+    if (auth && page > 0) {
       dispatch(getMyTickets(page, 6, 'DESC', 'registerTime', (newTickets) => {
         setAllTickets((prevTickets) => [...prevTickets, ...newTickets]);
       }));
@@ -39,6 +55,11 @@ const TicketBook = () => {
     }
   };
 
+  // Add a function to delete a ticket by its ID
+  const deleteTicketById = (ticketId) => {
+    setAllTickets((prevTickets) => prevTickets.filter(ticket => ticket.ticketId !== ticketId));
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <NavHeader />
@@ -49,7 +70,7 @@ const TicketBook = () => {
         <View style={styles.rowContainer}>
           {allTickets && allTickets.length !== 0 ? allTickets.map((ticket, index) => (
             <View key={index}>
-              <TicketItem {...ticket} />
+              <TicketItem {...ticket} deleteTicketById={deleteTicketById} />
             </View>
           ))
           : (
@@ -66,7 +87,6 @@ const TicketBook = () => {
     </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {

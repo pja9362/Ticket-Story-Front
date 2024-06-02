@@ -24,10 +24,10 @@ const SelectType = ({onClick}) => {
       mappedCategoryDetail = selectedCategoryDetail;
     } else if (category === '공연') {
       if (selectedCategoryDetail === '뮤지컬') {
-        mappedCategory = 'MUSICAL';
+        mappedCategory = 'PERFORMANCE';
         mappedCategoryDetail = 'MUSICAL';
       } else if (selectedCategoryDetail === '연극') {
-        mappedCategory = 'PLAY';
+        mappedCategory = 'PERFORMANCE';
         mappedCategoryDetail = 'PLAY';
       } else {
         mappedCategory = 'PERFORMANCE';

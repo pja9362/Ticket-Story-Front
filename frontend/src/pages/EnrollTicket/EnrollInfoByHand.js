@@ -20,6 +20,10 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   const { categoryInfo } = route.params;
   const { category, categoryDetail } = categoryInfo;
 
+  useEffect(() => {
+    console.log('categoryInfo:', categoryInfo);
+  }, []);
+
   //
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
@@ -107,10 +111,11 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   //
 
   const handleContentSelect = (content) => {
+    console.log(content);
     setTitle(content.title);
     setContentsId(content.content_id);
-    // setLocationId(content.location_id);
     content.location_id !== null && setLocation(content.location_name); 
+    content.location_id !== null && setLocationId(content.location_id);
     content.location_name !== null && setIsLocationSelected(true);
     setShowContentDropdown(false);
     handleClearList('content');

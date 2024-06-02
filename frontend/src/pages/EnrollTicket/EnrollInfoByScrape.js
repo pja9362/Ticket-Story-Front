@@ -158,6 +158,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     setTitle(content.title);
     setContentsId(content.content_id);
     // setLocationId(content.location_id);
+    content.location_id !== null && setLocationId(content.location_id);
     content.location_id !== null && setLocation(content.location_name);
     setShowContentDropdown(false);
     content.location_id == null && handleLocationSearch(location);

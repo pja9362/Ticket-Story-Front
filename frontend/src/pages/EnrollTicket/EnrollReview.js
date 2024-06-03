@@ -75,8 +75,8 @@ const EnrollReview = ({navigation, route}) => {
   };
 
   const handleImagePicker = async () => {
-    if (selectedImages.length >= 3) {
-      alert('이미지는 최대 3개까지 등록할 수 있습니다.');
+    if (selectedImages.length >= 1) {
+      alert('이미지는 1개 등록할 수 있습니다.');
       return; 
     }
     try {
@@ -118,7 +118,7 @@ const EnrollReview = ({navigation, route}) => {
             <TouchableOpacity onPress={handleImagePicker}>
               <Image source={addPhoto} style={styles.image} />
             </TouchableOpacity>
-            <Text style={{ width: 48, textAlign: 'center' }}>{selectedImages.length} / 3</Text>
+            <Text style={{ width: 48, textAlign: 'center' }}>{selectedImages.length} / 1</Text>
           </View>
           <FlatList
             data={selectedImages}

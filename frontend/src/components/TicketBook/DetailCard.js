@@ -9,6 +9,7 @@ import iconLogo from '../../images/logo_navHeader.png';
 import iconShare from '../../images/icon_share.png';
 import iconSave from '../../images/icon_save.png';
 import logo from '../../images/logo_white.png';
+import defaultReviewImage from '../../images/default_reviewImage.png';
 
 // 더미 데이터
 const dummyReview = [
@@ -34,31 +35,49 @@ const DetailCard = ({ ticket }) => {
         }
     }
 
-    const handleImagePress = (idx) => {
-        navigation.navigate('ShowImageView', {images: ticket.reviewImages, index: idx, ticket: ticket});
+    // const handleImagePress = (idx) => {
+    //     navigation.navigate('ShowImageView', {images: ticket.reviewImages, index: idx, ticket: ticket});
+    // }
+
+    const handleImagePress = () => {
+        if (ticket.reviewImages !== null) {
+            navigation.navigate('ShowImageView', {images: ticket.reviewImages[0], ticket: ticket});
+        } else {
+            alert('등록된 사진이 없어요. 등록하러 가실래요?');
+        }
     }
 
     const handleContentPress = () => {
-        navigation.navigate('ShowContentView', {ticket: ticket});
+        if (ticket.reviewTitle == '' && ticket.reviewDetails == '') {
+            alert('등록된 리뷰가 없어요. 등록하러 가실래요?');
+        } else {
+            navigation.navigate('ShowContentView', {ticket: ticket});
+        }
     }
+
+    useEffect(() => {
+        console.log('fdfdfdfadsfafdsd', ticket.reviewTitle !== '' && ticket.reviewDetails !== '');
+    }, []);
 
     return (
         ticket &&
         <View style={styles.container}>
             <View ref={viewRef}>
                 <View style={styles.imageContainer}>
-                    <Swiper
+                    {/* <Swiper
                         showsButtons={true}
                         dotStyle={styles.dot}
                         activeDotStyle={styles.activeDot}
                         paginationStyle={{justifyContent: 'flex-end', right: 20, bottom: 10}}
                         nextButton={<Image source={iconRight} style={styles.arrowImage}/>}
                         prevButton={<Image source={iconLeft} style={styles.arrowImage}/>}
-                    >
-                        {ticket.reviewImages.map((image, index) => (
-                            <TouchableOpacity key={index} style={styles.slide} onPress={()=>handleImagePress(index)}>
+                    > */}
+                        {/* {ticket.reviewImages.map((image, index) => ( */}
+
+                            {/* <TouchableOpacity key={index} style={styles.slide} onPress={()=>handleImagePress(index)}> */}
+                            <TouchableOpacity style={styles.slide} onPress={()=>handleImagePress()}>
                                 <>
-                                    <Image source={{uri: image}} style={styles.image} />
+                                    <Image source={ticket.reviewImages !== null ? {uri: ticket.reviewImages[0]} : defaultReviewImage} style={styles.image} />
                                     <Image source={logo} style={styles.logo}/>
                                     {/* Overlay Text */}
                                     <View style={styles.overlay}>
@@ -72,23 +91,30 @@ const DetailCard = ({ ticket }) => {
                                     </View>
                                 </>
                             </TouchableOpacity>
-                        ))}
-                    </Swiper>
+                        {/* ))} */}
+                    {/* </Swiper> */}
                 </View>
-                <View style={styles.contentContainer}>
-                    <TouchableOpacity onPress={handleContentPress}>
+                <TouchableOpacity onPress={handleContentPress}>
+                    <View style={styles.contentContainer}>
                         <View style={styles.titleContainer}>
                             <Text style={{...styles.mainText, flex: 1}}>{ticket.title}</Text>
                             <Image source={iconLogo} style={{width: 120, height: 40, margin: -15, marginBottom: 5}} />
                         </View>
-                        <Text style={styles.subText}>{ticket.date}</Text>
-                        <Text style={styles.subText}>{ticket.location}</Text>
-                        <View style={styles.reviewContainer}>
-                            <Text style={{...styles.mainText, color: '#000', fontSize: 16}}> {ticket.reviewTitle}</Text>
-                            <Text style={styles.text}>{ticket.reviewDetails}</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
+                        { (ticket.reviewTitle == '' && ticket.reviewDetails == '') ?
+                            <Text style={styles.noReviewText}> 등록된 리뷰가 없어요 :( </Text>
+                        : 
+                        <>
+                                <Text style={styles.subText}>{ticket.date}</Text>
+                                <Text style={styles.subText}>{ticket.location}</Text>
+
+                                <View style={styles.reviewContainer}>
+                                    <Text style={{...styles.mainText, color: '#000', fontSize: 16}}> {ticket.reviewTitle}</Text>
+                                    <Text style={styles.text}>{ticket.reviewDetails}</Text>
+                                </View>
+                            </>
+                        }
+                    </View>
+                </TouchableOpacity>
             </View>
             <View style={styles.btnContainer}>
                 <TouchableOpacity onPress={handleShareBtnPress}>
@@ -165,6 +191,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderBottomLeftRadius: 5,
         borderBottomRightRadius: 5,
+        height: '100%',
     },
     titleContainer: {
         flexDirection: 'row',
@@ -220,7 +247,14 @@ const styles = StyleSheet.create({
         right: 10,
         width: 100,
         height: 40,
-    },  
+    },
+    noReviewText: {
+        position: 'absolute',
+        top : 160,
+        left : 90,
+        fontSize : 18,
+        color: '#9A9A9A',
+    },
 });
 
 export default DetailCard;

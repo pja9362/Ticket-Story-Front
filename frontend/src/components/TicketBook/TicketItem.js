@@ -16,7 +16,7 @@ import iconReviewOn from '../../images/icon_ReviewOn.png';
 import iconReviewOff from '../../images/icon_ReviewOff.png';
 import iconEdit from '../../images/icon_dots.png';
 
-import { deleteTicket } from '../../actions/ticket/ticket';
+import { deleteTicket, getTicketDetails } from '../../actions/ticket/ticket';
 
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
 const imageWidth = Dimensions.get('window').width * 0.45;
@@ -89,35 +89,10 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
     console.log('click');
   };
 
-  //
-  const handleIconInfoEdit = () => {
-
-  };
-
-  //
-  const handleIconReviewEdit = () => {
-    // navigation.navigate('EditReview', {
-    //   category : category,
-    //   title : title,
-    //   date : date,
-    //   time : time,
-    //   location : location,
-    //   seat : seat,
-    //   contentRating : contentsRating,
-    //   seatRating : seatRating,
-    //   imageUrl : imageUrl,
-    //   ticketId : ticketId,
-    //   reviewId : reviewId
-    //  });
-  };
-
-  //
   const handleIconDelete = async() => {
-
     const deleteTicketData = {
       ticketId : ticketId
     }
-
     try {
       console.log("티켓 삭제 요청", deleteTicketData);
       const response = await deleteTicket(deleteTicketData);
@@ -134,6 +109,54 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
       console.error('Error deleting ticket?:', error.response);
     }
   };
+
+  const handleInfoEdit = async() => {
+    const editInfo = {
+      ticketId : ticketId
+    }
+    try {
+      const response = await getTicketDetails(editInfo);
+      if (response !== null) {
+        setDropdownVisible(false);
+        console.log("성공", response);
+        
+        //navigate 하면서 response 값들 보내야함
+        navigation.navigate('EditInfo', {
+          ticketId : ticketId,
+          ticketData : response
+        });
+
+      } else {
+        alert('Fail');
+      }
+    } catch (error) {
+      console.error('Error Editing ticket info:', error.response);
+    }
+  }
+
+  const handleReviewEdit = async() => {
+    const editReview = {
+      ticketId : ticketId
+    }
+    try {
+      const response = await getTicketDetails(editReview);
+      if (response !== null) {
+        setDropdownVisible(false);
+        console.log("성공", response);
+        
+        //navigate 하면서 response 값들 보내야함
+        navigation.navigate('EditReview', {
+          ticketId : ticketId,
+          ticketData : response
+         });
+
+      } else {
+        alert('Fail');
+      }
+    } catch (error) {
+      console.error('Error Editing ticket review:', error.response);
+    }
+  }
 
   const closeDropdown = () => {
     if (dropdownVisible) {
@@ -192,7 +215,7 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
                       <Text numberOfLines={1} style={[styles.info, { marginTop: 5, textAlign: 'center' }]}>{contentsRating}</Text>
                     </View>
                     <View style={styles.bottomContainer}>
-                      <Text numberOfLines={1} style={[styles.info, { marginTop: 12, textAlign: 'center' }]}>{contentsRating}</Text>
+                      <Text numberOfLines={1} style={[styles.info, { marginTop: 12, textAlign: 'center' }]}>{seatRating}</Text>
                     </View>
                     <View style={styles.buttonContainer}>
                       <TouchableOpacity 
@@ -224,10 +247,10 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
 
           {dropdownVisible && isFront && (
             <View style={{position: 'absolute', right: 10, top: 10, backgroundColor: '#fff', borderRadius: 5, padding: 10, gap: 15}}>
-              <TouchableOpacity onPress={() => alert('정보 수정')}>
+              <TouchableOpacity onPress={handleInfoEdit}>
                 <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>정보 수정</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => alert('리뷰 수정')}>
+              <TouchableOpacity onPress={handleReviewEdit}>
                 <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>리뷰 수정</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => setModalVisible(true)}>

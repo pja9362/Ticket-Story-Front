@@ -16,6 +16,8 @@ const TicketDetail = ({ route, navigation }) => {
     dispatch(getTicketDetail(ticketId))
       .then((response) => {
 
+        console.log('티켓아이디 확인:',response);
+
         const updatedTicket = {
           ...response, 
           date: date,

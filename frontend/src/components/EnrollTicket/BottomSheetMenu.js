@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Modal, TouchableOpacity} from 'react-native';
+import {CustomText} from '../CustomText';
 
 const BottomSheetMenu = ({closeBottomSheet, onClick}) => {
   return (

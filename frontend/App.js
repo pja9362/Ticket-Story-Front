@@ -1,9 +1,13 @@
-import React from 'react';
+// import React from 'react';
+import React, {useEffect} from 'react';
 import { Provider } from 'react-redux';
 import store from './src/store';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import { Text, TextInput } from 'react-native';
+import { setCustomText, setCustomTextInput } from 'react-native-global-props';
+
 import InitScreen from './src/pages/Auth/Init';
 import LoginScreen from './src/pages/Auth/Login';
 import SignUpScreen from './src/pages/Auth/SignUp';
@@ -22,12 +26,32 @@ import MainStack from './src/navigation/MainStack';
 import OAuthWebView from './src/pages/Scrape/OAuthWebView';
 import TicketlinkWebView from './src/pages/Scrape/TicketlinkWebView';
 import TicketDetail from './src/pages/TicketBook/TicketDetail';
+import EditInfo from './src/pages/EnrollTicket/EditInfo';
+import EditReview from './src/pages/EnrollTicket/EditReview';
+
 // dummy
 import ShowImageScreen from './src/pages/ShowImage';
 import ShowContentScreen from './src/pages/ShowContent';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
+
+  useEffect(() => {
+    const customTextProps = {
+      style: {
+        fontFamily: "Pretendard-Bold",
+      },
+    };
+
+    const customTextInputProps = {
+      style: {
+        fontFamily: 'Pretendard',
+      },
+    };
+
+    setCustomText(customTextProps);
+    setCustomTextInput(customTextInputProps);
+  }, []);
 
   const screenOptions = {
     headerShown: false,
@@ -36,13 +60,13 @@ const App = () => {
   const customTheme = {
     ...DefaultTheme,
     fonts: {
-      black: 'Inter-Black',
-      bold: 'Inter-Bold',
-      extraBold: 'Inter-ExtraBold',
-      regular: 'Inter-Regular',
-      medium: 'Inter-Medium',
-      light: 'Inter-Light',
-      thin: 'Inter-Thin',
+      black: 'Pretendard-Black',
+      bold: 'Pretendard-Bold',
+      extraBold: 'Pretendard-ExtraBold',
+      regular: 'Pretendard-Regular',
+      medium: 'Pretendard-Medium',
+      light: 'Pretendard-Light',
+      thin: 'Pretendard-Thin',
     },
   };
 
@@ -70,6 +94,8 @@ const App = () => {
               <Stack.Screen name="EnrollFinish" component={EnrollFinish} />
               <Stack.Screen name="OCRFail" component={OCRFail} />
               <Stack.Screen name="TicketDetail" component={TicketDetail} />
+              <Stack.Screen name="EditInfo" component={EditInfo} />
+              <Stack.Screen name="EditReview" component={EditReview} />
               {/* Ticket Link */}
               <Stack.Screen name="OAuthWebView" component={OAuthWebView} />
               <Stack.Screen name="TicketlinkWebView" component={TicketlinkWebView} />

@@ -11,8 +11,10 @@ import CustomCheckbox from '../components/EnrollTicket/CustomCheckbox';
 const ShowImage = ({ route }) => {
     const viewRef = useRef();
 
-    const { images, index, ticket } = route.params;
-    const dummyImageUrl = images[index];
+    // const { images, index, ticket } = route.params;
+    const { images, ticket } = route.params;
+    // const dummyImageUrl = images[index];
+    const dummyImageUrl = images;
 
     const [hideTicketInfo, setHideTicketInfo] = useState(false);
     const [hideTitle, setHideTitle] = useState(false);

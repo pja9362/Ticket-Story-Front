@@ -40,7 +40,7 @@ const TicketDetail = ({ route, navigation }) => {
         <ScrollView style={styles.cardContainer}>
           {
             ticket === null ? <Text>Loading...</Text> : 
-            <DetailCard ticket={ticket} />
+            <DetailCard ticket={ticket} ticketId ={ticketId}/>
           }
         </ScrollView>
     </SafeAreaView>

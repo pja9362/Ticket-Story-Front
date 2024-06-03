@@ -98,6 +98,15 @@ const EnrollReview = ({navigation, route}) => {
     setSelectedImages(newImages);
   };
 
+  const handleReviewContentChange = (text) => {
+    const lines = text.split('\n');
+    if (lines.length > 5) {
+      console.log('5줄까지만 입력할 수 있습니다.');
+      return;
+    }
+    setReviewContent(text);
+  };
+
   return (
     <>
       <EnrollHeader title="티켓 후기 입력" onIconClick={handleNext} />
@@ -147,7 +156,7 @@ const EnrollReview = ({navigation, route}) => {
             multiline={true}
             placeholder="관람 후기를 입력해주세요"
             value={reviewContent}
-            onChangeText={text => setReviewContent(text)}
+            onChangeText={handleReviewContentChange}
           />
         </View>
 

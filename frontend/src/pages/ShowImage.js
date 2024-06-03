@@ -1,5 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, Image, TouchableOpacity, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { setHideTicketInfo, setHideTitle } from '../reducers/overlaySlice';
 import { handleShareBtn, handleSaveBtn } from '../utils/shareAndSaveUtils';
 import Header from '../components/Header';
 import iconShare from '../images/icon_share.png';
@@ -8,28 +10,29 @@ import iconEdit from '../images/icon_edit_no_bg.png';
 import logo from '../images/logo_white.png';
 import CustomCheckbox from '../components/EnrollTicket/CustomCheckbox';
 
+
 const ShowImage = ({ route }) => {
     const viewRef = useRef();
 
-    // const { images, index, ticket } = route.params;
-    const { images, ticket } = route.params;
-    // const dummyImageUrl = images[index];
+    const dispatch = useDispatch();
+    const { images, ticket, ticketId } = route.params;
     const dummyImageUrl = images;
 
-    const [hideTicketInfo, setHideTicketInfo] = useState(false);
-    const [hideTitle, setHideTitle] = useState(false);
+    const overlayState = useSelector((state) => state.overlay[ticketId]) || { hideTicketInfo: false, hideTitle: false };
+    const { hideTicketInfo, hideTitle } = overlayState;
 
     const handleShareBtnPress = () => {
         handleShareBtn(viewRef);
-    }
+    };
 
     const handleSaveBtnPress = () => {
         handleSaveBtn(viewRef);
-    }
+    };
     
     const handleSelectNewImage = () => {
         console.log('사진 다시 선택하기 버튼 클릭');
-    }
+        console.log(ticketId)
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -40,12 +43,12 @@ const ShowImage = ({ route }) => {
             <View style={styles.checkboxContainer}>
                 <CustomCheckbox
                     checked={hideTicketInfo}
-                    onPress={() => setHideTicketInfo(!hideTicketInfo)}
+                    onPress={() => dispatch(setHideTicketInfo({ ticketId: ticketId, hideTicketInfo: !hideTicketInfo }))}
                     label="티켓 정보 가리기"
                 />
                 <CustomCheckbox
                     checked={hideTitle}
-                    onPress={() => setHideTitle(!hideTitle)}
+                    onPress={() => dispatch(setHideTitle({ ticketId: ticketId, hideTitle: !hideTitle }))}
                     label="콘텐츠 제목만 가리기"
                 />
             </View>
@@ -54,21 +57,18 @@ const ShowImage = ({ route }) => {
                 <Image source={{ uri: dummyImageUrl }} style={styles.image}/>
                 <Image source={logo} style={styles.logo}/>
                 <View style={styles.overlay}>
-                    {
-                        (!hideTitle && !hideTicketInfo) && <Text style={{...styles.overlayText, fontSize: 20}}>{ticket.title}</Text>
-                    }
-                    {
-                        !hideTicketInfo && (
-                            <>
-                                <Text style={styles.overlayGuideText}>Date</Text>
-                                <Text style={styles.overlayText}>2024.04.30</Text>
-                                <Text style={styles.overlayGuideText}>Time</Text>
-                                <Text style={styles.overlayText}>18:00</Text>
-                                <Text style={styles.overlayGuideText}>Place</Text>
-                                <Text style={styles.overlayText}>콘텐츠 관람 장소</Text>
-                            </>
-                        )
-                    }
+
+                    {(!hideTitle && !hideTicketInfo) && <Text style={{ ...styles.overlayText, fontSize: 20 }}>{ticket.title}</Text>}
+                    {!hideTicketInfo && (
+                        <>
+                            <Text style={styles.overlayGuideText}>Date</Text>
+                            <Text style={styles.overlayText}>2024.04.30</Text>
+                            <Text style={styles.overlayGuideText}>Time</Text>
+                            <Text style={styles.overlayText}>18:00</Text>
+                            <Text style={styles.overlayGuideText}>Place</Text>
+                            <Text style={styles.overlayText}>콘텐츠 관람 장소</Text>
+                        </>
+                    )}
                 </View>
             </View>
             
@@ -96,13 +96,13 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         height: 356,
-        margin: 20
+        margin: 20,
     },
     image: {
         width: '100%',
         height: '100%',
         resizeMode: 'cover',
-        borderRadius: 5
+        borderRadius: 5,
     },
     overlay: {
         position: 'absolute',
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     selectBtn: {
         backgroundColor: '#fff',
         marginHorizontal: 38,
-        borderRadius: 10
+        borderRadius: 10,
     },
     btnText: {
         color: '#525252',

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import store from './src/store';
+import { PersistGate } from 'redux-persist/integration/react';
+import store, { persistor } from './src/store';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
@@ -50,35 +51,37 @@ const App = () => {
     <SafeAreaProvider>
       <SafeAreaView edges={['top']} style={{flex: 1}}>
         <Provider store={store}>
-          <NavigationContainer theme={customTheme}>
-            <Stack.Navigator screenOptions={screenOptions}>
-              <Stack.Screen name="Init" component={InitScreen} />
-              <Stack.Screen name="Login" component={LoginScreen} />
-              <Stack.Screen name="SignUp" component={SignUpScreen} />
-              <Stack.Screen name="FindPassword" component={FindPasswordScreen} />
-              <Stack.Screen name="ChangePW" component={ChangePWScreen} />
-              <Stack.Screen name="MainStack">
-                {({navigation}) => <MainStack navigation={navigation} />}
-              </Stack.Screen>
-              <Stack.Screen name="EnrollAgreement" component={EnrollAgreement} />
-              <Stack.Screen name="EnrollByOCR" component={EnrollByOCR} />
-              <Stack.Screen name="EnrollByScrape" component={EnrollByScrape} />
-              <Stack.Screen name="EnrollInfoByOCR" component={EnrollInfoByOCR} />
-              <Stack.Screen name="EnrollInfoByHand" component={EnrollInfoByHand} />
-              <Stack.Screen name="EnrollInfoByScrape" component={EnrollInfoByScrape} />
-              <Stack.Screen name="EnrollReview" component={EnrollReview} />
-              <Stack.Screen name="EnrollFinish" component={EnrollFinish} />
-              <Stack.Screen name="OCRFail" component={OCRFail} />
-              <Stack.Screen name="TicketDetail" component={TicketDetail} />
-              {/* Ticket Link */}
-              <Stack.Screen name="OAuthWebView" component={OAuthWebView} />
-              <Stack.Screen name="TicketlinkWebView" component={TicketlinkWebView} />
+          <PersistGate loading={null} persistor={persistor}>
+            <NavigationContainer theme={customTheme}>
+              <Stack.Navigator screenOptions={screenOptions}>
+                <Stack.Screen name="Init" component={InitScreen} />
+                <Stack.Screen name="Login" component={LoginScreen} />
+                <Stack.Screen name="SignUp" component={SignUpScreen} />
+                <Stack.Screen name="FindPassword" component={FindPasswordScreen} />
+                <Stack.Screen name="ChangePW" component={ChangePWScreen} />
+                <Stack.Screen name="MainStack">
+                  {({navigation}) => <MainStack navigation={navigation} />}
+                </Stack.Screen>
+                <Stack.Screen name="EnrollAgreement" component={EnrollAgreement} />
+                <Stack.Screen name="EnrollByOCR" component={EnrollByOCR} />
+                <Stack.Screen name="EnrollByScrape" component={EnrollByScrape} />
+                <Stack.Screen name="EnrollInfoByOCR" component={EnrollInfoByOCR} />
+                <Stack.Screen name="EnrollInfoByHand" component={EnrollInfoByHand} />
+                <Stack.Screen name="EnrollInfoByScrape" component={EnrollInfoByScrape} />
+                <Stack.Screen name="EnrollReview" component={EnrollReview} />
+                <Stack.Screen name="EnrollFinish" component={EnrollFinish} />
+                <Stack.Screen name="OCRFail" component={OCRFail} />
+                <Stack.Screen name="TicketDetail" component={TicketDetail} />
+                {/* Ticket Link */}
+                <Stack.Screen name="OAuthWebView" component={OAuthWebView} />
+                <Stack.Screen name="TicketlinkWebView" component={TicketlinkWebView} />
 
-              {/* Dummy */}
-              <Stack.Screen name="ShowImageView" component={ShowImageScreen} />
-              <Stack.Screen name="ShowContentView" component={ShowContentScreen} />
-            </Stack.Navigator>
-          </NavigationContainer>
+                {/* Dummy */}
+                <Stack.Screen name="ShowImageView" component={ShowImageScreen} />
+                <Stack.Screen name="ShowContentView" component={ShowContentScreen} />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </PersistGate>
         </Provider>
       </SafeAreaView>
     </SafeAreaProvider>

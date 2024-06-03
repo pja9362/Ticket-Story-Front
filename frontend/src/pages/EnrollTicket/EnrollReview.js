@@ -98,6 +98,15 @@ const EnrollReview = ({navigation, route}) => {
     setSelectedImages(newImages);
   };
 
+  const handleReviewContentChange = (text) => {
+    const lines = text.split('\n');
+    if (lines.length > 5) {
+      console.log('5줄까지만 입력할 수 있습니다.');
+      return;
+    }
+    setReviewContent(text);
+  };
+
   return (
     <>
       <EnrollHeader title="티켓 후기 입력" onIconClick={handleNext} />
@@ -147,22 +156,9 @@ const EnrollReview = ({navigation, route}) => {
             multiline={true}
             placeholder="관람 후기를 입력해주세요"
             value={reviewContent}
-            onChangeText={text => setReviewContent(text)}
+            onChangeText={handleReviewContentChange}
           />
         </View>
-
-        {/* <View style={styles.checkboxContainer}>
-          <CustomCheckbox
-            checked={spoilerChecked}
-            onPress={() => setSpoilerChecked(!spoilerChecked)}
-            label="스포일러 포함"
-          />
-          <CustomCheckbox
-            checked={privateChecked}
-            onPress={() => setPrivateChecked(!privateChecked)}
-            label="비공개"
-          />
-        </View> */}
 
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 20}} >
           <NextButton isDisabled={artRating === 0 || seatRating === 0 || !sliderTouched} onPress={handleNext} />

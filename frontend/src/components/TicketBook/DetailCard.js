@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 import Swiper from 'react-native-swiper';
 import { handleShareBtn, handleSaveBtn } from '../../utils/shareAndSaveUtils';
 import iconLeft from '../../images/icon_left_pagination.png';
@@ -10,15 +11,13 @@ import iconShare from '../../images/icon_share.png';
 import iconSave from '../../images/icon_save.png';
 import logo from '../../images/logo_white.png';
 
-// 더미 데이터
-const dummyReview = [
-    '한화는 \"류현진은 2006년 한화이글스 소속으로 KBO리그에 데뷔해 그해 18승 6패 1세이브 204탈삼진 평균자책점 2.23을 기록하며 신인왕과 MVP를 동시에 획득했다. 이후 2012년까지 통산 98승 52패 1세이브 1238탈삼진 평균자책점 2.80을 기록하며 국내 최고의 투수로 우뚝 섰다"고 돌아온 에이스를 설명했다. 이어 \"2013년부터는 메이저리그에 진출해 지난해까지 78승 48패 1세이브 934탈삼진 평균자책점 3.27를 기록, 세계 최고의 무대에서도 수준급 선발투수로 활약을 펼쳤다. 특히 2019년에는 LA다저스 소속으로 14승 5패 163탈삼진 평균자책점 2.32의 성적으로 내셔널리그 사이영상 투표 2위에 오르며 최고의 시즌을 보냈다"고 되돌아봤다. 한 이정도 쓰면 적당한 길이일 것 같다.'
-];
-
-const DetailCard = ({ ticket }) => {
+const DetailCard = ({ ticket, ticketId }) => {
 
     const viewRef = useRef();
     const navigation = useNavigation();
+
+    const overlayState = useSelector((state) => state.overlay[ticketId]) || { hideTicketInfo: false, hideTitle: false };
+    const { hideTicketInfo, hideTitle } = overlayState;
 
     const handleShareBtnPress = () => {
         handleShareBtn(viewRef);
@@ -35,7 +34,7 @@ const DetailCard = ({ ticket }) => {
     }
 
     const handleImagePress = (idx) => {
-        navigation.navigate('ShowImageView', {images: ticket.reviewImages, index: idx, ticket: ticket});
+        navigation.navigate('ShowImageView', {images: ticket.reviewImages, index: idx, ticket: ticket, ticketId: ticketId});
     }
 
     const handleContentPress = () => {
@@ -47,33 +46,44 @@ const DetailCard = ({ ticket }) => {
         <View style={styles.container}>
             <View ref={viewRef}>
                 <View style={styles.imageContainer}>
-                    <Swiper
-                        showsButtons={true}
-                        dotStyle={styles.dot}
-                        activeDotStyle={styles.activeDot}
-                        paginationStyle={{justifyContent: 'flex-end', right: 20, bottom: 10}}
-                        nextButton={<Image source={iconRight} style={styles.arrowImage}/>}
-                        prevButton={<Image source={iconLeft} style={styles.arrowImage}/>}
-                    >
-                        {ticket.reviewImages.map((image, index) => (
-                            <TouchableOpacity key={index} style={styles.slide} onPress={()=>handleImagePress(index)}>
+                    {ticket.reviewImages && ticket.reviewImages.length > 0 ? (
+                        <Swiper
+                            showsButtons={true}
+                            dotStyle={styles.dot}
+                            activeDotStyle={styles.activeDot}
+                            paginationStyle={{ justifyContent: 'flex-end', right: 20, bottom: 10 }}
+                            nextButton={<Image source={iconRight} style={styles.arrowImage} />}
+                            prevButton={<Image source={iconLeft} style={styles.arrowImage} />}
+                        >
+                            {ticket.reviewImages.map((image, index) => (
+                            <TouchableOpacity key={index} style={styles.slide} onPress={() => handleImagePress(index)}>
                                 <>
-                                    <Image source={{uri: image}} style={styles.image} />
-                                    <Image source={logo} style={styles.logo}/>
-                                    {/* Overlay Text */}
-                                    <View style={styles.overlay}>
-                                        <Text style={{...styles.overlayText, fontSize: 20}}>{ticket.title}</Text>
+                                <Image source={{ uri: image }} style={styles.image} />
+                                <Image source={logo} style={styles.logo} />
+                                <View style={styles.overlay}>
+                                    {(!hideTitle && !hideTicketInfo) && (
+                                    <Text style={{ ...styles.overlayText, fontSize: 20 }}>{ticket.title}</Text>
+                                    )}
+                                    {!hideTicketInfo && (
+                                    <>
                                         <Text style={styles.overlayGuideText}>Date</Text>
                                         <Text style={styles.overlayText}>{ticket.date}</Text>
                                         <Text style={styles.overlayGuideText}>Time</Text>
                                         <Text style={styles.overlayText}>{ticket.time}</Text>
                                         <Text style={styles.overlayGuideText}>Place</Text>
                                         <Text style={styles.overlayText}>{ticket.location}</Text>
-                                    </View>
+                                    </>
+                                    )}
+                                </View>
                                 </>
                             </TouchableOpacity>
-                        ))}
-                    </Swiper>
+                            ))}
+                        </Swiper>
+                        ) : (
+                        <View style={styles.noImageContainer}>
+                            <Text style={styles.noImageText}>No images available</Text>
+                        </View>
+                        )}
                 </View>
                 <View style={styles.contentContainer}>
                     <TouchableOpacity onPress={handleContentPress}>
@@ -221,6 +231,15 @@ const styles = StyleSheet.create({
         width: 100,
         height: 40,
     },  
+    noImageContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+    },
+    noImageText: {
+        color: '#777',
+        fontSize: 16,
+    },
 });
 
 export default DetailCard;

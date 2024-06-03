@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { SafeAreaView, StyleSheet, Text, Image, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { setHideTicketInfo, setHideTitle } from '../reducers/overlaySlice';
+import { handleShareBtn, handleSaveBtn } from '../utils/shareAndSaveUtils';
 import Header from '../components/Header';
 import iconShare from '../images/icon_share.png';
 import iconSave from '../images/icon_save.png';

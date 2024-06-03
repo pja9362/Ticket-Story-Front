@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
 import Swiper from 'react-native-swiper';
 import { handleShareBtn, handleSaveBtn } from '../../utils/shareAndSaveUtils';
 import iconLeft from '../../images/icon_left_pagination.png';
@@ -10,7 +11,6 @@ import iconShare from '../../images/icon_share.png';
 import iconSave from '../../images/icon_save.png';
 import logo from '../../images/logo_white.png';
 import defaultReviewImage from '../../images/default_reviewImage.png';
-
 
 const DetailCard = ({ ticket, ticketId }) => {
 

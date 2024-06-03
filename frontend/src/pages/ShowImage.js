@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { SafeAreaView, StyleSheet, Text, Image, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { setHideTicketInfo, setHideTitle } from '../reducers/overlaySlice';
@@ -36,9 +36,9 @@ const ShowImage = ({ route }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={{paddingHorizontal: 20, marginBottom: 28, backgroundColor: '#fff' }}>
+            <View style={{ paddingHorizontal: 20, marginBottom: 28, backgroundColor: '#fff' }}>
                 <Header title="사진 카드 보기" />
-            </View> 
+            </View>
 
             <View style={styles.checkboxContainer}>
                 <CustomCheckbox
@@ -52,12 +52,11 @@ const ShowImage = ({ route }) => {
                     label="콘텐츠 제목만 가리기"
                 />
             </View>
-            
-            <View ref={viewRef} style={styles.imageContainer} collapsable={false}>
-                <Image source={{ uri: dummyImageUrl }} style={styles.image}/>
-                <Image source={logo} style={styles.logo}/>
-                <View style={styles.overlay}>
 
+            <View ref={viewRef} style={styles.imageContainer} collapsable={false}>
+                <Image source={{ uri: dummyImageUrl }} style={styles.image} />
+                <Image source={logo} style={styles.logo} />
+                <View style={styles.overlay}>
                     {(!hideTitle && !hideTicketInfo) && <Text style={{ ...styles.overlayText, fontSize: 20 }}>{ticket.title}</Text>}
                     {!hideTicketInfo && (
                         <>
@@ -71,24 +70,23 @@ const ShowImage = ({ route }) => {
                     )}
                 </View>
             </View>
-            
-            {/* 버튼 내부 좌측에 edit icon */}
+
             <TouchableOpacity style={styles.selectBtn} onPress={handleSelectNewImage}>
-                <Image source={iconEdit} style={{width: 24, height: 24, position: 'absolute', left: 18, top: 14}} />
+                <Image source={iconEdit} style={{ width: 24, height: 24, position: 'absolute', left: 18, top: 14 }} />
                 <Text style={styles.btnText}>사진 다시 선택하기</Text>
             </TouchableOpacity>
 
             <View style={styles.btnContainer}>
                 <TouchableOpacity onPress={handleShareBtnPress}>
-                    <Image source={iconShare} style={{width: 45, height: 45}} />
+                    <Image source={iconShare} style={{ width: 45, height: 45 }} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handleSaveBtnPress}>
-                    <Image source={iconSave} style={{width: 45, height: 45}} />
+                    <Image source={iconSave} style={{ width: 45, height: 45 }} />
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -117,7 +115,7 @@ const styles = StyleSheet.create({
         right: 10,
         width: 100,
         height: 40,
-    },    
+    },
     overlayText: {
         color: '#fff',
         fontWeight: 'bold',

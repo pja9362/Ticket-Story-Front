@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import {SafeAreaView, StyleSheet, Text, TouchableOpacity, View, ScrollView} from 'react-native';
+import { useDispatch } from 'react-redux';
+import {SafeAreaView, StyleSheet, Text, View, ScrollView} from 'react-native';
 import Header from '../../components/Header';
 import DetailCard from '../../components/TicketBook/DetailCard';
 import { getTicketDetail } from '../../actions/ticket/ticket';
@@ -8,7 +8,7 @@ import { getTicketDetail } from '../../actions/ticket/ticket';
 const TicketDetail = ({ route, navigation }) => {
   const dispatch = useDispatch();
 
-  const { ticketId, title, date, time, location } = route.params; //
+  const { ticketId, title, date, time, location } = route.params; 
 
   const [ticket, setTicket] = useState(null);
 

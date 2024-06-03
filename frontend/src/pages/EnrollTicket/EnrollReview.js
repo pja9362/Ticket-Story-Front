@@ -160,19 +160,6 @@ const EnrollReview = ({navigation, route}) => {
           />
         </View>
 
-        {/* <View style={styles.checkboxContainer}>
-          <CustomCheckbox
-            checked={spoilerChecked}
-            onPress={() => setSpoilerChecked(!spoilerChecked)}
-            label="스포일러 포함"
-          />
-          <CustomCheckbox
-            checked={privateChecked}
-            onPress={() => setPrivateChecked(!privateChecked)}
-            label="비공개"
-          />
-        </View> */}
-
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 20}} >
           <NextButton isDisabled={artRating === 0 || seatRating === 0 || !sliderTouched} onPress={handleNext} />
         </View>

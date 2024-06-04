@@ -1,5 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, Image, TouchableOpacity, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { setHideReviewInfo, setHideReviewTitle } from '../reducers/overlaySlice';
 import { handleShareBtn, handleSaveBtn } from '../utils/shareAndSaveUtils';
 import Header from '../components/Header';
 import iconShare from '../images/icon_share.png';
@@ -11,10 +13,11 @@ import CustomCheckbox from '../components/EnrollTicket/CustomCheckbox';
 const ShowContent = ({ route }) => {
     const viewRef = useRef();
 
-    const { ticket } = route.params;
+    const dispatch = useDispatch();
+    const { ticket, ticketId } = route.params;
 
-    const [hideTicketInfo, setHideTicketInfo] = useState(false);
-    const [hideTitle, setHideTitle] = useState(false);
+    const overlayState = useSelector((state) => state.overlay[ticketId]) || { hideReviewInfo: false, hideReviewTitle: false };
+    const { hideReviewInfo, hideReviewTitle } = overlayState;
 
     const handleShareBtnPress = () => {
         handleShareBtn(viewRef);
@@ -35,14 +38,19 @@ const ShowContent = ({ route }) => {
             </View> 
 
             <View style={styles.checkboxContainer}>
-                <CustomCheckbox
+                {/* <CustomCheckbox
                     checked={hideTicketInfo}
-                    onPress={() => setHideTicketInfo(!hideTicketInfo)}
+                    onPress={() => dispatch(setHideTicketInfo({ ticketId: ticketId, hideTicketInfo: !hideTicketInfo }))}
+                    label="글씨 어둡게"
+                /> */}
+                <CustomCheckbox
+                    checked={hideReviewInfo}
+                    onPress={() => dispatch(setHideReviewInfo({ ticketId: ticketId, hideReviewInfo: !hideReviewInfo }))}
                     label="티켓 정보 가리기"
                 />
                 <CustomCheckbox
-                    checked={hideTitle}
-                    onPress={() => setHideTitle(!hideTitle)}
+                    checked={hideReviewTitle}
+                    onPress={() => dispatch(setHideReviewTitle({ ticketId: ticketId, hideReviewTitle: !hideReviewTitle }))}
                     label="콘텐츠 제목만 가리기"
                 />
             </View>
@@ -52,12 +60,12 @@ const ShowContent = ({ route }) => {
                 <View style={styles.overlay}>
                     <View style={styles.titleContainer}>
                         {
-                            (!hideTitle && !hideTicketInfo) && <Text style={{...styles.mainText, flex: 1}}>{ticket.title}</Text>
+                            (!hideReviewTitle && !hideReviewInfo) && <Text style={{...styles.mainText, flex: 1}}>{ticket.title}</Text>
                         }
                     </View>
                     <View style={{position: 'absolute', top: 30, right: 25,}}>
                         {
-                            !hideTicketInfo && (
+                            !hideReviewInfo && (
                                 <>
                                     <Text style={styles.subText}>{ticket.date}</Text>
                                     <Text style={styles.subText}>{ticket.location}</Text>
@@ -137,7 +145,8 @@ const styles = StyleSheet.create({
     checkboxContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        gap: 10,
+        gap: 5,
+        right: 2
     },
     selectBtn: {
         backgroundColor: '#fff',

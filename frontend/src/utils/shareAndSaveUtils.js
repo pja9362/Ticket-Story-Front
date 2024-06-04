@@ -2,6 +2,7 @@ import { captureRef } from 'react-native-view-shot';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import Share from 'react-native-share';
 import { Platform } from 'react-native';
+// import ImageResizer from 'react-native-image-resizer';
 
 export const handleShareBtn = async (viewRef) => {
     console.log('공유하기');

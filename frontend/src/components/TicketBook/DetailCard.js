@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import Swiper from 'react-native-swiper';
 import { handleShareBtn, handleSaveBtn } from '../../utils/shareAndSaveUtils';
 import iconLeft from '../../images/icon_left_pagination.png';
 import iconRight from '../../images/icon_right_pagination.png';
-import iconLogo from '../../images/logo_navHeader.png';
+import iconLogo from '../../images/logo_black.png';
 import iconShare from '../../images/icon_share.png';
 import iconSave from '../../images/icon_save.png';
 import logo from '../../images/logo_white.png';
@@ -17,8 +17,8 @@ const DetailCard = ({ ticket, ticketId }) => {
     const viewRef = useRef();
     const navigation = useNavigation();
 
-    const overlayState = useSelector((state) => state.overlay[ticketId]) || { hideTicketInfo: false, hideTitle: false };
-    const { hideTicketInfo, hideTitle } = overlayState;
+    const overlayState = useSelector((state) => state.overlay[ticketId]) || { hideImageInfo: false, hideImageTitle: false, hideReviewInfo: false, hideReviewTitle: false };
+    const { hideImageInfo, hideImageTitle, hideReviewInfo, hideReviewTitle } = overlayState;
 
     const handleShareBtnPress = () => {
         handleShareBtn(viewRef);
@@ -50,7 +50,7 @@ const DetailCard = ({ ticket, ticketId }) => {
         if (ticket.reviewTitle == '' && ticket.reviewDetails == '') {
             alert('등록된 리뷰가 없어요. 등록하러 가실래요?');
         } else {
-            navigation.navigate('ShowContentView', {ticket: ticket});
+            navigation.navigate('ShowContentView', {ticket: ticket, ticketId : ticketId});
         }
     }
 
@@ -80,10 +80,10 @@ const DetailCard = ({ ticket, ticketId }) => {
                                     <Image source={logo} style={styles.logo}/>
                                     {/* Overlay Text */}
                                     <View style={styles.overlay}>
-                                        {(!hideTitle && !hideTicketInfo) && (
+                                        {(!hideImageTitle && !hideImageInfo) && (
                                         <Text style={{...styles.overlayText, fontSize: 20}}>{ticket.title}</Text>
                                         )}
-                                        {!hideTicketInfo && (
+                                        {!hideImageInfo && (
                                         <>
                                             <Text style={styles.overlayGuideText}>Date</Text>
                                             <Text style={styles.overlayText}>{ticket.date}</Text>
@@ -102,15 +102,21 @@ const DetailCard = ({ ticket, ticketId }) => {
                 <TouchableOpacity onPress={handleContentPress}>
                     <View style={styles.contentContainer}>
                         <View style={styles.titleContainer}>
-                            <Text style={{...styles.mainText, flex: 1}}>{ticket.title}</Text>
-                            <Image source={iconLogo} style={{width: 120, height: 40, margin: -15, marginBottom: 5}} />
+                            {(!hideReviewTitle && !hideReviewInfo) && (
+                                <Text style={{...styles.mainText, flex: 1}}>{ticket.title}</Text>
+                            )}
+                            <Image source={iconLogo} style={{position: 'absolute', width : 110, height : 42, right : -18, top: -18}} />
                         </View>
                         { (ticket.reviewTitle == '' && ticket.reviewDetails == '') ?
                             <Text style={styles.noReviewText}> 등록된 리뷰가 없어요 :( </Text>
-                        : 
-                        <>
-                                <Text style={styles.subText}>{ticket.date}</Text>
-                                <Text style={styles.subText}>{ticket.location}</Text>
+                        :
+                            <>
+                             {!hideReviewInfo && (
+                                <View style={{position: 'absolute', top: 50, right: 23, gap : 2}}>
+                                    <Text style={styles.subText}>{ticket.date}</Text>
+                                    <Text style={styles.subText}>{ticket.location}</Text>
+                                </View>
+                             )}
 
                                 <View style={styles.reviewContainer}>
                                     <Text style={{...styles.mainText, color: '#000', fontSize: 16}}> {ticket.reviewTitle}</Text>
@@ -129,27 +135,6 @@ const DetailCard = ({ ticket, ticketId }) => {
                     <Image source={iconSave} style={{width: 45, height: 45}} />
                 </TouchableOpacity>
             </View>
-
-            {/* <Modal  
-            // animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => setModalVisible(false)}
-            >
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-                <View style={{ backgroundColor: 'white', width: 280, padding: 18, borderRadius: 10 }}>
-                    <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center'}}>선택한 티켓을 삭제합니다.</Text>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
-                    <TouchableOpacity onPress={() => setModalVisible(false)} style={{ backgroundColor: '#E8ECEF', width: 100, padding: 10, borderRadius: 5 }}>
-                        <Text style={{ color: '#000', fontWeight: 'bold', textAlign : 'center'}}>취소</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleIconDelete} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5 }}>
-                        <Text style={{ color: 'white', fontWeight: 'bold', textAlign : 'center'}}>확인</Text>
-                    </TouchableOpacity>
-                    </View>
-                </View>
-                </View>
-            </Modal> */}
 
         </View>
     );
@@ -196,7 +181,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderBottomLeftRadius: 5,
         borderBottomRightRadius: 5,
-        height: '100%',
+        height: 356,
     },
     titleContainer: {
         flexDirection: 'row',
@@ -204,7 +189,9 @@ const styles = StyleSheet.create({
         gap: 40,
     },
     reviewContainer: {
-        marginTop: 15,
+        position: 'absolute',
+        left : 18,
+        top: 95,
     },
     mainText: {
         color: '#525252',
@@ -248,10 +235,10 @@ const styles = StyleSheet.create({
     },
     logo: {
         position: 'absolute',
-        top: 5,
-        right: 10,
-        width: 100,
-        height: 40,
+        top: 2,
+        right: 2,
+        width: 110,
+        height: 42,
     },
     noReviewText: {
         position: 'absolute',

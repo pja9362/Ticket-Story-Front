@@ -26,6 +26,7 @@
     "react-native-document-scanner-plugin": "^0.9.1",
     "react-native-dotenv": "^3.4.10",
     "react-native-fs": "^2.20.0",
+    "react-native-global-props": "^1.1.5",
     "react-native-image-crop-picker": "^0.40.3",
     "react-native-image-picker": "^7.1.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",

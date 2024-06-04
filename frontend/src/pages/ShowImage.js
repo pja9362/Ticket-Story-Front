@@ -10,12 +10,14 @@ import iconEdit from '../images/icon_edit_no_bg.png';
 import logo from '../images/logo_white.png';
 import CustomCheckbox from '../components/EnrollTicket/CustomCheckbox';
 
+
 const ShowImage = ({ route }) => {
     const viewRef = useRef();
+
     const dispatch = useDispatch();
-    const { images, index, ticket, ticketId } = route.params;
-    const dummyImageUrl = images[index];
-    
+    const { images, ticket, ticketId } = route.params;
+    const dummyImageUrl = images;
+
     const overlayState = useSelector((state) => state.overlay[ticketId]) || { hideTicketInfo: false, hideTitle: false };
     const { hideTicketInfo, hideTitle } = overlayState;
 
@@ -26,7 +28,7 @@ const ShowImage = ({ route }) => {
     const handleSaveBtnPress = () => {
         handleSaveBtn(viewRef);
     };
-
+    
     const handleSelectNewImage = () => {
         console.log('사진 다시 선택하기 버튼 클릭');
         console.log(ticketId)

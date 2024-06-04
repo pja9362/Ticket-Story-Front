@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { signInRequest } from '../../actions/auth/auth';
 import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
+import { CustomText, CustomTextInput } from '../../components/CustomText';
 
 const Login = () => {
   const navigation = useNavigation();

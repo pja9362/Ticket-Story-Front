@@ -16,10 +16,10 @@ import deleteIcon from '../../images/icon_delete_photo.png';
 import NextButton from '../../components/EnrollTicket/NextBtn';
 import CustomCheckbox from '../../components/EnrollTicket/CustomCheckbox';
 import ImagePicker from 'react-native-image-crop-picker';
-import { saveNewTicket, uploadImage } from '../../actions/ticket/ticket';
+import { saveNewTicket, uploadImage, updateTicket } from '../../actions/ticket/ticket';
 
 const EditReview = ({navigation, route}) => {
-  const { title, ticketData } = route.params;
+  const { ticketId, ticketData } = route.params;
 
   useEffect(() => {
     console.log("TICKET DATA", ticketData);
@@ -27,13 +27,14 @@ const EditReview = ({navigation, route}) => {
   
   const [sliderTouched, setSliderTouched] = useState(false);
 
-  const [artRating, setArtRating] = useState(0);
-  const [seatRating, setSeatRating] = useState(0);
-  const [reviewTitle, setReviewTitle] = useState('');
-  const [reviewContent, setReviewContent] = useState('');
-  const [selectedImages, setSelectedImages] = useState([]);
+  const [artRating, setArtRating] = useState(ticketData.ratingDetails.contentsRating);
+  const [seatRating, setSeatRating] = useState(ticketData.ratingDetails.seatRating);
+  const [reviewTitle, setReviewTitle] = useState(ticketData.reviewDetails.reviewTitle);
+  const [reviewContent, setReviewContent] = useState(ticketData.reviewDetails.reviewDetails);
+  const [selectedImages, setSelectedImages] = useState(ticketData.reviewDetails.reviewImages);
   const [spoilerChecked, setSpoilerChecked] = useState(false);
   const [privateChecked, setPrivateChecked] = useState(false);
+  const [seats, setSeats] = useState(ticketData.contentsDetails.seats);
 
   const handleSliderChange = (category, rating) => {
     if (category === 'art') {
@@ -45,6 +46,18 @@ const EditReview = ({navigation, route}) => {
   };
 
   const handleNext = async () => {
+
+    const ticket = {
+      registerBy: ticketData.registerBy,
+      category: ticketData.category,
+      categoryDetail: ticketData.categoryDetail,
+      platform: ticketData.platform,
+      ticketImg: ticketData.ticketImg,
+      contentsDetails: ticketData.contentsDetails
+    }
+
+    console.log('1', ticket);
+
     const reviewDetails = {
       isPublic: !privateChecked,
       isSpoiler: spoilerChecked,
@@ -59,15 +72,17 @@ const EditReview = ({navigation, route}) => {
     };
 
     const requestData = {
-        ...ticketData,
+        ticket,
         ratingDetails,
         reviewDetails
     };
 
+    console.log('2', JSON.stringify(requestData, null, 2));
+
     try {
       console.log("티켓 등록 요청", requestData);
-      const savedTicket = await saveNewTicket(requestData);
-      console.log('Saved ticket:', savedTicket);
+      const updatedTicket = await updateTicket(ticketId, requestData);
+      console.log('Updated ticket:', updatedTicket);
       navigation.navigate('EnrollFinish');
     } catch (error) {
       console.error('Error saving review:', error);
@@ -75,8 +90,8 @@ const EditReview = ({navigation, route}) => {
   };
 
   const handleImagePicker = async () => {
-    if (selectedImages.length >= 3) {
-      alert('이미지는 최대 3개까지 등록할 수 있습니다.');
+    if (selectedImages.length >= 1) {
+      alert('이미지는 1개 등록할 수 있습니다.');
       return; 
     }
     try {
@@ -103,7 +118,7 @@ const EditReview = ({navigation, route}) => {
       <EnrollHeader title="티켓 후기 입력" onIconClick={handleNext} />
       <ScrollView style={styles.container}>
         <Text style={{fontSize: 16, fontWeight: 'bold', color: '#525252', lineHeight: 24}}>
-          관람한 <Text style={{color: '#5D70F9'}}>{title || '콘텐츠'}</Text>의 후기를 알려주세요.
+          관람한 <Text style={{color: '#5D70F9'}}>{ticketData.contentsDetails.title || '콘텐츠'}</Text>의 후기를 알려주세요.
         </Text>
         <Text style={{ fontSize: 12, color: '#939393' }}>*표시는 필수 항목입니다.</Text>
 
@@ -118,7 +133,7 @@ const EditReview = ({navigation, route}) => {
             <TouchableOpacity onPress={handleImagePicker}>
               <Image source={addPhoto} style={styles.image} />
             </TouchableOpacity>
-            <Text style={{ width: 48, textAlign: 'center' }}>{selectedImages.length} / 3</Text>
+            <Text style={{ width: 48, textAlign: 'center' }}>{selectedImages.length} / 1</Text>
           </View>
           <FlatList
             data={selectedImages}
@@ -148,19 +163,6 @@ const EditReview = ({navigation, route}) => {
             placeholder="관람 후기를 입력해주세요"
             value={reviewContent}
             onChangeText={text => setReviewContent(text)}
-          />
-        </View>
-
-        <View style={styles.checkboxContainer}>
-          <CustomCheckbox
-            checked={spoilerChecked}
-            onPress={() => setSpoilerChecked(!spoilerChecked)}
-            label="스포일러 포함"
-          />
-          <CustomCheckbox
-            checked={privateChecked}
-            onPress={() => setPrivateChecked(!privateChecked)}
-            label="비공개"
           />
         </View>
 

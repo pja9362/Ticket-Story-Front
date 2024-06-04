@@ -8,6 +8,7 @@ import icon_apple from '../../images/icon_apple.png';
 import logo_ticket_white from '../../images/logo_ticket_white.png';
 import { API_URL } from '@env';
 import { handleOAuthKaKaoLogin, saveTokens } from '../../actions/auth/auth';
+import {CustomText} from '../../components/CustomText';
 // import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 
 const windowWidth = Dimensions.get('window').width;

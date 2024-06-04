@@ -52,6 +52,58 @@ export const deleteTicket = async (data) => {
   }
 }
 
+export const getTicketDetails = async (data) => {
+  try {
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    console.log('Access token:', accessToken);
+    console.log('Data:', data)
+    const response = await axios.delete(`${API_URL}/api/v1/ticket/getTicketDetails`,  {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+      params: {
+        ticketId: data.ticketId,
+      }
+    });
+    console.log('ticket detail response:', response.data);
+    if (response.data !== null) {
+      return response.data;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error('Error getting ticket detial:', error);
+    throw error;
+  }
+}
+
+export const updateTicket = async (ticketId, data) => {
+  try {
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    console.log('Access token:', accessToken);
+    console.log('editTicket-----------------', ticketId);
+    console.log('Data-------------------', data);
+    const response = await axios.patch(`${API_URL}/api/v1/ticket/updateTicket`, data, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+      params: {
+        ticketId: ticketId,
+      }
+    });
+    console.log('Update ticket response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating ticket:', error);
+    throw error;
+  }
+}
+
+
 export const saveImageAndPerformOCR = async (scannedImageUri) => {
   try {    
     const accessToken = await AsyncStorage.getItem('accessToken');

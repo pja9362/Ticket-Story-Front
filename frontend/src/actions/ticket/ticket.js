@@ -79,11 +79,36 @@ export const getTicketDetails = async (data) => {
   }
 }
 
-export const updateTicket = async (ticketId, data) => {
+export const updateReview = async (reviewId, data) => {
   try {
     const accessToken = await AsyncStorage.getItem('accessToken');
     console.log('Access token:', accessToken);
-    console.log('editTicket-----------------', ticketId);
+    console.log('editReview-----------------', reviewId);
+    console.log('Data-------------------', data);
+    const response = await axios.patch(`${API_URL}/api/v1/reviews/updateReview`, data, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+      params: {
+        // ticketId: ticketId
+        reviewId: reviewId
+      }
+    });
+    console.log('Update Review response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating Review:', error);
+    throw error;
+  }
+}
+
+export const updateInfo = async (ticketId, data) => {
+  try {
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    console.log('Access token:', accessToken);
+    console.log('editInfo-----------------', ticketId);
     console.log('Data-------------------', data);
     const response = await axios.patch(`${API_URL}/api/v1/ticket/updateTicket`, data, {
       headers: {
@@ -92,13 +117,13 @@ export const updateTicket = async (ticketId, data) => {
         'Authorization': `Bearer ${accessToken}`,
       },
       params: {
-        ticketId: ticketId,
+        ticketId: ticketId
       }
     });
-    console.log('Update ticket response:', response.data);
+    console.log('Update Info response:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error updating ticket:', error);
+    console.error('Error updating Info:', error);
     throw error;
   }
 }

@@ -147,7 +147,8 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
         //navigate 하면서 response 값들 보내야함
         navigation.navigate('EditReview', {
           ticketId : ticketId,
-          ticketData : response
+          ticketData : response,
+          reviewId : reviewId
          });
 
       } else {

@@ -102,6 +102,7 @@ const EnrollByScrape = () => {
     if (event.nativeEvent.data) {
       const ticketInfo= JSON.parse(event.nativeEvent.data);
       // console.log(`${source} Ticket Info: `, ticketInfo);
+      console.log('God Please',ticketInfo);
       
       navigation.navigate('EnrollInfoByScrape', { ticketInfo: ticketInfo, source: source });
     } 

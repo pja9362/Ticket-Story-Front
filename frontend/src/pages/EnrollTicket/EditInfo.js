@@ -6,11 +6,12 @@ import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
 import NextBtn from '../../components/EnrollTicket/NextBtn';
 import { searchContent, searchLocation, clearContent, clearLocation } from '../../actions/enrollTicketSearch/search';
 import { useDispatch, useSelector } from 'react-redux';
-import { getMappedDetailCategory, getMappedCategory } from '../../utils/getMappedCategory';
+import { getMappedDetailCategory, getMappedCategory, getReverseMappedCategory } from '../../utils/getMappedCategory';
 import checkIcon from '../../images/icon_circleCheck.png';
 import defaultImage from '../../images/ticket_default_poster_movie.png'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DateTimePickerModal from 'react-native-modal-datetime-picker'; //
+import { updateInfo } from '../../actions/ticket/ticket';
 
 const EnrollInfoByScrape = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -88,7 +89,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   const [locationDetail, setLocationDetail] = useState(initialLocationDetail);
   const [seats, setSeats] = useState(initialSeats.join(', '));
   const [platform, setPlatform] = useState(ticketData.platform);
-  const [category, setCategory] = useState(ticketData.category);
+  const [category, setCategory] = useState('');
   const [categoryDetail, setCategoryDetail] = useState('');
 
   const categories = ['영화', '공연', '스포츠'];
@@ -99,6 +100,10 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
 
   const handleCategorySelect = (selectedCategory) => {
     setCategory(selectedCategory);
+    console.log(selectedCategory);
+    if (selectedCategory !== '영화') {
+    setCategoryDetail('');
+    }
   };
 
   const handleCategoryDetailSelect = (selectedCategoryDetail) => {
@@ -113,8 +118,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   const handleNext = async () => {
     const { category: mappedCategory, categoryDetail: mappedCategoryDetail } = getMappedDetailCategory(category, categoryDetail);
   
-    const ticketData = {
-      registerBy: 'SCRAPE',
+    const ticket = {
+      registerBy: ticketData.registerBy,
       category: mappedCategory,
       categoryDetail: mappedCategoryDetail,
       platform,
@@ -130,9 +135,34 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
         locationId: locationId,
       }
     }
+
+    const reviewDetails = {
+      isPublic: ticketData.reviewDetails.isPublic,
+      isSpoiler: ticketData.reviewDetails.isSpoiler,
+      reviewTitle : ticketData.reviewDetails.reviewTitle,
+      reviewDetails: ticketData.reviewDetails.reviewDetails,
+      reviewImages: ticketData.reviewDetails.reviewImages
+    };
+
+    const ratingDetails = {
+      contentsRating: ticketData.ratingDetails.contentsRating,
+      seatRating: ticketData.reviewDetails.seatRating,
+    };
+
+    const requestData = {
+      ticket,
+      reviewDetails,
+      ratingDetails
+    }
   
     if (isFormValid()) {
-        navigation.navigate('EnrollReview', { title, ticketData })
+      try {
+        const updatedInfo = await updateInfo(ticketId, requestData);
+        navigation.navigate('EnrollFinish');
+      } catch (error) {
+        console.error('Error saving Info:', error);
+      }
+        // navigation.navigate('EnrollReview', { title, ticketData })
     } else {
       alert('필수 입력 항목을 모두 입력해주세요!');
     }
@@ -186,12 +216,17 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
 
   const isContentVisible = category !== '' && ((category != "영화" && categoryDetail !== '') || category == "영화");
 
-  // useEffect(() => {
-  //   if (title !== '' && isContentVisible) {
-  //     let mappedCategory = getMappedCategory(category);
-  //     dispatch(searchContent(title, date, mappedCategory, 'SCRAPE'));
-  //   }
-  // }, [category, categoryDetail]);
+  useEffect(() => {
+    if (title !== '' && isContentVisible) {
+      let mappedCategory = getMappedCategory(category);
+      dispatch(searchContent(title, date, mappedCategory, 'SCRAPE'));
+    }
+  }, [category, categoryDetail]);
+
+  useEffect(() => {
+    const reversedCategory = getReverseMappedCategory(ticketData.category);
+    setCategory(reversedCategory);
+  }, []);
 
   useEffect(() => {
     if (title.trim() !== '' && isContentVisible && isContentSelected === false) {
@@ -203,6 +238,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
       return () => clearTimeout(timeoutId);
     }
   }, [title]);
+  
 
   useEffect(() => {
     if (location.trim() !== '' && isContentVisible && isLocationSelected === false) {

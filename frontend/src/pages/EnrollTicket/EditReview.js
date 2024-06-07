@@ -16,10 +16,10 @@ import deleteIcon from '../../images/icon_delete_photo.png';
 import NextButton from '../../components/EnrollTicket/NextBtn';
 import CustomCheckbox from '../../components/EnrollTicket/CustomCheckbox';
 import ImagePicker from 'react-native-image-crop-picker';
-import { saveNewTicket, uploadImage, updateTicket } from '../../actions/ticket/ticket';
+import { saveNewTicket, uploadImage, updateReview } from '../../actions/ticket/ticket';
 
 const EditReview = ({navigation, route}) => {
-  const { ticketId, ticketData } = route.params;
+  const { ticketId, ticketData, reviewId } = route.params;
 
   useEffect(() => {
     console.log("TICKET DATA", ticketData);
@@ -81,8 +81,8 @@ const EditReview = ({navigation, route}) => {
 
     try {
       console.log("티켓 등록 요청", requestData);
-      const updatedTicket = await updateTicket(ticketId, requestData);
-      console.log('Updated ticket:', updatedTicket);
+      const updatedReview = await updateReview(reviewId, requestData);
+      console.log('Updated Review:', updatedReview);
       navigation.navigate('EnrollFinish');
     } catch (error) {
       console.error('Error saving review:', error);

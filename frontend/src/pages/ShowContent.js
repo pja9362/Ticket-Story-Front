@@ -9,6 +9,7 @@ import iconSave from '../images/icon_save.png';
 import iconEdit from '../images/icon_edit_no_bg.png';
 import iconLogo from '../images/logo_navHeader.png';
 import CustomCheckbox from '../components/EnrollTicket/CustomCheckbox';
+import {CustomText} from '../components/CustomText';
 
 const ShowContent = ({ route }) => {
     const viewRef = useRef();
@@ -60,30 +61,30 @@ const ShowContent = ({ route }) => {
                 <View style={styles.overlay}>
                     <View style={styles.titleContainer}>
                         {
-                            (!hideReviewTitle && !hideReviewInfo) && <Text style={{...styles.mainText, flex: 1}}>{ticket.title}</Text>
+                            (!hideReviewTitle && !hideReviewInfo) && <CustomText style={{...styles.mainText, flex: 1}}>{ticket.title}</CustomText>
                         }
                     </View>
                     <View style={{position: 'absolute', top: 30, right: 25,}}>
                         {
                             !hideReviewInfo && (
                                 <>
-                                    <Text style={styles.subText}>{ticket.date}</Text>
-                                    <Text style={styles.subText}>{ticket.location}</Text>
+                                    <CustomText style={styles.subText}>{ticket.date}</CustomText>
+                                    <CustomText style={styles.subText}>{ticket.location}</CustomText>
                                 </>
                             )
                         }
                     </View>
                 </View>
                 <View style={styles.reviewContainer}>
-                    <Text style={{...styles.mainText, color: '#000', fontSize: 16}}> {ticket.reviewTitle}</Text>
-                    <Text style={styles.text}>{ticket.reviewDetails}</Text>
+                    <CustomText style={{...styles.mainText, color: '#000', fontSize: 16}}> {ticket.reviewTitle}</CustomText>
+                    <CustomText style={styles.text}>{ticket.reviewDetails}</CustomText>
                 </View>
             </View>
             
             {/* 버튼 내부 좌측에 edit icon */}
             <TouchableOpacity style={styles.selectBtn} onPress={handleEditContent}>
                 <Image source={iconEdit} style={{width: 24, height: 24, position: 'absolute', left: 18, top: 14}} />
-                <Text style={styles.btnText}>리뷰 수정하기</Text>
+                <CustomText style={styles.btnText}>리뷰 수정하기</CustomText>
             </TouchableOpacity>
 
             <View style={styles.btnContainer}>

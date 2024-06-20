@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
+import { CustomText } from '../../components/CustomText';
 
 const EnrollHeader = ({title = '', onIconClick}) => {
   const navigation = useNavigation();
@@ -15,7 +16,7 @@ const EnrollHeader = ({title = '', onIconClick}) => {
       <TouchableOpacity onPress={onBackClick}>
         <Icon name="chevron-back-sharp" size={20} color="black" />
       </TouchableOpacity>
-      <Text style={styles.title}>{title}</Text>
+      <CustomText style={styles.title}>{title}</CustomText>
       <TouchableOpacity onPress={onIconClick}>
         <Icon name="chevron-forward-sharp" size={20} color="black" />
       </TouchableOpacity>

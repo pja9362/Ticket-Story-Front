@@ -12,6 +12,7 @@ import defaultImage from '../../images/ticket_default_poster_movie.png'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DateTimePickerModal from 'react-native-modal-datetime-picker'; //
 import { updateInfo } from '../../actions/ticket/ticket';
+import { CustomText, CustomTextInput } from '../../components/CustomText';
 
 const EnrollInfoByScrape = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -256,9 +257,9 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
       <EnrollHeader title="티켓 정보 입력" onIconClick={handleNext}/>
         <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
           <View style={{...styles.container, paddingBottom: 0}}>
-            <Text style={styles.sectionText}>
+            <CustomText style={styles.sectionText}>
               관람한 콘텐츠의 분야를 선택해 주세요.
-            </Text>
+            </CustomText>
             {/* Category */}
             <CategoryBtnContainer
               categories={categories}
@@ -270,7 +271,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
             {
               detailCategories[category] && (
                 <>
-                  <Text style={styles.sectionText}>관람한 {category == '공연' ? '공연 종류를' : '스포츠 종목을'} 선택해 주세요.</Text>
+                  <CustomText style={styles.sectionText}>관람한 {category == '공연' ? '공연 종류를' : '스포츠 종목을'} 선택해 주세요.</CustomText>
                   <CategoryBtnContainer
                     categories={detailCategories[category]}
                     selectedCategory={categoryDetail}
@@ -285,25 +286,25 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
               isContentVisible &&
               <>
                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', gap: 5}}>
-                  <Text style={styles.sectionText}>
+                  <CustomText style={styles.sectionText}>
                     입력된 정보를 확인해주세요.
-                  </Text>
-                  <Text style={{ fontSize: 12, color: '#939393' }}>
+                  </CustomText>
+                  <CustomText style={{ fontSize: 12, color: '#939393' }}>
                     *표시는 필수 항목입니다.
-                  </Text>
+                  </CustomText>
                 </View>
 
                 {/* Date */}
-                <Text style={styles.subsectionText}>
+                <CustomText style={styles.subsectionText}>
                   관람 일시
-                  <Text style={styles.requiredIndicator}>*</Text>
-                </Text>
+                  <CustomText style={styles.requiredIndicator}>*</CustomText>
+                </CustomText>
                 
                 <View style={styles.dateInputContainer}>
 
                   <TouchableOpacity onPress={showDatePicker}>
                     <View pointerEvents="none">
-                      <TextInput
+                      <CustomTextInput
                         style={[styles.inputBox, { flex: 2}]}
                         value={date}
                         placeholder='YYYY.MM.DD'
@@ -314,7 +315,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
 
                   <TouchableOpacity onPress={showTimePicker}>
                     <View pointerEvents="none">
-                      <TextInput
+                      <CustomTextInput
                         style={[styles.inputBox, { flex: 1 }]}
                         value={time}
                         placeholder='HH:MM'
@@ -343,15 +344,15 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                 </View>
               
                 {/* Title */}
-                <Text style={styles.subsectionText}>
+                <CustomText style={styles.subsectionText}>
                   관람 콘텐츠
-                  <Text style={styles.requiredIndicator}>*</Text>
-                </Text>
+                  <CustomText style={styles.requiredIndicator}>*</CustomText>
+                </CustomText>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   { contentsId !== null &&
                         <Image style={styles.checkIcon} source={checkIcon} />
                   }
-                  <TextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 제목'/>
+                  <CustomTextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 제목'/>
                 </View>
                 {/* Content Lists Dropdown */}
                 {
@@ -381,8 +382,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                                 )}
                               </View>
                               <View style={styles.contentDetails}>
-                                <Text style={styles.title}>{content.title}</Text>
-                                <Text>{content.detail.join(', ')}</Text>
+                                <CustomText style={styles.title}>{content.title}</CustomText>
+                                <CustomText>{content.detail.join(', ')}</CustomText>
                               </View>
                             </TouchableOpacity>
                           </View>
@@ -393,7 +394,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                             style={styles.dropdownItemTouchable}
                           >
                             <View style={styles.contentDetails}>
-                              <Text style={styles.textDetails}> 콘텐츠 선택하지 않고 입력하기 </Text>
+                              <CustomText style={styles.textDetails}> 콘텐츠 선택하지 않고 입력하기 </CustomText>
                             </View>
                           </TouchableOpacity>
                         </View>
@@ -403,15 +404,15 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                 }
 
                 {/* Location */}
-                <Text style={styles.subsectionText}>
+                <CustomText style={styles.subsectionText}>
                   관람 장소
-                  <Text style={styles.requiredIndicator}>*</Text>
-                </Text>
+                  <CustomText style={styles.requiredIndicator}>*</CustomText>
+                </CustomText>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   { locationId !== null &&
                         <Image style={styles.checkIcon} source={checkIcon} />
                   }
-                  <TextInput style={{...styles.inputBox, flex: 1}} value={location} onChangeText={(text) => {setLocation(text); setIsLocationSelected(false); setLocationId(null);}} placeholder={getCategoryPlaceholder(category, 'location')} />
+                  <CustomTextInput style={{...styles.inputBox, flex: 1}} value={location} onChangeText={(text) => {setLocation(text); setIsLocationSelected(false); setLocationId(null);}} placeholder={getCategoryPlaceholder(category, 'location')} />
                 </View>
                 {/* Location Dropdown */}
                 {
@@ -431,8 +432,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                               style={styles.dropdownItemTouchable}
                             >
                               <View style={styles.locationDetails}>
-                                <Text style={{...styles.title, flex: 1 }}>{location.name}</Text>
-                                <Text style={styles.subText}>{location.address}</Text>
+                                <CustomText style={{...styles.title, flex: 1 }}>{location.name}</CustomText>
+                                <CustomText style={styles.subText}>{location.address}</CustomText>
                               </View>
                             </TouchableOpacity>
                           </View>
@@ -443,7 +444,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                             style={styles.dropdownItemTouchable}
                           >
                             <View style={styles.contentDetails}>
-                              <Text style={styles.textDetails}> 장소 선택하지 않고 입력하기 </Text>
+                              <CustomText style={styles.textDetails}> 장소 선택하지 않고 입력하기 </CustomText>
                             </View>
                           </TouchableOpacity>
                         </View>
@@ -456,15 +457,15 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                 {
                   initialLocationDetail !=='' && (
                     <>
-                      <Text style={styles.subsectionText}>관람 장소 (세부)</Text>
-                      <TextInput style={styles.inputBox} value={locationDetail} onChangeText={setLocationDetail} placeholder={getCategoryPlaceholder(category, 'locationDetail')}/>
+                      <CustomText style={styles.subsectionText}>관람 장소 (세부)</CustomText>
+                      <CustomTextInput style={styles.inputBox} value={locationDetail} onChangeText={setLocationDetail} placeholder={getCategoryPlaceholder(category, 'locationDetail')}/>
                     </>
                   )
                 }
 
                 {/* Seats */}
-                <Text style={styles.subsectionText}>관람 좌석</Text>
-                <TextInput style={styles.inputBox} value={seats} onChangeText={setSeats} placeholder={getCategoryPlaceholder(category, 'seats')}/>
+                <CustomText style={styles.subsectionText}>관람 좌석</CustomText>
+                <CustomTextInput style={styles.inputBox} value={seats} onChangeText={setSeats} placeholder={getCategoryPlaceholder(category, 'seats')}/>
             </>
           }
           </View>

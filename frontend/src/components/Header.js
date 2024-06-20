@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
+import {CustomText} from './CustomText';
 
 const Header = ({title = '', icon, onIconClick}) => {
   const navigation = useNavigation();
@@ -15,7 +16,7 @@ const Header = ({title = '', icon, onIconClick}) => {
       <TouchableOpacity onPress={onBackClick}>
         <Icon name="chevron-back-sharp" size={20} color="black" />
       </TouchableOpacity>
-      <Text style={styles.title}>{title}</Text>
+      <CustomText style={styles.title}>{title}</CustomText>
       {icon === '' ? (
         <TouchableOpacity onPress={onIconClick}>
           <Icon name={icon} size={20} color="black" />

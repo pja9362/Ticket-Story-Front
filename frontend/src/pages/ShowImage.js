@@ -9,6 +9,7 @@ import iconSave from '../images/icon_save.png';
 import iconEdit from '../images/icon_edit_no_bg.png';
 import logo from '../images/logo_white.png';
 import CustomCheckbox from '../components/EnrollTicket/CustomCheckbox';
+import {CustomText} from '../components/CustomText';
 
 
 const ShowImage = ({ route }) => {
@@ -62,15 +63,15 @@ const ShowImage = ({ route }) => {
                 <Image source={{ uri: dummyImageUrl }} style={styles.image} />
                 <Image source={logo} style={styles.logo} />
                 <View style={styles.overlay}>
-                    {(!hideImageTitle && !hideImageInfo) && <Text style={{ ...styles.overlayText, fontSize: 20 }}>{ticket.title}</Text>}
+                    {(!hideImageTitle && !hideImageInfo) && <CustomText style={{ ...styles.overlayText, fontSize: 20 }}>{ticket.title}</CustomText>}
                     {!hideImageInfo && (
                         <>
-                            <Text style={styles.overlayGuideText}>Date</Text>
-                            <Text style={styles.overlayText}>{ticket.date}</Text>
-                            <Text style={styles.overlayGuideText}>Time</Text>
-                            <Text style={styles.overlayText}>{ticket.time}</Text>
-                            <Text style={styles.overlayGuideText}>Place</Text>
-                            <Text style={styles.overlayText}>{ticket.location}</Text>
+                            <CustomText style={styles.overlayGuideText}>Date</CustomText>
+                            <CustomText style={styles.overlayText}>{ticket.date}</CustomText>
+                            <CustomText style={styles.overlayGuideText}>Time</CustomText>
+                            <CustomText style={styles.overlayText}>{ticket.time}</CustomText>
+                            <CustomText style={styles.overlayGuideText}>Place</CustomText>
+                            <CustomText style={styles.overlayText}>{ticket.location}</CustomText>
                         </>
                     )}
                 </View>
@@ -78,7 +79,7 @@ const ShowImage = ({ route }) => {
 
             <TouchableOpacity style={styles.selectBtn} onPress={handleSelectNewImage}>
                 <Image source={iconEdit} style={{ width: 24, height: 24, position: 'absolute', left: 18, top: 14 }} />
-                <Text style={styles.btnText}>사진 다시 선택하기</Text>
+                <CustomText style={styles.btnText}>사진 다시 선택하기</CustomText>
             </TouchableOpacity>
 
             <View style={styles.btnContainer}>

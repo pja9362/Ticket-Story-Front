@@ -1,23 +1,25 @@
 import React from 'react';
 import {View, Image, StyleSheet, Text, Button, TouchableOpacity} from 'react-native';
 import ticket from '../../images/ticket.png';
+import { CustomText, CustomTextInput } from '../../components/CustomText';
+
 const EnrollFinish = ({navigation}) => {
 
     return (
         <View style={styles.container}>
             <Image source={ticket} style={styles.image} />
-            <Text style={styles.mainText}>나의 티켓스토리가 등록되었어요.</Text>
-            <Text style={styles.subText}>등록한 티켓은 티켓북에서 확인할 수 있어요.</Text>
+            <CustomText style={styles.mainText}>나의 티켓스토리가 등록되었어요.</CustomText>
+            <CustomText style={styles.subText}>등록한 티켓은 티켓북에서 확인할 수 있어요.</CustomText>
 
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={{...styles.navButton, backgroundColor: '#5D70F9' }} onPress={() => navigation.navigate('MainStack')}>
-                    <Text style={{...styles.btnText, color: '#fff'}}>홈으로 가기</Text>
+                    <CustomText style={{...styles.btnText, color: '#fff'}}>홈으로 가기</CustomText>
                 </TouchableOpacity>
                 {/* <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('TicketBook')}>
                     <Text style={styles.btnText}>티켓북으로 가기</Text>
                 </TouchableOpacity> */}
                 <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('EnrollTicket')}>
-                    <Text style={styles.btnText}>티켓 추가 등록하기</Text>
+                    <CustomText style={styles.btnText}>티켓 추가 등록하기</CustomText>
                 </TouchableOpacity>
             </View>
         </View>

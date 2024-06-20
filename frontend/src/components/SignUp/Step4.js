@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { View, StyleSheet, Image, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import logo from '../../images/logo.png';
+import {CustomText} from '../CustomText';
 
 const Step4 = () => {
   const navigation = useNavigation();
@@ -18,7 +19,7 @@ const Step4 = () => {
   return (
     <View style={styles.container}>
       <Image source={logo} style={styles.image} />
-      <Text style={styles.guideText}>계정 생성이 완료되었어요.</Text>
+      <CustomText style={styles.guideText}>계정 생성이 완료되었어요.</CustomText>
     </View>
   );
 };

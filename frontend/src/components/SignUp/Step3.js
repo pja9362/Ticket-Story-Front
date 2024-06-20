@@ -4,6 +4,7 @@ import NextButton from './NextButton';
 import GenderButton from './GenderButton';
 import Agreement from './Agreement';
 import { signUpRequest } from '../../actions/auth/auth';
+import {CustomText, CustomTextInput} from '../CustomText';
 
 const Step3 = ({nextStep, handleChange, values}) => {
   const [year, setYear] = useState('');
@@ -86,7 +87,7 @@ const Step3 = ({nextStep, handleChange, values}) => {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
 
     <View style={styles.formContainer}>
-        <Text style={styles.sectionText}>성별</Text>
+        <CustomText style={styles.sectionText}>성별</CustomText>
         <View style={styles.genderContainer}>
           {genderOptions.map(option => (
             <GenderButton
@@ -103,10 +104,10 @@ const Step3 = ({nextStep, handleChange, values}) => {
       </View>
 
       <View style={styles.formContainer}>
-        <Text style={styles.sectionText}>생년월일</Text>
+        <CustomText style={styles.sectionText}>생년월일</CustomText>
         <View style={styles.dateContainer}>
           <View style={styles.dateItem}>
-            <TextInput
+            <CustomTextInput
               style={{...styles.inputBox, width: 80}}
               value={year}
               onChangeText={text => setYear(text)}
@@ -114,10 +115,10 @@ const Step3 = ({nextStep, handleChange, values}) => {
               placeholder="YYYY"
               placeholderTextColor="#ccc"
             />
-            <Text>년</Text>
+            <CustomText>년</CustomText>
           </View>
           <View style={styles.dateItem}>
-            <TextInput
+            <CustomTextInput
               style={{...styles.inputBox, width: 60}}
               value={month}
               onChangeText={text => setMonth(text)}
@@ -126,10 +127,10 @@ const Step3 = ({nextStep, handleChange, values}) => {
               placeholder="MM"
               placeholderTextColor="#ccc"
             />
-            <Text>월</Text>
+            <CustomText>월</CustomText>
           </View>
           <View style={styles.dateItem}>
-            <TextInput
+            <CustomTextInput
               style={{...styles.inputBox, width: 60}}
               value={day}
               onChangeText={text => setDay(text)}
@@ -138,12 +139,12 @@ const Step3 = ({nextStep, handleChange, values}) => {
               placeholder="DD"
               placeholderTextColor="#ccc"
             />
-            <Text>일</Text>
+            <CustomText>일</CustomText>
           </View>
         </View>
       </View>
 
-      <Text style={[styles.sectionText, { marginBottom: 0 }]}>약관 동의</Text>
+      <CustomText style={[styles.sectionText, { marginBottom: 0 }]}>약관 동의</CustomText>
       <Agreement updateAgreementStatus={updateAgreementStatus} />
 
       <NextButton isLast={true} isValid={isValid} onClick={handleSignUp}/>

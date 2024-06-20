@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-nativ
 import Header from '../../components/Header';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
+import { CustomText, CustomTextInput } from '../../components/CustomText';
 
 const ChangePW = () => {
     const navigation = useNavigation();
@@ -39,9 +40,9 @@ const ChangePW = () => {
 
             <View style={{paddingHorizontal: 18}}>
                 <View style={styles.formContainer}>
-                    <Text style={styles.sectionText}>새 비밀번호</Text>
+                    <CustomText style={styles.sectionText}>새 비밀번호</CustomText>
                     <View style={styles.inputContainer}>
-                        <TextInput
+                        <CustomTextInput
                             style={styles.inputBox}
                             value={password}
                             secureTextEntry={!showPassword}
@@ -57,9 +58,9 @@ const ChangePW = () => {
                 </View>
 
                 <View style={{...styles.formContainer, marginBottom: 22}}>
-                    <Text style={styles.sectionText}>비밀번호 확인</Text>
+                    <CustomText style={styles.sectionText}>비밀번호 확인</CustomText>
                     <View style={styles.inputContainer}>
-                        <TextInput
+                        <CustomTextInput
                             style={styles.inputBox}
                             value={passwordCheck}
                             secureTextEntry={!showPasswordCheck}
@@ -75,14 +76,14 @@ const ChangePW = () => {
                 </View>
                 {
                 errorMessage !== '' ? 
-                    <Text style={{color: '#FF0000', textAlign: 'center', lineHeight: 40, fontSize: 12}}>{errorMessage}</Text> : <View height={40}></View>
+                    <CustomText style={{color: '#FF0000', textAlign: 'center', lineHeight: 40, fontSize: 12}}>{errorMessage}</CustomText> : <View height={40}></View>
                 }
                 <TouchableOpacity
                     disabled={!password || !passwordCheck}
                     onPress={handleNext}
                     style={{...styles.changeBtn, backgroundColor: password && passwordCheck ? '#5D70F9' : '#BDBDBD'}}            
                 >
-                    <Text style={styles.btnText}>다음</Text>
+                    <CustomText style={styles.btnText}>다음</CustomText>
                 </TouchableOpacity>
             </View>
         </View>

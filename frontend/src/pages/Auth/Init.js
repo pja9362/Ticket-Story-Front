@@ -82,7 +82,7 @@ const Init = ({navigation}) => {
           onPress={() => navigation.navigate('SignUp')}>
           <View style={styles.signupContainer}>
             <Image source={logo_ticket_white} style={styles.logo} />
-            <Text style={{...styles.text, color: '#fff'}}>티켓스토리 회원가입</Text>
+            <CustomText style={{...styles.text, color: '#fff'}}>티켓스토리 회원가입</CustomText>
           </View> 
       </TouchableOpacity>
 
@@ -106,7 +106,7 @@ const Init = ({navigation}) => {
       <TouchableOpacity
         style={styles.authBtnContainer}
         onPress={() => navigation.navigate('Login')}>
-        <Text style={{textDecorationLine: 'underline', fontSize: 16, lineHeight: 40}}>로그인</Text>
+        <CustomText style={{textDecorationLine: 'underline', fontSize: 16, lineHeight: 40}}>로그인</CustomText>
       </TouchableOpacity>
       </View>
      )

@@ -17,6 +17,8 @@ import iconReviewOff from '../../images/icon_ReviewOff.png';
 import iconEdit from '../../images/icon_dots.png';
 
 import { deleteTicket, getTicketDetails } from '../../actions/ticket/ticket';
+import {CustomText} from '../CustomText';
+
 
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
 const imageWidth = Dimensions.get('window').width * 0.45;
@@ -197,7 +199,7 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
                 >          
 
                   {imageUrl == null || imageUrl == "" && (
-                    <Text style={styles.backTitle}>{title}</Text>
+                    <CustomText style={styles.backTitle}>{title}</CustomText>
                   )}  
 
                 </ImageBackground>
@@ -205,18 +207,18 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
               <Animated.View style={[styles.cardContainer, styles.back, backAnimatedStyle]}>
                 <ImageBackground source={ticketImageSource} style={styles.imageBackground}>
                   <View style={styles.overlay}>
-                    <Text numberOfLines={2} style={styles.title}>{title}</Text>
+                    <CustomText numberOfLines={2} style={styles.title}>{title}</CustomText>
                     <View style={styles.infoContainer}>
-                      <Text numberOfLines={1} style={styles.info}>{date}</Text>
-                      <Text numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{time}</Text>
-                      <Text numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{location}</Text>
-                      <Text numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{seat}</Text>
+                      <CustomText numberOfLines={1} style={styles.info}>{date}</CustomText>
+                      <CustomText numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{time}</CustomText>
+                      <CustomText numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{location}</CustomText>
+                      <CustomText numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{seat}</CustomText>
                     </View>
                     <View style={styles.bottomContainer}>
-                      <Text numberOfLines={1} style={[styles.info, { marginTop: 5, textAlign: 'center' }]}>{contentsRating}</Text>
+                      <CustomText numberOfLines={1} style={[styles.info, { marginTop: 5, textAlign: 'center' }]}>{contentsRating}</CustomText>
                     </View>
                     <View style={styles.bottomContainer}>
-                      <Text numberOfLines={1} style={[styles.info, { marginTop: 12, textAlign: 'center' }]}>{seatRating}</Text>
+                      <CustomText numberOfLines={1} style={[styles.info, { marginTop: 12, textAlign: 'center' }]}>{seatRating}</CustomText>
                     </View>
                     <View style={styles.buttonContainer}>
                       <TouchableOpacity 
@@ -249,13 +251,13 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
           {dropdownVisible && isFront && (
             <View style={{position: 'absolute', right: 10, top: 10, backgroundColor: '#fff', borderRadius: 5, padding: 10, gap: 15}}>
               <TouchableOpacity onPress={handleInfoEdit}>
-                <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>정보 수정</Text>
+                <CustomText style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>정보 수정</CustomText>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleReviewEdit}>
-                <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>리뷰 수정</Text>
+                <CustomText style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>리뷰 수정</CustomText>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>삭제</Text>
+                <CustomText style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>삭제</CustomText>
               </TouchableOpacity>
             </View>
           )}
@@ -268,13 +270,13 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
           >
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
               <View style={{ backgroundColor: 'white', width: 280, padding: 18, borderRadius: 10 }}>
-                <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center'}}>선택한 티켓을 삭제합니다.</Text>
+                <CustomText style={{color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center'}}>선택한 티켓을 삭제합니다.</CustomText>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
                   <TouchableOpacity onPress={() => setModalVisible(false)} style={{ backgroundColor: '#E8ECEF', width: 100, padding: 10, borderRadius: 5 }}>
-                    <Text style={{ color: '#000', fontWeight: 'bold', textAlign : 'center'}}>취소</Text>
+                    <CustomText style={{ color: '#000', fontWeight: 'bold', textAlign : 'center'}}>취소</CustomText>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={handleIconDelete} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5 }}>
-                    <Text style={{ color: 'white', fontWeight: 'bold', textAlign : 'center'}}>확인</Text>
+                    <CustomText style={{ color: 'white', fontWeight: 'bold', textAlign : 'center'}}>확인</CustomText>
                   </TouchableOpacity>
                 </View>
               </View>

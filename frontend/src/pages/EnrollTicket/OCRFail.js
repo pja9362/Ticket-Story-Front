@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import closeIcon from '../../images/icon_close.png';
+import { CustomText } from '../../components/CustomText';
 
 const OCRFail = ({navigation}) => {
   return (
@@ -10,17 +11,17 @@ const OCRFail = ({navigation}) => {
       </TouchableOpacity>
 
       <View style={styles.textContainer}>
-        <Text style={styles.mainText}>티켓 인식에 실패했습니다.</Text>
-        <Text style={styles.subText}>
+        <CustomText style={styles.mainText}>티켓 인식에 실패했습니다.</CustomText>
+        <CustomText style={styles.subText}>
           깨끗한 배경에 티켓을 놓고{'\n'}전체가 잘 나오도록 촬영해 주세요.
-        </Text>
-        <Text style={[styles.subText, {color: '#9E9E9E'}]}>
+        </CustomText>
+        <CustomText style={[styles.subText, {color: '#9E9E9E'}]}>
           해외 티켓은 인증이 불가능합니다.
-        </Text>
+        </CustomText>
       </View>
 
       <TouchableOpacity style={styles.btn}>
-        <Text style={styles.btnText}>다시 촬영하기</Text>
+        <CustomText style={styles.btnText}>다시 촬영하기</CustomText>
       </TouchableOpacity>
     </View>
   );

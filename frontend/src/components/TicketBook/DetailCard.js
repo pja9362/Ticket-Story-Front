@@ -11,6 +11,7 @@ import iconShare from '../../images/icon_share.png';
 import iconSave from '../../images/icon_save.png';
 import logo from '../../images/logo_white.png';
 import defaultReviewImage from '../../images/default_reviewImage.png';
+import {CustomText} from '../CustomText';
 
 const DetailCard = ({ ticket, ticketId }) => {
 
@@ -81,16 +82,16 @@ const DetailCard = ({ ticket, ticketId }) => {
                                     {/* Overlay Text */}
                                     <View style={styles.overlay}>
                                         {(!hideImageTitle && !hideImageInfo) && (
-                                        <Text style={{...styles.overlayText, fontSize: 20}}>{ticket.title}</Text>
+                                        <CustomText style={{...styles.overlayText, fontSize: 20}}>{ticket.title}</CustomText>
                                         )}
                                         {!hideImageInfo && (
                                         <>
-                                            <Text style={styles.overlayGuideText}>Date</Text>
-                                            <Text style={styles.overlayText}>{ticket.date}</Text>
-                                            <Text style={styles.overlayGuideText}>Time</Text>
-                                            <Text style={styles.overlayText}>{ticket.time}</Text>
-                                            <Text style={styles.overlayGuideText}>Place</Text>
-                                            <Text style={styles.overlayText}>{ticket.location}</Text>
+                                            <CustomText style={styles.overlayGuideText}>Date</CustomText>
+                                            <CustomText style={styles.overlayText}>{ticket.date}</CustomText>
+                                            <CustomText style={styles.overlayGuideText}>Time</CustomText>
+                                            <CustomText style={styles.overlayText}>{ticket.time}</CustomText>
+                                            <CustomText style={styles.overlayGuideText}>Place</CustomText>
+                                            <CustomText style={styles.overlayText}>{ticket.location}</CustomText>
                                         </>
                                         )}
                                     </View>
@@ -103,24 +104,24 @@ const DetailCard = ({ ticket, ticketId }) => {
                     <View style={styles.contentContainer}>
                         <View style={styles.titleContainer}>
                             {(!hideReviewTitle && !hideReviewInfo) && (
-                                <Text style={{...styles.mainText, flex: 1}}>{ticket.title}</Text>
+                                <CustomText style={{...styles.mainText, flex: 1}}>{ticket.title}</CustomText>
                             )}
                             <Image source={iconLogo} style={{position: 'absolute', width : 110, height : 42, right : -18, top: -18}} />
                         </View>
                         { (ticket.reviewTitle == '' && ticket.reviewDetails == '') ?
-                            <Text style={styles.noReviewText}> 등록된 리뷰가 없어요 :( </Text>
+                            <CustomText style={styles.noReviewText}> 등록된 리뷰가 없어요 :( </CustomText>
                         :
                             <>
                              {!hideReviewInfo && (
                                 <View style={{position: 'absolute', top: 50, right: 23, gap : 2}}>
-                                    <Text style={styles.subText}>{ticket.date}</Text>
-                                    <Text style={styles.subText}>{ticket.location}</Text>
+                                    <CustomText style={styles.subText}>{ticket.date}</CustomText>
+                                    <CustomText style={styles.subText}>{ticket.location}</CustomText>
                                 </View>
                              )}
 
                                 <View style={styles.reviewContainer}>
-                                    <Text style={{...styles.mainText, color: '#000', fontSize: 16}}> {ticket.reviewTitle}</Text>
-                                    <Text style={styles.text}>{ticket.reviewDetails}</Text>
+                                    <CustomText style={{...styles.mainText, color: '#000', fontSize: 16}}> {ticket.reviewTitle}</CustomText>
+                                    <CustomText style={styles.text}>{ticket.reviewDetails}</CustomText>
                                 </View>
                             </>
                         }

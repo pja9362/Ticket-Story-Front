@@ -18,15 +18,15 @@ const BottomSheetMenu = ({closeBottomSheet, onClick}) => {
           <View style={styles.contentContainer}>
             <TouchableOpacity
               onPress={() => onClick('scrape')}>
-              <Text style={styles.btnText}>온라인 티켓 등록하기</Text>
+              <CustomText style={styles.btnText}>온라인 티켓 등록하기</CustomText>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => onClick('camera')}>
-              <Text style={styles.btnText}>카메라로 티켓 등록하기</Text>
+              <CustomText style={styles.btnText}>카메라로 티켓 등록하기</CustomText>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => onClick('hand')}>
-              <Text style={styles.btnText}>직접 입력으로 티켓 등록하기</Text>
+              <CustomText style={styles.btnText}>직접 입력으로 티켓 등록하기</CustomText>
             </TouchableOpacity>
           </View>
         </View>

@@ -49,9 +49,9 @@ const Login = () => {
       <Header title='로그인'/>
 
       <View style={styles.formContainer}>
-        <Text style={styles.sectionText}>아이디</Text>
+        <CustomText style={styles.sectionText}>아이디</CustomText>
         <View style={styles.inputContainer}>
-          <TextInput
+          <CustomTextInput
             value={id}
             placeholder='example@naver.com'
             placeholderTextColor="#ccc"
@@ -62,9 +62,9 @@ const Login = () => {
           />
         </View>
 
-        <Text style={styles.sectionText}>비밀번호</Text>
+        <CustomText style={styles.sectionText}>비밀번호</CustomText>
         <View style={{...styles.inputContainer, marginBottom: 15}}>
-          <TextInput
+          <CustomTextInput
             value={password}
             onChangeText={text => setPassword(text)}
             secureTextEntry={!showPassword}
@@ -81,7 +81,7 @@ const Login = () => {
 
         <View style={styles.findBtnContainer}>
           <TouchableOpacity onPress={handleFindPW} style={styles.findBtn}>
-            <Text style={{fontSize: 13, color: '#525252'}}>비밀번호가 기억나지 않아요</Text>
+            <CustomText style={{fontSize: 13, color: '#525252'}}>비밀번호가 기억나지 않아요</CustomText>
           </TouchableOpacity>
         </View>
 
@@ -94,7 +94,7 @@ const Login = () => {
             pointerEvents: isValid ? 'auto' : 'none',
           }}
         >
-          <Text style={styles.btnText}>로그인</Text>
+          <CustomText style={styles.btnText}>로그인</CustomText>
         </TouchableOpacity>
 
       </View>

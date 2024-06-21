@@ -59,6 +59,7 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
   const [isFront, setIsFront] = useState(true);
   const [dropdownVisible, setDropdownVisible] = useState(false); //
   const [modalVisible, setModalVisible] = useState(false); //
+  const [makeCardVisible, setMakeCardVisible] = useState(false); //
   const animation = useRef(new Animated.Value(0)).current;
 
 
@@ -112,6 +113,8 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
     }
   };
 
+  
+
   const handleInfoEdit = async() => {
     const editInfo = {
       ticketId : ticketId
@@ -141,6 +144,7 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
       ticketId : ticketId
     }
     try {
+      setMakeCardVisible(false);
       const response = await getTicketDetails(editReview);
       if (response !== null) {
         setDropdownVisible(false);
@@ -222,7 +226,7 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
                     </View>
                     <View style={styles.buttonContainer}>
                       <TouchableOpacity 
-                        onPress={reviewId !== 0 ? handleReviewClick : null} 
+                        onPress={reviewId !== 0 ? handleReviewClick : () => setMakeCardVisible(true)} 
                         style={[styles.reviewButton, { opacity: !isFront ? 1 : 0 }]}
                         activeOpacity={reviewId !== 0 ? 0.2 : 1} // 터치 가능한 경우 activeOpacity 적용
                         disabled={isFront} // isFront이 true일 때 버튼 비활성화
@@ -270,12 +274,33 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
           >
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
               <View style={{ backgroundColor: 'white', width: 280, padding: 18, borderRadius: 10 }}>
-                <CustomText style={{color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center'}}>선택한 티켓을 삭제합니다.</CustomText>
+                <CustomText style={{color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center', marginTop: 2}}>선택한 티켓을 삭제합니다.</CustomText>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
                   <TouchableOpacity onPress={() => setModalVisible(false)} style={{ backgroundColor: '#E8ECEF', width: 100, padding: 10, borderRadius: 5 }}>
                     <CustomText style={{ color: '#000', fontWeight: 'bold', textAlign : 'center'}}>취소</CustomText>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={handleIconDelete} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5 }}>
+                    <CustomText style={{ color: 'white', fontWeight: 'bold', textAlign : 'center'}}>확인</CustomText>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+
+          <Modal  
+            // animationType="slide"
+            transparent={true}
+            visible={makeCardVisible}
+            onRequestClose={() => setMakeCardVisible(false)}
+          >
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+              <View style={{ backgroundColor: 'white', width: 260, padding: 18, borderRadius: 10 }}>
+                <CustomText style={{color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center', lineHeight: 24}}> 등록된 리뷰나 사진이 없습니다. {'\n'} 지금 등록하시겠어요? </CustomText>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
+                  <TouchableOpacity onPress={() => setMakeCardVisible(false)} style={{ backgroundColor: '#E8ECEF', width: 100, padding: 10, borderRadius: 5 }}>
+                    <CustomText style={{ color: '#000', fontWeight: 'bold', textAlign : 'center'}}>취소</CustomText>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleReviewEdit} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5 }}>
                     <CustomText style={{ color: 'white', fontWeight: 'bold', textAlign : 'center'}}>확인</CustomText>
                   </TouchableOpacity>
                 </View>

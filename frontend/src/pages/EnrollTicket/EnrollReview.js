@@ -37,6 +37,8 @@ const EnrollReview = ({navigation, route}) => {
   const [selectedImages, setSelectedImages] = useState([]);
   // const [spoilerChecked, setSpoilerChecked] = useState(false);
   // const [privateChecked, setPrivateChecked] = useState(false);
+  const [saveProcessing, setSaveProcessing] = useState(false);
+  const [imageProcessing, setImageProcessing] = useState(false);
 
   const [inputHeight, setInputHeight] = useState(0);
   const maxHeight = 200; // 최대 높이 설정
@@ -67,6 +69,11 @@ const EnrollReview = ({navigation, route}) => {
   };
 
   const handleNext = async () => {
+
+    if (saveProcessing) {
+      return;
+    }
+
     const reviewDetails = {
       // isPublic: !privateChecked,
       // isSpoiler: spoilerChecked,
@@ -87,30 +94,44 @@ const EnrollReview = ({navigation, route}) => {
     };
 
     try {
+      setSaveProcessing(true);
       console.log("티켓 등록 요청", requestData);
       const savedTicket = await saveNewTicket(requestData);
       console.log('Saved ticket:', savedTicket);
       navigation.navigate('EnrollFinish');
     } catch (error) {
       console.error('Error saving review:', error);
+    } finally {
+      setSaveProcessing(false);
     }
   };
 
   const handleImagePicker = async () => {
+
+    if (imageProcessing) {
+      return;
+    }
+
     if (selectedImages.length >= 1) {
       alert('이미지는 1개 등록할 수 있습니다.');
       return; 
     }
     try {
+      setImageProcessing(true);
+
       const image = await ImagePicker.openPicker({
         cropping: true,
         mediaType: 'photo',
+        width: 1000,
+        height: 1000
       });
 
       const uploadedImagePath = await uploadImage(image.path);
       setSelectedImages(prevImages => [...prevImages, uploadedImagePath]);
     } catch (error) {
       console.log('ImagePicker Error: ', error);
+    } finally {
+      setImageProcessing(false);
     }
   };
 
@@ -200,7 +221,7 @@ const EnrollReview = ({navigation, route}) => {
         </View>
 
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 20}} >
-          <NextButton isDisabled={artRating === 0 || seatRating === 0 || !sliderTouched} onPress={handleNext} />
+          <NextButton isDisabled={saveProcessing || imageProcessing || artRating === 0 || seatRating === 0 || !sliderTouched} onPress={handleNext} />
         </View>
       </KeyboardAwareScrollView>  
     </>

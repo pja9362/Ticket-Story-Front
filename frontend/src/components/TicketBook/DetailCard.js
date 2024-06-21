@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView} from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Modal} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import Swiper from 'react-native-swiper';
@@ -10,6 +10,7 @@ import iconLogo from '../../images/logo_black.png';
 import iconShare from '../../images/icon_share.png';
 import iconSave from '../../images/icon_save.png';
 import logo from '../../images/logo_white.png';
+import darklogo from '../../images/logo_dark.png';
 import defaultReviewImage from '../../images/default_reviewImage.png';
 import {CustomText} from '../CustomText';
 
@@ -18,8 +19,14 @@ const DetailCard = ({ ticket, ticketId }) => {
     const viewRef = useRef();
     const navigation = useNavigation();
 
-    const overlayState = useSelector((state) => state.overlay[ticketId]) || { hideImageInfo: false, hideImageTitle: false, hideReviewInfo: false, hideReviewTitle: false };
-    const { hideImageInfo, hideImageTitle, hideReviewInfo, hideReviewTitle } = overlayState;
+    const overlayState = useSelector((state) => state.overlay[ticketId]) || { hideImageInfo: false, hideImageTitle: false, hideReviewInfo: false, hideReviewTitle: false, darkText: false };
+    const { hideImageInfo, hideImageTitle, hideReviewInfo, hideReviewTitle, darkText } = overlayState;
+
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const closeModal = () => {
+        setModalVisible(false);
+    };
 
     const handleShareBtnPress = () => {
         handleShareBtn(viewRef);
@@ -29,7 +36,7 @@ const DetailCard = ({ ticket, ticketId }) => {
         try {
             const response = await handleSaveBtn(viewRef);
             console.log(response);
-            
+            setModalVisible(true);
         } catch (error) {
         console.error('Error Saving ticket?:', error.response);
         }
@@ -78,20 +85,24 @@ const DetailCard = ({ ticket, ticketId }) => {
                             <TouchableOpacity style={styles.slide} onPress={()=>handleImagePress()}>
                                 <>
                                     <Image source={ticket.reviewImages !== null ? {uri: ticket.reviewImages[0]} : defaultReviewImage} style={styles.image} />
-                                    <Image source={logo} style={styles.logo}/>
+                                    {darkText ? (
+                                        <Image source={darklogo} style={styles.logo} />
+                                    ) : (
+                                        <Image source={logo} style={styles.logo} />
+                                    )}
                                     {/* Overlay Text */}
                                     <View style={styles.overlay}>
                                         {(!hideImageTitle && !hideImageInfo) && (
-                                        <CustomText style={{...styles.overlayText, fontSize: 20}}>{ticket.title}</CustomText>
+                                        <CustomText style={{ ...styles.overlayText, fontSize: 20, color: darkText ? '#525252' : '#fff'  }}>{ticket.title}</CustomText>
                                         )}
                                         {!hideImageInfo && (
                                         <>
-                                            <CustomText style={styles.overlayGuideText}>Date</CustomText>
-                                            <CustomText style={styles.overlayText}>{ticket.date}</CustomText>
-                                            <CustomText style={styles.overlayGuideText}>Time</CustomText>
-                                            <CustomText style={styles.overlayText}>{ticket.time}</CustomText>
-                                            <CustomText style={styles.overlayGuideText}>Place</CustomText>
-                                            <CustomText style={styles.overlayText}>{ticket.location}</CustomText>
+                                            <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Date</CustomText>
+                                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]}>{ticket.date}</CustomText>
+                                            <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Time</CustomText>
+                                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]}>{ticket.time}</CustomText>
+                                            <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Place</CustomText>
+                                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]}>{ticket.location}</CustomText>
                                         </>
                                         )}
                                     </View>
@@ -137,6 +148,31 @@ const DetailCard = ({ ticket, ticketId }) => {
                 </TouchableOpacity>
             </View>
 
+            {/* {modalVisible && (
+            <SaveCardImage
+                closeModal={closeModal}
+            />
+            )} */}
+
+            {modalVisible && (
+                <Modal  
+                transparent={true}
+                visible={true}
+                onRequestClose={closeModal}
+                >
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+                      <View style={{ backgroundColor: 'white', height: 120, width: 280, padding: 18, borderRadius: 10 }}>
+                        <CustomText style={{color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center', top: 5}}>스토리카드가 앨범에 저장됐어요</CustomText>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
+                          <TouchableOpacity onPress={closeModal} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5, marginTop: 5}}>
+                            <CustomText style={{ color: 'white', fontWeight: 'bold', textAlign : 'center'}}>확인</CustomText>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </View>
+                </Modal>
+            )}
+
         </View>
     );
 }
@@ -158,8 +194,8 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         resizeMode: 'cover',
-        borderTopLeftRadius: 5,
-        borderTopRightRadius: 5,
+        // borderTopLeftRadius: 5,
+        // borderTopRightRadius: 5,
     },
     dot: {
         backgroundColor: '#fff',

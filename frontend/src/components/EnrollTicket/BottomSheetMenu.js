@@ -4,7 +4,7 @@ import {CustomText} from '../CustomText';
 
 const BottomSheetMenu = ({closeBottomSheet, onClick}) => {
   return (
-    <Modal transparent={true} visible={true} onRequestClose={closeBottomSheet}>
+    <Modal transparent={true} visible={true} onRequestClose={closeBottomSheet} animationType='slide'>
       <TouchableOpacity
         style={{flex: 1, justifyContent: 'flex-end'}}
         onPress={closeBottomSheet}>
@@ -13,7 +13,7 @@ const BottomSheetMenu = ({closeBottomSheet, onClick}) => {
             flex: 1,
             justifyContent: 'flex-end',
             alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            // backgroundColor: 'rgba(0, 0, 0, 0.3)'
           }}>
           <View style={styles.contentContainer}>
             <TouchableOpacity

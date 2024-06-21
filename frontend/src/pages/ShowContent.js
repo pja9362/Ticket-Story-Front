@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, Image, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, Image, TouchableOpacity, View, Modal } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { setHideReviewInfo, setHideReviewTitle } from '../reducers/overlaySlice';
 import { handleShareBtn, handleSaveBtn } from '../utils/shareAndSaveUtils';
@@ -20,12 +20,24 @@ const ShowContent = ({ route }) => {
     const overlayState = useSelector((state) => state.overlay[ticketId]) || { hideReviewInfo: false, hideReviewTitle: false };
     const { hideReviewInfo, hideReviewTitle } = overlayState;
 
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const closeModal = () => {
+        setModalVisible(false);
+    };
+
     const handleShareBtnPress = () => {
         handleShareBtn(viewRef);
     }
 
-    const handleSaveBtnPress = () => {
-        handleSaveBtn(viewRef);
+    const handleSaveBtnPress = async() => {
+        try {
+            const response = await handleSaveBtn(viewRef);
+            console.log(response);
+            setModalVisible(true);
+        } catch (error) {
+        console.error('Error Saving ticket?:', error.response);
+        }
     }
     
     const handleEditContent = () => {
@@ -95,6 +107,25 @@ const ShowContent = ({ route }) => {
                     <Image source={iconSave} style={{width: 45, height: 45}} />
                 </TouchableOpacity>
             </View>
+
+            {modalVisible && (
+                <Modal  
+                transparent={true}
+                visible={true}
+                onRequestClose={closeModal}
+                >
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+                      <View style={{ backgroundColor: 'white', height: 120, width: 280, padding: 18, borderRadius: 10 }}>
+                        <CustomText style={{color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center', top: 5}}>리뷰카드가 앨범에 저장됐어요</CustomText>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
+                          <TouchableOpacity onPress={closeModal} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5, marginTop: 5}}>
+                            <CustomText style={{ color: 'white', fontWeight: 'bold', textAlign : 'center'}}>확인</CustomText>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </View>
+                </Modal>
+            )}
         </SafeAreaView>
     )
 }
@@ -159,6 +190,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         padding: 15,
         textAlign: 'center',
+        fontWeight: '500',
     },
     titleContainer: {
         flexDirection: 'row',
@@ -193,8 +225,8 @@ const styles = StyleSheet.create({
         margin: 20,
         padding: 20,
         backgroundColor: '#fff',
-        borderBottomLeftRadius: 5,
-        borderBottomRightRadius: 5,
+        // borderBottomLeftRadius: 5,
+        // borderBottomRightRadius: 5,
     },
 });
 

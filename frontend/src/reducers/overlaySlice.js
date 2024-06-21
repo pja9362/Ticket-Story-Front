@@ -36,24 +36,18 @@ const overlaySlice = createSlice({
       state[ticketId].hideReviewTitle = hideReviewTitle;
       console.log("!!!!!!!!TICKET NUMBER:", ticketId, 'state:', state);
     },
-
-
-
-
-
-
-    // setDarkText(state,action) {
-    //   const { ticketId, darkText } = action.payload;
-    //   if (!state[ticketId]) {
-    //     state[ticketId] = { darkText: false };
-    //   } 
-    //   state[ticketId].darkText = darkText;
-    //   console.log("!!!!!!!!TICKET NUMBER:", ticketId, 'state:', state);
-    // }
+    setDarkText(state,action) {
+      const { ticketId, darkText } = action.payload;
+      if (!state[ticketId]) {
+        state[ticketId] = { darkText: false };
+      } 
+      state[ticketId].darkText = darkText;
+      console.log("!!!!!!!!TICKET NUMBER:", ticketId, 'state:', state);
+    }
   },
 });
 
-export const { setHideImageInfo, setHideImageTitle, setHideReviewInfo, setHideReviewTitle } = overlaySlice.actions;
+export const { setHideImageInfo, setHideImageTitle, setHideReviewInfo, setHideReviewTitle, setDarkText} = overlaySlice.actions;
 
 export default overlaySlice.reducer;
 

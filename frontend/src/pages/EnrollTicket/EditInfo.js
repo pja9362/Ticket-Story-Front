@@ -151,7 +151,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     };
 
     const requestData = {
-      ticket,
+      ...ticket,
       reviewDetails,
       ratingDetails
     }
@@ -227,7 +227,18 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   useEffect(() => {
     const reversedCategory = getReverseMappedCategory(ticketData.category);
     setCategory(reversedCategory);
+    
+    setDate(new Date(date).toISOString().split('T')[0].replace(/-/g, '.'));
   }, []);
+
+  // useEffect(() => {
+  //   console.log('나는 귀여운 이노',date);
+  //   const handleConfirmDate = async () => {
+  //     const formattedDate = await date.toISOString().split('T')[0].replace(/-/g, '.');
+  //     console.log('나는 귀여운 이노2',formattedDate);
+  //     setDate(formattedDate);
+  //   };
+  // }, [date]);
 
   useEffect(() => {
     if (title.trim() !== '' && isContentVisible && isContentSelected === false) {

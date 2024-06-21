@@ -40,6 +40,9 @@ const EditReview = ({navigation, route}) => {
   const [privateChecked, setPrivateChecked] = useState(false);
   const [seats, setSeats] = useState(ticketData.contentsDetails.seats);
 
+  const [saveProcessing, setSaveProcessing] = useState(false);
+  const [imageProcessing, setImageProcessing] = useState(false);
+
   //
   const [inputHeight, setInputHeight] = useState(0);
   const maxHeight = 200; // 최대 높이 설정
@@ -71,6 +74,10 @@ const EditReview = ({navigation, route}) => {
 
   const handleNext = async () => {
 
+    if (saveProcessing) {
+      return;
+    }
+
     const ticket = {
       registerBy: ticketData.registerBy,
       category: ticketData.category,
@@ -79,8 +86,6 @@ const EditReview = ({navigation, route}) => {
       ticketImg: ticketData.ticketImg,
       contentsDetails: ticketData.contentsDetails
     }
-
-    console.log('1', ticket);
 
     const reviewDetails = {
       isPublic: !privateChecked,
@@ -101,33 +106,46 @@ const EditReview = ({navigation, route}) => {
         reviewDetails
     };
 
-    console.log('2', JSON.stringify(requestData, null, 2));
-
     try {
+      setSaveProcessing(true);
       console.log("티켓 등록 요청", requestData);
       const updatedReview = await updateReview(reviewId, requestData);
       console.log('Updated Review:', updatedReview);
       navigation.navigate('EnrollFinish');
     } catch (error) {
       console.error('Error saving review:', error);
+    } finally {
+      setSaveProcessing(false);
     }
   };
 
   const handleImagePicker = async () => {
+
+    if (imageProcessing) {
+      return;
+    }
+
     if (selectedImages.length >= 1) {
       alert('이미지는 1개 등록할 수 있습니다.');
       return; 
     }
+
     try {
+      setImageProcessing(true);
+
       const image = await ImagePicker.openPicker({
         cropping: true,
         mediaType: 'photo',
+        width: 1000,
+        height: 1000
       });
 
       const uploadedImagePath = await uploadImage(image.path);
       setSelectedImages(prevImages => [...prevImages, uploadedImagePath]);
     } catch (error) {
       console.log('ImagePicker Error: ', error);
+    } finally {
+      setImageProcessing(false);
     }
   };
 
@@ -209,7 +227,7 @@ const EditReview = ({navigation, route}) => {
         </View>
 
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 20}} >
-          <NextButton  isDisabled={(artRating === 0 || seatRating === 0) && sliderTouched} onPress={handleNext} />
+          <NextButton  isDisabled={(saveProcessing || imageProcessing || artRating === 0 || seatRating === 0) && sliderTouched} onPress={handleNext} />
         </View>
       </KeyboardAwareScrollView>
     </>

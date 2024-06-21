@@ -81,11 +81,11 @@ const My = () => {
               collapsable={false}
               ref={viewRef}
             >
-              <View style={{ alignItems: 'center' }}>
+              {/* <View style={{ alignItems: 'center' }}>
                 <CustomText style={{...styles.mainText, marginTop: 30}}>
                   <CustomText style={{ color: '#5D70F9' }}>아이디</CustomText>님의 티켓스토리
                 </CustomText>
-              </View>
+              </View> */}
               <View style={styles.mainContent}>
                 {/* 관람한 콘텐츠 */}
                 <View style={{ marginTop: 25, paddingBottom: 32, borderBottomColor: '#0000001A', borderBottomWidth: 1 }}>

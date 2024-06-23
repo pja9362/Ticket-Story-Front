@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Image, StyleSheet, Text } from 'react-native';
+import {CustomText} from './CustomText';
 
 import loadingIcon1 from '../images/icon_loading1.png';
 import loadingIcon2 from '../images/icon_loading2.png';
@@ -19,8 +20,8 @@ const LoadingScreen = ({ iconId, showText = true }) => {
             {
                 showText && (
                 <View style={{height: 120}}>
-                    <Text style={styles.mainText} >열심히 티켓을 읽는 중이에요.</Text>
-                    <Text style={styles.subText}>인터넷 연결 상태에 따라 10초 이상 소요될 수 있어요.</Text>
+                    <CustomText style={styles.mainText} fontWeight="bold">열심히 티켓을 읽는 중이에요.</CustomText>
+                    <CustomText style={styles.subText}>인터넷 연결 상태에 따라 10초 이상 소요될 수 있어요.</CustomText>
                 </View>
                 )
             }
@@ -41,7 +42,6 @@ const styles = StyleSheet.create({
     },
     mainText: {
         fontSize: 16,
-        fontWeight: 'bold',
         marginTop: 12,
         lineHeight: 40,
         color: '#525252',

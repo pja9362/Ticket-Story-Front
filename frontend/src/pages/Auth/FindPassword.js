@@ -79,7 +79,7 @@ const FindPassword = () => {
       <View style={{paddingHorizontal: 18}}>
 
         <View style={styles.formContainer}>
-          <CustomText style={styles.sectionText}>아이디</CustomText>
+          <CustomText style={styles.sectionText} fontWeight="bold">아이디</CustomText>
           <View style={styles.inputContainer}>
             <CustomTextInput
               value={id}
@@ -105,7 +105,7 @@ const FindPassword = () => {
           {
             isEmailSent ? 
             <View style={styles.formContainer}>
-              <CustomText style={styles.sectionText}>인증번호</CustomText>
+              <CustomText style={styles.sectionText} fontWeight="bold">인증번호</CustomText>
               <View style={styles.inputContainer}>
                 <CustomTextInput
                   value={validationNumber}
@@ -149,7 +149,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 12,
     color: '#525252',
-    fontWeight: 'bold',
   },
   formContainer: {
     paddingVertical: 10,

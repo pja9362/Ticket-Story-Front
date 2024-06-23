@@ -53,7 +53,7 @@ const SelectType = ({onClick}) => {
     if (category === '영화') {
       return (
         <>
-          <CustomText style={[styles.sectionText, {marginTop: 30}]}>
+          <CustomText style={[styles.sectionText, {marginTop: 30}]} fontWeight="bold">
             관람한 멀티플렉스를 선택해 주세요.
           </CustomText>
           <View style={styles.row}>
@@ -63,7 +63,7 @@ const SelectType = ({onClick}) => {
                 categoryDetail === 'CGV' && styles.category,
               ]}
               onPress={() => handleCategoryDetailClick('CGV')}>
-              <CustomText style={styles.categoryText}>CGV</CustomText>
+              <CustomText style={styles.categoryText} fontWeight="bold">CGV</CustomText>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
@@ -71,7 +71,7 @@ const SelectType = ({onClick}) => {
                 categoryDetail === '메가박스' && styles.category,
               ]}
               onPress={() => handleCategoryDetailClick('메가박스')}>
-              <CustomText style={styles.categoryText}>메가박스</CustomText>
+              <CustomText style={styles.categoryText} fontWeight="bold">메가박스</CustomText>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
@@ -79,7 +79,7 @@ const SelectType = ({onClick}) => {
                 categoryDetail === '롯데시네마' && styles.category,
               ]}
               onPress={() => handleCategoryDetailClick('롯데시네마')}>
-              <CustomText style={styles.categoryText}>롯데시네마</CustomText>
+              <CustomText style={styles.categoryText} fontWeight="bold">롯데시네마</CustomText>
             </TouchableOpacity>
           </View>
         </>
@@ -87,7 +87,7 @@ const SelectType = ({onClick}) => {
     } else if (category === '스포츠') {
       return (
         <>
-          <CustomText style={[styles.sectionText, {marginTop: 30}]}>
+          <CustomText style={[styles.sectionText, {marginTop: 30}]} fontWeight="bold">
             관람한 스포츠 종목을 선택해 주세요.
           </CustomText>
           <View style={styles.row}>
@@ -97,7 +97,7 @@ const SelectType = ({onClick}) => {
                 categoryDetail === '야구' && styles.selectedCategory,
               ]}
               onPress={() => handleCategoryDetailClick('야구')}>
-              <CustomText style={styles.categoryText}>야구</CustomText>
+              <CustomText style={styles.categoryText} fontWeight="bold">야구</CustomText>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
@@ -105,7 +105,7 @@ const SelectType = ({onClick}) => {
                 categoryDetail === '축구' && styles.selectedCategory,
               ]}
               onPress={() => handleCategoryDetailClick('축구')}>
-              <CustomText style={styles.categoryText}>축구</CustomText>
+              <CustomText style={styles.categoryText} fontWeight="bold">축구</CustomText>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
@@ -113,7 +113,7 @@ const SelectType = ({onClick}) => {
                 categoryDetail === '기타' && styles.selectedCategory,
               ]}
               onPress={() => handleCategoryDetailClick('기타')}>
-              <CustomText style={styles.categoryText}>기타</CustomText>
+              <CustomText style={styles.categoryText} fontWeight="bold">기타</CustomText>
             </TouchableOpacity>
           </View>
         </>
@@ -121,7 +121,7 @@ const SelectType = ({onClick}) => {
     } else if (category === '공연') {
       return (
         <>
-          <CustomText style={[styles.sectionText, {marginTop: 30}]}>
+          <CustomText style={[styles.sectionText, {marginTop: 30}]} fontWeight="bold">
             관람한 공연 종류를 선택해 주세요.
           </CustomText>
           <View style={styles.row}>
@@ -131,7 +131,7 @@ const SelectType = ({onClick}) => {
                 categoryDetail === '뮤지컬' && styles.selectedCategory,
               ]}
               onPress={() => handleCategoryDetailClick('뮤지컬')}>
-              <CustomText style={styles.categoryText}>뮤지컬</CustomText>
+              <CustomText style={styles.categoryText} fontWeight="bold">뮤지컬</CustomText>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
@@ -139,7 +139,7 @@ const SelectType = ({onClick}) => {
                 categoryDetail === '연극' && styles.selectedCategory,
               ]}
               onPress={() => handleCategoryDetailClick('연극')}>
-              <CustomText style={styles.categoryText}>연극</CustomText>
+              <CustomText style={styles.categoryText} fontWeight="bold">연극</CustomText>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
@@ -147,7 +147,7 @@ const SelectType = ({onClick}) => {
                 categoryDetail === '기타' && styles.selectedCategory,
               ]}
               onPress={() => handleCategoryDetailClick('기타')}>
-              <CustomText style={styles.categoryText}>기타</CustomText>
+              <CustomText style={styles.categoryText} fontWeight="bold">기타</CustomText>
             </TouchableOpacity>
           </View>
         </>
@@ -159,24 +159,24 @@ const SelectType = ({onClick}) => {
 
   return (
     <View style={styles.container}>
-      <CustomText style={styles.sectionText}>
+      <CustomText style={styles.sectionText} fontWeight="bold">
         관람한 콘텐츠의 분야를 선택해 주세요.
       </CustomText>
       <View style={styles.row}>
         <TouchableOpacity
           style={[styles.categoryBox, category === '영화' && styles.category]}
           onPress={() => handleCategoryClick('영화')}>
-          <CustomText style={styles.categoryText}>영화</CustomText>
+          <CustomText style={styles.categoryText} fontWeight="bold">영화</CustomText>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.categoryBox, category === '공연' && styles.category]}
           onPress={() => handleCategoryClick('공연')}>
-          <CustomText style={styles.categoryText}>공연</CustomText>
+          <CustomText style={styles.categoryText} fontWeight="bold">공연</CustomText>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.categoryBox, category === '스포츠' && styles.category]}
           onPress={() => handleCategoryClick('스포츠')}>
-          <CustomText style={styles.categoryText}>스포츠</CustomText>
+          <CustomText style={styles.categoryText} fontWeight="bold">스포츠</CustomText>
         </TouchableOpacity>
       </View>
       {renderSubCategories()}
@@ -193,7 +193,6 @@ const styles = StyleSheet.create({
   },
   sectionText: {
     fontSize: 16,
-    fontWeight: 'bold',
     color: '#000',
     marginBottom: 20,
   },
@@ -211,7 +210,6 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontSize: 16,
-    fontWeight: 'bold',
     color: '#fff',
   },
   category: {

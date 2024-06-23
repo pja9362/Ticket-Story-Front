@@ -171,7 +171,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
         <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
           <View style={styles.container}>
             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', gap: 5}}>
-              <CustomText style={{ fontSize: 16, fontWeight: 'bold', color: '#000' }}>
+              <CustomText style={{ fontSize: 16, color: '#000' }} fontWeight="bold">
                 작품 정보를 입력해주세요.
               </CustomText>
               <CustomText style={{ fontSize: 12, color: '#939393' }}>
@@ -271,7 +271,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                                     )}
                                   </View>
                                   <View style={styles.contentDetails}>
-                                    <CustomText style={styles.title}>{content.title}</CustomText>
+                                    <CustomText fontWeight="bold">{content.title}</CustomText>
                                     <CustomText>{content.detail.join(', ')}</CustomText>
                                   </View>
                                 </TouchableOpacity>
@@ -284,7 +284,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                                 style={styles.dropdownItemTouchable}
                               >
                                 <View style={styles.contentDetails}>
-                                  <CustomText style={styles.textDetails}> 콘텐츠 선택하지 않고 입력하기 </CustomText>
+                                  <CustomText style={styles.textDetails} fontWeight="bold"> 콘텐츠 선택하지 않고 입력하기 </CustomText>
                                 </View>
                               </TouchableOpacity>
                             </View>
@@ -309,9 +309,10 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                       }
                       {category === 'MOVIE' ? (
                         <CustomTextInput
-                          style={[styles.inputBox, { fontWeight: 'bold', color: '#525252', textAlign: 'center', paddingHorizontal: 15, marginRight: 15}]}
+                          style={[styles.inputBox, { color: '#525252', textAlign: 'center', paddingHorizontal: 15, marginRight: 15}]}
                           value={categoryDetail}
                           editable={false}
+                          fontWeight="bold"
                         />
                       ) : null}
                       <CustomTextInput
@@ -340,7 +341,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                                   style={styles.dropdownItemTouchable}
                                 >
                                   <View style={styles.locationDetails}>
-                                    <CustomText style={{...styles.title, flex: 1 }}>{location.name}</CustomText>
+                                    <CustomText style={{ flex: 1 }} fontWeight="bold">{location.name}</CustomText>
                                     <CustomText style={styles.subText}>{location.address}</CustomText>
                                   </View>
                                 </TouchableOpacity>
@@ -352,7 +353,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                                 style={styles.dropdownItemTouchable}
                               >
                                 <View style={styles.contentDetails}>
-                                  <CustomText style={styles.textDetails}> 장소 선택하지 않고 입력하기 </CustomText>
+                                  <CustomText style={styles.textDetails} fontWeight="bold"> 장소 선택하지 않고 입력하기 </CustomText>
                                 </View>
                               </TouchableOpacity>
                             </View>
@@ -492,9 +493,6 @@ const styles = StyleSheet.create({
     gap: 8,
     alignItems: 'center',
   },
-  title: {
-    fontWeight: 'bold',
-  },
   checkIcon: {
     width: 12,
     height: 12,
@@ -507,7 +505,6 @@ const styles = StyleSheet.create({
   textDetails: {
     textAlign: 'center',
     fontSize: 15,
-    fontWeight: 'bold',
     color: '#9A9A9A',
   },
 });

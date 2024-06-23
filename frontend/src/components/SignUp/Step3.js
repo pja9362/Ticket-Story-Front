@@ -87,7 +87,7 @@ const Step3 = ({nextStep, handleChange, values}) => {
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
 
     <View style={styles.formContainer}>
-        <CustomText style={styles.sectionText}>성별</CustomText>
+        <CustomText style={styles.sectionText} fontWeight="bold">성별</CustomText>
         <View style={styles.genderContainer}>
           {genderOptions.map(option => (
             <GenderButton
@@ -104,7 +104,7 @@ const Step3 = ({nextStep, handleChange, values}) => {
       </View>
 
       <View style={styles.formContainer}>
-        <CustomText style={styles.sectionText}>생년월일</CustomText>
+        <CustomText style={styles.sectionText} fontWeight="bold">생년월일</CustomText>
         <View style={styles.dateContainer}>
           <View style={styles.dateItem}>
             <CustomTextInput
@@ -144,7 +144,7 @@ const Step3 = ({nextStep, handleChange, values}) => {
         </View>
       </View>
 
-      <CustomText style={[styles.sectionText, { marginBottom: 0 }]}>약관 동의</CustomText>
+      <CustomText style={[styles.sectionText, { marginBottom: 0 }]} fontWeight="bold">약관 동의</CustomText>
       <Agreement updateAgreementStatus={updateAgreementStatus} />
 
       <NextButton isLast={true} isValid={isValid} onClick={handleSignUp}/>
@@ -161,7 +161,6 @@ const styles = StyleSheet.create({
   },
   sectionText: {
     fontSize: 16,
-    fontWeight: 'bold',
     marginBottom: 12,
     color: '#000',
   },

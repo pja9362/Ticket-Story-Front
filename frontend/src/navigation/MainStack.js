@@ -86,10 +86,9 @@ const MainStack = ({navigation}) => {
           },
           tabBarLabelStyle: {
             fontSize: 12,
-            fontWeight: 'bold',
             color: route.name == 'Main' ? '#fff' : '#525252',
             paddingBottom: 10,
-            fontFamily: 'Pretendard'
+            fontFamily: 'Pretendard-Bold'
           },
           tabBarIcon: ({ focused }) => (
             <CustomTabIcon focused={focused} />

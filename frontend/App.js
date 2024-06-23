@@ -29,6 +29,7 @@ import TicketlinkWebView from './src/pages/Scrape/TicketlinkWebView';
 import TicketDetail from './src/pages/TicketBook/TicketDetail';
 import EditInfo from './src/pages/EnrollTicket/EditInfo';
 import EditReview from './src/pages/EnrollTicket/EditReview';
+import EditFinish from './src/pages/EnrollTicket/EditFinish';
 
 // dummy
 import ShowImageScreen from './src/pages/ShowImage';
@@ -55,7 +56,7 @@ const App = () => {
   }, []);
 
   const screenOptions = {
-    headerShown: false,
+    headerShown: false
   };
 
   const customTheme = {
@@ -99,6 +100,7 @@ const App = () => {
                 <Stack.Screen name="TicketDetail" component={TicketDetail} />
                 <Stack.Screen name="EditInfo" component={EditInfo} />
                 <Stack.Screen name="EditReview" component={EditReview} />
+                <Stack.Screen name="EditFinish" component={EditFinish} />
                 {/* Ticket Link */}
                 <Stack.Screen name="OAuthWebView" component={OAuthWebView} />
                 <Stack.Screen name="TicketlinkWebView" component={TicketlinkWebView} />

@@ -211,7 +211,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
       <EnrollHeader title="티켓 정보 입력" onIconClick={handleNext}/>
         <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
           <View style={{...styles.container, paddingBottom: 0}}>
-            <CustomText style={styles.sectionText}>
+            <CustomText style={styles.sectionText} fontWeight="bold">
               관람한 콘텐츠의 분야를 선택해 주세요.
             </CustomText>
             {/* Category */}
@@ -225,7 +225,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
             {
               detailCategories[category] && (
                 <>
-                  <CustomText style={styles.sectionText}>관람한 {category == '공연' ? '공연 종류를' : '스포츠 종목을'} 선택해 주세요.</CustomText>
+                  <CustomText style={styles.sectionText} fontWeight="bold">관람한 {category == '공연' ? '공연 종류를' : '스포츠 종목을'} 선택해 주세요.</CustomText>
                   <CategoryBtnContainer
                     categories={detailCategories[category]}
                     selectedCategory={categoryDetail}
@@ -240,7 +240,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
               isContentVisible &&
               <>
                 <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', gap: 5}}>
-                  <CustomText style={styles.sectionText}>
+                  <CustomText style={styles.sectionText} fontWeight="bold">
                     입력된 정보를 확인해주세요.
                   </CustomText>
                   <CustomText style={{ fontSize: 12, color: '#939393' }}>
@@ -338,7 +338,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                                 )}
                               </View>
                               <View style={styles.contentDetails}>
-                                <CustomText style={styles.title}>{content.title}</CustomText>
+                                <CustomText fontWeight="bold">{content.title}</CustomText>
                                 <CustomText>{content.detail.join(', ')}</CustomText>
                               </View>
                             </TouchableOpacity>
@@ -350,7 +350,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                             style={styles.dropdownItemTouchable}
                           >
                             <View style={styles.contentDetails}>
-                              <CustomText style={styles.textDetails}> 콘텐츠 선택하지 않고 입력하기 </CustomText>
+                              <CustomText style={styles.textDetails} fontWeight="bold"> 콘텐츠 선택하지 않고 입력하기 </CustomText>
                             </View>
                           </TouchableOpacity>
                         </View>
@@ -388,7 +388,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                               style={styles.dropdownItemTouchable}
                             >
                               <View style={styles.locationDetails}>
-                                <CustomText style={{...styles.title, flex: 1 }}>{location.name}</CustomText>
+                                <CustomText style={{ flex: 1 }} fontWeight="bold">{location.name}</CustomText>
                                 <CustomText style={styles.subText}>{location.address}</CustomText>
                               </View>
                             </TouchableOpacity>
@@ -400,7 +400,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                             style={styles.dropdownItemTouchable}
                           >
                             <View style={styles.contentDetails}>
-                              <CustomText style={styles.textDetails}> 장소 선택하지 않고 입력하기 </CustomText>
+                              <CustomText style={styles.textDetails} fontWeight="bold"> 장소 선택하지 않고 입력하기 </CustomText>
                             </View>
                           </TouchableOpacity>
                         </View>
@@ -451,7 +451,6 @@ const styles = StyleSheet.create({
     },
     sectionText: {
       fontSize: 16,
-      fontWeight: 'bold',
       color: '#525252',
     },
     subsectionText: {
@@ -515,9 +514,6 @@ const styles = StyleSheet.create({
       gap: 8,
       alignItems: 'center',
     },
-    title: {
-      fontWeight: 'bold',
-    },
     checkIcon: {
       width: 12,
       height: 12,
@@ -540,7 +536,6 @@ const styles = StyleSheet.create({
     textDetails: {
       textAlign: 'center',
       fontSize: 15,
-      fontWeight: 'bold',
       color: '#9A9A9A',
     },
 });

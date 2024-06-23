@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { CustomText } from '../../components/CustomText';
 
 const CategoryBtn = ({ title, onPress, isSelected, isDisabled }) => {
   return (
@@ -11,9 +12,9 @@ const CategoryBtn = ({ title, onPress, isSelected, isDisabled }) => {
       onPress={onPress}
       disabled={isDisabled}
     >
-      <Text style={styles.categoryText}>
+      <CustomText style={styles.categoryText} fontWeight="bold">
         {title}
-      </Text>
+      </CustomText>
     </TouchableOpacity>
   );
 };
@@ -28,7 +29,6 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontSize: 16,
-    fontWeight: 'bold',
     color: '#fff',
   },
 });

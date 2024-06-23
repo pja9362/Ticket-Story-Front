@@ -62,12 +62,6 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 0,
   },
-  titleText: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#000',
-    textAlign: 'center',
-  },
 });
 
 export default SignUp;

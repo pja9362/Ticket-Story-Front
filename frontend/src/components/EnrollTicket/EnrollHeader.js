@@ -16,7 +16,7 @@ const EnrollHeader = ({title = '', onIconClick}) => {
       <TouchableOpacity onPress={onBackClick}>
         <Icon name="chevron-back-sharp" size={20} color="black" />
       </TouchableOpacity>
-      <CustomText style={styles.title}>{title}</CustomText>
+      <CustomText style={styles.title} fontWeight="bold">{title}</CustomText>
       <TouchableOpacity onPress={onIconClick}>
         <Icon name="chevron-forward-sharp" size={20} color="black" />
       </TouchableOpacity>
@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     color: '#000',
-    fontWeight: 'bold',
   },
 });
 

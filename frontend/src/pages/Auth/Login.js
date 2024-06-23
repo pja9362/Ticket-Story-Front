@@ -10,7 +10,7 @@ import Header from '../../components/Header';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { signInRequest } from '../../actions/auth/auth';
 import { useDispatch } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 
 const Login = () => {
@@ -28,7 +28,11 @@ const Login = () => {
       console.log('login result:', result);
       console.log('login response:', response);
       if(result) {
-        navigation.navigate('MainStack');
+        // navigation.navigate('MainStack');
+        navigation.dispatch(CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'MainStack'}]
+        }))
       } else {
         console.log('login error:', response);
       }
@@ -94,7 +98,7 @@ const Login = () => {
             pointerEvents: isValid ? 'auto' : 'none',
           }}
         >
-          <CustomText style={styles.btnText}>로그인</CustomText>
+          <CustomText style={styles.btnText} fontWeight="bold">로그인</CustomText>
         </TouchableOpacity>
 
       </View>
@@ -147,7 +151,6 @@ const styles = StyleSheet.create({
   },
   btnText: {
     color: '#fff',
-    fontWeight: 'bold',
     lineHeight: 20,
   },
   inputContainer: {

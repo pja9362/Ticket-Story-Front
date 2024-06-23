@@ -13,6 +13,7 @@ import logo from '../../images/logo_white.png';
 import darklogo from '../../images/logo_dark.png';
 import defaultReviewImage from '../../images/default_reviewImage.png';
 import {CustomText} from '../CustomText';
+import { getTicketDetails } from '../../actions/ticket/ticket';
 
 const DetailCard = ({ ticket, ticketId }) => {
 
@@ -23,10 +24,8 @@ const DetailCard = ({ ticket, ticketId }) => {
     const { hideImageInfo, hideImageTitle, hideReviewInfo, hideReviewTitle, darkText } = overlayState;
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [reviewVisible, setReviewVisible] = useState(false);
 
-    const closeModal = () => {
-        setModalVisible(false);
-    };
 
     const handleShareBtnPress = () => {
         handleShareBtn(viewRef);
@@ -56,11 +55,38 @@ const DetailCard = ({ ticket, ticketId }) => {
 
     const handleContentPress = () => {
         if (ticket.reviewTitle == '' && ticket.reviewDetails == '') {
-            alert('등록된 리뷰가 없어요. 등록하러 가실래요?');
+            setReviewVisible(true);
         } else {
+            console.log('ticket이 뭐야?', ticket);
+            console.log('ticketId이 뭐야?', ticketId);
             navigation.navigate('ShowContentView', {ticket: ticket, ticketId : ticketId});
         }
     }
+
+    const handleReviewEdit = async() => {
+        const editReview = {
+          ticketId : ticketId
+        }
+        try {
+          setReviewVisible(false);
+          const response = await getTicketDetails(editReview);
+          if (response !== null) {
+            console.log("성공", response);
+            
+            //navigate 하면서 response 값들 보내야함
+            navigation.navigate('EditReview', {
+              ticketId : ticketId,
+              ticketData : response,
+              reviewId : ticket.reviewId
+             });
+    
+          } else {
+            alert('Fail');
+          }
+        } catch (error) {
+          console.error('Error Editing ticket review1:', error.response);
+        }
+      }
 
     useEffect(() => {
         console.log('fdfdfdfadsfafdsd', ticket.reviewTitle !== '' && ticket.reviewDetails !== '');
@@ -93,16 +119,16 @@ const DetailCard = ({ ticket, ticketId }) => {
                                     {/* Overlay Text */}
                                     <View style={styles.overlay}>
                                         {(!hideImageTitle && !hideImageInfo) && (
-                                        <CustomText style={{ ...styles.overlayText, fontSize: 20, color: darkText ? '#525252' : '#fff'  }}>{ticket.title}</CustomText>
+                                        <CustomText style={{ ...styles.overlayText, fontSize: 20, color: darkText ? '#525252' : '#fff'  }} fontWeight="bold">{ticket.title}</CustomText>
                                         )}
                                         {!hideImageInfo && (
                                         <>
                                             <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Date</CustomText>
-                                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]}>{ticket.date}</CustomText>
+                                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="bold">{ticket.date}</CustomText>
                                             <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Time</CustomText>
-                                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]}>{ticket.time}</CustomText>
+                                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="bold">{ticket.time}</CustomText>
                                             <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Place</CustomText>
-                                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]}>{ticket.location}</CustomText>
+                                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="bold">{ticket.location}</CustomText>
                                         </>
                                         )}
                                     </View>
@@ -115,7 +141,7 @@ const DetailCard = ({ ticket, ticketId }) => {
                     <View style={styles.contentContainer}>
                         <View style={styles.titleContainer}>
                             {(!hideReviewTitle && !hideReviewInfo) && (
-                                <CustomText style={{...styles.mainText, flex: 1}}>{ticket.title}</CustomText>
+                                <CustomText style={{...styles.mainText, flex: 1}} fontWeight="bold">{ticket.title}</CustomText>
                             )}
                             <Image source={iconLogo} style={{position: 'absolute', width : 110, height : 42, right : -18, top: -18}} />
                         </View>
@@ -125,13 +151,13 @@ const DetailCard = ({ ticket, ticketId }) => {
                             <>
                              {!hideReviewInfo && (
                                 <View style={{position: 'absolute', top: 50, right: 23, gap : 2}}>
-                                    <CustomText style={styles.subText}>{ticket.date}</CustomText>
-                                    <CustomText style={styles.subText}>{ticket.location}</CustomText>
+                                    <CustomText style={styles.subText} fontWeight="bold">{ticket.date}</CustomText>
+                                    <CustomText style={styles.subText} fontWeight="bold">{ticket.location}</CustomText>
                                 </View>
                              )}
 
                                 <View style={styles.reviewContainer}>
-                                    <CustomText style={{...styles.mainText, color: '#000', fontSize: 16}}> {ticket.reviewTitle}</CustomText>
+                                    <CustomText style={{...styles.mainText, color: '#000', fontSize: 16}} fontWeight="bold"> {ticket.reviewTitle}</CustomText>
                                     <CustomText style={styles.text}>{ticket.reviewDetails}</CustomText>
                                 </View>
                             </>
@@ -158,17 +184,39 @@ const DetailCard = ({ ticket, ticketId }) => {
                 <Modal  
                 transparent={true}
                 visible={true}
-                onRequestClose={closeModal}
+                onRequestClose={()=>setModalVisible(false)}
                 >
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
                       <View style={{ backgroundColor: 'white', height: 120, width: 280, padding: 18, borderRadius: 10 }}>
-                        <CustomText style={{color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center', top: 5}}>스토리카드가 앨범에 저장됐어요</CustomText>
+                        <CustomText style={{color: '#000', fontSize: 16, textAlign: 'center', top: 5}} fontWeight="bold">스토리카드가 앨범에 저장됐어요</CustomText>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
-                          <TouchableOpacity onPress={closeModal} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5, marginTop: 5}}>
-                            <CustomText style={{ color: 'white', fontWeight: 'bold', textAlign : 'center'}}>확인</CustomText>
+                          <TouchableOpacity onPress={()=>setModalVisible(false)} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5, marginTop: 5}}>
+                            <CustomText style={{ color: 'white', textAlign : 'center'}} fontWeight="bold">확인</CustomText>
                           </TouchableOpacity>
                         </View>
                       </View>
+                    </View>
+                </Modal>
+            )}
+
+            {reviewVisible && (
+                <Modal  
+                transparent={true}
+                visible={true}
+                onRequestClose={()=>setReviewVisible(false)}
+                >
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+                    <View style={{ backgroundColor: 'white', width: 260, padding: 18, borderRadius: 10 }}>
+                        <CustomText style={{color: '#000', fontSize: 16, textAlign: 'center', lineHeight: 24}} fontWeight="bold"> 등록된 리뷰가 존재하지 않습니다. {'\n'} 지금 등록하시겠어요? </CustomText>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
+                        <TouchableOpacity onPress={()=>setReviewVisible(false)} style={{ backgroundColor: '#E8ECEF', width: 100, padding: 10, borderRadius: 5 }}>
+                            <CustomText style={{ color: '#000', textAlign : 'center'}} fontWeight="bold">취소</CustomText>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={handleReviewEdit} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5 }}>
+                            <CustomText style={{ color: 'white', textAlign : 'center'}} fontWeight="bold">확인</CustomText>
+                        </TouchableOpacity>
+                        </View>
+                    </View>
                     </View>
                 </Modal>
             )}
@@ -233,12 +281,10 @@ const styles = StyleSheet.create({
     mainText: {
         color: '#525252',
         fontSize: 18,
-        fontWeight: 'bold',
     },
     subText: {
         color: '#B6B6B6',
         fontSize: 14,
-        fontWeight: 'bold',
         textAlign: 'right',
     },
     text: {
@@ -262,7 +308,6 @@ const styles = StyleSheet.create({
     },
     overlayText: {
         color: '#fff',
-        fontWeight: 'bold',
         fontSize: 16,
     },
     overlayGuideText: {

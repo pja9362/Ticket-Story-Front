@@ -10,7 +10,7 @@ const CustomCheckbox = ({ checked, onPress, label}) => {
         <TouchableOpacity style={styles.checkboxButton} onPress={onPress}>
             <Image source={checked ? iconChecked : iconUnchecked} style={styles.checkboxImage} />
         </TouchableOpacity>
-        <CustomText style={styles.checkboxText}>{label}</CustomText>
+        <CustomText style={styles.checkboxText} fontWeight="bold">{label}</CustomText>
     </View>
   );
 };
@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
   },
   checkboxText: {
     fontSize: 12,
-    fontWeight: 'bold',
     color: '#525252',
   },
 });

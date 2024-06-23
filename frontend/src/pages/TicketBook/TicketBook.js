@@ -4,15 +4,17 @@ import TicketItem from '../../components/TicketBook/TicketItem';
 import NavHeader from '../../components/NavHeader';
 import { useSelector, useDispatch } from 'react-redux';
 import { getMyTickets } from '../../actions/ticket/ticket';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import noTicket from '../../images/no_ticket.png';
 import addIcon from '../../images/icon_add_ticket.png';
+import BottomSheetMenu from '../../components/EnrollTicket/BottomSheetMenu';
 
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
 const imageWidth = Dimensions.get('window').width * 0.45;
 
 const TicketBook = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const auth = useSelector((state) => state.auth.isAuthenticated);
   const ticketData = useSelector((state) => state.ticket.myTickets);
@@ -20,6 +22,22 @@ const TicketBook = () => {
 
   const [page, setPage] = useState(0);
   const [allTickets, setAllTickets] = useState([]);
+
+  const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+
+  const openBottomSheet = () => {
+    setBottomSheetVisible(true);
+  };
+
+  const closeBottomSheet = () => {
+    setBottomSheetVisible(false);
+  };
+
+  const onClick = (action) => {
+    if (action === 'scrape') navigation.navigate('EnrollByScrape', {action});
+    else navigation.navigate('EnrollAgreement', { action });
+    closeBottomSheet();
+  }
 
   const refreshTickets = useCallback(() => {
     if (auth) {
@@ -62,6 +80,7 @@ const TicketBook = () => {
   };
 
   return (
+    <>
     <SafeAreaView style={styles.container}>
       <NavHeader />
       <ScrollView 
@@ -77,7 +96,7 @@ const TicketBook = () => {
           : (
             <View style={styles.noTicketContainer}>
               <Image source={noTicket} style={styles.ticketCard} />
-              <TouchableOpacity onPress={() => console.log('Add ticket')}>
+              <TouchableOpacity onPress={openBottomSheet}>
                 <Image source={addIcon} style={styles.addIcon} />
               </TouchableOpacity>
             </View>
@@ -86,6 +105,15 @@ const TicketBook = () => {
         </View>
       </ScrollView>
     </SafeAreaView>
+
+    {bottomSheetVisible && (
+      <BottomSheetMenu
+        closeBottomSheet={closeBottomSheet}
+        onClick={onClick}
+      />
+    )}
+
+    </>
   );
 };
 

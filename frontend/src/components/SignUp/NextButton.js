@@ -1,5 +1,6 @@
 import React from 'react';
 import {TouchableOpacity, Text, StyleSheet, View} from 'react-native';
+import {CustomText} from '../CustomText';
 
 const NextButton = ({onClick, isValid = 'true', isLast, message}) => {
   const handleNextClick = () => {
@@ -13,13 +14,13 @@ const NextButton = ({onClick, isValid = 'true', isLast, message}) => {
   return (
     <View style={{alignItems: 'center', marginTop: 22}}>
       {
-        message && <Text style={styles.errorMessage}>{message}</Text>
+        message && <CustomText style={styles.errorMessage}>{message}</CustomText>
       }
       <TouchableOpacity
         style={[styles.nextBtn, !isValid && styles.disabledBtn, message == null && {marginTop: 40}]}
         onPress={handleNextClick}
         disabled={!isValid}>
-        <Text style={styles.text}>{isLast ? '계정 만들기' : '다음'}</Text>
+        <CustomText style={styles.text}>{isLast ? '계정 만들기' : '다음'}</CustomText>
       </TouchableOpacity>
     </View>
   );

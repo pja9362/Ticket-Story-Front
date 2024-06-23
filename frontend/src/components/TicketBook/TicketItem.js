@@ -17,6 +17,8 @@ import iconReviewOff from '../../images/icon_ReviewOff.png';
 import iconEdit from '../../images/icon_dots.png';
 
 import { deleteTicket, getTicketDetails } from '../../actions/ticket/ticket';
+import {CustomText} from '../CustomText';
+
 
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
 const imageWidth = Dimensions.get('window').width * 0.45;
@@ -57,6 +59,7 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
   const [isFront, setIsFront] = useState(true);
   const [dropdownVisible, setDropdownVisible] = useState(false); //
   const [modalVisible, setModalVisible] = useState(false); //
+  const [makeCardVisible, setMakeCardVisible] = useState(false); //
   const animation = useRef(new Animated.Value(0)).current;
 
 
@@ -110,6 +113,8 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
     }
   };
 
+  
+
   const handleInfoEdit = async() => {
     const editInfo = {
       ticketId : ticketId
@@ -139,6 +144,7 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
       ticketId : ticketId
     }
     try {
+      setMakeCardVisible(false);
       const response = await getTicketDetails(editReview);
       if (response !== null) {
         setDropdownVisible(false);
@@ -147,7 +153,8 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
         //navigate 하면서 response 값들 보내야함
         navigation.navigate('EditReview', {
           ticketId : ticketId,
-          ticketData : response
+          ticketData : response,
+          reviewId : reviewId
          });
 
       } else {
@@ -196,7 +203,7 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
                 >          
 
                   {imageUrl == null || imageUrl == "" && (
-                    <Text style={styles.backTitle}>{title}</Text>
+                    <CustomText style={styles.backTitle}>{title}</CustomText>
                   )}  
 
                 </ImageBackground>
@@ -204,22 +211,22 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
               <Animated.View style={[styles.cardContainer, styles.back, backAnimatedStyle]}>
                 <ImageBackground source={ticketImageSource} style={styles.imageBackground}>
                   <View style={styles.overlay}>
-                    <Text numberOfLines={2} style={styles.title}>{title}</Text>
+                    <CustomText numberOfLines={2} style={styles.title}>{title}</CustomText>
                     <View style={styles.infoContainer}>
-                      <Text numberOfLines={1} style={styles.info}>{date}</Text>
-                      <Text numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{time}</Text>
-                      <Text numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{location}</Text>
-                      <Text numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{seat}</Text>
+                      <CustomText numberOfLines={1} style={styles.info}>{date}</CustomText>
+                      <CustomText numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{time}</CustomText>
+                      <CustomText numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{location}</CustomText>
+                      <CustomText numberOfLines={1} style={[styles.info, { marginTop: 2 }]}>{seat}</CustomText>
                     </View>
                     <View style={styles.bottomContainer}>
-                      <Text numberOfLines={1} style={[styles.info, { marginTop: 5, textAlign: 'center' }]}>{contentsRating}</Text>
+                      <CustomText numberOfLines={1} style={[styles.info, { marginTop: 5, textAlign: 'center' }]}>{contentsRating}</CustomText>
                     </View>
                     <View style={styles.bottomContainer}>
-                      <Text numberOfLines={1} style={[styles.info, { marginTop: 12, textAlign: 'center' }]}>{seatRating}</Text>
+                      <CustomText numberOfLines={1} style={[styles.info, { marginTop: 12, textAlign: 'center' }]}>{seatRating}</CustomText>
                     </View>
                     <View style={styles.buttonContainer}>
                       <TouchableOpacity 
-                        onPress={reviewId !== 0 ? handleReviewClick : null} 
+                        onPress={reviewId !== 0 ? handleReviewClick : () => setMakeCardVisible(true)} 
                         style={[styles.reviewButton, { opacity: !isFront ? 1 : 0 }]}
                         activeOpacity={reviewId !== 0 ? 0.2 : 1} // 터치 가능한 경우 activeOpacity 적용
                         disabled={isFront} // isFront이 true일 때 버튼 비활성화
@@ -248,13 +255,13 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
           {dropdownVisible && isFront && (
             <View style={{position: 'absolute', right: 10, top: 10, backgroundColor: '#fff', borderRadius: 5, padding: 10, gap: 15}}>
               <TouchableOpacity onPress={handleInfoEdit}>
-                <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>정보 수정</Text>
+                <CustomText style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>정보 수정</CustomText>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleReviewEdit}>
-                <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>리뷰 수정</Text>
+                <CustomText style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>리뷰 수정</CustomText>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>삭제</Text>
+                <CustomText style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>삭제</CustomText>
               </TouchableOpacity>
             </View>
           )}
@@ -267,13 +274,34 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
           >
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
               <View style={{ backgroundColor: 'white', width: 280, padding: 18, borderRadius: 10 }}>
-                <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center'}}>선택한 티켓을 삭제합니다.</Text>
+                <CustomText style={{color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center', marginTop: 2}}>선택한 티켓을 삭제합니다.</CustomText>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
                   <TouchableOpacity onPress={() => setModalVisible(false)} style={{ backgroundColor: '#E8ECEF', width: 100, padding: 10, borderRadius: 5 }}>
-                    <Text style={{ color: '#000', fontWeight: 'bold', textAlign : 'center'}}>취소</Text>
+                    <CustomText style={{ color: '#000', fontWeight: 'bold', textAlign : 'center'}}>취소</CustomText>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={handleIconDelete} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5 }}>
-                    <Text style={{ color: 'white', fontWeight: 'bold', textAlign : 'center'}}>확인</Text>
+                    <CustomText style={{ color: 'white', fontWeight: 'bold', textAlign : 'center'}}>확인</CustomText>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+
+          <Modal  
+            // animationType="slide"
+            transparent={true}
+            visible={makeCardVisible}
+            onRequestClose={() => setMakeCardVisible(false)}
+          >
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+              <View style={{ backgroundColor: 'white', width: 260, padding: 18, borderRadius: 10 }}>
+                <CustomText style={{color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center', lineHeight: 24}}> 등록된 리뷰나 사진이 없습니다. {'\n'} 지금 등록하시겠어요? </CustomText>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
+                  <TouchableOpacity onPress={() => setMakeCardVisible(false)} style={{ backgroundColor: '#E8ECEF', width: 100, padding: 10, borderRadius: 5 }}>
+                    <CustomText style={{ color: '#000', fontWeight: 'bold', textAlign : 'center'}}>취소</CustomText>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleReviewEdit} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5 }}>
+                    <CustomText style={{ color: 'white', fontWeight: 'bold', textAlign : 'center'}}>확인</CustomText>
                   </TouchableOpacity>
                 </View>
               </View>

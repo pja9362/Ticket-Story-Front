@@ -40,6 +40,19 @@ export const getMappedCategory = (category) => {
         return 'SPORTS';
       default:
         return '';
-    }
+    }    
+};
+
+export const getReverseMappedCategory = (category) => {
+  switch (category) {
+    case 'MOVIE':
+      return '영화';
+    case 'PERFORMANCE':
+      return '공연';
+    case 'SPORTS':
+      return '스포츠';
+    default:
+      return '';
+  }    
 };
   

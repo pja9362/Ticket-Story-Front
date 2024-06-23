@@ -1,5 +1,7 @@
 import React, { useRef, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, Image, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, Image, TouchableOpacity, View, Modal } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { setHideReviewInfo, setHideReviewTitle } from '../reducers/overlaySlice';
 import { handleShareBtn, handleSaveBtn } from '../utils/shareAndSaveUtils';
 import Header from '../components/Header';
 import iconShare from '../images/icon_share.png';
@@ -7,21 +9,35 @@ import iconSave from '../images/icon_save.png';
 import iconEdit from '../images/icon_edit_no_bg.png';
 import iconLogo from '../images/logo_navHeader.png';
 import CustomCheckbox from '../components/EnrollTicket/CustomCheckbox';
+import {CustomText} from '../components/CustomText';
 
 const ShowContent = ({ route }) => {
     const viewRef = useRef();
 
-    const { ticket } = route.params;
+    const dispatch = useDispatch();
+    const { ticket, ticketId } = route.params;
 
-    const [hideTicketInfo, setHideTicketInfo] = useState(false);
-    const [hideTitle, setHideTitle] = useState(false);
+    const overlayState = useSelector((state) => state.overlay[ticketId]) || { hideReviewInfo: false, hideReviewTitle: false };
+    const { hideReviewInfo, hideReviewTitle } = overlayState;
+
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const closeModal = () => {
+        setModalVisible(false);
+    };
 
     const handleShareBtnPress = () => {
         handleShareBtn(viewRef);
     }
 
-    const handleSaveBtnPress = () => {
-        handleSaveBtn(viewRef);
+    const handleSaveBtnPress = async() => {
+        try {
+            const response = await handleSaveBtn(viewRef);
+            console.log(response);
+            setModalVisible(true);
+        } catch (error) {
+        console.error('Error Saving ticket?:', error.response);
+        }
     }
     
     const handleEditContent = () => {
@@ -35,14 +51,19 @@ const ShowContent = ({ route }) => {
             </View> 
 
             <View style={styles.checkboxContainer}>
-                <CustomCheckbox
+                {/* <CustomCheckbox
                     checked={hideTicketInfo}
-                    onPress={() => setHideTicketInfo(!hideTicketInfo)}
+                    onPress={() => dispatch(setHideTicketInfo({ ticketId: ticketId, hideTicketInfo: !hideTicketInfo }))}
+                    label="글씨 어둡게"
+                /> */}
+                <CustomCheckbox
+                    checked={hideReviewInfo}
+                    onPress={() => dispatch(setHideReviewInfo({ ticketId: ticketId, hideReviewInfo: !hideReviewInfo }))}
                     label="티켓 정보 가리기"
                 />
                 <CustomCheckbox
-                    checked={hideTitle}
-                    onPress={() => setHideTitle(!hideTitle)}
+                    checked={hideReviewTitle}
+                    onPress={() => dispatch(setHideReviewTitle({ ticketId: ticketId, hideReviewTitle: !hideReviewTitle }))}
                     label="콘텐츠 제목만 가리기"
                 />
             </View>
@@ -52,30 +73,30 @@ const ShowContent = ({ route }) => {
                 <View style={styles.overlay}>
                     <View style={styles.titleContainer}>
                         {
-                            (!hideTitle && !hideTicketInfo) && <Text style={{...styles.mainText, flex: 1}}>{ticket.title}</Text>
+                            (!hideReviewTitle && !hideReviewInfo) && <CustomText style={{...styles.mainText, flex: 1}}>{ticket.title}</CustomText>
                         }
                     </View>
                     <View style={{position: 'absolute', top: 30, right: 25,}}>
                         {
-                            !hideTicketInfo && (
+                            !hideReviewInfo && (
                                 <>
-                                    <Text style={styles.subText}>{ticket.date}</Text>
-                                    <Text style={styles.subText}>{ticket.location}</Text>
+                                    <CustomText style={styles.subText}>{ticket.date}</CustomText>
+                                    <CustomText style={styles.subText}>{ticket.location}</CustomText>
                                 </>
                             )
                         }
                     </View>
                 </View>
                 <View style={styles.reviewContainer}>
-                    <Text style={{...styles.mainText, color: '#000', fontSize: 16}}> {ticket.reviewTitle}</Text>
-                    <Text style={styles.text}>{ticket.reviewDetails}</Text>
+                    <CustomText style={{...styles.mainText, color: '#000', fontSize: 16}}> {ticket.reviewTitle}</CustomText>
+                    <CustomText style={styles.text}>{ticket.reviewDetails}</CustomText>
                 </View>
             </View>
             
             {/* 버튼 내부 좌측에 edit icon */}
             <TouchableOpacity style={styles.selectBtn} onPress={handleEditContent}>
                 <Image source={iconEdit} style={{width: 24, height: 24, position: 'absolute', left: 18, top: 14}} />
-                <Text style={styles.btnText}>리뷰 수정하기</Text>
+                <CustomText style={styles.btnText}>리뷰 수정하기</CustomText>
             </TouchableOpacity>
 
             <View style={styles.btnContainer}>
@@ -86,6 +107,25 @@ const ShowContent = ({ route }) => {
                     <Image source={iconSave} style={{width: 45, height: 45}} />
                 </TouchableOpacity>
             </View>
+
+            {modalVisible && (
+                <Modal  
+                transparent={true}
+                visible={true}
+                onRequestClose={closeModal}
+                >
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+                      <View style={{ backgroundColor: 'white', height: 120, width: 280, padding: 18, borderRadius: 10 }}>
+                        <CustomText style={{color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center', top: 5}}>리뷰카드가 앨범에 저장됐어요</CustomText>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
+                          <TouchableOpacity onPress={closeModal} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5, marginTop: 5}}>
+                            <CustomText style={{ color: 'white', fontWeight: 'bold', textAlign : 'center'}}>확인</CustomText>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </View>
+                </Modal>
+            )}
         </SafeAreaView>
     )
 }
@@ -137,7 +177,8 @@ const styles = StyleSheet.create({
     checkboxContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        gap: 10,
+        gap: 5,
+        right: 2
     },
     selectBtn: {
         backgroundColor: '#fff',
@@ -149,6 +190,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         padding: 15,
         textAlign: 'center',
+        fontWeight: '500',
     },
     titleContainer: {
         flexDirection: 'row',
@@ -183,8 +225,8 @@ const styles = StyleSheet.create({
         margin: 20,
         padding: 20,
         backgroundColor: '#fff',
-        borderBottomLeftRadius: 5,
-        borderBottomRightRadius: 5,
+        // borderBottomLeftRadius: 5,
+        // borderBottomRightRadius: 5,
     },
 });
 

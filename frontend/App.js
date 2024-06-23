@@ -6,7 +6,7 @@ import store, { persistor } from './src/store';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
-import { Text, TextInput } from 'react-native';
+import { Text, TextInput, StatusBar } from 'react-native';
 import { setCustomText, setCustomTextInput } from 'react-native-global-props';
 
 import InitScreen from './src/pages/Auth/Init';
@@ -73,7 +73,8 @@ const App = () => {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView edges={['top']} style={{flex: 1}}>
+      <StatusBar backgroundColor="#FFFFFF" barStyle="default" />
+      <SafeAreaView edges={['top']} style={{flex: 1, backgroundColor: '#ffffff'}}>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             <NavigationContainer theme={customTheme}>

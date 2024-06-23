@@ -1,5 +1,6 @@
 import React from 'react';
 import {TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {CustomText} from '../CustomText';
 
 const GenderButton = ({label, isActive, onPress}) => (
   <TouchableOpacity
@@ -8,9 +9,9 @@ const GenderButton = ({label, isActive, onPress}) => (
       isActive && {backgroundColor: '#B6B6B6'},
     ]}
     onPress={onPress}>
-    <Text style={isActive ? styles.activeText : styles.optionText}>
+    <CustomText style={isActive ? styles.activeText : styles.optionText}>
       {label}
-    </Text>
+    </CustomText>
   </TouchableOpacity>
 );
 

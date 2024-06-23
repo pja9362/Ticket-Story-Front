@@ -11,6 +11,7 @@ import logo_lottecinema from '../../images/logo_lottecinema.png';
 import logo_megabox from '../../images/logo_megabox.png';
 import logo_yes24 from '../../images/logo_yes24.png';
 import logo_ticketlink from '../../images/logo_ticketlink.png';
+import { CustomText } from '../../components/CustomText';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -67,6 +68,11 @@ const EnrollByScrape = () => {
         window.location.href = 'https://m.megabox.co.kr/myMegabox';
       `;
       webViewRef.current.injectJavaScript(redirectScript);
+    } else if (state.url === 'https://m.megabox.co.kr/main') {
+      const redirectScript = `
+        window.location.href = 'https://m.megabox.co.kr/myMegabox';
+      `;
+      webViewRef.current.injectJavaScript(redirectScript);
     } else if (state.url === 'https://m.megabox.co.kr/myMegabox') {
       injectMegaboxScrapButton(webViewRef);
     } else if (state.url === 'https://m.megabox.co.kr/mypage/moviestory?divCd=WATCHED') {
@@ -102,6 +108,7 @@ const EnrollByScrape = () => {
     if (event.nativeEvent.data) {
       const ticketInfo= JSON.parse(event.nativeEvent.data);
       // console.log(`${source} Ticket Info: `, ticketInfo);
+      console.log('God Please',ticketInfo);
       
       navigation.navigate('EnrollInfoByScrape', { ticketInfo: ticketInfo, source: source });
     } 
@@ -154,49 +161,49 @@ const EnrollByScrape = () => {
         <TicketlinkWebView />
       ) : (
         <>
-          <Text style={styles.guideText}>티켓을 가져올 사이트를 선택해 주세요.</Text>
+          <CustomText style={styles.guideText}>티켓을 가져올 사이트를 선택해 주세요.</CustomText>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={styles.button}
               onPress={() => handleScraping({ platform: 'cgv' })}
             >
               <Image source={logo_cgv} style={styles.logoImage} />
-              <Text style={styles.btnText}>CGV</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => handleScraping({ platform: 'interpark' })}
-            >
-              <Image source={logo_interpark} style={styles.logoImage} />
-              <Text style={styles.btnText}>인터파크</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => handleScraping({ platform: 'lottecinema' })}
-            >
-              <Image source={logo_lottecinema} style={styles.logoImage} />
-              <Text style={styles.btnText}>롯데시네마</Text>
+              <CustomText style={styles.btnText}>CGV</CustomText>
             </TouchableOpacity>
             <TouchableOpacity 
               style={styles.button}
               onPress={() => handleScraping({ platform: 'megabox' })}
             >
               <Image source={logo_megabox} style={styles.logoImage} />
-              <Text style={styles.btnText}>메가박스</Text>
+              <CustomText style={styles.btnText}>메가박스</CustomText>
             </TouchableOpacity>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.button}
-              onPress={() => handleScraping({ platform: 'yes24' })}
+              onPress={() => handleScraping({ platform: 'lottecinema' })}
             >
-              <Image source={logo_yes24} style={styles.logoImage} />
-              <Text style={styles.btnText}>YES24</Text>
+              <Image source={logo_lottecinema} style={styles.logoImage} />
+              <CustomText style={styles.btnText}>롯데시네마</CustomText>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => handleScraping({ platform: 'interpark' })}
+            >
+              <Image source={logo_interpark} style={styles.logoImage} />
+              <CustomText style={styles.btnText}>인터파크 티켓</CustomText>
             </TouchableOpacity>
             <TouchableOpacity 
               style={styles.button}
               onPress={() => handleScraping({ platform: 'ticketlink' })}
             >
               <Image source={logo_ticketlink} style={styles.logoImage} />
-              <Text style={styles.btnText}>티켓링크</Text>
+              <CustomText style={styles.btnText}>티켓링크</CustomText>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.button}
+              onPress={() => handleScraping({ platform: 'yes24' })}
+            >
+              <Image source={logo_yes24} style={styles.logoImage} />
+              <CustomText style={styles.btnText}>YES24 티켓</CustomText>
             </TouchableOpacity>
           </View>
         </>

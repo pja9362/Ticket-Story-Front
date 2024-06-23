@@ -4,6 +4,7 @@ import ticket from '../../images/ticket_white.png';
 import closeIcon from '../../images/icon_close_white.png';
 import OCR from '../../components/EnrollTicket/OCR';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CustomText } from '../../components/CustomText';
 
 const EnrollByOCR = ({route, navigation}) => {
   const {categoryInfo} = route.params;
@@ -30,10 +31,10 @@ const EnrollByOCR = ({route, navigation}) => {
           </TouchableOpacity>
 
           <Image source={ticket} style={styles.image} />
-          <Text style={styles.mainText}>
+          <CustomText style={styles.mainText}>
             직접 관람한 티켓의{'\n'}제목과 좌석 정보가{'\n'}잘 나오게
             찍어주세요.
-          </Text>
+          </CustomText>
         </View>
       ) : (
         <OCR onNextStep={onNextStep}/>

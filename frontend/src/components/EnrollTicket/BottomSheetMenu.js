@@ -4,7 +4,7 @@ import {CustomText} from '../CustomText';
 
 const BottomSheetMenu = ({closeBottomSheet, onClick}) => {
   return (
-    <Modal transparent={true} visible={true} onRequestClose={closeBottomSheet}>
+    <Modal transparent={true} visible={true} onRequestClose={closeBottomSheet} animationType='slide'>
       <TouchableOpacity
         style={{flex: 1, justifyContent: 'flex-end'}}
         onPress={closeBottomSheet}>
@@ -13,20 +13,20 @@ const BottomSheetMenu = ({closeBottomSheet, onClick}) => {
             flex: 1,
             justifyContent: 'flex-end',
             alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            // backgroundColor: 'rgba(0, 0, 0, 0.3)'
           }}>
           <View style={styles.contentContainer}>
             <TouchableOpacity
               onPress={() => onClick('scrape')}>
-              <Text style={styles.btnText}>온라인 티켓 등록하기</Text>
+              <CustomText style={styles.btnText}>온라인 티켓 등록하기</CustomText>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => onClick('camera')}>
-              <Text style={styles.btnText}>카메라로 티켓 등록하기</Text>
+              <CustomText style={styles.btnText}>카메라로 티켓 등록하기</CustomText>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => onClick('hand')}>
-              <Text style={styles.btnText}>직접 입력으로 티켓 등록하기</Text>
+              <CustomText style={styles.btnText}>직접 입력으로 티켓 등록하기</CustomText>
             </TouchableOpacity>
           </View>
         </View>

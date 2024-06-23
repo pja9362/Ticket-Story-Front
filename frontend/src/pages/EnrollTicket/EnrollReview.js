@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   View,
   Text,
@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
-  ScrollView
+  Keyboard
 } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import SliderRating from '../../components/EnrollTicket/SliderRating';
@@ -17,6 +17,9 @@ import NextButton from '../../components/EnrollTicket/NextBtn';
 import CustomCheckbox from '../../components/EnrollTicket/CustomCheckbox';
 import ImagePicker from 'react-native-image-crop-picker';
 import { saveNewTicket, uploadImage } from '../../actions/ticket/ticket';
+import { CustomText, CustomTextInput } from '../../components/CustomText';
+
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const EnrollReview = ({navigation, route}) => {
   const { title, ticketData } = route.params;
@@ -34,6 +37,27 @@ const EnrollReview = ({navigation, route}) => {
   const [selectedImages, setSelectedImages] = useState([]);
   // const [spoilerChecked, setSpoilerChecked] = useState(false);
   // const [privateChecked, setPrivateChecked] = useState(false);
+  const [saveProcessing, setSaveProcessing] = useState(false);
+  const [imageProcessing, setImageProcessing] = useState(false);
+
+  const [inputHeight, setInputHeight] = useState(0);
+  const maxHeight = 200; // 최대 높이 설정
+
+  const scrollViewRef = useRef(null);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow);
+
+    return () => {
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
+  const handleKeyboardDidShow = () => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: true });
+    }
+  };
 
   const handleSliderChange = (category, rating) => {
     if (category === 'art') {
@@ -45,6 +69,11 @@ const EnrollReview = ({navigation, route}) => {
   };
 
   const handleNext = async () => {
+
+    if (saveProcessing) {
+      return;
+    }
+
     const reviewDetails = {
       // isPublic: !privateChecked,
       // isSpoiler: spoilerChecked,
@@ -65,30 +94,44 @@ const EnrollReview = ({navigation, route}) => {
     };
 
     try {
+      setSaveProcessing(true);
       console.log("티켓 등록 요청", requestData);
       const savedTicket = await saveNewTicket(requestData);
       console.log('Saved ticket:', savedTicket);
       navigation.navigate('EnrollFinish');
     } catch (error) {
       console.error('Error saving review:', error);
+    } finally {
+      setSaveProcessing(false);
     }
   };
 
   const handleImagePicker = async () => {
+
+    if (imageProcessing) {
+      return;
+    }
+
     if (selectedImages.length >= 1) {
       alert('이미지는 1개 등록할 수 있습니다.');
       return; 
     }
     try {
+      setImageProcessing(true);
+
       const image = await ImagePicker.openPicker({
         cropping: true,
         mediaType: 'photo',
+        width: 1000,
+        height: 1000
       });
 
       const uploadedImagePath = await uploadImage(image.path);
       setSelectedImages(prevImages => [...prevImages, uploadedImagePath]);
     } catch (error) {
       console.log('ImagePicker Error: ', error);
+    } finally {
+      setImageProcessing(false);
     }
   };
 
@@ -98,36 +141,45 @@ const EnrollReview = ({navigation, route}) => {
     setSelectedImages(newImages);
   };
 
-  const handleReviewContentChange = (text) => {
-    const lines = text.split('\n');
-    if (lines.length > 5) {
-      console.log('5줄까지만 입력할 수 있습니다.');
-      return;
+  // const handleReviewContentChange = (text) => {
+  //   const lines = text.split('\n');
+  //   if (lines.length > 5) {
+  //     console.log('5줄까지만 입력할 수 있습니다.');
+  //     return;
+  //   }
+  //   setReviewContent(text);
+  // };
+
+  const handleChangeText = (text) => {
+    if (inputHeight <= maxHeight) {
+      setReviewContent(text);
+    } else {
+      alert('더 이상 입력 불가');
+      setReviewContent(prevText => prevText.slice(0, -1)); // 마지막 입력 제거
     }
-    setReviewContent(text);
   };
 
   return (
     <>
       <EnrollHeader title="티켓 후기 입력" onIconClick={handleNext} />
-      <ScrollView style={styles.container}>
-        <Text style={{fontSize: 16, fontWeight: 'bold', color: '#525252', lineHeight: 24}}>
-          관람한 <Text style={{color: '#5D70F9'}}>{title || '콘텐츠'}</Text>의 후기를 알려주세요.
-        </Text>
-        <Text style={{ fontSize: 12, color: '#939393' }}>*표시는 필수 항목입니다.</Text>
+      <KeyboardAwareScrollView style={styles.container} showsVerticalScrollIndicator={false} ref={scrollViewRef}>
+        <CustomText style={{fontSize: 16, fontWeight: 'bold', color: '#525252', lineHeight: 24}}>
+          관람한 <CustomText style={{color: '#5D70F9'}}>{title || '콘텐츠'}</CustomText>의 후기를 알려주세요.
+        </CustomText>
+        <CustomText style={{ fontSize: 12, color: '#939393' }}>*표시는 필수 항목입니다.</CustomText>
 
         <SliderRating category="art" value={artRating} onValueChange={handleSliderChange} />
 
         <SliderRating category="seat" value={seatRating} onValueChange={handleSliderChange} />
         
-        <Text style={styles.sectionText}>작품 후기</Text>
+        <CustomText style={styles.sectionText}>작품 후기</CustomText>
 
         <View style={styles.reviewImageContainer}>
           <View>
             <TouchableOpacity onPress={handleImagePicker}>
               <Image source={addPhoto} style={styles.image} />
             </TouchableOpacity>
-            <Text style={{ width: 48, textAlign: 'center' }}>{selectedImages.length} / 1</Text>
+            <CustomText style={{ width: 48, textAlign: 'center' }}>{selectedImages.length} / 1</CustomText>
           </View>
           <FlatList
             data={selectedImages}
@@ -144,26 +196,34 @@ const EnrollReview = ({navigation, route}) => {
           />
         </View>
         <View style={styles.reviewTextContainer}>
-          <TextInput
+          <CustomTextInput
             style={{...styles.inputArea, height: 30, fontSize: 16, fontWeight: 'bold', color: '#525252'}}
             value={reviewTitle}
+            maxLength={20}
             placeholder = "제목"
-            placeholderTextColor = "#525252"
+            placeholderTextColor = "#B6B6B6"
             onChangeText={text => setReviewTitle(text)}
           />
-          <TextInput
+          <CustomTextInput
             style={{...styles.inputArea, flex: 1}}
             multiline={true}
             placeholder="관람 후기를 입력해주세요"
+            placeholderTextColor = "#D9D9D9"
             value={reviewContent}
-            onChangeText={handleReviewContentChange}
+            // maxLength={280}
+            onChangeText={handleChangeText}
+            onContentSizeChange={(e) => {
+              const newHeight = e.nativeEvent.contentSize.height;
+              setInputHeight(newHeight);
+            }}
+            onFocus={handleKeyboardDidShow}
           />
         </View>
 
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 20}} >
-          <NextButton isDisabled={artRating === 0 || seatRating === 0 || !sliderTouched} onPress={handleNext} />
+          <NextButton isDisabled={saveProcessing || imageProcessing || artRating === 0 || seatRating === 0 || !sliderTouched} onPress={handleNext} />
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>  
     </>
   );
 };

@@ -9,6 +9,7 @@ import {
 import Header from '../../components/Header';
 import { checkIdDuplicate } from '../../actions/auth/auth';
 import { startCountdown, formatTime } from '../../utils/countdownUtils';
+import { CustomText, CustomTextInput } from '../../components/CustomText';
 
 const FindPassword = () => {
   const [id, setId] = useState('');
@@ -78,9 +79,9 @@ const FindPassword = () => {
       <View style={{paddingHorizontal: 18}}>
 
         <View style={styles.formContainer}>
-          <Text style={styles.sectionText}>아이디</Text>
+          <CustomText style={styles.sectionText}>아이디</CustomText>
           <View style={styles.inputContainer}>
-            <TextInput
+            <CustomTextInput
               value={id}
               onChangeText={text => setId(text)}
               style={styles.inputBox}
@@ -90,7 +91,7 @@ const FindPassword = () => {
 
           {
             errorMessage !== '' ? 
-            <Text style={{color: '#FF0000', textAlign: 'center', lineHeight: 36, fontSize: 12}}>{errorMessage}</Text> : <View height={20}></View>
+            <CustomText style={{color: '#FF0000', textAlign: 'center', lineHeight: 36, fontSize: 12}}>{errorMessage}</CustomText> : <View height={20}></View>
           }
 
           <TouchableOpacity
@@ -98,28 +99,28 @@ const FindPassword = () => {
               disabled={id === '' || isEmailSent}
               style={{ ...styles.findBtn, backgroundColor: id !== '' && !isEmailSent ? '#5D70F9' : '#BDBDBD' }}
           >
-            <Text style={styles.btnText}>{firstBtnText}</Text>
+            <CustomText style={styles.btnText}>{firstBtnText}</CustomText>
           </TouchableOpacity>
 
           {
             isEmailSent ? 
             <View style={styles.formContainer}>
-              <Text style={styles.sectionText}>인증번호</Text>
+              <CustomText style={styles.sectionText}>인증번호</CustomText>
               <View style={styles.inputContainer}>
-                <TextInput
+                <CustomTextInput
                   value={validationNumber}
                   onChangeText={text => setValidationNumber(text)}
                   style={styles.inputBox}
                   placeholder='인증번호를 입력해주세요'
                 />
-                <Text style={{ marginLeft: 10, color: '#FE5757' }}>{formattedTime()}</Text>
+                <CustomText style={{ marginLeft: 10, color: '#FE5757' }}>{formattedTime()}</CustomText>
               </View>
               {
                 secondBtnClicked && isNumberValid === false ? 
-                <Text style={{color: '#FF0000', textAlign: 'center', lineHeight: 36, fontSize: 12}}>인증번호가 일치하지 않아요</Text> : 
-                <Text style={{color: '#B6B6B6', fontSize: 10, textAlign: 'center', lineHeight: 36}}>
+                <CustomText style={{color: '#FF0000', textAlign: 'center', lineHeight: 36, fontSize: 12}}>인증번호가 일치하지 않아요</CustomText> : 
+                <CustomText style={{color: '#B6B6B6', fontSize: 10, textAlign: 'center', lineHeight: 36}}>
                   메일이 오지 않는다면 스팸 메일함이나 프로모션 메일함을 확인해주세요.
-                </Text>
+                </CustomText>
               }
 
               <TouchableOpacity
@@ -127,7 +128,7 @@ const FindPassword = () => {
                 disabled={ validationNumber === '' }
                 style={{ ...styles.findBtn, backgroundColor: validationNumber !== '' ? '#5D70F9' : '#BDBDBD' }}
               >
-                <Text style={styles.btnText}>인증번호 확인</Text>
+                <CustomText style={styles.btnText}>인증번호 확인</CustomText>
               </TouchableOpacity>
             </View> : null
           }

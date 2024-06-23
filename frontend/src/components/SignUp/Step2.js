@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import NextButton from './NextButton';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {CustomText, CustomTextInput} from '../CustomText';
 
 const Step2 = ({ nextStep, handleChange, values }) => {
   const [password, setPassword] = useState('');
@@ -34,9 +35,14 @@ const Step2 = ({ nextStep, handleChange, values }) => {
     if (isValid) {
       nextStep();
     } else {
-      if(password !== passwordCheck) {
+      // if(password !== passwordCheck) {
+      //   setErrorMessage('비밀번호가 일치하지 않아요.');
+      // } else if (!passwordRegex.test(password)) {
+      //   setErrorMessage('영문, 숫자, 특수문자를 포함한 8~16자리로 입력해 주세요.');
+      // }
+      if(passwordRegex.test(password)) {
         setErrorMessage('비밀번호가 일치하지 않아요.');
-      } else if (!passwordRegex.test(password)) {
+      } else if (password !== passwordCheck) {
         setErrorMessage('영문, 숫자, 특수문자를 포함한 8~16자리로 입력해 주세요.');
       }
     }
@@ -45,9 +51,9 @@ const Step2 = ({ nextStep, handleChange, values }) => {
   return (
     <View style={styles.container}>
       <View style={styles.formContainer}>
-        <Text style={styles.sectionText}>비밀번호</Text>
+        <CustomText style={styles.sectionText}>비밀번호</CustomText>
         <View style={styles.inputContainer}>
-          <TextInput
+          <CustomTextInput
             style={styles.inputBox}
             value={password}
             secureTextEntry={!showPassword}
@@ -60,17 +66,17 @@ const Step2 = ({ nextStep, handleChange, values }) => {
             <Icon name={showPassword ? 'eye-off' : 'eye'} size={20} color="black" />
           </TouchableOpacity>
         </View>
-        {showPasswordGuide ? (
-          <Text style={styles.guideText}>
+        {/* {showPasswordGuide ? ( */}
+          <CustomText style={styles.guideText}>
             영문, 숫자, 특수문자를 포함한 8~16자리로 입력해 주세요.
-          </Text>
-        ) : null}
+          </CustomText>
+        {/* ) : null} */}
       </View>
 
       <View style={{...styles.formContainer, marginBottom: 0}}>
-        <Text style={styles.sectionText}>비밀번호 확인</Text>
+        <CustomText style={{...styles.sectionText, marginTop: 10}}>비밀번호 확인</CustomText>
         <View style={styles.inputContainer}>
-          <TextInput
+          <CustomTextInput
             style={styles.inputBox}
             value={passwordCheck}
             secureTextEntry={!showPasswordCheck}
@@ -103,8 +109,8 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   guideText: {
-    marginTop: 5,
-    fontSize: 10,
+    marginTop: 10,
+    fontSize: 11,
     lineHeight: 20,
     color: '#B6B6B6',
   },

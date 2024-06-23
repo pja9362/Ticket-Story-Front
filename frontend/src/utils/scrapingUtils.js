@@ -11,7 +11,7 @@ export const injectCGVScrapButton = webViewRef => {
     `;
   const style = `
       var style = document.createElement('style');
-      style.innerHTML = 'button { position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%); width: 50%; background-color: red; color: white; padding: 15px; text-align: center; }';
+      style.innerHTML = 'button { position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%); width: 50%; background-color: rgba(0, 0, 0, 0.7); color: white; padding: 15px; text-align: center; border: none; border-radius: 10px; font-size: 15px; font-weight: bold;}';
       document.head.appendChild(style);
       true;
     `;
@@ -191,9 +191,13 @@ export const injectMegaboxScrapButton = (webViewRef) => {
     if (isLoggedIn) {
       var scrapButton = document.createElement('button');
       scrapButton.innerHTML = '스크랩 하러가기';
-      scrapButton.style.backgroundColor = 'red';
-      scrapButton.style.padding = '15px';
-      scrapButton.style.color= 'white';
+      scrapButton.style.padding = '20px';
+      scrapButton.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+      scrapButton.style.color = 'white';
+      scrapButton.style.border = 'none';
+      scrapButton.style.borderRadius = '10px';
+      scrapButton.style.fontSize = '15px';
+      scrapButton.style.fontWeight = 'bold';
       scrapButton.onclick = function() {
         window.location.href = 'https://m.megabox.co.kr/mypage/moviestory?divCd=WATCHED';
       };
@@ -209,14 +213,16 @@ export const injectMegaboxScrapButton = (webViewRef) => {
         mainContent.appendChild(floatingDiv);
       }
     }
+  `;
 
+  const style = `
     var style = document.createElement('style');
     style.innerHTML = '.scrap-button-container { position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%); width: 50%; padding: 15px; text-align: center; z-index: 9999; padding: 10px;}';
     document.head.appendChild(style);
-
     true;
   `;
 
+  webViewRef.current.injectJavaScript(style);
   webViewRef.current.injectJavaScript(script);
 };
 
@@ -348,9 +354,13 @@ export const injectTicketlinkScrapButton = (webViewRef) => {
       if (!loginElement) {
         var scrapButton = document.createElement('button');
         scrapButton.innerHTML = '스크랩 하러가기';
-        scrapButton.style.backgroundColor = 'red';
-        scrapButton.style.padding = '15px';
+        scrapButton.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+        scrapButton.style.padding = '20px';
         scrapButton.style.color= 'white';
+        scrapButton.style.border = 'none';
+        scrapButton.style.borderRadius = '10px';
+        scrapButton.style.fontSize = '15px';
+        scrapButton.style.fontWeight = 'bold'
         scrapButton.onclick = function() {
           window.location.href = 'https://m.ticketlink.co.kr/my/reserve/gate/list?page=1&productClass=ALL&searchType=PERIOD&period=MONTH_3&targetDay=RESERVE&year=&month=';
         };

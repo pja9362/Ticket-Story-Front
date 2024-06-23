@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import NextButton from './NextButton';
 import { checkIdDuplicate } from '../../actions/auth/auth';
+import {CustomText, CustomTextInput} from '../CustomText';
 
 const Step1 = ({nextStep, handleChange, values}) => {
   const [id, setId] = useState('');
@@ -56,8 +57,8 @@ const Step1 = ({nextStep, handleChange, values}) => {
   
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionText}>아이디</Text>
-      <TextInput
+      <CustomText style={styles.sectionText}>아이디</CustomText>
+      <CustomTextInput
         style={styles.inputBox}
         value={id}
         placeholder='example@naver.com'

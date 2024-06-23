@@ -2,15 +2,16 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import noCheck from '../../images/no_check.png';
 import check from '../../images/check.png';
+import {CustomText, CustomTextInput} from '../CustomText';
 
 
 const AgreementItem = ({label, guideText, buttonText, isChecked, onPress}) => (
   <View style={styles.itemContainer}>
     <View style={styles.labelBox}>
-      <Text style={styles.label}>{label}</Text>
+      <CustomText style={styles.label}>{label}</CustomText>
     </View>
     <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-      <Text style={styles.guideText}>{guideText}</Text>
+      <CustomText style={styles.guideText}>{guideText}</CustomText>
 
       <TouchableOpacity onPress={onPress}>
         <View style={styles.checkboxContainer}>
@@ -23,7 +24,7 @@ const AgreementItem = ({label, guideText, buttonText, isChecked, onPress}) => (
       </TouchableOpacity>
     </View>
     <TouchableOpacity onPress={onPress}>
-      <Text style={styles.btnText}>{buttonText}</Text>
+      <CustomText style={styles.btnText}>{buttonText}</CustomText>
     </TouchableOpacity>
   </View>
 );
@@ -74,7 +75,7 @@ const Agreement = ({updateAgreementStatus}) => {
     <>
       <View style={{marginLeft: 8}}>
         <View style={styles.allAgreement}>
-          <Text style={{color: '#525252',fontSize: 12, fontWeight: 'bold'}}>전체 동의하기</Text>
+          <CustomText style={{color: '#525252',fontSize: 12, fontWeight: 'bold'}}>전체 동의하기</CustomText>
           <TouchableOpacity onPress={() => handlePressAllBtn()}>
             <View>
               {Object.keys(agreements).every(key => agreements[key]) ? (
@@ -85,7 +86,7 @@ const Agreement = ({updateAgreementStatus}) => {
             </View>
           </TouchableOpacity>
         </View>
-        <Text style={[styles.guideText, { paddingTop: 0, paddingBottom: 15}]}>선택적 약관에 대한 동의를 포함합니다. 전체 동의하기 선택 후 선택적 약관에 대한 동의를 변경하실 수 있습니다.</Text>
+        <CustomText style={[styles.guideText, { paddingTop: 0, paddingBottom: 15}]}>선택적 약관에 대한 동의를 포함합니다. 전체 동의하기 선택 후 선택적 약관에 대한 동의를 변경하실 수 있습니다.</CustomText>
       </View>
       <View style={styles.agreementLists}>
         <AgreementItem

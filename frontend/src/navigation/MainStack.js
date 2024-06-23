@@ -89,6 +89,7 @@ const MainStack = ({navigation}) => {
             fontWeight: 'bold',
             color: route.name == 'Main' ? '#fff' : '#525252',
             paddingBottom: 10,
+            fontFamily: 'Pretendard'
           },
           tabBarIcon: ({ focused }) => (
             <CustomTabIcon focused={focused} />

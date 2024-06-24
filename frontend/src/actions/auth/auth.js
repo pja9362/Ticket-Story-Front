@@ -26,6 +26,27 @@ export const checkIdDuplicate = async userId => {
   }
 }
 
+export const sendEmail = async userId => {
+  try {
+    console.log(API_URL)
+    const response = await axios.post(
+      `${API_URL}/api/v1/auth/password/sendPasswordCertification`, 
+      {
+        id: userId,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    console.log('Send Email check response:', response.data);
+    return response.data.result;
+  } catch (error) {
+    console.error('SendEmail check error:', error);
+    throw error;
+  }
+}
 
 export const signUpRequest = async formData => {
   try {

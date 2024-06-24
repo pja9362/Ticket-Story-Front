@@ -53,7 +53,7 @@ const Login = () => {
       <Header title='로그인'/>
 
       <View style={styles.formContainer}>
-        <CustomText style={styles.sectionText}>아이디</CustomText>
+        <CustomText style={styles.sectionText} fontWeight="bold">아이디</CustomText>
         <View style={styles.inputContainer}>
           <CustomTextInput
             value={id}
@@ -66,7 +66,7 @@ const Login = () => {
           />
         </View>
 
-        <CustomText style={styles.sectionText}>비밀번호</CustomText>
+        <CustomText style={styles.sectionText} fontWeight="bold">비밀번호</CustomText>
         <View style={{...styles.inputContainer, marginBottom: 15}}>
           <CustomTextInput
             value={password}
@@ -116,7 +116,8 @@ const styles = StyleSheet.create({
   sectionText: {
     fontSize: 16,
     marginBottom: 12,
-    color: '#000',
+    // color: '#000',
+    color: '#525252',
   },
   formContainer: {
     marginBottom: 20,

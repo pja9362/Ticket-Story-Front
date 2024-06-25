@@ -11,7 +11,7 @@ const OCRFail = ({navigation}) => {
       </TouchableOpacity>
 
       <View style={styles.textContainer}>
-        <CustomText style={styles.mainText}>티켓 인식에 실패했습니다.</CustomText>
+        <CustomText style={styles.mainText} fontWeight="bold">티켓 인식에 실패했습니다.</CustomText>
         <CustomText style={styles.subText}>
           깨끗한 배경에 티켓을 놓고{'\n'}전체가 잘 나오도록 촬영해 주세요.
         </CustomText>
@@ -51,7 +51,6 @@ const styles = StyleSheet.create({
   },
   mainText: {
     fontSize: 20,
-    fontWeight: 'bold',
     color: '#000',
   },
   subText: {

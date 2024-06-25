@@ -33,21 +33,21 @@ const EnrollFinish = ({navigation}) => {
         <>
         <View style={styles.container}>
             <Image source={ticket} style={styles.image} />
-            <CustomText style={styles.mainText}>나의 <CustomText style={{...styles.mainText, fontWeight:'bold'}}>티켓스토리</CustomText>가 등록되었어요.</CustomText>
+            <CustomText style={styles.mainText} fontWeight="medium">나의 <CustomText style={styles.mainText} fontWeight="bold">티켓스토리</CustomText>가 등록되었어요.</CustomText>
             <CustomText style={styles.subText}>등록한 티켓은 티켓북에서 확인할 수 있어요.</CustomText>
 
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={{...styles.navButton, backgroundColor: '#5D70F9' }} onPress={() => navigation.navigate('MainStack')}>
                     <Image style={styles.homeIcon} source={home} />
-                    <CustomText style={{...styles.btnText, color: '#fff'}}>홈으로 가기</CustomText>
+                    <CustomText style={{...styles.btnText, color: '#fff'}} fontWeight="medium">홈으로 가기</CustomText>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.navButton} onPress={hi}>
                     <Image style={styles.storyIcon} source={storycard} />
-                    <CustomText style={styles.btnText}>스토리 카드 보기</CustomText>
+                    <CustomText style={styles.btnText} fontWeight="medium">스토리 카드 보기</CustomText>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.navButton} onPress={openBottomSheet}>
                     <Image style={styles.addticket} source={addticket} />
-                    <CustomText style={styles.btnText}>티켓 추가 등록하기</CustomText>
+                    <CustomText style={styles.btnText} fontWeight="medium">티켓 추가 등록하기</CustomText>
                 </TouchableOpacity>
             </View>
         </View>
@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
     },
     mainText: {
         fontSize: 18,
-        fontWeight: '500',
         color: '#525252',
         marginTop: 0,
         marginBottom: 10,
@@ -101,7 +100,6 @@ const styles = StyleSheet.create({
         color: '#000',
         fontSize: 18,
         textAlign: 'center',
-        fontWeight: '500',
     },
     homeIcon: {
         width: 22,

@@ -1,5 +1,6 @@
 import React from 'react';
 import {TouchableOpacity, Text, StyleSheet, View} from 'react-native';
+import {CustomText} from '../CustomText';
 
 const VerifyButton = ({isValid}) => {
   const handleNextClick = () => {
@@ -16,7 +17,7 @@ const VerifyButton = ({isValid}) => {
         style={[styles.nextBtn, !isValid && styles.disabledBtn]}
         onPress={handleNextClick}
         disabled={!isValid}>
-        <Text style={styles.text}>인증번호 요청</Text>
+        <CustomText style={styles.text} fontWeight="bold">인증번호 요청</CustomText>
       </TouchableOpacity>
     </View>
   );
@@ -37,7 +38,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontWeight: 'bold',
     color: '#fff',
     lineHeight: 40,
   },

@@ -31,7 +31,7 @@ const EnrollByOCR = ({route, navigation}) => {
           </TouchableOpacity>
 
           <Image source={ticket} style={styles.image} />
-          <CustomText style={styles.mainText}>
+          <CustomText style={styles.mainText} fontWeight="bold">
             직접 관람한 티켓의{'\n'}제목과 좌석 정보가{'\n'}잘 나오게
             찍어주세요.
           </CustomText>
@@ -66,7 +66,6 @@ const styles = StyleSheet.create({
   },
   mainText: {
     fontSize: 20,
-    fontWeight: 'bold',
     lineHeight: 24,
     color: '#fff',
     textAlign: 'center',

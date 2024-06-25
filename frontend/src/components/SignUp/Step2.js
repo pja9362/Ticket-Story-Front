@@ -51,7 +51,7 @@ const Step2 = ({ nextStep, handleChange, values }) => {
   return (
     <View style={styles.container}>
       <View style={styles.formContainer}>
-        <CustomText style={styles.sectionText}>비밀번호</CustomText>
+        <CustomText style={styles.sectionText} fontWeight="bold">비밀번호</CustomText>
         <View style={styles.inputContainer}>
           <CustomTextInput
             style={styles.inputBox}
@@ -74,7 +74,7 @@ const Step2 = ({ nextStep, handleChange, values }) => {
       </View>
 
       <View style={{...styles.formContainer, marginBottom: 0}}>
-        <CustomText style={{...styles.sectionText, marginTop: 10}}>비밀번호 확인</CustomText>
+        <CustomText style={{...styles.sectionText, marginTop: 10}} fontWeight="bold">비밀번호 확인</CustomText>
         <View style={styles.inputContainer}>
           <CustomTextInput
             style={styles.inputBox}
@@ -104,7 +104,6 @@ const styles = StyleSheet.create({
   },
   sectionText: {
     fontSize: 16,
-    fontWeight: 'bold',
     marginBottom: 12,
     color: '#000',
   },

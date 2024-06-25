@@ -5,14 +5,19 @@ import iconTutorial from '../images/icon_tutorial.png';
 import logo from '../images/logo_navHeader.png';
 
 const NavHeader = () => {
+
+  const handleHamburger = () => {
+    console.log('dd');
+  }
+
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={{width: 30}}>
-        <Image source={iconHamburger} style={{width: 21, height: 16}}/>
+      <TouchableOpacity style={{width: 30}} onPress={handleHamburger}>
+        <Image source={iconHamburger} style={{width: 21, height: 18,}}/>
       </TouchableOpacity>
-      <Image source={logo} style={{width: 131, height: 44}}/>
+      <Image source={logo} style={{width: 131, height: 44, marginBottom: 10, marginLeft: 20}}/>
       <TouchableOpacity style={{width: 30, alignItems: 'flex-end'}}>
-        <Image source={iconTutorial} style={{width: 22, height: 22}}/>
+        <Image source={iconTutorial} style={{width: 24, height: 24}}/>
       </TouchableOpacity>
     </View>
   );

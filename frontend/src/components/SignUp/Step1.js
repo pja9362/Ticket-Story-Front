@@ -57,7 +57,7 @@ const Step1 = ({nextStep, handleChange, values}) => {
   
   return (
     <View style={styles.container}>
-      <CustomText style={styles.sectionText}>아이디</CustomText>
+      <CustomText style={styles.sectionText} fontWeight="bold">아이디</CustomText>
       <CustomTextInput
         style={styles.inputBox}
         value={id}
@@ -85,7 +85,6 @@ const styles = StyleSheet.create({
   },
   sectionText: {
     fontSize: 16,
-    fontWeight: 'bold',
     marginBottom: 12,
     color: '#525252',
   },

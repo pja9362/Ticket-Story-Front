@@ -163,8 +163,8 @@ const EnrollReview = ({navigation, route}) => {
     <>
       <EnrollHeader title="티켓 후기 입력" onIconClick={handleNext} />
       <KeyboardAwareScrollView style={styles.container} showsVerticalScrollIndicator={false} ref={scrollViewRef}>
-        <CustomText style={{fontSize: 16, fontWeight: 'bold', color: '#525252', lineHeight: 24}}>
-          관람한 <CustomText style={{color: '#5D70F9'}}>{title || '콘텐츠'}</CustomText>의 후기를 알려주세요.
+        <CustomText style={{fontSize: 16, color: '#525252', lineHeight: 24}} fontWeight="bold">
+          관람한 <CustomText style={{color: '#5D70F9'}} fontWeight="bold">{title || '콘텐츠'}</CustomText>의 후기를 알려주세요.
         </CustomText>
         <CustomText style={{ fontSize: 12, color: '#939393' }}>*표시는 필수 항목입니다.</CustomText>
 
@@ -197,12 +197,13 @@ const EnrollReview = ({navigation, route}) => {
         </View>
         <View style={styles.reviewTextContainer}>
           <CustomTextInput
-            style={{...styles.inputArea, height: 30, fontSize: 16, fontWeight: 'bold', color: '#525252'}}
+            style={{...styles.inputArea, height: 30, fontSize: 16, color: '#525252'}}
             value={reviewTitle}
             maxLength={20}
             placeholder = "제목"
             placeholderTextColor = "#B6B6B6"
             onChangeText={text => setReviewTitle(text)}
+            fontWeight="bold"
           />
           <CustomTextInput
             style={{...styles.inputArea, flex: 1}}

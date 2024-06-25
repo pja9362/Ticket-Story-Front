@@ -5,6 +5,7 @@ import GoldTicketIcon from '../../images/icon_ticket_gold.png';
 import SilverTicketIcon from '../../images/icon_ticket_silver.png';
 import BronzeTicketIcon from '../../images/icon_ticket_bronze.png';
 import BlackTicketIcon from '../../images/icon_ticket_black.png';
+import { CustomText } from '../../components/CustomText';
 
 const SliderRating = ({category, value, onValueChange}) => {
   const getTicketIcon = () => {
@@ -21,10 +22,10 @@ const SliderRating = ({category, value, onValueChange}) => {
 
   return (
     <View style={{marginTop: category === 'art' ? 12 : 0}}>
-      <Text style={styles.sliderText}>
+      <CustomText style={styles.sliderText}>
         {category === 'art' ? '작품' : '좌석'} 평점
-        <Text style={styles.requiredIndicator}>*</Text>
-      </Text>
+        <CustomText style={styles.requiredIndicator}>*</CustomText>
+      </CustomText>
     
       <View style={styles.sliderContainer}>
         <View style={styles.ticketIconContainer}>
@@ -42,7 +43,7 @@ const SliderRating = ({category, value, onValueChange}) => {
           onValueChange={rating => onValueChange(category, rating)}
         />
 
-        <Text style={styles.sliderValue}> {value} </Text>
+        <CustomText style={styles.sliderValue} fontWeight="bold"> {value} </CustomText>
       </View>
     </View>
   );
@@ -61,7 +62,6 @@ const styles = StyleSheet.create({
   sliderValue: {
     textAlign: 'center',
     fontSize: 20,
-    fontWeight: 'bold',
     color: '#525252',
     width: 45,
   },

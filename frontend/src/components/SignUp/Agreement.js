@@ -75,7 +75,7 @@ const Agreement = ({updateAgreementStatus}) => {
     <>
       <View style={{marginLeft: 8}}>
         <View style={styles.allAgreement}>
-          <CustomText style={{color: '#525252',fontSize: 12, fontWeight: 'bold'}}>전체 동의하기</CustomText>
+          <CustomText style={{color: '#525252',fontSize: 12}} fontWeight="bold">전체 동의하기</CustomText>
           <TouchableOpacity onPress={() => handlePressAllBtn()}>
             <View>
               {Object.keys(agreements).every(key => agreements[key]) ? (

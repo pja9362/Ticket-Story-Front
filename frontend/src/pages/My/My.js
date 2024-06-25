@@ -67,10 +67,10 @@ const My = () => {
       <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingVertical: 10, paddingHorizontal: 12 }}>
         <View style={{ flex: 1 }} />
 
-        <CustomText style={{ color: '#525252', fontWeight: 'bold', fontSize: 17, flex: 1 }}>나의 통계</CustomText>
+        <CustomText style={{ color: '#525252', fontSize: 17, flex: 1 }} fontWeight="bold">나의 통계</CustomText>
 
         <TouchableOpacity style={{ width: 64, backgroundColor: '#EEEEEE', borderRadius: 50 }} onPress={handleShareBtnPress}>
-          <CustomText style={{ color: '#525252', padding: 7, fontWeight: 700 }}>공유하기</CustomText>
+          <CustomText style={{ color: '#525252', padding: 7 }} fontWeight="bold">공유하기</CustomText>
         </TouchableOpacity>
       </View>
 
@@ -89,75 +89,75 @@ const My = () => {
               <View style={styles.mainContent}>
                 {/* 관람한 콘텐츠 */}
                 <View style={{ marginTop: 25, paddingBottom: 32, borderBottomColor: '#0000001A', borderBottomWidth: 1 }}>
-                  <CustomText style={{ ...styles.mainText, fontSize: 20, marginBottom: 24 }}>관람한 콘텐츠</CustomText>
+                  <CustomText style={{ ...styles.mainText, fontSize: 20, marginBottom: 24 }} fontWeight="bold">관람한 콘텐츠</CustomText>
                   <View style={styles.contentContainer}>
                     <View style={styles.rowContainer}>
-                      <CustomText style={styles.categoryText}>영화 <CustomText style={{ color: '#5D70F9', fontWeight: 700, fontSize: 24 }}>   {movieStats && movieStats.viewCount} </CustomText>편</CustomText>
-                      <CustomText style={styles.categoryText}>뮤지컬 <CustomText style={{ color: '#5D70F9', fontWeight: 700, fontSize: 24 }}>   {musicalStats && musicalStats.viewCount} </CustomText>편</CustomText>
+                      <CustomText style={styles.categoryText} fontWeight="bold">영화 <CustomText style={{ color: '#5D70F9', fontSize: 24 }} fontWeight="bold">   {movieStats && movieStats.viewCount} </CustomText>편</CustomText>
+                      <CustomText style={styles.categoryText} fontWeight="bold">뮤지컬 <CustomText style={{ color: '#5D70F9', fontSize: 24 }} fontWeight="bold">   {musicalStats && musicalStats.viewCount} </CustomText>편</CustomText>
                     </View>
                     <View style={styles.rowContainer}>
-                      <CustomText style={styles.categoryText}>연극 <CustomText style={{ color: '#5D70F9', fontWeight: 700, fontSize: 24 }}>   {playStats && playStats.viewCount} </CustomText>편</CustomText>
-                      <CustomText style={styles.categoryText}>스포츠 <CustomText style={{ color: '#5D70F9', fontWeight: 700, fontSize: 24 }}>   {sportsStats && sportsStats.viewCount} </CustomText>편</CustomText>
+                      <CustomText style={styles.categoryText} fontWeight="bold">연극 <CustomText style={{ color: '#5D70F9', fontSize: 24 }} fontWeight="bold">   {playStats && playStats.viewCount} </CustomText>편</CustomText>
+                      <CustomText style={styles.categoryText} fontWeight="bold">스포츠 <CustomText style={{ color: '#5D70F9', fontSize: 24 }} fontWeight="bold">   {sportsStats && sportsStats.viewCount} </CustomText>편</CustomText>
                     </View>
                   </View>
                 </View>
 
                 {/* 평균 콘텐츠 점수 */}
                 <View style={{ paddingBottom: 32, borderBottomColor: '#0000001A', borderBottomWidth: 1 }}>
-                  <CustomText style={{ ...styles.mainText, fontSize: 20, marginTop: 36, marginBottom: 22 }}>평균 콘텐츠 점수</CustomText>
+                  <CustomText style={{ ...styles.mainText, fontSize: 20, marginTop: 36, marginBottom: 22 }} fontWeight="bold">평균 콘텐츠 점수</CustomText>
                   <View style={{ gap: 10 }}>
                     <View style={styles.barRow}>
-                      <CustomText style={{ ...styles.categoryText, width: 50, marginRight: 20, textAlign: 'right' }}>영화</CustomText>
+                      <CustomText style={{ ...styles.categoryText, width: 50, marginRight: 20, textAlign: 'right' }} fontWeight="bold">영화</CustomText>
                       <View style={styles.bar}>
                         <View style={getFilledBarStyle(movieStats.averageScore)} />
                       </View>
-                      <CustomText style={styles.scoreText}>{movieStats.viewCount != 0 ? movieStats.averageScore : ""}</CustomText>
+                      <CustomText style={styles.scoreText} fontWeight="bold">{movieStats.viewCount != 0 ? movieStats.averageScore : ""}</CustomText>
                     </View>
                     <View style={styles.barRow}>
-                      <CustomText style={{ ...styles.categoryText, width: 50, marginRight: 20, textAlign: 'right' }}>연극</CustomText>
+                      <CustomText style={{ ...styles.categoryText, width: 50, marginRight: 20, textAlign: 'right' }} fontWeight="bold">연극</CustomText>
                       <View style={styles.bar}>
                         <View style={getFilledBarStyle(playStats.averageScore)} />
                       </View>
-                      <CustomText style={styles.scoreText}>{playStats.viewCount != 0 ? playStats.averageScore : ""}</CustomText>
+                      <CustomText style={styles.scoreText} fontWeight="bold">{playStats.viewCount != 0 ? playStats.averageScore : ""}</CustomText>
                     </View>
                     <View style={styles.barRow}>
-                      <CustomText style={{ ...styles.categoryText, width: 50, marginRight: 20, textAlign: 'right' }}>뮤지컬</CustomText>
+                      <CustomText style={{ ...styles.categoryText, width: 50, marginRight: 20, textAlign: 'right' }} fontWeight="bold">뮤지컬</CustomText>
                       <View style={styles.bar}>
                         <View style={getFilledBarStyle(musicalStats.averageScore)} />
                       </View>
-                      <CustomText style={styles.scoreText}>{musicalStats.viewCount != 0 ? musicalStats.averageScore : ""}</CustomText>
+                      <CustomText style={styles.scoreText} fontWeight="bold">{musicalStats.viewCount != 0 ? musicalStats.averageScore : ""}</CustomText>
                     </View>
                     <View style={styles.barRow}>
-                      <CustomText style={{ ...styles.categoryText, width: 50, marginRight: 20, textAlign: 'right' }}>스포츠</CustomText>
+                      <CustomText style={{ ...styles.categoryText, width: 50, marginRight: 20, textAlign: 'right' }} fontWeight="bold">스포츠</CustomText>
                       <View style={styles.bar}>
                         <View style={getFilledBarStyle(sportsStats.averageScore)} />
                       </View>
-                      <CustomText style={styles.scoreText}>{sportsStats.viewCount != 0 ? sportsStats.averageScore : ""}</CustomText>
+                      <CustomText style={styles.scoreText} fontWeight="bold">{sportsStats.viewCount != 0 ? sportsStats.averageScore : ""}</CustomText>
                     </View>
                   </View>
                 </View>
 
                 {/* 방문한 문화 공간 */}
                 <View>
-                  <CustomText style={{ ...styles.mainText, fontSize: 20, marginVertical: 20 }}>방문한 문화 공간</CustomText>
+                  <CustomText style={{ ...styles.mainText, fontSize: 20, marginVertical: 20 }} fontWeight="bold">방문한 문화 공간</CustomText>
                   <View style={styles.locationContainer}>
-                    <CustomText style={styles.locationText}>영화관 <CustomText style={{ color: '#5D70F9', fontWeight: 700, fontSize: 22 }}> {locationCountStats.movieLocationCount} </CustomText>곳</CustomText>
-                    <CustomText style={styles.locationText}>공연장 <CustomText style={{ color: '#5D70F9', fontWeight: 700, fontSize: 22 }}> {locationCountStats.performanceLocationCount} </CustomText>곳</CustomText>
-                    <CustomText style={styles.locationText}>경기장 <CustomText style={{ color: '#5D70F9', fontWeight: 700, fontSize: 22 }}> {locationCountStats.sportsLocationCount} </CustomText>곳</CustomText>
+                    <CustomText style={styles.locationText} fontWeight="bold">영화관 <CustomText style={{ color: '#5D70F9', fontSize: 22 }} fontWeight="bold"> {locationCountStats.movieLocationCount} </CustomText>곳</CustomText>
+                    <CustomText style={styles.locationText} fontWeight="bold">공연장 <CustomText style={{ color: '#5D70F9', fontSize: 22 }} fontWeight="bold"> {locationCountStats.performanceLocationCount} </CustomText>곳</CustomText>
+                    <CustomText style={styles.locationText} fontWeight="bold">경기장 <CustomText style={{ color: '#5D70F9', fontSize: 22 }} fontWeight="bold"> {locationCountStats.sportsLocationCount} </CustomText>곳</CustomText>
                   </View>
 
                   {/* locationCount  분류, 장소명, 방문횟수 */}
                   <View>
                     <View style={styles.tableHeader}>
-                      <CustomText style={styles.columnHeader}>분류</CustomText>
-                      <CustomText style={styles.columnHeader}>장소명</CustomText>
-                      <CustomText style={styles.columnHeader}>방문횟수</CustomText>
+                      <CustomText style={styles.columnHeader} fontWeight="bold">분류</CustomText>
+                      <CustomText style={styles.columnHeader} fontWeight="bold">장소명</CustomText>
+                      <CustomText style={styles.columnHeader} fontWeight="bold">방문횟수</CustomText>
                     </View>
                     {locationListStats.slice(0, 10).map((location, index) => (
                       <View key={index} style={styles.tableRow}>
-                        <CustomText style={styles.tableCell}>{location.locationType}</CustomText>
-                        <CustomText style={styles.tableCell}>{location.locationName}</CustomText>
-                        <CustomText style={styles.tableCell}>{location.count}</CustomText>
+                        <CustomText style={styles.tableCell} fontWeight="medium">{location.locationType}</CustomText>
+                        <CustomText style={styles.tableCell} fontWeight="medium">{location.locationName}</CustomText>
+                        <CustomText style={styles.tableCell} fontWeight="medium">{location.count}</CustomText>
                       </View>
                     ))}
                     <View style={{ alignItems: 'center', paddingVertical: 10, marginBottom: 30, borderBottomColor: '#0000001A', borderBottomWidth: 1 }}>
@@ -181,7 +181,6 @@ const styles = StyleSheet.create({
   mainText: {
     color: '#525252',
     fontSize: 24,
-    fontWeight: 'bold',
     marginBottom: 10,
   },
   mainContent: {
@@ -190,7 +189,6 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     color: '#9A9A9A',
-    fontWeight: '800',
     fontSize: 16,
   },
   contentContainer: {
@@ -210,7 +208,6 @@ const styles = StyleSheet.create({
   },
   locationText: {
     color: '#9A9A9A',
-    fontWeight: '800',
     fontSize: 14,
   },
   barRow: {
@@ -226,7 +223,6 @@ const styles = StyleSheet.create({
   },
   scoreText: {
     color: '#525252',
-    fontWeight: 'bold',
     fontSize: 20,
     marginLeft: 14,
     width: 40,
@@ -241,7 +237,6 @@ const styles = StyleSheet.create({
   },
   columnHeader: {
     flex: 1,
-    fontWeight: 800,
     color: '#9A9A9A',
     textAlign: 'center',
     paddingVertical: 5,
@@ -255,7 +250,6 @@ const styles = StyleSheet.create({
     flex: 1,
     color: '#9A9A9A',
     textAlign: 'center',
-    fontWeight: 500,
   },
 });
 

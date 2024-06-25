@@ -18,15 +18,15 @@ const BottomSheetMenu = ({closeBottomSheet, onClick}) => {
           <View style={styles.contentContainer}>
             <TouchableOpacity
               onPress={() => onClick('scrape')}>
-              <CustomText style={styles.btnText}>온라인 티켓 등록하기</CustomText>
+              <CustomText style={styles.btnText} fontWeight="bold">온라인 티켓 등록하기</CustomText>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => onClick('camera')}>
-              <CustomText style={styles.btnText}>카메라로 티켓 등록하기</CustomText>
+              <CustomText style={styles.btnText} fontWeight="bold">카메라로 티켓 등록하기</CustomText>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => onClick('hand')}>
-              <CustomText style={styles.btnText}>직접 입력으로 티켓 등록하기</CustomText>
+              <CustomText style={styles.btnText} fontWeight="bold">직접 입력으로 티켓 등록하기</CustomText>
             </TouchableOpacity>
           </View>
         </View>
@@ -54,7 +54,6 @@ const styles = StyleSheet.create({
   btnText: {
     fontSize: 20,
     lineHeight: 29,
-    fontWeight: 'bold',
     color: '#000',
   },
 });

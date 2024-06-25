@@ -4,10 +4,11 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
+  Modal
 } from 'react-native';
 import Header from '../../components/Header';
-import { checkIdDuplicate } from '../../actions/auth/auth';
+import { checkIdDuplicate, sendEmail } from '../../actions/auth/auth';
 import { startCountdown, formatTime } from '../../utils/countdownUtils';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 
@@ -16,6 +17,7 @@ const FindPassword = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [firstBtnText, setFirstBtnText] = useState('인증번호 받기');
   const [isEmailSent, setIsEmailSent] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const [validationNumber, setValidationNumber] = useState(''); 
   const [isNumberValid, setIsNumberValid] = useState(false);
@@ -29,6 +31,8 @@ const FindPassword = () => {
       timer = startCountdown(countdown, newSeconds => setCountdown(newSeconds));
     } else if (countdown === 0) {
       console.log('인증번호가 만료되었습니다. 다시 인증번호를 받아주세요.');
+      setModalVisible(true);
+      setIsEmailSent(false);
     }
   
     return () => {
@@ -58,9 +62,17 @@ const FindPassword = () => {
       if (isIdDuplicated === false) {
         setErrorMessage('입력한 아이디를 찾을 수 없어요.')
       } else {
-        setErrorMessage('');
-        setFirstBtnText('인증번호 발송됨');
-        setIsEmailSent(true);
+        console.log(111);
+        // const sendEmailStatus = await sendEmail(id);
+        // console.log('sendEmailStatus', sendEmailStatus);
+
+        //   if (sendEmailStatus === true) {
+          setErrorMessage('');
+          setFirstBtnText('인증번호 발송됨');
+          setIsEmailSent(true);
+          // } else {
+          //   console.log('뭔가 잘못됨');
+          // }
       }
 
     } catch (error) {
@@ -73,19 +85,27 @@ const FindPassword = () => {
     console.log('인증번호 확인');
   }
 
+  const handleTimeOver = () => {
+    setModalVisible(false);
+    setId('');
+  }
+
   return (
     <View style={styles.container}>
       <Header title='비밀번호 재설정'/>
       <View style={{paddingHorizontal: 18}}>
 
         <View style={styles.formContainer}>
-          <CustomText style={styles.sectionText}>아이디</CustomText>
+          <CustomText style={styles.sectionText} fontWeight="bold">아이디</CustomText>
           <View style={styles.inputContainer}>
             <CustomTextInput
               value={id}
               onChangeText={text => setId(text)}
               style={styles.inputBox}
               placeholder='example@naver.com'
+              placeholderTextColor="#ccc"
+              keyboardType='email-address'
+              autoCapitalize='none'
             />
           </View>
 
@@ -105,7 +125,7 @@ const FindPassword = () => {
           {
             isEmailSent ? 
             <View style={styles.formContainer}>
-              <CustomText style={styles.sectionText}>인증번호</CustomText>
+              <CustomText style={styles.sectionText} fontWeight="bold">인증번호</CustomText>
               <View style={styles.inputContainer}>
                 <CustomTextInput
                   value={validationNumber}
@@ -134,6 +154,26 @@ const FindPassword = () => {
           }
         </View>
         </View>
+
+        {modalVisible && (
+          <Modal  
+          transparent={true}
+          visible={true}
+          onRequestClose={()=>setModalVisible(false)}
+          >
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+                <View style={{ backgroundColor: 'white', height: 120, width: 280, padding: 18, borderRadius: 10 }}>
+                  <CustomText style={{color: '#000', fontSize: 16, textAlign: 'center', top: 5}} fontWeight="bold">입력 시간이 만료되었어요. {'\n'} 처음부터 다시 진행해 주세요.</CustomText>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
+                    <TouchableOpacity onPress={handleTimeOver} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5, marginTop: 5}}>
+                      <CustomText style={{ color: 'white', textAlign : 'center'}} fontWeight="bold">확인</CustomText>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+          </Modal>
+        )}
+
     </View>
   );
 };
@@ -149,7 +189,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 12,
     color: '#525252',
-    fontWeight: 'bold',
   },
   formContainer: {
     paddingVertical: 10,
@@ -160,7 +199,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#EEEEEE',
     borderRadius: 5,
     justifyContent: 'space-between',
-    paddingRight: 20,
+    paddingRight: 50,
   },
   inputBox: {
     fontSize: 16,

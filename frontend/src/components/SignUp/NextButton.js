@@ -20,7 +20,7 @@ const NextButton = ({onClick, isValid = 'true', isLast, message}) => {
         style={[styles.nextBtn, !isValid && styles.disabledBtn, message == null && {marginTop: 40}]}
         onPress={handleNextClick}
         disabled={!isValid}>
-        <CustomText style={styles.text}>{isLast ? '계정 만들기' : '다음'}</CustomText>
+        <CustomText style={styles.text} fontWeight="bold">{isLast ? '계정 만들기' : '다음'}</CustomText>
       </TouchableOpacity>
     </View>
   );
@@ -41,7 +41,6 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontWeight: 'bold',
     color: '#fff',
     lineHeight: 40,
   },

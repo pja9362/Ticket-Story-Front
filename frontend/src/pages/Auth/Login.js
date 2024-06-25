@@ -10,7 +10,7 @@ import Header from '../../components/Header';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { signInRequest } from '../../actions/auth/auth';
 import { useDispatch } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 
 const Login = () => {
@@ -28,7 +28,11 @@ const Login = () => {
       console.log('login result:', result);
       console.log('login response:', response);
       if(result) {
-        navigation.navigate('MainStack');
+        // navigation.navigate('MainStack');
+        navigation.dispatch(CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'MainStack'}]
+        }))
       } else {
         console.log('login error:', response);
       }
@@ -49,7 +53,7 @@ const Login = () => {
       <Header title='로그인'/>
 
       <View style={styles.formContainer}>
-        <CustomText style={styles.sectionText}>아이디</CustomText>
+        <CustomText style={styles.sectionText} fontWeight="bold">아이디</CustomText>
         <View style={styles.inputContainer}>
           <CustomTextInput
             value={id}
@@ -62,7 +66,7 @@ const Login = () => {
           />
         </View>
 
-        <CustomText style={styles.sectionText}>비밀번호</CustomText>
+        <CustomText style={styles.sectionText} fontWeight="bold">비밀번호</CustomText>
         <View style={{...styles.inputContainer, marginBottom: 15}}>
           <CustomTextInput
             value={password}
@@ -94,7 +98,7 @@ const Login = () => {
             pointerEvents: isValid ? 'auto' : 'none',
           }}
         >
-          <CustomText style={styles.btnText}>로그인</CustomText>
+          <CustomText style={styles.btnText} fontWeight="bold">로그인</CustomText>
         </TouchableOpacity>
 
       </View>
@@ -112,7 +116,8 @@ const styles = StyleSheet.create({
   sectionText: {
     fontSize: 16,
     marginBottom: 12,
-    color: '#000',
+    // color: '#000',
+    color: '#525252',
   },
   formContainer: {
     marginBottom: 20,
@@ -147,7 +152,6 @@ const styles = StyleSheet.create({
   },
   btnText: {
     color: '#fff',
-    fontWeight: 'bold',
     lineHeight: 20,
   },
   inputContainer: {

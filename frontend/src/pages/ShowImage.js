@@ -80,15 +80,15 @@ const ShowImage = ({ route }) => {
                     <Image source={logo} style={styles.logo} />
                 )}
                 <View style={styles.overlay}>
-                    {(!hideImageTitle && !hideImageInfo) && <CustomText style={{ ...styles.overlayText, fontSize: 20, color: darkText ? '#525252' : '#fff'  }}>{ticket.title}</CustomText>}
+                    {(!hideImageTitle && !hideImageInfo) && <CustomText style={{ ...styles.overlayText, fontSize: 20, color: darkText ? '#525252' : '#fff'  }} fontWeight="bold">{ticket.title}</CustomText>}
                     {!hideImageInfo && (
                         <>
                             <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Date</CustomText>
-                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]}>{ticket.date}</CustomText>
+                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="bold">{ticket.date}</CustomText>
                             <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Time</CustomText>
-                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]}>{ticket.time}</CustomText>
+                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="bold">{ticket.time}</CustomText>
                             <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Place</CustomText>
-                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]}>{ticket.location}</CustomText>
+                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="bold">{ticket.location}</CustomText>
                         </>
                     )}
                 </View>
@@ -96,7 +96,7 @@ const ShowImage = ({ route }) => {
 
             <TouchableOpacity style={styles.selectBtn} onPress={handleSelectNewImage}>
                 <Image source={iconEdit} style={{ width: 24, height: 24, position: 'absolute', left: 18, top: 14 }} />
-                <CustomText style={styles.btnText}>사진 다시 선택하기</CustomText>
+                <CustomText style={styles.btnText} fontWeight="medium">사진 다시 선택하기</CustomText>
             </TouchableOpacity>
 
             <View style={styles.btnContainer}>
@@ -116,10 +116,10 @@ const ShowImage = ({ route }) => {
                 >
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
                       <View style={{ backgroundColor: 'white', height: 120, width: 280, padding: 18, borderRadius: 10 }}>
-                        <CustomText style={{color: '#000', fontSize: 16, fontWeight: 'bold', textAlign: 'center', top: 5}}>이미지카드가 앨범에 저장됐어요</CustomText>
+                        <CustomText style={{color: '#000', fontSize: 16, textAlign: 'center', top: 5}} fontWeight="bold">이미지카드가 앨범에 저장됐어요</CustomText>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
                           <TouchableOpacity onPress={closeModal} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5, marginTop: 5}}>
-                            <CustomText style={{ color: 'white', fontWeight: 'bold', textAlign : 'center'}}>확인</CustomText>
+                            <CustomText style={{ color: 'white', textAlign : 'center'}} fontWeight="bold">확인</CustomText>
                           </TouchableOpacity>
                         </View>
                       </View>
@@ -161,7 +161,6 @@ const styles = StyleSheet.create({
     },
     overlayText: {
         color: '#fff',
-        fontWeight: 'bold',
         fontSize: 16,
     },
     overlayGuideText: {
@@ -191,7 +190,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         padding: 15,
         textAlign: 'center',
-        fontWeight: '500',
     },
 });
 

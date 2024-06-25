@@ -17,17 +17,13 @@ import deleteIcon from '../../images/icon_delete_photo.png';
 import NextButton from '../../components/EnrollTicket/NextBtn';
 import CustomCheckbox from '../../components/EnrollTicket/CustomCheckbox';
 import ImagePicker from 'react-native-image-crop-picker';
-import { saveNewTicket, uploadImage, updateReview } from '../../actions/ticket/ticket';
+import { saveNewTicket, uploadImage, updateReview, getTicketDetail } from '../../actions/ticket/ticket';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const EditReview = ({navigation, route}) => {
   const { ticketId, ticketData, reviewId } = route.params;
-
-  useEffect(() => {
-    console.log("TICKET DATA", ticketData);
-  }, []);
   
   const [sliderTouched, setSliderTouched] = useState(false);
 
@@ -39,6 +35,7 @@ const EditReview = ({navigation, route}) => {
   const [spoilerChecked, setSpoilerChecked] = useState(false);
   const [privateChecked, setPrivateChecked] = useState(false);
   const [seats, setSeats] = useState(ticketData.contentsDetails.seats);
+  const [updatedTicket, setUpdatedTicket] = useState(null);
 
   const [saveProcessing, setSaveProcessing] = useState(false);
   const [imageProcessing, setImageProcessing] = useState(false);
@@ -51,11 +48,12 @@ const EditReview = ({navigation, route}) => {
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow);
-
+    console.log('뭐냐대체');
     return () => {
       keyboardDidShowListener.remove();
     };
   }, []);
+
 
   const handleKeyboardDidShow = () => {
     if (scrollViewRef.current) {
@@ -111,7 +109,9 @@ const EditReview = ({navigation, route}) => {
       console.log("티켓 등록 요청", requestData);
       const updatedReview = await updateReview(reviewId, requestData);
       console.log('Updated Review:', updatedReview);
-      navigation.navigate('EnrollFinish');
+      
+      navigation.navigate('EditFinish', { ticket: ticket, ticketId: ticketId });
+
     } catch (error) {
       console.error('Error saving review:', error);
     } finally {
@@ -168,8 +168,8 @@ const EditReview = ({navigation, route}) => {
     <>
       <EnrollHeader title="티켓 후기 입력" onIconClick={handleNext} />
       <KeyboardAwareScrollView style={styles.container} ref={scrollViewRef}>
-        <CustomText style={{fontSize: 16, fontWeight: 'bold', color: '#525252', lineHeight: 24}}>
-          관람한 <CustomText style={{color: '#5D70F9'}}>{ticketData.contentsDetails.title || '콘텐츠'}</CustomText>의 후기를 알려주세요.
+        <CustomText style={{fontSize: 16, color: '#525252', lineHeight: 24}} fontWeight="bold">
+          관람한 <CustomText style={{color: '#5D70F9'}} fontWeight="bold">{ticketData.contentsDetails.title || '콘텐츠'}</CustomText>의 후기를 알려주세요.
         </CustomText>
         <CustomText style={{ fontSize: 12, color: '#939393' }}>*표시는 필수 항목입니다.</CustomText>
 
@@ -202,12 +202,13 @@ const EditReview = ({navigation, route}) => {
         </View>
         <View style={styles.reviewTextContainer}>
           <CustomTextInput
-            style={{...styles.inputArea, height: 30, fontSize: 16, fontWeight: 'bold', color: '#525252'}}
+            style={{...styles.inputArea, height: 30, fontSize: 16, color: '#525252'}}
             value={reviewTitle}
             placeholder = "제목"
             placeholderTextColor = "#B6B6B6"
             maxLength={20}
             onChangeText={text => setReviewTitle(text)}
+            fontWeight="bold"
           />
           <CustomTextInput
             // style={{...styles.inputArea, flex: 1}}
@@ -227,7 +228,7 @@ const EditReview = ({navigation, route}) => {
         </View>
 
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 20}} >
-          <NextButton  isDisabled={(saveProcessing || imageProcessing || artRating === 0 || seatRating === 0) && sliderTouched} onPress={handleNext} />
+          <NextButton isDisabled={saveProcessing || imageProcessing || artRating === 0 || seatRating === 0 } onPress={handleNext} />
         </View>
       </KeyboardAwareScrollView>
     </>

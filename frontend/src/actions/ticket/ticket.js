@@ -74,7 +74,7 @@ export const getTicketDetails = async (data) => {
       return null;
     }
   } catch (error) {
-    console.error('Error getting ticket detial:', error);
+    console.error('Error getting ticket detail:', error);
     throw error;
   }
 }

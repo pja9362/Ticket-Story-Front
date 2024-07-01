@@ -7,7 +7,7 @@ const getCategoryPlaceholder = (category, placeholderType) => {
         case 'locationDetail':
           return '5관';
         case 'seats':
-          return 'A12';
+          return 'A열 12번';
         default:
           return '';
       }
@@ -19,7 +19,7 @@ const getCategoryPlaceholder = (category, placeholderType) => {
         case 'locationDetail':
           return '신한카드홀';
         case 'seats':
-          return 'A12';
+          return 'A열 12번';
         default:
           return '';
       }

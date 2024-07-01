@@ -1,15 +1,36 @@
-import React, {useState} from 'react';
-import {View, Image, StyleSheet, Text, Button, TouchableOpacity} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Image, StyleSheet, Text, Button, TouchableOpacity, Modal} from 'react-native';
 import ticket from '../../images/character_black.png';
 import home from '../../images/icon_home.png';
 import storycard from '../../images/icon_storycard.png';
+import { useDispatch } from 'react-redux';
 import addticket from '../../images/icon_addticket.png';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 import BottomSheetMenu from '../../components/EnrollTicket/BottomSheetMenu';
+import { getTicketDetail, getTicketDetails } from '../../actions/ticket/ticket';
 
-const EnrollFinish = ({navigation}) => {
+const EnrollFinish = ({navigation, route}) => {
+    const dispatch = useDispatch();
+    const { ticketId } = route.params;
 
+    const [moveStorycard, setMoveStorycard] = useState(false);
+    const [makeCardVisible, setMakeCardVisible] = useState(false); //
+    const [reviewCardId, setReviewCardId] = useState(null);
     const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+
+    useEffect(() => {
+        dispatch(getTicketDetail(ticketId))
+          .then((response) => {
+            
+            if (response.reviewImages === null && response.reviewTitle === "" && response.reviewDetails === "") {
+              setReviewCardId(response.reviewId);
+            } else {
+              console.log('bangbang2');
+              setMoveStorycard(true);
+            }
+  
+          })
+      }, []);
 
     const openBottomSheet = () => {
         setBottomSheetVisible(true);
@@ -25,9 +46,63 @@ const EnrollFinish = ({navigation}) => {
     closeBottomSheet();
     }
 
-    const hi = () => {
-        alert('만드는 중..');
+    const hi = async() => {
+        console.log('되는거 확인해야해서',ticketId);
+
+        const editInfo = {
+            ticketId : ticketId
+        }
+
+        if (moveStorycard) {
+          try {
+            const response = await getTicketDetails(editInfo);
+            if (response !== null) {
+              console.log("성공", response);
+              console.log(response.contentsDetails);
+              
+              navigation.navigate('TicketDetail', {
+                ticketId: ticketId,
+                title : response.contentsDetails.title,
+                date : response.contentsDetails.date,
+                time : response.contentsDetails.time,
+                location : response.contentsDetails.location
+               });
+      
+            } else {
+              alert('Fail');
+            }
+          } catch (error) {
+            console.error('Error Moving to StoryCard:', error.response);
+          }
+        } else {
+            setMakeCardVisible(true)
+        }
     }
+
+    const handleReviewEdit = async() => {
+        const editReview = {
+          ticketId : ticketId
+        }
+        try {
+          setMakeCardVisible(false);
+          const response = await getTicketDetails(editReview);
+          if (response !== null) {
+            console.log("성공2", response);
+            
+            //navigate 하면서 response 값들 보내야함
+            navigation.navigate('EditReview', {
+              ticketId : ticketId,
+              ticketData : response,
+              reviewId : reviewCardId
+             });
+    
+          } else {
+            alert('Fail');
+          }
+        } catch (error) {
+          console.error('Error Editing ticket review:', error.response);
+        }
+      }
 
     return (
         <>
@@ -51,6 +126,27 @@ const EnrollFinish = ({navigation}) => {
                 </TouchableOpacity>
             </View>
         </View>
+
+        <Modal  
+            // animationType="slide"
+            transparent={true}
+            visible={makeCardVisible}
+            onRequestClose={() => setMakeCardVisible(false)}
+          >
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+              <View style={{ backgroundColor: 'white', width: 260, padding: 18, borderRadius: 10 }}>
+                <CustomText style={{color: '#000', fontSize: 16, textAlign: 'center', lineHeight: 24}} fontWeight="bold"> 등록된 리뷰나 사진이 없습니다. {'\n'} 지금 등록하시겠어요? </CustomText>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
+                  <TouchableOpacity onPress={() => setMakeCardVisible(false)} style={{ backgroundColor: '#E8ECEF', width: 100, padding: 10, borderRadius: 5 }}>
+                    <CustomText style={{ color: '#000', textAlign : 'center'}} fontWeight="bold">취소</CustomText>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={handleReviewEdit} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5 }}>
+                    <CustomText style={{ color: 'white', textAlign : 'center'}} fontWeight="bold">확인</CustomText>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
 
         {bottomSheetVisible && (
             <BottomSheetMenu

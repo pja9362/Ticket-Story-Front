@@ -11,6 +11,8 @@ import logo from '../images/logo_white.png';
 import darklogo from '../images/logo_dark.png';
 import CustomCheckbox from '../components/EnrollTicket/CustomCheckbox';
 import {CustomText} from '../components/CustomText';
+import ImagePicker from 'react-native-image-crop-picker';
+import { uploadImage } from '../actions/ticket/ticket';
 
 
 const ShowImage = ({ route }) => {
@@ -24,6 +26,7 @@ const ShowImage = ({ route }) => {
     const { hideImageInfo, hideImageTitle, darkText } = overlayState;
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [selectedImages, setSelectedImages] = useState([]);
 
     const closeModal = () => {
         setModalVisible(false);
@@ -43,9 +46,24 @@ const ShowImage = ({ route }) => {
         }
     }
     
-    const handleSelectNewImage = () => {
+    const handleSelectNewImage = async () => {
         console.log('사진 다시 선택하기 버튼 클릭');
         console.log(ticketId)
+
+        // try {
+    
+        // const image = await ImagePicker.openPicker({
+        //     cropping: true,
+        //     mediaType: 'photo',
+        //     width: 1000,
+        //     height: 1000
+        // });
+    
+        // const uploadedImagePath = await uploadImage(image.path);
+        // setSelectedImages([uploadedImagePath]);
+        // } catch (error) {
+        // console.log('ImagePicker Error: ', error);
+        // } 
     };
 
     return (
@@ -74,6 +92,7 @@ const ShowImage = ({ route }) => {
 
             <View ref={viewRef} style={styles.imageContainer} collapsable={false}>
                 <Image source={{ uri: dummyImageUrl }} style={styles.image} />
+                {/* <Image source={{ uri: selectedImages[0] }} style={styles.image} /> */}
                 {darkText ? (
                     <Image source={darklogo} style={styles.logo} />
                 ) : (

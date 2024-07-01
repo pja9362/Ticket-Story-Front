@@ -24,6 +24,7 @@ const DetailCard = ({ ticket, ticketId }) => {
     const { hideImageInfo, hideImageTitle, hideReviewInfo, hideReviewTitle, darkText } = overlayState;
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [imageVisible, setImageVisible] = useState(false);
     const [reviewVisible, setReviewVisible] = useState(false);
 
 
@@ -49,7 +50,8 @@ const DetailCard = ({ ticket, ticketId }) => {
         if (ticket.reviewImages !== null) {
             navigation.navigate('ShowImageView', {images: ticket.reviewImages[0], ticket: ticket, ticketId: ticketId});
         } else {
-            alert('등록된 사진이 없어요. 등록하러 가실래요?');
+            // alert('등록된 사진이 없어요. 등록하러 가실래요?');
+            setImageVisible(true);
         }
     }
 
@@ -87,6 +89,10 @@ const DetailCard = ({ ticket, ticketId }) => {
           console.error('Error Editing ticket review1:', error.response);
         }
       }
+
+    const handleImageEdit = () => {
+        console.log('밍밍');
+    }
 
     useEffect(() => {
         console.log('fdfdfdfadsfafdsd', ticket.reviewTitle !== '' && ticket.reviewDetails !== '');
@@ -146,7 +152,9 @@ const DetailCard = ({ ticket, ticketId }) => {
                             <Image source={iconLogo} style={{position: 'absolute', width : 110, height : 42, right : -18, top: -18}} />
                         </View>
                         { (ticket.reviewTitle == '' && ticket.reviewDetails == '') ?
-                            <CustomText style={styles.noReviewText}> 등록된 리뷰가 없어요 :( </CustomText>
+                            <View style={{alignItems:'center'}}>
+                             <CustomText style={styles.noReviewText}> 등록된 리뷰가 없어요 :( </CustomText>
+                            </View>
                         :
                             <>
                              {!hideReviewInfo && (
@@ -157,8 +165,8 @@ const DetailCard = ({ ticket, ticketId }) => {
                              )}
 
                                 <View style={styles.reviewContainer}>
-                                    <CustomText style={{...styles.mainText, color: '#000', fontSize: 16}} fontWeight="bold"> {ticket.reviewTitle}</CustomText>
-                                    <CustomText style={styles.text}>{ticket.reviewDetails}</CustomText>
+                                    <CustomText style={{...styles.mainText, color: '#525252', fontSize: 16}} fontWeight="bold"> {ticket.reviewTitle}</CustomText>
+                                    <CustomText style={styles.text} fontWeight="medium">{ticket.reviewDetails}</CustomText>
                                 </View>
                             </>
                         }
@@ -213,6 +221,28 @@ const DetailCard = ({ ticket, ticketId }) => {
                             <CustomText style={{ color: '#000', textAlign : 'center'}} fontWeight="bold">취소</CustomText>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={handleReviewEdit} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5 }}>
+                            <CustomText style={{ color: 'white', textAlign : 'center'}} fontWeight="bold">확인</CustomText>
+                        </TouchableOpacity>
+                        </View>
+                    </View>
+                    </View>
+                </Modal>
+            )}
+
+            {imageVisible && (
+                <Modal  
+                transparent={true}
+                visible={true}
+                onRequestClose={()=>setImageVisible(false)}
+                >
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+                    <View style={{ backgroundColor: 'white', width: 260, padding: 18, borderRadius: 10 }}>
+                        <CustomText style={{color: '#000', fontSize: 16, textAlign: 'center', lineHeight: 24}} fontWeight="bold"> 등록된 사진이 존재하지 않습니다. {'\n'} 지금 등록하시겠어요? </CustomText>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
+                        <TouchableOpacity onPress={()=>setImageVisible(false)} style={{ backgroundColor: '#E8ECEF', width: 100, padding: 10, borderRadius: 5 }}>
+                            <CustomText style={{ color: '#000', textAlign : 'center'}} fontWeight="bold">취소</CustomText>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={handleImageEdit} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5 }}>
                             <CustomText style={{ color: 'white', textAlign : 'center'}} fontWeight="bold">확인</CustomText>
                         </TouchableOpacity>
                         </View>
@@ -324,8 +354,8 @@ const styles = StyleSheet.create({
     },
     noReviewText: {
         position: 'absolute',
-        top : 160,
-        left : 90,
+        top : 120,
+        // left : 90,
         fontSize : 18,
         color: '#9A9A9A',
     },

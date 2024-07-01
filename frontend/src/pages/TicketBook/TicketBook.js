@@ -47,6 +47,7 @@ const TicketBook = () => {
         setAllTickets([]);
         setAllTickets(newTickets);
       }));
+      console.log('@@',allTickets);
     }
   }, [auth, dispatch]);
 
@@ -78,6 +79,7 @@ const TicketBook = () => {
   const deleteTicketById = (ticketId) => {
     setAllTickets((prevTickets) => prevTickets.filter(ticket => ticket.ticketId !== ticketId));
   };
+
 
   return (
     <>

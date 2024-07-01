@@ -7,19 +7,11 @@ import addticket from '../../images/icon_addticket.png';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 import BottomSheetMenu from '../../components/EnrollTicket/BottomSheetMenu';
 
-const EditFinish = ({navigation, route}) => {
-
-    const { ticket, ticketId, reviewDetails } = route.params;
-
+const ChangePWFinish = ({navigation}) => {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            if (reviewDetails.reviewTitle === '' && reviewDetails.reviewDetails === '' && reviewDetails.reviewImages.length === 0) {
-                navigation.navigate('MainStackWithDrawer');
-            } else {
-                navigation.replace('TicketDetail', {ticketId: ticketId, title: ticket.contentsDetails.title, date : ticket.contentsDetails.date, time: ticket.contentsDetails.time, location: ticket.contentsDetails.location})
-            }
-
+            navigation.replace('Login')
         }, 1000);
 
         return () => clearTimeout(timer);
@@ -29,8 +21,8 @@ const EditFinish = ({navigation, route}) => {
         <>
         <View style={styles.container}>
             <Image source={character} style={styles.image} />
-            <CustomText style={styles.mainText} fontWeight="medium"> 수정이 완료되었어요.</CustomText>
-            <CustomText style={styles.subText}>잠시후 스토리 카드로 이동할게요.</CustomText>
+            <CustomText style={styles.mainText} fontWeight="bold"> 비밀번호 변경이 완료되었어요. </CustomText>
+            <CustomText style={styles.subText} fontWeight="medium">잠시후 로그인 페이지로 이동합니다.</CustomText>
         </View>
         </>
     )
@@ -50,15 +42,15 @@ const styles = StyleSheet.create({
         height: 150,
     },
     mainText: {
-        fontSize: 18,
+        fontSize: 16,
         color: '#525252',
         marginTop: 0,
         marginBottom: 10,
     },
     subText: {
-        fontSize: 14,
+        fontSize: 12,
         color: '#B6B6B6',
     },
 });
 
-export default EditFinish;
+export default ChangePWFinish;

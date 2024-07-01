@@ -10,6 +10,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
 import navIcon from '../images/navIcon_ticket.png';
 
+import NavHeader from '../components/NavHeader';
+
 const Tab = createBottomTabNavigator();
 
 const CustomTabIcon = ({ focused}) => {
@@ -96,13 +98,10 @@ const MainStack = ({navigation}) => {
           tabBarLabel: ({focused, color}) => (
             <Text style={{color}}>{focused ? 'Active' : 'Inactive'}</Text>
           ),
+          // headerShown: route.name === 'Home', // TicketBookScreen에서만 NavHeader 보이기
+          // navigation: navigation, // navigation을 전달
         })}>
-        {/* <Tab.Screen
-          name="Home"
-          options={{headerShown: false, tabBarLabel: '홈'}}
-          component={HomeScreen}
-        /> */}
-        {/* Icon : home-filled */}
+
         <Tab.Screen
           name="Home"
           options={{headerShown: false, tabBarLabel: '홈'}}

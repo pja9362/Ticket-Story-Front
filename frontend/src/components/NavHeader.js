@@ -1,13 +1,21 @@
 import React from 'react';
 import {View, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import iconHamburger from '../images/icon_hamburger.png';
 import iconTutorial from '../images/icon_tutorial.png';
 import logo from '../images/logo_navHeader.png';
+import { DrawerActions } from '@react-navigation/native';
 
+// const NavHeader = () => {
 const NavHeader = () => {
+  const navigation = useNavigation();
 
   const handleHamburger = () => {
     console.log('dd');
+    console.log(navigation)
+    // console.log(navigation.dispatch(DrawerActions))
+    navigation.openDrawer();
+    // navigation.dispatch(DrawerActions.openDrawer());
   }
 
   return (

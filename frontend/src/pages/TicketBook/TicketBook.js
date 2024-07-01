@@ -47,6 +47,7 @@ const TicketBook = () => {
         setAllTickets([]);
         setAllTickets(newTickets);
       }));
+      console.log('@@',allTickets);
     }
   }, [auth, dispatch]);
 

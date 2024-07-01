@@ -22,11 +22,11 @@ const EnrollFinish = ({navigation, route}) => {
         dispatch(getTicketDetail(ticketId))
           .then((response) => {
             
-            if (response.reviewImages !== null && response.reviewTitle !== "" && response.reviewDetails !== "") {
-                setReviewCardId(response.reviewId);
-                setMoveStorycard(true);
+            if (response.reviewImages === null && response.reviewTitle === "" && response.reviewDetails === "") {
+              setReviewCardId(response.reviewId);
             } else {
-                console.log('bangbang2');
+              console.log('bangbang2');
+              setMoveStorycard(true);
             }
   
           })

@@ -123,8 +123,8 @@ const ShowContent = ({ route }) => {
                     </View>
                 </View>
                 <View style={styles.reviewContainer}>
-                    <CustomText style={{...styles.mainText, color: '#000', fontSize: 16}} fontWeight="bold"> {ticket.reviewTitle}</CustomText>
-                    <CustomText style={styles.text}>{ticket.reviewDetails}</CustomText>
+                    <CustomText style={{...styles.mainText, color: '#525252', fontSize: 16}} fontWeight="bold"> {ticket.reviewTitle}</CustomText>
+                    <CustomText style={styles.text} fontWeight="medium">{ticket.reviewDetails}</CustomText>
                 </View>
             </View>
             

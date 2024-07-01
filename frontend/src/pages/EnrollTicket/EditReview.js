@@ -110,7 +110,8 @@ const EditReview = ({navigation, route}) => {
       const updatedReview = await updateReview(reviewId, requestData);
       console.log('Updated Review:', updatedReview);
       
-      navigation.navigate('EditFinish', { ticket: ticket, ticketId: ticketId });
+      // navigation.navigate('EditFinish', { ticket: ticket, ticketId: ticketId });
+      navigation.navigate('EditFinish', { ticket: ticket, ticketId: ticketId, reviewDetails : reviewDetails });
 
     } catch (error) {
       console.error('Error saving review:', error);

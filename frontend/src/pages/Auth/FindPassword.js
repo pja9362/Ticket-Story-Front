@@ -8,11 +8,14 @@ import {
   Modal
 } from 'react-native';
 import Header from '../../components/Header';
-import { checkIdDuplicate, sendEmail } from '../../actions/auth/auth';
+import { checkIdDuplicate, sendEmail, verfiyPasswordResetCode, sendPasswordResetEmail } from '../../actions/auth/auth';
 import { startCountdown, formatTime } from '../../utils/countdownUtils';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
+import { useNavigation } from '@react-navigation/native';
 
 const FindPassword = () => {
+  const navigation = useNavigation();
+
   const [id, setId] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [firstBtnText, setFirstBtnText] = useState('인증번호 받기');
@@ -62,6 +65,7 @@ const FindPassword = () => {
       if (isIdDuplicated === false) {
         setErrorMessage('입력한 아이디를 찾을 수 없어요.')
       } else {
+        setErrorMessage('');
         console.log(111);
 
         const sendEmailStatus = await sendEmail(id);
@@ -83,9 +87,21 @@ const FindPassword = () => {
     }
   };
 
-  const handleValidateNumber = () => {
+  const handleValidateNumber = async () => {
     setSecondBtnClicked(true);
     console.log('인증번호 확인');
+
+    const passwordReset = await verfiyPasswordResetCode(id, validationNumber);
+    console.log('뭐야....',passwordReset);
+    
+    if (passwordReset) {
+      // navigation.navigate('ChangePW');
+      navigation.replace('ChangePW');
+      console.log('뭐냐고!!!!');
+    } else {
+      setIsNumberValid(false);
+      console.log('읭!!!!');
+    }
   }
 
   const handleTimeOver = () => {
@@ -147,7 +163,7 @@ const FindPassword = () => {
               }
 
               <TouchableOpacity
-                onPress={()=> handleValidateNumber()}
+                onPress={handleValidateNumber}
                 disabled={ validationNumber === '' }
                 style={{ ...styles.findBtn, backgroundColor: validationNumber !== '' ? '#5D70F9' : '#BDBDBD' }}
               >

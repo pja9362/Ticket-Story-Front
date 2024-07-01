@@ -20,8 +20,6 @@ const Step2 = ({ nextStep, handleChange, values }) => {
     setPassword(text);
     handleChange('password', text);
 
-    console.log('뭔데샹',!passwordRegex.test(text));
-
     if (!passwordRegex.test(text)) {
       setShowPasswordGuide(true);
     } else {
@@ -38,20 +36,22 @@ const Step2 = ({ nextStep, handleChange, values }) => {
       nextStep();
     } else {
       console.log(showPasswordGuide);
-      // if(password !== passwordCheck) {
-      //   setErrorMessage('비밀번호가 일치하지 않아요.');
-      // } else if (!passwordRegex.test(password)) {
-      //   setErrorMessage('영문, 숫자, 특수문자를 포함한 8~16자리로 입력해 주세요.');
-      // }
-      if(showPasswordGuide) {
-        console.log(1);
-        // setErrorMessage('비밀번호가 일치하지 않아요.');
-        setErrorMessage('영문, 숫자, 특수문자를 포함한 8~16자리로 입력해 주세요.');
-      } else if (password !== passwordCheck) {
-        // setErrorMessage('영문, 숫자, 특수문자를 포함한 8~16자리로 입력해 주세요.');
-        console.log(2);
+      if(password !== passwordCheck) {
         setErrorMessage('비밀번호가 일치하지 않아요.');
+      } else if (!passwordRegex.test(password)) {
+        setErrorMessage('영문, 숫자, 특수문자를 포함한 8~16자리로 입력해 주세요.');
       }
+
+      // if(showPasswordGuide) {
+      //   console.log(1);
+      //   // setErrorMessage('비밀번호가 일치하지 않아요.');
+      //   setErrorMessage('영문, 숫자, 특수문자를 포함한 8~16자리로 입력해 주세요.');
+      // } else if (password !== passwordCheck) {
+      //   // setErrorMessage('영문, 숫자, 특수문자를 포함한 8~16자리로 입력해 주세요.');
+      //   console.log(2);
+      //   setErrorMessage('비밀번호가 일치하지 않아요.');
+      // }
+
     }
   }
 

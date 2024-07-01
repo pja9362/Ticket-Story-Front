@@ -152,7 +152,9 @@ const DetailCard = ({ ticket, ticketId }) => {
                             <Image source={iconLogo} style={{position: 'absolute', width : 110, height : 42, right : -18, top: -18}} />
                         </View>
                         { (ticket.reviewTitle == '' && ticket.reviewDetails == '') ?
-                            <CustomText style={styles.noReviewText}> 등록된 리뷰가 없어요 :( </CustomText>
+                            <View style={{alignItems:'center'}}>
+                             <CustomText style={styles.noReviewText}> 등록된 리뷰가 없어요 :( </CustomText>
+                            </View>
                         :
                             <>
                              {!hideReviewInfo && (
@@ -163,8 +165,8 @@ const DetailCard = ({ ticket, ticketId }) => {
                              )}
 
                                 <View style={styles.reviewContainer}>
-                                    <CustomText style={{...styles.mainText, color: '#000', fontSize: 16}} fontWeight="bold"> {ticket.reviewTitle}</CustomText>
-                                    <CustomText style={styles.text}>{ticket.reviewDetails}</CustomText>
+                                    <CustomText style={{...styles.mainText, color: '#525252', fontSize: 16}} fontWeight="bold"> {ticket.reviewTitle}</CustomText>
+                                    <CustomText style={styles.text} fontWeight="medium">{ticket.reviewDetails}</CustomText>
                                 </View>
                             </>
                         }
@@ -352,8 +354,8 @@ const styles = StyleSheet.create({
     },
     noReviewText: {
         position: 'absolute',
-        top : 160,
-        left : 90,
+        top : 120,
+        // left : 90,
         fontSize : 18,
         color: '#9A9A9A',
     },

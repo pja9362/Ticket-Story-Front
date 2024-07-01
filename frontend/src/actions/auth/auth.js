@@ -29,17 +29,17 @@ export const checkIdDuplicate = async userId => {
 export const sendEmail = async userId => {
   try {
     console.log(API_URL)
-    const response = await axios.post(
+    const response = await axios.get(
       `${API_URL}/api/v1/auth/password/sendPasswordCertification`, 
-      // {
-      //   id: userId,
-      // },
-      userId,
+      // userId,
       {
         headers: {
           'Content-Type': 'application/json',
           // 'Accept': 'application/json',
           // 'Content-Type': 'application/json;charset=UTF-8',
+        },
+        params: {
+          userId: userId
         },
       },
     );
@@ -163,7 +163,7 @@ export const sendPasswordResetEmail = async (email) => {
 }
 
 export const verfiyPasswordResetCode = async (userId, code) => {
-  const token = await AsyncStorage.getItem('accessToken');
+  // const token = await AsyncStorage.getItem('accessToken');
   const body = JSON.stringify({ userId, code });
   try {
     console.log('Verifying password reset code:', code);
@@ -173,6 +173,41 @@ export const verfiyPasswordResetCode = async (userId, code) => {
       {
         headers: {
           'Content-Type': 'application/json',
+          // 'Authorization': `Bearer ${token}`,
+        },
+      },
+    );
+    console.log('Password reset code verification response:', response.data);
+    // return response.data;
+
+    if(response.data.accessToken !== null) {
+      await AsyncStorage.setItem('accessToken', response.data.accessToken);
+      console.log('dfdfdfdff',AsyncStorage.getItem('accessToken'));
+      return response.data;
+      // if(callback) callback([true, response.data]);
+    } else {
+      console.log(response.data.accessToken);
+      // if(callback) callback([false, response.data]);
+    }
+
+  } catch (error) {
+    console.error('Error verifying password reset code:', error);
+    throw error;
+  }
+}
+
+export const resetPassword = async password => {
+  console.log('22222', password);
+  const token = await AsyncStorage.getItem('accessToken');
+  try {
+    const response = await axios.post(
+      `${API_URL}/api/v1/auth/password/changePassword`,
+      { password : password },
+      {
+        headers: {
+          // 'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Content-Type': 'application/json;charset=UTF-8',
           'Authorization': `Bearer ${token}`,
         },
       },

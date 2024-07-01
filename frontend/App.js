@@ -1,9 +1,11 @@
 // import React from 'react';
-import React, {useEffect} from 'react';
+// import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import store, { persistor } from './src/store';
-import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
+// import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
+import {NavigationContainer, DefaultTheme, useNavigationContainerRef} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import { Text, TextInput, StatusBar } from 'react-native';
@@ -15,6 +17,7 @@ import LoginScreen from './src/pages/Auth/Login';
 import SignUpScreen from './src/pages/Auth/SignUp';
 import FindPasswordScreen from './src/pages/Auth/FindPassword';
 import ChangePWScreen from './src/pages/Auth/ChangePW';
+import ChangePWFinish from './src/pages/Auth/ChangePWFinish';
 import EnrollAgreement from './src/pages/EnrollTicket/EnrollAgreement';
 import EnrollByOCR from './src/pages/EnrollTicket/EnrollByOCR';
 import EnrollByScrape from './src/pages/EnrollTicket/EnrollByScrape';
@@ -52,6 +55,33 @@ import ResignScreen from './src/pages/DrawerScreens/ResignScreen';
 const App = () => {
   const Stack = createNativeStackNavigator();
   const Drawer = createDrawerNavigator();
+
+  const navigationRef = useNavigationContainerRef();
+  const [isReady, setIsReady] = useState(false);
+  const [initialState, setInitialState] = useState();
+
+  useEffect(() => {
+    const initialNavState = {
+      routes: [
+        {
+          name: 'MainStackWithDrawer',
+          state: {
+            routes: [
+              {
+                name: 'Init'
+              }
+            ]
+          }
+        },
+        {
+          name: 'Init'
+        }
+      ]
+    };
+
+    setInitialState(initialNavState);
+    setIsReady(true);
+  }, []);
 
   // useEffect(() => {
   //   const customTextProps = {
@@ -98,25 +128,30 @@ const App = () => {
     </Drawer.Navigator>
   );
 
+  if (!isReady) {
+    return null; // 로딩 스피너를 추가할 수 있습니다.
+  }
 
 
   return (
     <SafeAreaProvider>
-      <StatusBar backgroundColor="#FFFFFF" barStyle="default" />
+      <StatusBar backgroundColor="#FFFFFF" barStyle="dark-content" />
       <SafeAreaView edges={['top']} style={{flex: 1, backgroundColor: '#ffffff'}}>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            <NavigationContainer>
+            <NavigationContainer initialState={initialState} ref={navigationRef}>
               <Stack.Navigator screenOptions={screenOptions}>
                 <Stack.Screen name="Init" component={InitScreen} />
+                <Stack.Screen name="MainStackWithDrawer" component={MainStackWithDrawer} />
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="SignUp" component={SignUpScreen} />
                 <Stack.Screen name="FindPassword" component={FindPasswordScreen} />
                 <Stack.Screen name="ChangePW" component={ChangePWScreen} />
+                <Stack.Screen name="ChangePWFinish" component={ChangePWFinish} />
                 {/* <Stack.Screen name="MainStack">
                   {({navigation}) => <MainStack navigation={navigation} />}
                 </Stack.Screen> */}
-                <Stack.Screen name="MainStackWithDrawer" component={MainStackWithDrawer} />
+                {/* <Stack.Screen name="MainStackWithDrawer" component={MainStackWithDrawer} /> */}
                 <Stack.Screen name="EnrollAgreement" component={EnrollAgreement} />
                 <Stack.Screen name="EnrollByOCR" component={EnrollByOCR} />
                 <Stack.Screen name="EnrollByScrape" component={EnrollByScrape} />

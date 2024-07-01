@@ -4,6 +4,8 @@ import Header from '../../components/Header';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
+import { resetPassword } from '../../actions/auth/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ChangePW = () => {
     const navigation = useNavigation();
@@ -20,11 +22,23 @@ const ChangePW = () => {
 
     const handlePasswordChange = (text) => {
         setPassword(text);
+        console.log(password);
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (isValid) {
-            navigation.navigate('MainStack');
+            // navigation.navigate('MainStack');
+            console.log('11111', password);
+            const newPassword = await resetPassword(password);
+
+            if (newPassword) {
+                console.log('비밀번호 변경 완료 페이지로 넘어가기');
+                await AsyncStorage.removeItem('accessToken');
+                navigation.navigate('ChangePWFinish');
+            } else {
+                console.log('실패');
+            }
+
         } else {
             if(password !== passwordCheck) {
                 setErrorMessage('비밀번호가 일치하지 않아요.');
@@ -55,6 +69,9 @@ const ChangePW = () => {
                             <Icon name={showPassword ? 'eye-off' : 'eye'} size={20} color="black" />
                         </TouchableOpacity>
                     </View>
+                    <CustomText style={styles.guideText}>
+                        8~16자의 영문 대/소문자, 숫자, 특수문자를 세 종류 이상 사용해 주세요.
+                    </CustomText>
                 </View>
 
                 <View style={{...styles.formContainer, marginBottom: 22}}>
@@ -83,7 +100,7 @@ const ChangePW = () => {
                     onPress={handleNext}
                     style={{...styles.changeBtn, backgroundColor: password && passwordCheck ? '#5D70F9' : '#BDBDBD'}}            
                 >
-                    <CustomText style={styles.btnText}>다음</CustomText>
+                    <CustomText style={styles.btnText}>완료</CustomText>
                 </TouchableOpacity>
             </View>
         </View>
@@ -139,6 +156,12 @@ const styles = StyleSheet.create({
     height: 50,
     borderTopRightRadius: 5,
     borderBottomRightRadius: 5,
+  },
+  guideText: {
+    marginTop: 6,
+    fontSize: 10,
+    lineHeight: 20,
+    color: '#B6B6B6',
   },
 });
 

@@ -20,10 +20,22 @@ const Login = () => {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const isValid = id !== '' && password !== '';
 
+  const isValidEmail = (id) => {
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$/;
+    return emailRegex.test(id);
+  };
+
   const handleLogin = () => {
+
+    if (!isValidEmail(id)) {
+      setErrorMessage('이메일 형식의 아이디를 입력해주세요.');
+      return;
+    }
+
     dispatch(signInRequest(id, password, ([result, response]) => {
       console.log('login result:', result);
       console.log('login response:', response);
@@ -35,6 +47,7 @@ const Login = () => {
           routes: [{ name: 'MainStackWithDrawer'}]
         }))
       } else {
+        setErrorMessage('아이디 혹은 비밀번호가 일치하지 않아요.');
         console.log('login error:', response);
       }
     }))
@@ -90,6 +103,13 @@ const Login = () => {
           </TouchableOpacity>
         </View>
 
+        <View style={styles.errorContainer}>
+        {
+          errorMessage !== '' ? 
+          <CustomText style={{color: '#FF0000', textAlign: 'center', lineHeight: 36, fontSize: 12}}>{errorMessage}</CustomText> : <View height={20}></View>
+        }
+        </View>
+
         <TouchableOpacity
           onPress={handleLogin}
           disabled={!isValid}
@@ -101,6 +121,8 @@ const Login = () => {
         >
           <CustomText style={styles.btnText} fontWeight="bold">로그인</CustomText>
         </TouchableOpacity>
+
+
 
       </View>
     </View>
@@ -144,7 +166,10 @@ const styles = StyleSheet.create({
     borderBottomColor: '#525252',
   },
   loginBtn: {
-    margin: 30,
+    // position: 'relative',
+    // margin: 30,
+    // marginTop: 290,
+    // marginTop: 30,
     paddingVertical: 9,
     width: 90,
     borderRadius: 20,
@@ -168,6 +193,10 @@ const styles = StyleSheet.create({
     height: 50,
     borderTopRightRadius: 5,
     borderBottomRightRadius: 5,
+  },
+  errorContainer: {
+    height: 36, 
+    justifyContent: 'center',
   },
 });
 

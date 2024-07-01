@@ -160,7 +160,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
       try {
         const updatedInfo = await updateInfo(ticketId, requestData);
         // navigation.navigate('EnrollFinish');
-        navigation.navigate('EditFinish', { ticket: ticket, ticketId: ticketId });
+        navigation.navigate('EditFinish', { ticket: ticket, ticketId: ticketId, reviewDetails : reviewDetails });
       } catch (error) {
         console.error('Error Updating Info:', error);
       }

@@ -23,7 +23,7 @@ import {CustomText} from '../CustomText';
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
 const imageWidth = Dimensions.get('window').width * 0.45;
 
-const TicketItem = ({ category, title, date, time, location, seat, contentsRating, seatRating, imageUrl = null, ticketId, reviewId, deleteTicketById }) => {
+const TicketItem = ({ category, title, date, time, location, seat, contentsRating, seatRating, imageUrl = null, ticketId, reviewId, deleteTicketById, reviewExists}) => {
   const navigation = useNavigation();
 
   let ticketImageSource;
@@ -226,14 +226,16 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
                     </View>
                     <View style={styles.buttonContainer}>
                       <TouchableOpacity 
-                        onPress={reviewId !== 0 ? handleReviewClick : () => setMakeCardVisible(true)}
-                        // onPress={reviewId !== 0 ? handleReviewClick : () => console.log(reviewId)}
+                        // onPress={reviewId !== 0 ? handleReviewClick : () => setMakeCardVisible(true)}
+                        onPress={reviewExists ? handleReviewClick : () => setMakeCardVisible(true)}
                         style={[styles.reviewButton, { opacity: !isFront ? 1 : 0 }]}
-                        activeOpacity={reviewId !== 0 ? 0.2 : 1} // 터치 가능한 경우 activeOpacity 적용
+                        // activeOpacity={reviewId !== 0 ? 0.2 : 1} // 터치 가능한 경우 activeOpacity 적용
+                        activeOpacity={reviewExists ? 0.2 : 1} 
                         disabled={isFront} // isFront이 true일 때 버튼 비활성화
                       >
                         <Image 
-                          source={reviewId === 0 ? iconReviewOff : iconReviewOn} 
+                          // source={reviewId === 0 ? iconReviewOff : iconReviewOn}
+                          source={reviewExists ? iconReviewOn : iconReviewOff}
                           style={{width: 50, height: 50}}
                         />
                       </TouchableOpacity>

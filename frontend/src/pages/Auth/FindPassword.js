@@ -63,16 +63,19 @@ const FindPassword = () => {
         setErrorMessage('입력한 아이디를 찾을 수 없어요.')
       } else {
         console.log(111);
-        // const sendEmailStatus = await sendEmail(id);
-        // console.log('sendEmailStatus', sendEmailStatus);
 
-        //   if (sendEmailStatus === true) {
+        const sendEmailStatus = await sendEmail(id);
+        console.log('sendEmailStatus', sendEmailStatus);
+          if (sendEmailStatus === true) {
+
           setErrorMessage('');
           setFirstBtnText('인증번호 발송됨');
           setIsEmailSent(true);
-          // } else {
-          //   console.log('뭔가 잘못됨');
-          // }
+
+          } else {
+            console.log('뭔가 잘못됨');
+          }
+
       }
 
     } catch (error) {

@@ -5,11 +5,13 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 
-const ChangePW = () => {
+const ChangePassword = () => {
     const navigation = useNavigation();
 
+    const [exPassword, setExPassword] = useState('');
     const [password, setPassword] = useState('');
     const [passwordCheck, setPasswordCheck] = useState('');
+    const [showExPassword, setShowExPassword] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordCheck, setShowPasswordCheck] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
@@ -24,6 +26,7 @@ const ChangePW = () => {
 
     const handleNext = () => {
         if (isValid) {
+            alert('아직 개발안함');
             navigation.navigate('MainStack');
         } else {
             if(password !== passwordCheck) {
@@ -39,8 +42,27 @@ const ChangePW = () => {
             <Header title='비밀번호 변경'/>
 
             <View style={{paddingHorizontal: 18}}>
+
                 <View style={styles.formContainer}>
-                    <CustomText style={styles.sectionText} fontWeight="bold">새 비밀번호</CustomText>
+                    <CustomText style={styles.sectionText} fontWeight="bold">기존 비밀번호</CustomText>
+                    <View style={styles.inputContainer}>
+                        <CustomTextInput
+                            style={styles.inputBox}
+                            value={exPassword}
+                            secureTextEntry={!showExPassword}
+                            onChangeText={(text) => setExPassword(text)}
+                        />
+                        <TouchableOpacity
+                            style={styles.iconContainer}
+                            onPress={() => setShowExPassword(!showExPassword)}
+                        >
+                            <Icon name={showPassword ? 'eye-off' : 'eye'} size={20} color="black" />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+                <View style={styles.formContainer}>
+                    <CustomText style={{...styles.sectionText, marginTop: 10}} fontWeight="bold">새 비밀번호</CustomText>
                     <View style={styles.inputContainer}>
                         <CustomTextInput
                             style={styles.inputBox}
@@ -55,10 +77,13 @@ const ChangePW = () => {
                             <Icon name={showPassword ? 'eye-off' : 'eye'} size={20} color="black" />
                         </TouchableOpacity>
                     </View>
+                    <CustomText style={styles.guideText}>
+                        영문, 숫자, 특수문자를 포함한 8~16자리로 입력해 주세요.
+                    </CustomText>
                 </View>
 
                 <View style={{...styles.formContainer, marginBottom: 22}}>
-                    <CustomText style={styles.sectionText} fontWeight="bold">비밀번호 확인</CustomText>
+                    <CustomText style={{...styles.sectionText, marginTop: 10}} fontWeight="bold">비밀번호 확인</CustomText>
                     <View style={styles.inputContainer}>
                         <CustomTextInput
                             style={styles.inputBox}
@@ -83,7 +108,7 @@ const ChangePW = () => {
                     onPress={handleNext}
                     style={{...styles.changeBtn, backgroundColor: password && passwordCheck ? '#5D70F9' : '#BDBDBD'}}            
                 >
-                    <CustomText style={styles.btnText}>다음</CustomText>
+                    <CustomText style={styles.btnText}>완료</CustomText>
                 </TouchableOpacity>
             </View>
         </View>
@@ -140,6 +165,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 5,
     borderBottomRightRadius: 5,
   },
+  guideText: {
+    marginTop: 10,
+    fontSize: 11,
+    lineHeight: 20,
+    color: '#B6B6B6',
+  },
 });
 
-export default ChangePW;
+export default ChangePassword;

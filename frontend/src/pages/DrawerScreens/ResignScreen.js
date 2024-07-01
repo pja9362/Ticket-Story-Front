@@ -5,30 +5,24 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 
-const ChangePW = () => {
+const ChangePassword = () => {
     const navigation = useNavigation();
 
-    const [password, setPassword] = useState('');
-    const [passwordCheck, setPasswordCheck] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-    const [showPasswordCheck, setShowPasswordCheck] = useState(false);
+    const [exPassword, setExPassword] = useState('');
+    const [showExPassword, setShowExPassword] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
 
-    const isValid = password !== '' && password === passwordCheck && passwordRegex.test(password);
+    const isValid = exPassword !== '' && passwordRegex.test(exPassword);
 
-    const handlePasswordChange = (text) => {
-        setPassword(text);
-    };
 
     const handleNext = () => {
         if (isValid) {
-            navigation.navigate('MainStack');
+            alert('아직 개발안함');
+            // navigation.navigate('Init');
         } else {
-            if(password !== passwordCheck) {
-                setErrorMessage('비밀번호가 일치하지 않아요.');
-            } else if (!passwordRegex.test(password)) {
+            if(!passwordRegex.test(exPassword)) {
                 setErrorMessage('영문, 숫자, 특수문자를 포함한 8~16자리로 입력해 주세요.');
             }
         }
@@ -36,55 +30,44 @@ const ChangePW = () => {
 
     return (
         <View style={styles.container}>
-            <Header title='비밀번호 변경'/>
+            <Header title='회원 탈퇴'/>
 
             <View style={{paddingHorizontal: 18}}>
+
                 <View style={styles.formContainer}>
-                    <CustomText style={styles.sectionText} fontWeight="bold">새 비밀번호</CustomText>
+                    <CustomText style={styles.sectionText} fontWeight="bold">계정 비밀번호</CustomText>
                     <View style={styles.inputContainer}>
                         <CustomTextInput
                             style={styles.inputBox}
-                            value={password}
-                            secureTextEntry={!showPassword}
-                            onChangeText={handlePasswordChange}
+                            value={exPassword}
+                            secureTextEntry={!showExPassword}
+                            onChangeText={(text) => setExPassword(text)}
                         />
                         <TouchableOpacity
                             style={styles.iconContainer}
-                            onPress={() => setShowPassword(!showPassword)}
+                            onPress={() => setShowExPassword(!showExPassword)}
                         >
-                            <Icon name={showPassword ? 'eye-off' : 'eye'} size={20} color="black" />
+                            <Icon name={showExPassword ? 'eye-off' : 'eye'} size={20} color="black" />
                         </TouchableOpacity>
                     </View>
+                    <CustomText style={styles.guideText}>
+                        탈퇴 시 개인정보, 저장한 티켓, 리뷰 등의 데이터가 삭제되며 복구할 수 없습니다. 자세한 내용은 개인정보처리방침을 확인해 주세요.
+                    </CustomText>
                 </View>
 
-                <View style={{...styles.formContainer, marginBottom: 22}}>
-                    <CustomText style={styles.sectionText} fontWeight="bold">비밀번호 확인</CustomText>
-                    <View style={styles.inputContainer}>
-                        <CustomTextInput
-                            style={styles.inputBox}
-                            value={passwordCheck}
-                            secureTextEntry={!showPasswordCheck}
-                            onChangeText={(text) => setPasswordCheck(text)}
-                        />
-                        <TouchableOpacity
-                            style={styles.iconContainer}
-                            onPress={() => setShowPasswordCheck(!showPasswordCheck)}
-                        >
-                            <Icon name={showPasswordCheck ? 'eye-off' : 'eye'} size={20} color="black" />
-                        </TouchableOpacity>
-                    </View>
-                </View>
+                <View style={{marginTop: 120}}>
                 {
                 errorMessage !== '' ? 
                     <CustomText style={{color: '#FF0000', textAlign: 'center', lineHeight: 40, fontSize: 12}}>{errorMessage}</CustomText> : <View height={40}></View>
                 }
                 <TouchableOpacity
-                    disabled={!password || !passwordCheck}
+                    disabled={!exPassword}
                     onPress={handleNext}
-                    style={{...styles.changeBtn, backgroundColor: password && passwordCheck ? '#5D70F9' : '#BDBDBD'}}            
+                    style={{...styles.changeBtn, backgroundColor: exPassword ? '#5D70F9' : '#BDBDBD'}}            
                 >
-                    <CustomText style={styles.btnText}>다음</CustomText>
+                    <CustomText style={styles.btnText}>회원 탈퇴</CustomText>
                 </TouchableOpacity>
+                </View>
             </View>
         </View>
     );
@@ -119,11 +102,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   changeBtn: {
-    margin: 30,
-    marginTop: 0,
+    margin: 5,
+    // marginTop: 150,
     paddingVertical: 10,
-    width: 78,
-    borderRadius: 20,
+    width: 312,
+    borderRadius: 5,
     alignItems: 'center',
     alignSelf: 'center',
     backgroundColor:'#5D70F9' 
@@ -140,6 +123,12 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 5,
     borderBottomRightRadius: 5,
   },
+  guideText: {
+    marginTop: 10,
+    fontSize: 12,
+    lineHeight: 18,
+    color: '#B6B6B6',
+  },
 });
 
-export default ChangePW;
+export default ChangePassword;

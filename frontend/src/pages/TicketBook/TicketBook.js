@@ -79,6 +79,7 @@ const TicketBook = () => {
     setAllTickets((prevTickets) => prevTickets.filter(ticket => ticket.ticketId !== ticketId));
   };
 
+
   return (
     <>
     <SafeAreaView style={styles.container}>

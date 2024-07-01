@@ -28,10 +28,11 @@ const Login = () => {
       console.log('login result:', result);
       console.log('login response:', response);
       if(result) {
-        // navigation.navigate('MainStack');
+        // navigation.navigate('MainStackWithDrawer');
         navigation.dispatch(CommonActions.reset({
           index: 0,
-          routes: [{ name: 'MainStack'}]
+          // routes: [{ name: 'MainStack'}]
+          routes: [{ name: 'MainStackWithDrawer'}]
         }))
       } else {
         console.log('login error:', response);

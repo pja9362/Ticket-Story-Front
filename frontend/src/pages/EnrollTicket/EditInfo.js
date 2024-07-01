@@ -162,7 +162,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
         // navigation.navigate('EnrollFinish');
         navigation.navigate('EditFinish', { ticket: ticket, ticketId: ticketId });
       } catch (error) {
-        console.error('Error saving Info:', error);
+        console.error('Error Updating Info:', error);
       }
     } else {
       alert('필수 입력 항목을 모두 입력해주세요!');

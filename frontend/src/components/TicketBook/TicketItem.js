@@ -226,7 +226,8 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
                     </View>
                     <View style={styles.buttonContainer}>
                       <TouchableOpacity 
-                        onPress={reviewId !== 0 ? handleReviewClick : () => setMakeCardVisible(true)} 
+                        onPress={reviewId !== 0 ? handleReviewClick : () => setMakeCardVisible(true)}
+                        // onPress={reviewId !== 0 ? handleReviewClick : () => console.log(reviewId)}
                         style={[styles.reviewButton, { opacity: !isFront ? 1 : 0 }]}
                         activeOpacity={reviewId !== 0 ? 0.2 : 1} // 터치 가능한 경우 activeOpacity 적용
                         disabled={isFront} // isFront이 true일 때 버튼 비활성화

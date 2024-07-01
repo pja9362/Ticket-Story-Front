@@ -31,12 +31,15 @@ export const sendEmail = async userId => {
     console.log(API_URL)
     const response = await axios.post(
       `${API_URL}/api/v1/auth/password/sendPasswordCertification`, 
-      {
-        id: userId,
-      },
+      // {
+      //   id: userId,
+      // },
+      userId,
       {
         headers: {
           'Content-Type': 'application/json',
+          // 'Accept': 'application/json',
+          // 'Content-Type': 'application/json;charset=UTF-8',
         },
       },
     );

@@ -160,9 +160,9 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
       try {
         const updatedInfo = await updateInfo(ticketId, requestData);
         // navigation.navigate('EnrollFinish');
-        navigation.navigate('EditFinish', { ticket: ticket, ticketId: ticketId });
+        navigation.navigate('EditFinish', { ticket: ticket, ticketId: ticketId, reviewDetails : reviewDetails });
       } catch (error) {
-        console.error('Error saving Info:', error);
+        console.error('Error Updating Info:', error);
       }
     } else {
       alert('필수 입력 항목을 모두 입력해주세요!');

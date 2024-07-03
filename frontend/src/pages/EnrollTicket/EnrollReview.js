@@ -97,8 +97,9 @@ const EnrollReview = ({navigation, route}) => {
       setSaveProcessing(true);
       console.log("티켓 등록 요청", requestData);
       const savedTicket = await saveNewTicket(requestData);
-      console.log('Saved ticket:', savedTicket);
-      navigation.navigate('EnrollFinish');
+      const ticketId = savedTicket.value
+      console.log('Saved ticket:', ticketId); //
+      navigation.navigate('EnrollFinish', {ticketId});
     } catch (error) {
       console.error('Error saving review:', error);
     } finally {

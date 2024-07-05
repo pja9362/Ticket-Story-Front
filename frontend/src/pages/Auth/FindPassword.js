@@ -23,7 +23,7 @@ const FindPassword = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const [validationNumber, setValidationNumber] = useState(''); 
-  const [isNumberValid, setIsNumberValid] = useState(false);
+  const [isNumberValid, setIsNumberValid] = useState(null);
   const [secondBtnClicked, setSecondBtnClicked] = useState(false);
 
   const [countdown, setCountdown] = useState(300); 
@@ -91,16 +91,20 @@ const FindPassword = () => {
     setSecondBtnClicked(true);
     console.log('인증번호 확인');
 
+    try {
     const passwordReset = await verfiyPasswordResetCode(id, validationNumber);
     console.log('뭐야....',passwordReset);
     
     if (passwordReset) {
       // navigation.navigate('ChangePW');
+      setIsNumberValid(true);
       navigation.replace('ChangePW');
-      console.log('뭐냐고!!!!');
     } else {
       setIsNumberValid(false);
-      console.log('읭!!!!');
+      alert('에러');
+    }
+    } catch {
+      setIsNumberValid(false);
     }
   }
 

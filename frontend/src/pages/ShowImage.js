@@ -12,21 +12,23 @@ import darklogo from '../images/logo_dark.png';
 import CustomCheckbox from '../components/EnrollTicket/CustomCheckbox';
 import {CustomText} from '../components/CustomText';
 import ImagePicker from 'react-native-image-crop-picker';
-import { uploadImage } from '../actions/ticket/ticket';
-
+import { uploadImage, updateReviewImage } from '../actions/ticket/ticket';
+import { useNavigation } from '@react-navigation/native';
 
 const ShowImage = ({ route }) => {
     const viewRef = useRef();
+    const navigation = useNavigation();
 
     const dispatch = useDispatch();
     const { images, ticket, ticketId } = route.params;
     const dummyImageUrl = images;
+    // const [dummyImageUrl, setDummyImageUrl] = useState(images);
 
     const overlayState = useSelector((state) => state.overlay[ticketId]) || { hideImageInfo: false, hideImageTitle: false, darkText: false };
     const { hideImageInfo, hideImageTitle, darkText } = overlayState;
 
     const [modalVisible, setModalVisible] = useState(false);
-    const [selectedImages, setSelectedImages] = useState([]);
+    const [selectedImages, setSelectedImages] = useState(null);
 
     const closeModal = () => {
         setModalVisible(false);
@@ -50,20 +52,35 @@ const ShowImage = ({ route }) => {
         console.log('사진 다시 선택하기 버튼 클릭');
         console.log(ticketId)
 
-        // try {
+        try {
     
-        // const image = await ImagePicker.openPicker({
-        //     cropping: true,
-        //     mediaType: 'photo',
-        //     width: 1000,
-        //     height: 1000
-        // });
+        const image = await ImagePicker.openPicker({
+            cropping: true,
+            mediaType: 'photo',
+            width: 1000,
+            height: 1000
+        });
     
-        // const uploadedImagePath = await uploadImage(image.path);
-        // setSelectedImages([uploadedImagePath]);
-        // } catch (error) {
-        // console.log('ImagePicker Error: ', error);
-        // } 
+        const uploadedImagePath = await uploadImage(image.path);
+        console.log(uploadedImagePath);
+
+        const requestData = {
+            imageOrder : 0,
+            imageUrl : uploadedImagePath
+        }
+
+            try {
+                const updatedReviewImage = await updateReviewImage(ticket.reviewId, requestData)
+                console.log(updatedReviewImage);
+                navigation.replace('TicketDetail', {ticketId: ticketId, title: ticket.title, date : ticket.date, time: ticket.time, location: ticket.location})
+            } catch (error){
+                console.log('Update Review Image Error: ', error);  
+            }
+
+
+        } catch (error) {
+        console.log('ImagePicker Error: ', error);
+        } 
     };
 
     return (

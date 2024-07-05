@@ -4,6 +4,7 @@ import Header from '../../components/Header';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
+import { checkPassword, resetPassword } from '../../actions/auth/auth';
 
 const ChangePassword = () => {
     const navigation = useNavigation();
@@ -24,15 +25,31 @@ const ChangePassword = () => {
         setPassword(text);
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (isValid) {
-            alert('아직 개발안함');
-            navigation.navigate('MainStack');
+
+            const passwordChecked = await checkPassword(exPassword);
+            console.log('뿡이',passwordChecked);
+            if (passwordChecked) {
+                const newPassword = await resetPassword(password, passwordChecked.accessToken);
+                if (newPassword) {
+                    console.log('비밀번호 변경 완료 페이지로 넘어가기');
+                    navigation.navigate('ChangePWFinish');
+                } else {
+                    console.log('실패');
+                }
+            } else {
+                setErrorMessage('기존 비밀번호가 일치하지 않아요.');
+            }
+
+            // alert('아직 개발안함');
+            // navigation.navigate('MainStack');
+            navigation.navigate('ChangePWFinish');
         } else {
             if(password !== passwordCheck) {
                 setErrorMessage('비밀번호가 일치하지 않아요.');
             } else if (!passwordRegex.test(password)) {
-                setErrorMessage('영문, 숫자, 특수문자를 포함한 8~16자리로 입력해 주세요.');
+                setErrorMessage('8~16자의 영문 대/소문자, 숫자, 특수문자를 세 종류 이상 사용해 주세요.');
             }
         }
     }

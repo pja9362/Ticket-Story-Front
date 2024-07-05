@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, View, Image, Dimensions, TouchableOpacity } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, View, Image, Dimensions, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import TicketItem from '../../components/TicketBook/TicketItem';
 import NavHeader from '../../components/NavHeader';
 import { useSelector, useDispatch } from 'react-redux';
@@ -8,6 +8,11 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import noTicket from '../../images/no_ticket.png';
 import addIcon from '../../images/icon_add_ticket.png';
 import BottomSheetMenu from '../../components/EnrollTicket/BottomSheetMenu';
+import DropDownPicker from 'react-native-dropdown-picker';
+import iconUp from '../../images/icon_up.png'
+import iconDown from '../../images/icon_down.png'
+import iconLine from '../../images/icon_line.png'
+
 
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
 const imageWidth = Dimensions.get('window').width * 0.45;
@@ -20,10 +25,31 @@ const TicketBook = () => {
   const ticketData = useSelector((state) => state.ticket.myTickets);
   const totalPages = useSelector((state) => state.ticket.myTickets.totalPages);
 
+  const [isDesc, setIsDesc] = useState(true);
+  const [orderText, setOrderText] = useState('DESC')
+
   const [page, setPage] = useState(0);
   const [allTickets, setAllTickets] = useState([]);
 
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
+
+  const [openOrder, setOpenOrder] = useState(false);
+  const [openType, setOpenType] = useState(false);
+  const [defaultOrder, setDefaultOrder] = useState('registerTime');
+  const [defaultType, setDefaultType] = useState("");
+  const [orders, setOrders] = useState([
+    {label: '관람일순', value: 'eventTime'},
+    {label: '등록일순', value: 'registerTime'},
+    {label: '콘텐츠 평점순', value: 'rating'},
+  ]);
+  const [types, setTypes] = useState([
+    {label: '전체', value: ""},
+    {label: '영화', value: 'movie'},
+    {label: '공연', value: 'performance'},
+    {label: '스포츠', value: 'sport'},
+  ]);
+
+
 
   const openBottomSheet = () => {
     setBottomSheetVisible(true);
@@ -47,7 +73,8 @@ const TicketBook = () => {
         setAllTickets([]);
         setAllTickets(newTickets);
       }));
-      console.log('@@',allTickets);
+      setOpenOrder(false);
+      setOpenType(false);
     }
   }, [auth, dispatch]);
 
@@ -80,11 +107,68 @@ const TicketBook = () => {
     setAllTickets((prevTickets) => prevTickets.filter(ticket => ticket.ticketId !== ticketId));
   };
 
+  const closeSelectBox = () => {
+    setOpenOrder(false);
+    setOpenType(false);
+  }
+
+  const changeArrow = () => {
+    setOrderText(prevOrderText => (prevOrderText === 'DESC' ? 'ASC' : 'DESC'));
+  }
+
 
   return (
-    <>
+    <TouchableWithoutFeedback onPress={closeSelectBox}>
+    <View style={{flex:1}}>
     <SafeAreaView style={styles.container}>
       <NavHeader />
+        <View style={{flexDirection:'row', zIndex:1}}>
+          <DropDownPicker
+          style={{width: 130, minHeight: 30, borderColor: '#525252'}}
+          containerStyle={{marginLeft:15, marginBottom:15, width: 130, minHeight: 30}}
+          dropDownContainerStyle={{borderColor: '#525252'}}
+          labelStyle={{fontFamily: 'Pretendard-Medium', fontSize: 14}}
+          textStyle={{fontFamily: 'Pretendard-Regular', fontSize: 14}}
+          listItemContainerStyle={{height:30, borderBottomWidth: 1, borderBottomColor: '#EEEEEE', borderBottomStartRadius : 10, borderBottomEndRadius : 10}}
+          selectedItemLabelStyle={{fontFamily: 'Pretendard-Medium'}}
+          showTickIcon={false}
+          // ArrowUpIconComponent={({style}) => <MyArrowUpIcon style={style} />}
+          // ArrowDownIconComponent={({style}) => <MyArrowDownIcon style={style} />}
+          open={openOrder}
+          value={defaultOrder}
+          items={orders}
+          setOpen={setOpenOrder}
+          setValue={setDefaultOrder}
+          setItems={setOrders}
+          />
+
+          <Image source={iconLine} style={{marginHorizontal: 7, width:1.5, height: 30}}/>
+          
+          <TouchableOpacity onPress={changeArrow} >
+            <Image source={orderText === 'DESC' ? iconDown : iconUp} style={{width: 35, height: 35, marginTop: -3, marginLeft: -6}}/>
+          </TouchableOpacity>
+
+          <DropDownPicker
+          style={{width: 90, minHeight: 30, borderColor: '#525252'}}
+          containerStyle={{marginLeft:15, marginBottom:15, width: 90, minHeight: 30, marginLeft: 95}}
+          dropDownContainerStyle={{borderColor: '#525252'}}
+          labelStyle={{fontFamily: 'Pretendard-Medium', fontSize: 14}}
+          textStyle={{fontFamily: 'Pretendard-Regular', fontSize: 14}}
+          listItemContainerStyle={{height:30, borderBottomWidth: 1, borderBottomColor: '#EEEEEE', borderBottomStartRadius : 10, borderBottomEndRadius : 10}}
+          selectedItemLabelStyle={{fontFamily: 'Pretendard-Medium'}}
+          showTickIcon={false}
+          // ArrowUpIconComponent={({style}) => <MyArrowUpIcon style={style} />}
+          // ArrowDownIconComponent={({style}) => <MyArrowDownIcon style={style} />}
+          open={openType}
+          value={defaultType}
+          items={types}
+          setOpen={setOpenType}
+          setValue={setDefaultType}
+          setItems={setTypes}
+          />
+
+        </View>
+              
       <ScrollView 
         contentContainerStyle={styles.scrollViewContent}
         onScroll={handleScroll}
@@ -106,6 +190,7 @@ const TicketBook = () => {
         }
         </View>
       </ScrollView>
+      
     </SafeAreaView>
 
     {bottomSheetVisible && (
@@ -114,8 +199,8 @@ const TicketBook = () => {
         onClick={onClick}
       />
     )}
-
-    </>
+    </View>
+    </TouchableWithoutFeedback>
   );
 };
 

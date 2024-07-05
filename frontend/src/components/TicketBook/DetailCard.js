@@ -13,7 +13,8 @@ import logo from '../../images/logo_white.png';
 import darklogo from '../../images/logo_dark.png';
 import defaultReviewImage from '../../images/default_reviewImage.png';
 import {CustomText} from '../CustomText';
-import { getTicketDetails } from '../../actions/ticket/ticket';
+import { getTicketDetails, uploadImage, updateReviewImage } from '../../actions/ticket/ticket';
+import ImagePicker from 'react-native-image-crop-picker';
 
 const DetailCard = ({ ticket, ticketId }) => {
 
@@ -90,8 +91,41 @@ const DetailCard = ({ ticket, ticketId }) => {
         }
       }
 
-    const handleImageEdit = () => {
+    const handleImageEdit = async () => {
         console.log('밍밍');
+
+        try {
+    
+            const image = await ImagePicker.openPicker({
+                cropping: true,
+                mediaType: 'photo',
+                width: 1000,
+                height: 1000
+            });
+
+            setImageVisible(false);
+        
+            const uploadedImagePath = await uploadImage(image.path);
+            console.log(uploadedImagePath);
+    
+            const requestData = {
+                imageOrder : 0,
+                imageUrl : uploadedImagePath
+            }
+    
+                try {
+                    const updatedReviewImage = await updateReviewImage(ticket.reviewId, requestData)
+                    console.log(updatedReviewImage);
+                    navigation.replace('TicketDetail', {ticketId: ticketId, title: ticket.title, date : ticket.date, time: ticket.time, location: ticket.location})
+                } catch (error){
+                    console.log('Update Review Image Error: ', error);  
+                }
+    
+    
+            } catch (error) {
+            console.log('ImagePicker Error: ', error);
+            } 
+
     }
 
     useEffect(() => {

@@ -46,7 +46,7 @@ const EnrollFinish = ({navigation, route}) => {
     closeBottomSheet();
     }
 
-    const hi = async() => {
+    const openStoryCard = async() => {
         console.log('되는거 확인해야해서',ticketId);
 
         const editInfo = {
@@ -116,7 +116,7 @@ const EnrollFinish = ({navigation, route}) => {
                     <Image style={styles.homeIcon} source={home} />
                     <CustomText style={{...styles.btnText, color: '#fff'}} fontWeight="medium">홈으로 가기</CustomText>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.navButton} onPress={hi}>
+                <TouchableOpacity style={styles.navButton} onPress={openStoryCard}>
                     <Image style={styles.storyIcon} source={storycard} />
                     <CustomText style={styles.btnText} fontWeight="medium">스토리 카드 보기</CustomText>
                 </TouchableOpacity>

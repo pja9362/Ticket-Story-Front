@@ -104,6 +104,30 @@ export const updateReview = async (reviewId, data) => {
   }
 }
 
+export const updateReviewImage = async (reviewId, data) => {
+  try {
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    console.log('Access token:', accessToken);
+    console.log('updateReviewImage-----------------', reviewId);
+    console.log('Data-------------------', data);
+    const response = await axios.patch(`${API_URL}/api/v1/reviews/updateSingleReviewImage`, data, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+      params: {
+        reviewId: reviewId
+      }
+    });
+    console.log('Update Review Image response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating Review Image:', error);
+    throw error;
+  }
+}
+
 export const updateInfo = async (ticketId, data) => {
   try {
     const accessToken = await AsyncStorage.getItem('accessToken');

@@ -196,9 +196,9 @@ export const verfiyPasswordResetCode = async (userId, code) => {
   }
 }
 
-export const resetPassword = async password => {
+export const resetPassword = async (password, token) => {
   console.log('22222', password);
-  const token = await AsyncStorage.getItem('accessToken');
+  // const token = await AsyncStorage.getItem('accessToken');
   try {
     const response = await axios.post(
       `${API_URL}/api/v1/auth/password/changePassword`,
@@ -215,7 +215,55 @@ export const resetPassword = async password => {
     console.log('Password reset code verification response:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error verifying password reset code:', error);
+    console.error('Error verifying password reset code:', error.response.data);
+    throw error;
+  }
+}
+
+export const checkPassword = async password => {
+  const token = await AsyncStorage.getItem('accessToken');
+  try {
+    const response = await axios.post(
+      `${API_URL}/api/v1/auth/password/getChangeAuth`,
+      { password : password },
+      {
+        headers: {
+          // 'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Content-Type': 'application/json;charset=UTF-8',
+          'Authorization': `Bearer ${token}`,
+        },
+      },
+    );
+    console.log('Password check code verification response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error password checking code:', error.response.data);
+    throw error;
+  }
+}
+
+export const deleteAccount = async (survey, token) => {
+  // const token = await AsyncStorage.getItem('accessToken');
+  try {
+    const response = await axios.post(
+      `${API_URL}/api/v1/auth/quitTicketStory`,
+      { 
+        survey : survey
+      },
+      {
+        headers: {
+          // 'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Content-Type': 'application/json;charset=UTF-8',
+          'Authorization': `Bearer ${token}`,
+        },
+      },
+    );
+    console.log('Delete Account response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting account code:', error.response.data);
     throw error;
   }
 }

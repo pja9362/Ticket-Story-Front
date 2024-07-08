@@ -40,11 +40,9 @@ const Login = () => {
       console.log('login result:', result);
       console.log('login response:', response);
       if(result) {
-        // navigation.navigate('MainStackWithDrawer');
         navigation.dispatch(CommonActions.reset({
           index: 0,
-          // routes: [{ name: 'MainStack'}]
-          routes: [{ name: 'MainStackWithDrawer'}]
+          routes: [{name: 'MainStackWithDrawer'}]
         }))
       } else {
         setErrorMessage('아이디 혹은 비밀번호가 일치하지 않아요.');
@@ -87,6 +85,7 @@ const Login = () => {
             onChangeText={text => setPassword(text)}
             secureTextEntry={!showPassword}
             style={styles.inputBox}
+            autoCapitalize='none'
           />
           <TouchableOpacity
             style={styles.iconContainer}

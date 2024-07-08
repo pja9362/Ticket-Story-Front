@@ -125,8 +125,8 @@ const styles = StyleSheet.create({
   },
   menuItem: {
     paddingLeft: 10,
-    marginTop: 20,
-    paddingBottom: 14,
+    marginTop: 15,
+    paddingBottom: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     borderBottomStartRadius : 5, 

@@ -22,7 +22,11 @@ import { CustomText, CustomTextInput } from '../../components/CustomText';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
+import { useDispatch } from 'react-redux';
+
 const EditReview = ({navigation, route}) => {
+  const dispatch = useDispatch();
+  
   const { ticketId, ticketData, reviewId } = route.params;
   
   const [sliderTouched, setSliderTouched] = useState(false);
@@ -107,7 +111,8 @@ const EditReview = ({navigation, route}) => {
     try {
       setSaveProcessing(true);
       console.log("티켓 등록 요청", requestData);
-      const updatedReview = await updateReview(reviewId, requestData);
+      // const updatedReview = await updateReview(reviewId, requestData);
+      const updatedReview = await dispatch(updateReview(reviewId, requestData));
       console.log('Updated Review:', updatedReview);
       
       // navigation.navigate('EditFinish', { ticket: ticket, ticketId: ticketId });

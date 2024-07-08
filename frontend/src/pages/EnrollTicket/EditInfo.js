@@ -158,7 +158,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   
     if (isFormValid()) {
       try {
-        const updatedInfo = await updateInfo(ticketId, requestData);
+        // const updatedInfo = await updateInfo(ticketId, requestData);
+        const updatedInfo = await dispatch(updateInfo(ticketId, requestData));
         // navigation.navigate('EnrollFinish');
         navigation.navigate('EditFinish', { ticket: ticket, ticketId: ticketId, reviewDetails : reviewDetails });
       } catch (error) {

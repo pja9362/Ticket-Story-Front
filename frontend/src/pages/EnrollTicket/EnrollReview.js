@@ -19,9 +19,13 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { saveNewTicket, uploadImage } from '../../actions/ticket/ticket';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 
+import { useDispatch } from 'react-redux';
+
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const EnrollReview = ({navigation, route}) => {
+  const dispatch = useDispatch();
+  
   const { title, ticketData } = route.params;
 
   useEffect(() => {
@@ -96,9 +100,11 @@ const EnrollReview = ({navigation, route}) => {
     try {
       setSaveProcessing(true);
       console.log("티켓 등록 요청", requestData);
-      const savedTicket = await saveNewTicket(requestData);
+      // const savedTicket = await saveNewTicket(requestData);
+      const savedTicket = await dispatch(saveNewTicket(requestData));
       const ticketId = savedTicket.value
-      console.log('Saved ticket:', ticketId); //
+      console.log('Saved ticket:', savedTicket.value); 
+      console.log('Saved ticket:', ticketId);
       navigation.navigate('EnrollFinish', {ticketId});
     } catch (error) {
       console.error('Error saving review:', error);

@@ -5,6 +5,9 @@ import {
   REFRESH_SUCCESS,
   REFRESH_FAIL,
 } from './types';
+import {
+  UPDATE_TICKET_SUCCESS
+} from './../ticket/types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
@@ -104,6 +107,12 @@ export const signInRequest = (id, password, callback) => async dispatch => {
         type: LOGIN_SUCCESS,
         payload: response.data,
       });
+
+      console.log('왜안돼2');
+      dispatch({
+        type: UPDATE_TICKET_SUCCESS,
+      })
+
       if(callback) callback([true, response.data]);
     } else {
       if(callback) callback([false, response.data]);

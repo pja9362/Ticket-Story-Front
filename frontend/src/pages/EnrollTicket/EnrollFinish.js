@@ -19,6 +19,8 @@ const EnrollFinish = ({navigation, route}) => {
     const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
 
     useEffect(() => {
+        console.log('뭉', ticketId);
+
         dispatch(getTicketDetail(ticketId))
           .then((response) => {
             

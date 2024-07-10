@@ -232,14 +232,6 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     setDate(new Date(date).toISOString().split('T')[0].replace(/-/g, '.'));
   }, []);
 
-  // useEffect(() => {
-  //   console.log('나는 귀여운 이노',date);
-  //   const handleConfirmDate = async () => {
-  //     const formattedDate = await date.toISOString().split('T')[0].replace(/-/g, '.');
-  //     console.log('나는 귀여운 이노2',formattedDate);
-  //     setDate(formattedDate);
-  //   };
-  // }, [date]);
 
   useEffect(() => {
     if (title.trim() !== '' && isContentVisible && isContentSelected === false) {
@@ -466,14 +458,15 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                 }
 
                 {/* Location Detail */}
-                {
+                
+                {/* {
                   initialLocationDetail !=='' && (
-                    <>
+                    <> */}
                       <CustomText style={styles.subsectionText}>관람 장소 (세부)</CustomText>
                       <CustomTextInput style={styles.inputBox} value={locationDetail} onChangeText={setLocationDetail} placeholder={getCategoryPlaceholder(category, 'locationDetail')}/>
-                    </>
+                    {/* </>
                   )
-                }
+                } */}
 
                 {/* Seats */}
                 <CustomText style={styles.subsectionText}>관람 좌석</CustomText>

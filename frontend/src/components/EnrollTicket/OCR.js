@@ -3,8 +3,11 @@ import { View, StyleSheet, Alert, Platform } from 'react-native';
 import DocumentScanner from 'react-native-document-scanner-plugin';
 import { saveImageAndPerformOCR } from '../../actions/ticket/ticket';
 import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
+import {useNavigation} from '@react-navigation/native';
 
 const OCR = ({ onNextStep }) => {
+  const navigation = useNavigation();
+  
   const [scannedImage, setScannedImage] = useState();
   const [openScanner, setOpenScanner] = useState(false);
 
@@ -42,16 +45,41 @@ const OCR = ({ onNextStep }) => {
   
 
   
+  // const scanDocument = async () => {
+  //   try {
+  //     const { scannedImages } = await DocumentScanner.scanDocument({
+  //       // responseType: 'base64',
+  //       responseType: 'imageFilePath',
+  //       letUserAdjustCrop: true,
+  //     });
+
+  //     if (status === 'cancel') {
+  //       navigation.reset({routes: [{name: "HomeScreen"}]})
+  //      }
+
+  //     if (scannedImages.length > 0) {
+  //       setScannedImage(scannedImages[0]);
+  //       onNextStep(); 
+  //     }
+  //   } catch (error) {
+  //     console.error('Error scanning document:', error);
+  //   }
+  // };
+
   const scanDocument = async () => {
     try {
-      const { scannedImages } = await DocumentScanner.scanDocument({
-        // responseType: 'base64',
+      const result = await DocumentScanner.scanDocument({
         responseType: 'imageFilePath',
         letUserAdjustCrop: true,
       });
 
-      if (scannedImages.length > 0) {
-        setScannedImage(scannedImages[0]);
+      if (result.status && result.status === 'cancel') {
+        navigation.navigate("MainStack");
+        return;
+      }
+
+      if (result.scannedImages && result.scannedImages.length > 0) {
+        setScannedImage(result.scannedImages[0]);
         onNextStep(); 
       }
     } catch (error) {

@@ -38,6 +38,7 @@ export const handleShareBtn = async (viewRef) => {
 
 
 export const handleSaveBtn = async (viewRef) => {
+    console.log('왱', viewRef);
     console.log('저장하기');
     try {
         const uri = await captureRef(viewRef, {

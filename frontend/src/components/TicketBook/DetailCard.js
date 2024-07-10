@@ -135,7 +135,7 @@ const DetailCard = ({ ticket, ticketId }) => {
     return (
         ticket &&
         <View style={styles.container}>
-            <View ref={viewRef}>
+            <View ref={viewRef} collapsable={false}>
                 <View style={styles.imageContainer}>
                     {/* <Swiper
                         showsButtons={true}

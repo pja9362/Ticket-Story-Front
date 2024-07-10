@@ -3,8 +3,10 @@ import { View, TouchableOpacity, Text, StyleSheet, Image, ScrollView, Modal } fr
 import {CustomText} from '../../components/CustomText';
 import Header from '../../components/Header';
 import { deleteAccount } from '../../actions/auth/auth';
+import { useNavigation } from '@react-navigation/native';
 
 const ResignReason = ({route}) => {
+    const navigation = useNavigation();
 
     const [reasonNumber, setReasonNumber] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
@@ -13,15 +15,21 @@ const ResignReason = ({route}) => {
         
         try {
             const deletedAccount = await deleteAccount(reasonNumber, route.params.token);
+
+            console.log('WHYY????', deletedAccount)
+
             if (deletedAccount) {
-            setModalVisible(false);
-            navigation.navigate('Init');
+                setModalVisible(false);
+                navigation.navigate('Init');
             } else {
-            setModalVisible(false);
-            alert('회원 탈퇴 실패');
+                console.log('dddd');
             }
-        } catch {
+
+        } catch (error){
+            console.error('에러가 어떻게 나오는데?', error);
+            console.error('에러가 어떻게 나오는데?2', error.response.data);
             alert('나중에 다시 시도해주세요.');
+            setModalVisible(false);
         }
     }
 

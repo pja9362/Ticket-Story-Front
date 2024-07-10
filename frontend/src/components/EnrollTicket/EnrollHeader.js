@@ -4,11 +4,15 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import { CustomText } from '../../components/CustomText';
 
-const EnrollHeader = ({title = '', onIconClick}) => {
+const EnrollHeader = ({title = '', onIconClick, backDestination, backParams}) => {
   const navigation = useNavigation();
 
   const onBackClick = () => {
-    navigation.goBack();
+    if (backDestination) {
+      navigation.navigate(backDestination, backParams);
+    } else {
+      navigation.goBack();
+    }
   };
 
   return (

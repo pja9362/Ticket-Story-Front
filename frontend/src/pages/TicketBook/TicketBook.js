@@ -23,7 +23,8 @@ const TicketBook = () => {
 
   const auth = useSelector((state) => state.auth.isAuthenticated);
   const ticketData = useSelector((state) => state.ticket.myTickets);
-  const totalPages = useSelector((state) => state.ticket.myTickets.totalPages);
+  // const totalPages = useSelector((state) => state.ticket.myTickets.totalPages);
+  const totalElements = useSelector((state) => state.ticket.myTickets.totalElements);
   const ticketUpdated = useSelector((state) => state.ticket.ticketUpdated);
 
   const [isDesc, setIsDesc] = useState(true);
@@ -45,9 +46,9 @@ const TicketBook = () => {
   ]);
   const [types, setTypes] = useState([
     {label: '전체', value: ""},
-    {label: '영화', value: 'movie'},
-    {label: '공연', value: 'performance'},
-    {label: '스포츠', value: 'sport'},
+    {label: '영화', value: 'MOVIE'},
+    {label: '공연', value: 'PERFORMANCE'},
+    {label: '스포츠', value: 'SPORTS'},
   ]);
 
   const scrollViewRef = useRef(null);
@@ -85,18 +86,15 @@ const TicketBook = () => {
 
   const refreshTickets = useCallback(async () => {
     if (auth) {
-      // saveScrollPosition();
-      console.log('좀 말좀 들어라',defaultOrder);
-      dispatch(getMyTickets(0, (pageRef.current + 1) * 10, orderText, defaultOrder, (newTickets) => {
+      dispatch(getMyTickets(0, (pageRef.current + 1) * 10, orderText, defaultOrder, defaultType, (newTickets) => {
         setAllTickets([]);
         setAllTickets(newTickets);
         setTimeout(restoreScrollPosition, 0);
-        // console.log('?',newTickets);
       }));
       setOpenOrder(false);
       setOpenType(false);
     }
-  }, [auth, dispatch, defaultOrder, orderText]);
+  }, [auth, dispatch, defaultOrder, orderText, defaultType]);
 
   useEffect(() => {
     if (ticketUpdated) {
@@ -111,9 +109,8 @@ const TicketBook = () => {
 
 
   useEffect(() => {
-    console.log('이건 제대로?',defaultOrder);
     if (auth && page > 0) {
-      dispatch(getMyTickets(page, 10, orderText, defaultOrder, (newTickets) => {
+      dispatch(getMyTickets(page, 10, orderText, defaultOrder, defaultType, (newTickets) => {
         setAllTickets((prevTickets) => [...prevTickets, ...newTickets]);
       }));
     }
@@ -125,11 +122,12 @@ const TicketBook = () => {
     const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
     const paddingToBottom = 30;
     if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
-      if (page <= totalPages - 1) {
+        if (page <= (totalElements / 10) - 1) {
         setPage(page + 1);
       }
     }
   };
+
 
 
   const deleteTicketById = (ticketId) => {
@@ -150,27 +148,24 @@ const TicketBook = () => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollTo({ y: 0, animated: true });
     }
-    // if (orderText) {
-    console.log(orderText);
-    dispatch(getMyTickets(0, 10, orderText, defaultOrder, (newTickets) => {
+
+    dispatch(getMyTickets(0, 10, orderText, defaultOrder, defaultType, (newTickets) => {
       setPage(0);
       setAllTickets([]);
       setAllTickets(newTickets);
     }));
-    // }
 
   }, [orderText]);
   
 
   const onOrderChange = (value) => {
-    console.log('선택된 값:', value);
     setDefaultOrder(value);
 
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollTo({ y: 0, animated: true });
     }
 
-    dispatch(getMyTickets(0, 10, orderText, value, (newTickets) => {
+    dispatch(getMyTickets(0, 10, orderText, value, defaultType, (newTickets) => {
       setPage(0);
       setAllTickets([]);
       setAllTickets(newTickets);
@@ -178,18 +173,17 @@ const TicketBook = () => {
   };
 
   const onTypeChange = (value) => {
-    console.log('선택된 값:', value);
-    // setDefaultOrder(value);
+    setDefaultType(value);
 
-    // if (scrollViewRef.current) {
-    //   scrollViewRef.current.scrollTo({ y: 0, animated: true });
-    // }
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ y: 0, animated: true });
+    }
 
-    // dispatch(getMyTickets(0, 10, orderText, value, (newTickets) => {
-    //   setPage(0);
-    //   setAllTickets([]);
-    //   setAllTickets(newTickets);
-    // }));
+    dispatch(getMyTickets(0, 10, orderText, defaultOrder, value, (newTickets) => {
+      setPage(0);
+      setAllTickets([]);
+      setAllTickets(newTickets);
+    }));
   };
 
 
@@ -249,7 +243,7 @@ const TicketBook = () => {
           // setValue={setDefaultType}
           setValue={(callback) => {
             const value = callback(defaultType);
-            setDefaultType(value);
+            // setDefaultType(value);
             onTypeChange(value);
           }}
           setItems={setTypes}

@@ -10,6 +10,7 @@ import { API_URL } from '@env';
 import { handleOAuthKaKaoLogin, saveTokens } from '../../actions/auth/auth';
 import {CustomText} from '../../components/CustomText';
 // import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
+import Header from '../../components/Header';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -59,55 +60,66 @@ const Init = ({navigation}) => {
     navigation.navigate('MainStack');
   }
 
+  const handleBackClick = () => {
+    console.log('??');
+    setWebViewVisible(false);
+    setRedirectUrl(null);
+  }
+
   return (
     <View style={styles.container}>
       {webViewVisible && (redirectUrl != null) ? (
-          <WebView
-            ref={webViewRef}
-            style={{... styles.webview, margin: 0, padding: 0}}
-            source={{ uri: redirectUrl }} 
-            onNavigationStateChange={handleOAuthNavigationChange}
-            onClose={() => setWebViewVisible(false)}
-          />
+        <>
+          <View style={{padding: 20, paddingTop: 0}}>
+            <Header title="카카오톡 로그인" backClick={handleBackClick}/> 
+          </View>
+            <WebView
+              ref={webViewRef}
+              style={{... styles.webview, margin: 0, padding: 0}}
+              source={{ uri: redirectUrl }} 
+              onNavigationStateChange={handleOAuthNavigationChange}
+              onClose={() => setWebViewVisible(false)}
+            />
+        </>
       )
     :
      (
       <View style={{padding: 38, flex: 1}}>
-      <View style={styles.title}>
-        <Image source={logo} style={styles.image} />
-      </View>
+        <View style={styles.title}>
+          <Image source={logo} style={styles.image} />
+        </View>
 
-      <TouchableOpacity
-          style={styles.snsBtn}
-          onPress={() => navigation.navigate('SignUp')}>
-          <View style={styles.signupContainer}>
-            <Image source={logo_ticket_white} style={styles.logo} />
-            <CustomText style={{...styles.text, color: '#fff'}}>티켓스토리 회원가입</CustomText>
-          </View> 
-      </TouchableOpacity>
-
-      <View style={styles.oauthBtnContainer}>
         <TouchableOpacity
-          onPress={handleKaKaoLogin}>
-          <Image
-            source={icon_kakao}
-            style={{width: 48, height: 48}}
-          />
+            style={styles.snsBtn}
+            onPress={() => navigation.navigate('SignUp')}>
+            <View style={styles.signupContainer}>
+              <Image source={logo_ticket_white} style={styles.logo} />
+              <CustomText style={{...styles.text, color: '#fff'}}>티켓스토리 회원가입</CustomText>
+            </View> 
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleAppleLogin}>
-          <Image
-            source={icon_apple}
-            style={{width: 48, height: 48}}
-          />
-        </TouchableOpacity>
-      </View>
 
-      <TouchableOpacity
-        style={styles.authBtnContainer}
-        onPress={() => navigation.navigate('Login')}>
-        <CustomText style={{textDecorationLine: 'underline', fontSize: 16, lineHeight: 40}}>로그인</CustomText>
-      </TouchableOpacity>
+        <View style={styles.oauthBtnContainer}>
+          <TouchableOpacity
+            onPress={handleKaKaoLogin}>
+            <Image
+              source={icon_kakao}
+              style={{width: 48, height: 48}}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleAppleLogin}>
+            <Image
+              source={icon_apple}
+              style={{width: 48, height: 48}}
+            />
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity
+          style={styles.authBtnContainer}
+          onPress={() => navigation.navigate('Login')}>
+          <CustomText style={{textDecorationLine: 'underline', fontSize: 16, lineHeight: 40}}>로그인</CustomText>
+        </TouchableOpacity>
       </View>
      )
     }

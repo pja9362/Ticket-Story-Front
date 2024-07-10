@@ -189,11 +189,15 @@ const EnrollInfoByHand = ({ route, navigation }) => {
               <TouchableOpacity onPress={showDatePicker}>
                 <View pointerEvents="none">
                   <CustomTextInput
-                    style={[styles.inputBox, { flex: 2}]}
+                    style={[styles.inputBox, { flex: 2 }]}
                     value={date}
+                    textAlign="center"
                     placeholder='YYYY.MM.DD'
-                    placeholderTextColor="#ccc"
+                    // mm='YYYY.MM.DD'
+                    // placeholder='티켓'
+                    placeholderTextColor="#B6B6B6"
                     editable={false}
+                    placeholderStyle={{ fontFamily: 'Pretendard-Regular', color: '#B6B6B6' }}
                   />
                 </View>
               </TouchableOpacity>
@@ -204,7 +208,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                     style={[styles.inputBox, { flex: 1 }]}
                     value={time}
                     placeholder='HH:MM'
-                    placeholderTextColor="#ccc"
+                    placeholderTextColor="#B6B6B6"
                     editable={false}
                   />
                 </View>
@@ -241,7 +245,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                     { contentsId !== null &&
                           <Image style={styles.checkIcon} source={checkIcon} />
                     }
-                    <CustomTextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 검색' placeholderTextColor="#ccc"/>
+                    <CustomTextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 검색' placeholderTextColor="#B6B6B6"/>
                   </View>
                   {/* Content Lists Dropdown */}
                   {
@@ -271,8 +275,8 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                                     )}
                                   </View>
                                   <View style={styles.contentDetails}>
-                                    <CustomText fontWeight="bold">{content.title}</CustomText>
-                                    <CustomText>{content.detail.join(', ')}</CustomText>
+                                    <CustomText style={{color: '#525252'}} fontWeight="bold">{content.title}</CustomText>
+                                    <CustomText style={{color: '#8A8A8A'}} fontWeight="medium">{content.detail.join(', ')}</CustomText>
                                   </View>
                                 </TouchableOpacity>
                               </View>
@@ -320,7 +324,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                         value={location}
                         onChangeText={(text) => {setLocation(text); setIsLocationSelected(false); setLocationId(null);}}
                         placeholder={getCategoryPlaceholder(category, 'location')}
-                        placeholderTextColor="#ccc"
+                        placeholderTextColor="#B6B6B6"
                       />
                     </View>
                   </View>
@@ -367,7 +371,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                       value={locationDetail}
                       onChangeText={text => setLocationDetail(text)}
                       placeholder={getCategoryPlaceholder(category, 'locationDetail')}
-                      placeholderTextColor="#ccc"
+                      placeholderTextColor="#B6B6B6"
                     />
 
                     <CustomText style={styles.sectionText}>관람 좌석</CustomText>
@@ -377,7 +381,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                         value={seats}
                         onChangeText={text => setSeats(text)}
                         placeholder={getCategoryPlaceholder(category, 'seats')}
-                        placeholderTextColor="#ccc"
+                        placeholderTextColor="#B6B6B6"
                       />
                     </View>
                 </>
@@ -408,10 +412,14 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: '#B6B6B6',
     borderRadius: 5,
     height: 40,
     paddingHorizontal: 10,
+    fontSize: 14,
+    color: '#525252',
+    // letterSpacing: 2,
+    // fontSize: 20,
   },
   sectionText: {
     fontSize: 16,
@@ -449,7 +457,7 @@ const styles = StyleSheet.create({
   // dropdown
   dropdown: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#B6B6B6',
     borderRadius: 5,
     padding: 10,
   },

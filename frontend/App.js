@@ -143,7 +143,7 @@ const App = () => {
           <PersistGate loading={null} persistor={persistor}>
             <NavigationContainer initialState={initialState} ref={navigationRef}>
               <Stack.Navigator screenOptions={screenOptions}>
-                <Stack.Screen name="Init" component={InitScreen} />
+                <Stack.Screen name="Init" component={InitScreen} options={{ gestureEnabled: false }}/>
                 <Stack.Screen name="MainStackWithDrawer" component={MainStackWithDrawer} />
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="SignUp" component={SignUpScreen} />

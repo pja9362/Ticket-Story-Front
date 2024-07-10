@@ -4,10 +4,15 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation, useNavigationState} from '@react-navigation/native';
 import {CustomText} from './CustomText';
 
-const Header = ({title = '', icon, onIconClick, backDestination, backParams}) => {
+const Header = ({title = '', icon, onIconClick, backDestination, backParams, backClick}) => {
   const navigation = useNavigation();
 
   const onBackClick = () => {
+    if (backClick) {
+      backClick();
+      return;
+    }
+
     if (backDestination) {
       navigation.navigate(backDestination, backParams);
     } else {

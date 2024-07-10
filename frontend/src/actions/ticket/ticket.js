@@ -221,25 +221,29 @@ export const saveImageAndPerformOCR = async (scannedImageUri) => {
   }
 };
 
-export const getMyTickets = (page, size, order, orderBy, callback) => async dispatch => {
+export const getMyTickets = (page, size, order, orderBy, category, callback) => async dispatch => {
   try {
-    console.log('어떻게오는데?', orderBy);
     const accessToken = await AsyncStorage.getItem('accessToken');
-    const response = await axios.get(`${API_URL}/api/v1/ticket/getTicketBookTickets`, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json;charset=UTF-8',
-        'Authorization': `Bearer ${accessToken}`,
-      },
-      params: {
-        page: page,
-        pageSize: size,
-        order: order,
-        orderBy: orderBy,
-        category: ""
-      }
-    });
-    console.log('!@#$%',response.data)
+    
+    if (accessToken === null) {
+      return;
+    }
+
+      const response = await axios.get(`${API_URL}/api/v1/ticket/getTicketBookTickets`, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json;charset=UTF-8',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        params: {
+          page: page,
+          pageSize: size,
+          order: order,
+          orderBy: orderBy,
+          category: category,
+        }
+      });
+
     if (response.data != null) {
       dispatch({
         type: LOAD_MY_TICKETS_SUCCESS,
@@ -248,6 +252,7 @@ export const getMyTickets = (page, size, order, orderBy, callback) => async disp
       callback(response.data.contents);
     }
     return response.data;
+
   } catch (error) {
     console.error('Error fetching my tickets:', error);
     dispatch({

@@ -38,7 +38,9 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   };
 
   const handleConfirmDate = async (selectedDate) => {
+    console.log('selectedDate',selectedDate);
     const formattedDate = await selectedDate.toISOString().split('T')[0].replace(/-/g, '.');
+    console.log('formattedDate', formattedDate);
     setDate(formattedDate);
     hideDatePicker();
   };
@@ -166,6 +168,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     <>
       <EnrollHeader 
         title="티켓 정보 입력" 
+        needAlert="true" 
         // onIconClick={() => isFormValid() ? navigation.navigate('EnrollReview', { title }) : alert('필수 입력 항목을 모두 입력해주세요!')} 
       />
         <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>

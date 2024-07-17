@@ -172,7 +172,7 @@ const EditReview = ({navigation, route}) => {
 
   return (
     <>
-      <EnrollHeader title="티켓 후기 입력" />
+      <EnrollHeader title="티켓 리뷰 수정" needAlert="true" />
       <KeyboardAwareScrollView style={styles.container} ref={scrollViewRef}>
         <CustomText style={{fontSize: 16, color: '#525252', lineHeight: 24}} fontWeight="bold">
           관람한 <CustomText style={{color: '#5D70F9'}} fontWeight="bold">{ticketData.contentsDetails.title || '콘텐츠'}</CustomText>의 후기를 알려주세요.

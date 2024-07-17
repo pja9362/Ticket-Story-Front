@@ -258,7 +258,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   
   return (
     <>
-      <EnrollHeader title="티켓 정보 입력" />
+      <EnrollHeader title="티켓 정보 수정" needAlert="true" />
         <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
           <View style={{...styles.container, paddingBottom: 0}}>
             <CustomText style={styles.sectionText} fontWeight="bold">

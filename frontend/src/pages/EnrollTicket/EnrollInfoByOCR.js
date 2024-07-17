@@ -264,6 +264,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
           <EnrollHeader
             title="티켓 정보 입력"
             backDestination="MainStack"
+            needAlert="true"
             // onIconClick={() => { navigation.navigate('EnrollReview', {title: title}) }}
           />
             <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, Text, ImageBackground, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, TouchableOpacity, Image, Modal, Button} from 'react-native';
+import { View, Text, ImageBackground, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, TouchableOpacity, Image, Modal, Button, Platform} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import movieTicket from '../../images/ticket_info_movie.png';
@@ -8,9 +8,9 @@ import sportsTicket from '../../images/ticket_info_sports.png';
 import playTicket from '../../images/ticket_info_play.png';
 import musicalTicket from '../../images/ticket_info_musical.png';
 
-import movieBasicTicket from '../../images/ticket_default_poster_movie.png';
-import performanceBasicTicket from '../../images/ticket_default_poster_performance.png';
-import sportsBasicTicket from '../../images/ticket_default_poster_sports.png';
+import movieBasicTicket from '../../images/ticket_default_poster_movie2.png';
+import performanceBasicTicket from '../../images/ticket_default_poster_performance2.png';
+import sportsBasicTicket from '../../images/ticket_default_poster_sports2.png';
 
 import iconReviewOn from '../../images/icon_ReviewOn.png';
 import iconReviewOff from '../../images/icon_ReviewOff.png';
@@ -19,6 +19,7 @@ import iconEdit from '../../images/icon_dots.png';
 import { deleteTicket, getTicketDetails } from '../../actions/ticket/ticket';
 import {CustomText} from '../CustomText';
 
+import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
 
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
 const imageWidth = Dimensions.get('window').width * 0.45;
@@ -213,16 +214,16 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
                   <View style={styles.overlay}>
                     <CustomText numberOfLines={2} style={styles.title} fontWeight="bold">{title}</CustomText>
                     <View style={styles.infoContainer}>
-                      <CustomText numberOfLines={1} style={styles.info} fontWeight="bold">{date}</CustomText>
-                      <CustomText numberOfLines={1} style={[styles.info, { marginTop: 2 }]} fontWeight="bold">{time}</CustomText>
-                      <CustomText numberOfLines={1} style={[styles.info, { marginTop: 2 }]} fontWeight="bold">{location}</CustomText>
-                      <CustomText numberOfLines={1} style={[styles.info, { marginTop: 2 }]} fontWeight="bold">{seat}</CustomText>
+                      <CustomText numberOfLines={1} style={styles.info} fontWeight="semibold">{date}</CustomText>
+                      <CustomText numberOfLines={1} style={[styles.info, { marginTop: Platform.OS === 'android' ? verticalScale(1) : verticalScale(4) }]} fontWeight="semibold">{time}</CustomText>
+                      <CustomText numberOfLines={1} style={[styles.info, { marginTop: Platform.OS === 'android' ? verticalScale(1) : verticalScale(4) }]} fontWeight="semibold">{location}</CustomText>
+                      <CustomText numberOfLines={1} style={[styles.info, { marginTop: Platform.OS === 'android' ? verticalScale(1) : verticalScale(4) }]} fontWeight="semibold">{seat}</CustomText>
                     </View>
                     <View style={styles.bottomContainer}>
-                      <CustomText numberOfLines={1} style={[styles.info, { marginTop: 5, textAlign: 'center' }]} fontWeight="bold">{contentsRating}</CustomText>
+                      <CustomText numberOfLines={1} style={[styles.info, { fontSize: scale(15), marginTop: verticalScale(6), textAlign: 'center' }]} fontWeight="bold">{contentsRating}</CustomText>
                     </View>
                     <View style={styles.bottomContainer}>
-                      <CustomText numberOfLines={1} style={[styles.info, { marginTop: 12, textAlign: 'center' }]} fontWeight="bold">{seatRating}</CustomText>
+                      <CustomText numberOfLines={1} style={[styles.info, { fontSize: scale(15), top: verticalScale(13), textAlign: 'center' }]} fontWeight="bold">{seatRating}</CustomText>
                     </View>
                     <View style={styles.buttonContainer}>
                       <TouchableOpacity 
@@ -236,7 +237,8 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
                         <Image 
                           // source={reviewId === 0 ? iconReviewOff : iconReviewOn}
                           source={reviewExists ? iconReviewOn : iconReviewOff}
-                          style={{width: 50, height: 50}}
+                          // style={{width: scale(50), height: verticalScale(50)}}
+                          style={{width: moderateScale(50), height: moderateScale(50)}}
                         />
                       </TouchableOpacity>
                     </View>
@@ -250,21 +252,24 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
             <TouchableOpacity onPress={handleIconEditClick} disabled={!isFront}>
               <Image 
                 source={iconEdit} 
-                style={{width: 30, height: 30, left: 18, bottom: 3}}
+                // style={{width: 30, height: 30, left: 18, bottom: 3}}
+                // style={{width: moderateScale(30), height: moderateScale(30), left: moderateScale(18), bottom: moderateScale(3)}}
+                style={{width: scale(30), height: verticalScale(30), left: moderateScale(18), bottom: verticalScale(3)}}
               />
             </TouchableOpacity>
           </Animated.View>
 
           {dropdownVisible && isFront && (
-            <View style={{position: 'absolute', right: 10, top: 10, backgroundColor: '#fff', borderRadius: 5, padding: 10, gap: 15}}>
+            // <View style={{position: 'absolute', right: 10, top: 10, backgroundColor: '#fff', borderRadius: 5, padding: 10, gap: 15}}>
+            <View style={{position: 'absolute', right: moderateScale(10), top: verticalScale(10), backgroundColor: '#fff', borderRadius: 5, padding: moderateScale(10), gap: verticalScale(15)}}>
               <TouchableOpacity onPress={handleInfoEdit}>
-                <CustomText style={{color: '#000', fontSize: 16}} fontWeight="bold">정보 수정</CustomText>
+                <CustomText style={{color: '#000', fontSize: scale(15)}} fontWeight="semibold">정보 수정</CustomText>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleReviewEdit}>
-                <CustomText style={{color: '#000', fontSize: 16}} fontWeight="bold">리뷰 수정</CustomText>
+                <CustomText style={{color: '#000', fontSize: scale(15)}} fontWeight="semibold">리뷰 수정</CustomText>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <CustomText style={{color: '#000', fontSize: 16}} fontWeight="bold">삭제</CustomText>
+                <CustomText style={{color: '#000', fontSize: scale(15)}} fontWeight="semibold">삭제</CustomText>
               </TouchableOpacity>
             </View>
           )}
@@ -338,24 +343,31 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    paddingHorizontal: 22,
-    top: imageHeight*0.07,
+    // paddingHorizontal: 22,
+    paddingHorizontal: scale(22),
+    // top: imageHeight*0.07,
+    top: verticalScale(17),
   },
   title: {
     color: '#fff',
-    fontSize: 15,
+    // fontSize: 15,
+    fontSize: scale(15),
     height: imageHeight*0.17,
     overflow: 'hidden',
-    paddingTop: 5,
+    // paddingTop: 5,
+    paddingTop: verticalScale(5),
   },
   info: {
     color: '#fff',
-    fontSize: 14,
+    // fontSize: 14,
+    fontSize: scale(13),
     overflow: 'hidden',
   },
   infoContainer: {
-    marginLeft: imageWidth*0.22,
-    marginVertical: 8,
+    // marginLeft: imageWidth*0.22,
+    marginLeft: scale(35),
+    // marginVertical: 8,
+    marginVertical: verticalScale(8),
     height: imageHeight*0.3,
   },
   bottomContainer: {
@@ -379,10 +391,13 @@ const styles = StyleSheet.create({
   },
   backTitle: {
     color: '#525252',
-    fontSize: 15,
+    // fontSize: 15,
+    // fontSize: moderateScale(15),
+    fontSize: scale(14),
+    // fontSize: verticalScale(15),
     overflow: 'hidden',
     textAlign: 'center',
-    top: imageHeight*0.58,
+    top: imageHeight*0.56,
     paddingHorizontal: 15,
   },
   editBtnContainer: {
@@ -401,12 +416,11 @@ const styles = StyleSheet.create({
   },
   reviewButton: {
     position: 'absolute',
-    right: 28,
-    bottom: 32,
-    width: 50,
-    height: 50,
+    right: scale(28),
+    bottom: verticalScale(32),
+    width: scale(50),
+    height: verticalScale(50),
     justifyContent: 'center',
-    alignItems: 'center',
   },
   buttonContainer: {
     width: imageWidth*0.875,

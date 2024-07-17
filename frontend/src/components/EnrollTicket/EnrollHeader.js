@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 import { CustomText } from '../../components/CustomText';
 
-const EnrollHeader = ({title = '', onIconClick, backDestination, backParams}) => {
+const EnrollHeader = ({title = '', backDestination, backParams}) => {
   const navigation = useNavigation();
 
   const onBackClick = () => {
@@ -21,9 +21,10 @@ const EnrollHeader = ({title = '', onIconClick, backDestination, backParams}) =>
         <Icon name="chevron-back-sharp" size={20} color="black" />
       </TouchableOpacity>
       <CustomText style={styles.title} fontWeight="bold">{title}</CustomText>
-      <TouchableOpacity onPress={onIconClick}>
+      {/* <TouchableOpacity onPress={onIconClick}>
         <Icon name="chevron-forward-sharp" size={20} color="black" />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+      <View width={20} />
     </View>
   );
 };

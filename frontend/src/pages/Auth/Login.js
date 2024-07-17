@@ -70,7 +70,7 @@ const Login = () => {
           <CustomTextInput
             value={id}
             placeholder='example@naver.com'
-            placeholderTextColor="#ccc"
+            placeholderTextColor="#B6B6B6"
             keyboardType='email-address'
             autoCapitalize='none'
             onChangeText={text => setId(text)}
@@ -153,6 +153,7 @@ const styles = StyleSheet.create({
     height: 50,
     paddingHorizontal: 12,
     flex: 1,
+    color: '#525252'
   },
   findBtnContainer: {
     flexDirection: 'row',

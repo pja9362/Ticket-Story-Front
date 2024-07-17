@@ -118,7 +118,7 @@ const Init = ({navigation}) => {
         <TouchableOpacity
           style={styles.authBtnContainer}
           onPress={() => navigation.navigate('Login')}>
-          <CustomText style={{textDecorationLine: 'underline', fontSize: 16, lineHeight: 40}}>로그인</CustomText>
+          <CustomText style={{textDecorationLine: 'underline', fontSize: 16, lineHeight: 40, color: '#000000'}}>로그인</CustomText>
         </TouchableOpacity>
       </View>
      )

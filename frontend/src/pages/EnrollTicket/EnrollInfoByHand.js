@@ -166,7 +166,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     <>
       <EnrollHeader 
         title="티켓 정보 입력" 
-        onIconClick={() => isFormValid() ? navigation.navigate('EnrollReview', { title }) : alert('필수 입력 항목을 모두 입력해주세요!')} 
+        // onIconClick={() => isFormValid() ? navigation.navigate('EnrollReview', { title }) : alert('필수 입력 항목을 모두 입력해주세요!')} 
       />
         <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
           <View style={styles.container}>
@@ -208,6 +208,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                     style={[styles.inputBox, { flex: 1 }]}
                     value={time}
                     placeholder='HH:MM'
+                    textAlign="center"
                     placeholderTextColor="#B6B6B6"
                     editable={false}
                   />
@@ -345,7 +346,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                                   style={styles.dropdownItemTouchable}
                                 >
                                   <View style={styles.locationDetails}>
-                                    <CustomText style={{ flex: 1 }} fontWeight="bold">{location.name}</CustomText>
+                                    <CustomText style={{ flex: 1, color: '#525252' }} fontWeight="bold">{location.name}</CustomText>
                                     <CustomText style={styles.subText}>{location.address}</CustomText>
                                   </View>
                                 </TouchableOpacity>
@@ -514,6 +515,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 15,
     color: '#9A9A9A',
+  },
+  subText: {
+    fontSize: 12,
+    color: '#8A8A8A'
   },
 });
 

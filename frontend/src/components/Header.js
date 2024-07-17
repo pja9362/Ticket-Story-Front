@@ -20,11 +20,11 @@ const Header = ({title = '', icon, onIconClick, backDestination, backParams, bac
     }
   };
 
-  const routeState = useNavigationState(state => state);
+  // const routeState = useNavigationState(state => state);
 
-  useEffect(() => {
-    console.log('Current route stack:', routeState.routes);
-  },[]);
+  // useEffect(() => {
+  //   console.log('Current route stack:', routeState.routes);
+  // },[]);
 
 
   return (

@@ -27,6 +27,8 @@ const My = () => {
     backgroundColor: '#5D70F9', 
     borderTopLeftRadius: 5,
     borderBottomLeftRadius: 5,
+    borderTopRightRadius: 5,
+    borderBottomRightRadius: 5,
   });
 
   const handleShareBtnPress = () => {

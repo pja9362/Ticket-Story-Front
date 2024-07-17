@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import {CustomText} from '../../../components/CustomText';
 import Header from '../../../components/Header';
+import {scale, verticalScale, moderateScale} from '../../../utils/sizeUtil'
 
 const NoticeContent = ({route}) => {
 
@@ -25,11 +26,12 @@ const NoticeContent = ({route}) => {
     <View style={{ flex: 1 }}>
         <CustomText style={styles.menuText} fontWeight="bold">{title}</CustomText>
     </View>
-    <View style={{marginLeft: 279}}>
+    {/* <View style={{marginLeft: 279}}> */}
+    <View style={{marginLeft: verticalScale(279)}}>
         <CustomText style={styles.menuTextDate}>{date}</CustomText>
     </View>
     <View>
-        <CustomText style={styles.textcontent}>
+        <CustomText style={styles.textContent}>
           {detail}
         </CustomText>
     </View>
@@ -47,15 +49,6 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 0
   },
-  menuItem: {
-    paddingLeft: 10,
-    marginTop: 20,
-    paddingBottom: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    borderBottomStartRadius : 10, 
-    borderBottomEndRadius : 10, 
-  },
   menuText: {
     marginTop: 20,
     marginBottom: 18,
@@ -67,7 +60,7 @@ const styles = StyleSheet.create({
     color: '#525252',
     marginBottom: 30,
   },
-  textcontent: {
+  textContent: {
     fontSize: 16,
     color: '#525252',
     lineHeight: 22

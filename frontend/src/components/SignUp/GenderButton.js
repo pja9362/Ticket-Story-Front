@@ -6,7 +6,7 @@ const GenderButton = ({label, isActive, onPress}) => (
   <TouchableOpacity
     style={[
       styles.genderBtn,
-      isActive && {backgroundColor: '#B6B6B6'},
+      isActive && {backgroundColor: '#5D70F9'},
     ]}
     onPress={onPress}>
     <CustomText style={isActive ? styles.activeText : styles.optionText}>

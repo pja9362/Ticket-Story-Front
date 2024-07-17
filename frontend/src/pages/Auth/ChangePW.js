@@ -22,7 +22,6 @@ const ChangePW = () => {
 
     const handlePasswordChange = (text) => {
         setPassword(text);
-        console.log(password);
     };
 
     const handleNext = async () => {
@@ -61,6 +60,7 @@ const ChangePW = () => {
                             value={password}
                             secureTextEntry={!showPassword}
                             onChangeText={handlePasswordChange}
+                            autoCapitalize='none'
                         />
                         <TouchableOpacity
                             style={styles.iconContainer}
@@ -82,6 +82,7 @@ const ChangePW = () => {
                             value={passwordCheck}
                             secureTextEntry={!showPasswordCheck}
                             onChangeText={(text) => setPasswordCheck(text)}
+                            autoCapitalize='none'
                         />
                         <TouchableOpacity
                             style={styles.iconContainer}
@@ -134,6 +135,7 @@ const styles = StyleSheet.create({
     height: 50,
     paddingHorizontal: 12,
     flex: 1,
+    color: '#525252',
   },
   changeBtn: {
     margin: 30,

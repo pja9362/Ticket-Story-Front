@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {View, Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import ticket from '../../images/ticket_white.png';
+import ticket from '../../images/ticket_ocr_info.png';
 import closeIcon from '../../images/icon_close_white.png';
 import OCR from '../../components/EnrollTicket/OCR';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,6 +11,14 @@ const EnrollByOCR = ({route, navigation}) => {
 
   const [showGuide, setShowGuide] = useState(true);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onCloseGuide();
+    }, 2000);
+
+    return () => clearTimeout(timer); // Clean up the timer when the component is unmounted
+  }, []);
+
   const onCloseGuide = () => {
     setShowGuide(false);
   }
@@ -19,6 +27,7 @@ const EnrollByOCR = ({route, navigation}) => {
     await AsyncStorage.removeItem('ticket');
     navigation.navigate('EnrollInfoByOCR', {categoryInfo})
   }
+
 
   return (
     <>
@@ -32,8 +41,10 @@ const EnrollByOCR = ({route, navigation}) => {
 
           <Image source={ticket} style={styles.image} />
           <CustomText style={styles.mainText} fontWeight="bold">
-            직접 관람한 티켓의{'\n'}제목과 좌석 정보가{'\n'}잘 나오게
-            찍어주세요.
+            관람한 티켓의{'\n'}제목과 시간, 좌석 정보 부분이{'\n'}잘 나오게 찍어주세요
+          </CustomText>
+          <CustomText style={styles.subText}>
+            잠시 후 카메라가 작동됩니다
           </CustomText>
         </View>
       ) : (
@@ -48,7 +59,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    // backgroundColor: 'rgba(0,0,0,0.3)',
+    backgroundColor: '#525252',
   },
   closeButton: {
     position: 'absolute',
@@ -61,11 +73,18 @@ const styles = StyleSheet.create({
     height: 40,
   },
   image: {
-    width: 86,
-    height: 122,
+    width: 50,
+    height: 25,
   },
   mainText: {
     fontSize: 20,
+    lineHeight: 26,
+    color: '#fff',
+    textAlign: 'center',
+    marginTop: 15,
+  },
+  subText: {
+    fontSize: 16,
     lineHeight: 24,
     color: '#fff',
     textAlign: 'center',

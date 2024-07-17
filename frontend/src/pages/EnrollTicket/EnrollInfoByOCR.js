@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -21,6 +21,7 @@ import defaultImage from '../../images/ticket_default_poster_movie.png'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DateTimePickerModal from 'react-native-modal-datetime-picker'; //
 import { CustomText, CustomTextInput } from '../../components/CustomText';
+import { useFocusEffect } from '@react-navigation/native';
 
 const EnrollInfoByOCR = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -84,38 +85,56 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
   const [showLocationDropdown, setShowLocationDropdown] = useState(false);
   const [isLocationSelected, setIsLocationSelected] = useState(false);
 
-  useEffect(() => {
-    const getOcrResponse = async () => {
-      try {
-        const response = await AsyncStorage.getItem('ticket');
-        
-        if (response && response.trim() !== '') {
-          setOcrResponse(JSON.parse(response));
-          console.log('ocrResponse: ', JSON.parse(response));
-          setLoading(false);
-        } else {
-          const intervalId = setInterval(async () => {
-            const updatedResponse = await AsyncStorage.getItem('ticket');
-            if (updatedResponse && updatedResponse.trim() !== '') {
-              setOcrResponse(JSON.parse(updatedResponse));
+  useFocusEffect(
+    useCallback(() => {
+      const getOcrResponse = async () => {
+        try {
+          const response = await AsyncStorage.getItem('ticket');
+
+          if (response && response.trim() !== '') {
+            setOcrResponse(JSON.parse(response));
+            console.log('ocrResponse: ', JSON.parse(response));
+            setLoading(false);
+          } else {
+            console.log('1', response);
+
+            const intervalId = setInterval(async () => {
+              const updatedResponse = await AsyncStorage.getItem('ticket');
+              if (updatedResponse && updatedResponse.trim() !== '') {
+                console.log('2', updatedResponse);
+
+                const parsedResponse = JSON.parse(updatedResponse);
+                const { title, location, seat, location_detail } = parsedResponse.ocr_result;
+                const nonEmptyFields = [title, location, seat, location_detail].filter(field => field && field.trim() !== '').length;
+
+                if (nonEmptyFields >= 2) {
+                  console.log('3', parsedResponse);
+                  setOcrResponse(parsedResponse);
+                  clearInterval(intervalId);
+                  setLoading(false);
+                } else {
+                  console.log(4);
+                  clearInterval(intervalId);
+                  navigation.navigate('OCRFail', { categoryInfo });
+                }
+              }
+            }, 2000);
+
+            if (response && response.trim() !== '') {
               clearInterval(intervalId);
               setLoading(false);
             }
-          }, 2000);
-
-          if (response && response.trim() !== '') {
-            clearInterval(intervalId);
-            setLoading(false);
+            return () => clearInterval(intervalId);
           }
-          return () => clearInterval(intervalId);
+        } catch (error) {
+          console.error('Error retrieving OCR response:', error);
+          setLoading(false);
         }
-      } catch (error) {
-        console.error('Error retrieving OCR response:', error);
-        setLoading(false);
-      }
-    };
-    getOcrResponse();
-  }, []);
+      };
+      getOcrResponse();
+    }, [navigation])
+  );
+
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -137,13 +156,6 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
     }
   }, [ocrResponse]);
 
-  // useEffect(() => {
-  //   if(title.trim() !== '') {
-  //     let mappedCategory = getMappedCategory(category);
-  //     dispatch(searchContent(title, date, mappedCategory, "OCR"));
-  //     console.log('searchContent: ', title, date, mappedCategory);
-  //   }
-  // }, [title]);
 
   useEffect(() => {
     if (title.trim() !== '' && isContentSelected === false) {
@@ -252,7 +264,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
           <EnrollHeader
             title="티켓 정보 입력"
             backDestination="MainStack"
-            onIconClick={() => { navigation.navigate('EnrollReview', {title: title}) }}
+            // onIconClick={() => { navigation.navigate('EnrollReview', {title: title}) }}
           />
             <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
               <View style={styles.container}>
@@ -278,7 +290,8 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                           style={[styles.inputBox, { flex: 2}]}
                           value={date}
                           placeholder='YYYY.MM.DD'
-                          placeholderTextColor="#ccc"
+                          placeholderTextColor="#B6B6B6"
+                          textAlign="center"
                           editable={false}
                         />
                       </View>
@@ -290,7 +303,8 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                           style={[styles.inputBox, { flex: 1 }]}
                           value={time}
                           placeholder='HH:MM'
-                          placeholderTextColor="#ccc"
+                          placeholderTextColor="#B6B6B6"
+                          textAlign="center"
                           editable={false}
                         />
                       </View>
@@ -324,7 +338,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                     { contentsId !== null &&
                           <Image style={styles.checkIcon} source={checkIcon} />
                     }
-                    <CustomTextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 검색' placeholderTextColor="#ccc"/> 
+                    <CustomTextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 검색' placeholderTextColor="#B6B6B6"/> 
                   </View>
                   {/* Content Lists Dropdown */}
                   {
@@ -354,8 +368,8 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                                   )}
                                 </View>
                                 <View style={styles.contentDetails}>
-                                  <CustomText fontWeight="bold">{content.title}</CustomText>
-                                  <CustomText>{content.detail.join(', ')}</CustomText>
+                                  <CustomText style={{color: '#525252'}} fontWeight="bold">{content.title}</CustomText>
+                                  <CustomText style={{color: '#8A8A8A'}} fontWeight="medium">{content.detail.join(', ')}</CustomText>
                                 </View>
                               </TouchableOpacity>
                             </View>
@@ -397,7 +411,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                         value={location}
                         onChangeText={(text) => {setLocation(text); setIsLocationSelected(false); setLocationId(null);}}
                         placeholder={getCategoryPlaceholder(category, 'location')}
-                        placeholderTextColor="#ccc"
+                        placeholderTextColor="#B6B6B6"
                       />
                     </View>
                   </View>
@@ -419,7 +433,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                                 style={styles.dropdownItemTouchable}
                               >
                                 <View style={styles.locationDetails}>
-                                  <CustomText style={{ flex: 1 }} fontWeight="bold">{location.name}</CustomText>
+                                  <CustomText style={{ flex: 1, color: '#525252' }} fontWeight="bold">{location.name}</CustomText>
                                   <CustomText style={styles.subText}>{location.address}</CustomText>
                                 </View>
                               </TouchableOpacity>
@@ -446,7 +460,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                     value={locationDetail}
                     onChangeText={text => setLocationDetail(text)}
                     placeholder={getCategoryPlaceholder(category, 'locationDetail')}
-                    placeholderTextColor="#ccc"
+                    placeholderTextColor="#B6B6B6"
                   />
 
                   <CustomText style={styles.sectionText}>관람 좌석</CustomText>
@@ -456,7 +470,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                       value={seats}
                       onChangeText={text => setSeats(text)}
                       placeholder={getCategoryPlaceholder(category, 'seats')}
-                      placeholderTextColor="#ccc"
+                      placeholderTextColor="#B6B6B6"
                     />
                   </View>
               </View>
@@ -487,10 +501,11 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: '#B6B6B6',
     borderRadius: 5,
     height: 40,
     paddingHorizontal: 10,
+    color: '#525252',
   },
   sectionText: {
     fontSize: 16,
@@ -583,6 +598,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 15,
     color: '#9A9A9A',
+  },
+  subText: {
+    fontSize: 12,
+    color: '#8A8A8A'
   },
 });
 

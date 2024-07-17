@@ -208,7 +208,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   
   return (
     <>
-      <EnrollHeader title="티켓 정보 입력" onIconClick={handleNext}/>
+      <EnrollHeader title="티켓 정보 입력" />
         <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
           <View style={{...styles.container, paddingBottom: 0}}>
             <CustomText style={styles.sectionText} fontWeight="bold">
@@ -262,7 +262,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                         style={[styles.inputBox, { flex: 2}]}
                         value={date}
                         placeholder='YYYY.MM.DD'
-                        placeholderTextColor="#ccc"
+                        placeholderTextColor="#B6B6B6"
+                        textAlign="center"
                         editable={false}
                       />
                     </View>
@@ -274,7 +275,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                         style={[styles.inputBox, { flex: 1 }]}
                         value={time}
                         placeholder='HH:MM'
-                        placeholderTextColor="#ccc"
+                        placeholderTextColor="#B6B6B6"
+                        textAlign="center"
                         editable={false}
                       />
                     </View>
@@ -308,7 +310,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                   { contentsId !== null &&
                         <Image style={styles.checkIcon} source={checkIcon} />
                   }
-                  <CustomTextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 검색' placeholderTextColor="#ccc"/>
+                  <CustomTextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 검색' placeholderTextColor="#B6B6B6"/>
                 </View>
                 {/* Content Lists Dropdown */}
                 {
@@ -338,8 +340,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                                 )}
                               </View>
                               <View style={styles.contentDetails}>
-                                <CustomText fontWeight="bold">{content.title}</CustomText>
-                                <CustomText>{content.detail.join(', ')}</CustomText>
+                                <CustomText style={{color: '#525252'}} fontWeight="bold">{content.title}</CustomText>
+                                <CustomText style={{color: '#8A8A8A'}} fontWeight="medium">{content.detail.join(', ')}</CustomText>
                               </View>
                             </TouchableOpacity>
                           </View>
@@ -368,7 +370,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                   { locationId !== null &&
                         <Image style={styles.checkIcon} source={checkIcon} />
                   }
-                  <CustomTextInput style={{...styles.inputBox, flex: 1}} value={location} onChangeText={(text) => {setLocation(text); setIsLocationSelected(false); setLocationId(null);}} placeholder={getCategoryPlaceholder(category, 'location')} placeholderTextColor="#ccc"/>
+                  <CustomTextInput style={{...styles.inputBox, flex: 1}} value={location} onChangeText={(text) => {setLocation(text); setIsLocationSelected(false); setLocationId(null);}} placeholder={getCategoryPlaceholder(category, 'location')} placeholderTextColor="#B6B6B6"/>
                 </View>
                 {/* Location Dropdown */}
                 {
@@ -388,7 +390,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                               style={styles.dropdownItemTouchable}
                             >
                               <View style={styles.locationDetails}>
-                                <CustomText style={{ flex: 1 }} fontWeight="bold">{location.name}</CustomText>
+                                <CustomText style={{ flex: 1, color: '#525252' }} fontWeight="bold">{location.name}</CustomText>
                                 <CustomText style={styles.subText}>{location.address}</CustomText>
                               </View>
                             </TouchableOpacity>
@@ -414,14 +416,14 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                   initialLocationDetail !=='' && (
                     <>
                       <CustomText style={styles.subsectionText}>관람 장소 (세부)</CustomText>
-                      <CustomTextInput style={styles.inputBox} value={locationDetail} onChangeText={setLocationDetail} placeholder={getCategoryPlaceholder(category, 'locationDetail')} placeholderTextColor="#ccc"/>
+                      <CustomTextInput style={styles.inputBox} value={locationDetail} onChangeText={setLocationDetail} placeholder={getCategoryPlaceholder(category, 'locationDetail')} placeholderTextColor="#B6B6B6"/>
                     </>
                   )
                 }
 
                 {/* Seats */}
                 <CustomText style={styles.subsectionText}>관람 좌석</CustomText>
-                <CustomTextInput style={styles.inputBox} value={seats} onChangeText={setSeats} placeholder={getCategoryPlaceholder(category, 'seats')} placeholderTextColor="#ccc"/>
+                <CustomTextInput style={styles.inputBox} value={seats} onChangeText={setSeats} placeholder={getCategoryPlaceholder(category, 'seats')} placeholderTextColor="#B6B6B6"/>
             </>
           }
           </View>
@@ -465,10 +467,11 @@ const styles = StyleSheet.create({
     },
     inputBox: {
       borderWidth: 1,
-      borderColor: '#000',
+      borderColor: '#B6B6B6',
       borderRadius: 5,
       height: 40,
       paddingHorizontal: 10,
+      color: '#525252',
     },
     dateInputContainer: {
       flexDirection: 'row',

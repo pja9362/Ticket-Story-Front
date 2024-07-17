@@ -22,15 +22,11 @@ const EnrollAgreement = ({route, navigation}) => {
   const headerTitle = action === 'hand' ? "직접 입력으로 티켓 등록하기" : "카메라로 티켓 등록하기";
   const headerOnClick = action === 'hand' ? () => navigation.navigate('EnrollInfoByHand') : () => navigation.navigate('EnrollByOCR');
 
+
   return (
     <>
-      <EnrollHeader
-        title={headerTitle}
-        onIconClick={headerOnClick}
-      />
-
+      <EnrollHeader title={headerTitle}/>
         <SelectType onClick={onClick}/>
-
     </>
   );
 };

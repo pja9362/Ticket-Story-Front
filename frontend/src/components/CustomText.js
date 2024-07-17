@@ -10,6 +10,10 @@ const CustomText = (props) => {
         return styles.bold;
       case 'medium':
         return styles.medium;
+      case 'semibold':
+        return styles.semibold;
+      case 'extrabold':
+        return styles.extrabold;
       default:
         return styles.regular;
     }
@@ -58,6 +62,12 @@ const styles = StyleSheet.create({
   },
   medium: {
     fontFamily: 'Pretendard-Medium',
+  },
+  semibold: {
+    fontFamily: 'Pretendard-SemiBold',
+  },
+  extrabold: {
+    fontFamily: 'Pretendard-ExtraBold',
   },
   inputContainer: {
     position: 'relative',

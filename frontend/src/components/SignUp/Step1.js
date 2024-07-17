@@ -11,7 +11,8 @@ import { checkIdDuplicate } from '../../actions/auth/auth';
 import {CustomText, CustomTextInput} from '../CustomText';
 
 const Step1 = ({nextStep, handleChange, values}) => {
-  const [id, setId] = useState('');
+  // const [id, setId] = useState('');
+  const [id, setId] = useState(values.id || '');
   const [errorMessage, setErrorMessage] = useState('');
   const [isIdCheck, setIsIdCheck] = useState(true);
   
@@ -62,7 +63,7 @@ const Step1 = ({nextStep, handleChange, values}) => {
         style={styles.inputBox}
         value={id}
         placeholder='example@naver.com'
-        placeholderTextColor="#ccc"
+        placeholderTextColor="#B6B6B6"
         keyboardType='email-address'
         autoCapitalize='none'
         onChangeText={text => {
@@ -93,6 +94,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   inputBox: {
+    color: '#525252',
     fontSize: 16,
     backgroundColor: '#EEEEEE',
     borderRadius: 5,

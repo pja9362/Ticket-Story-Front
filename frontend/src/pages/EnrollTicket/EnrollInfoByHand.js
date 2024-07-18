@@ -38,12 +38,22 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   };
 
   const handleConfirmDate = async (selectedDate) => {
-    console.log('selectedDate',selectedDate);
-    const formattedDate = await selectedDate.toISOString().split('T')[0].replace(/-/g, '.');
-    console.log('formattedDate', formattedDate);
-    setDate(formattedDate);
     hideDatePicker();
+
+    const timezoneOffset = 9 * 60 * 60 * 1000; // 9시간을 밀리초로 변환
+    const adjustedDate = new Date(selectedDate.getTime() + timezoneOffset);
+
+    const formattedDate = await adjustedDate.toISOString().split('T')[0].replace(/-/g, '.');
+    setDate(formattedDate);
   };
+
+  // const handleConfirmDate = async (selectedDate) => {
+  //   console.log('selectedDate',selectedDate);
+  //   const formattedDate = await selectedDate.toISOString().split('T')[0].replace(/-/g, '.');
+  //   console.log('formattedDate', formattedDate);
+  //   setDate(formattedDate);
+  //   hideDatePicker();
+  // };
 
   const showTimePicker = () => {
     setTimePickerVisibility(true);
@@ -54,13 +64,21 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   };
 
   const handleConfirmTime = (selectedTime) => {
+    hideTimePicker();
+
+    const roundedMinutes = Math.floor(selectedTime.getMinutes() / 5) * 5;
+    selectedTime.setMinutes(roundedMinutes);
+    selectedTime.setSeconds(0); // 초를 0으로 설정
+
     const hours = selectedTime.getHours().toString().padStart(2, '0');
     const minutes = selectedTime.getMinutes().toString().padStart(2, '0');
     setTime(`${hours}:${minutes}`);
-    hideTimePicker();
+    setSelectedTime(selectedTime);
+
   };
 //
   
+  const [selectedTime, setSelectedTime] = useState(''); 
 
   const [contentsId, setContentsId] = useState(null);
   const [locationId, setLocationId] = useState(null);
@@ -221,14 +239,16 @@ const EnrollInfoByHand = ({ route, navigation }) => {
               <DateTimePickerModal
                 isVisible={isDatePickerVisible}
                 mode="date"
-                // date = {date != '' ? new Date('2014-6-4') : new Date()}
+                date={date !== '' ? new Date(date.replace(/\./g, '-')) : new Date()}
                 onConfirm={handleConfirmDate}
                 onCancel={hideDatePicker}
                 locale="ko"
+                display="inline"
               />
 
               <DateTimePickerModal
                 isVisible={isTimePickerVisible}
+                date={selectedTime || new Date()}
                 mode="time"
                 onConfirm={handleConfirmTime}
                 onCancel={hideTimePicker}

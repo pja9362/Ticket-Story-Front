@@ -18,22 +18,17 @@ const NoticeList = () => {
 
 
   const refreshNotices = useCallback(() => {
-    // if (auth) {
+
       setPage(0); // Reset page to 0 when refreshing
       setAllNotices([]); // Clear current tickets
-      // dispatch(getNotices(0, (newNotices) => {
-      //   setAllNotices([]);
-      //   setAllNotices(newNotices);
-      // }));
+
       const response = getNotices(0, (newNotices) => {
         setAllNotices([]);
         setAllNotices(newNotices);
         const currentPage = Math.floor(newNotices.length / 10);
         setTotalPages(currentPage)
-        console.log('뿌',allNotices.length);
       });
 
-    // }
   }, []);
 
   useFocusEffect(
@@ -44,9 +39,6 @@ const NoticeList = () => {
 
   useEffect(() => {
     if (page > 0) {
-      // dispatch(getNotices(page, (newNotices) => {
-      //   setAllNotices((prevNotices) => [...prevNotices, ...newNotices]);
-      // }));
       const response = getNotices(page, (newNotices) => {
         setAllNotices((prevNotices) => [...prevNotices, ...newNotices]);
         console.log('뿌잉',allNotices);
@@ -84,7 +76,6 @@ const NoticeList = () => {
       {allNotices && allNotices.length !== 0 ? allNotices.map((notice, index) => (
 
             <View key={index}>
-              {/* <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('NoticeContent', {noticeId: notice.noticeId})}> */}
               <TouchableOpacity style={styles.menuItem} onPress={() => handleDetail(notice.noticeId)}>
                 <CustomText style={styles.menuText} fontWeight="bold">{notice.noticeTitle}</CustomText>
                 <CustomText style={styles.menuTextDate}>{notice.createdDate}</CustomText>
@@ -96,16 +87,6 @@ const NoticeList = () => {
             <CustomText style={styles.menuText} fontWeight="bold">공지사항 없음</CustomText>
           )
       }
-
-
-      {/* <TouchableOpacity onPress={() => navigation.navigate('NoticeContent02')} style={styles.menuItem}>
-        <CustomText style={styles.menuText} fontWeight="bold">개인정보취급방침 변경 안내</CustomText>
-        <CustomText style={styles.menuTextDate}>2024.07.01</CustomText>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('NoticeContent01')} style={styles.menuItem}>
-        <CustomText style={styles.menuText} fontWeight="bold">티켓스토리 베타서비스 시행 안내</CustomText>
-        <CustomText style={styles.menuTextDate}>2024.07.01</CustomText>
-      </TouchableOpacity> */}
 
 
     </View>

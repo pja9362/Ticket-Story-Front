@@ -26,8 +26,7 @@ const NoticeContent = ({route}) => {
     <View style={{ flex: 1 }}>
         <CustomText style={styles.menuText} fontWeight="bold">{title}</CustomText>
     </View>
-    {/* <View style={{marginLeft: 279}}> */}
-    <View style={{marginLeft: verticalScale(279)}}>
+    <View style={{marginLeft: scale(270)}}>
         <CustomText style={styles.menuTextDate}>{date}</CustomText>
     </View>
     <View>
@@ -46,24 +45,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 20,
+    padding: moderateScale(20),
     paddingTop: 0
   },
   menuText: {
-    marginTop: 20,
-    marginBottom: 18,
-    fontSize: 20,
+    marginTop: verticalScale(20),
+    marginBottom: verticalScale(18),
+    fontSize: scale(20),
     color: '#525252',
   },
   menuTextDate: {
-    fontSize: 14,
+    fontSize: scale(14),
     color: '#525252',
-    marginBottom: 30,
+    marginBottom: verticalScale(30),
   },
   textContent: {
-    fontSize: 16,
+    fontSize: scale(16),
     color: '#525252',
-    lineHeight: 22
+    lineHeight: verticalScale(22)
   } 
 });
 

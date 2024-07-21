@@ -85,20 +85,26 @@ const TicketBook = () => {
   };
 
   const refreshTickets = useCallback(async () => {
+    console.log(4444);
     if (auth) {
+      console.log(5555);
       dispatch(getMyTickets(0, (pageRef.current + 1) * 10, orderText, defaultOrder, defaultType, (newTickets) => {
         setAllTickets([]);
         setAllTickets(newTickets);
         setTimeout(restoreScrollPosition, 0);
+        console.log('allTickets',allTickets);
       }));
       setOpenOrder(false);
       setOpenType(false);
     }
   }, [auth, dispatch, defaultOrder, orderText, defaultType]);
+// }, [dispatch, defaultOrder, orderText, defaultType]);
 
   useEffect(() => {
     if (ticketUpdated) {
+      console.log(1111);
       const refreshAndReset = async () => {
+        console.log(2222);
         await refreshTickets();
         dispatch(resetUpdateTicket());
       };
@@ -109,6 +115,7 @@ const TicketBook = () => {
 
 
   useEffect(() => {
+    console.log(3333);
     if (auth && page > 0) {
       dispatch(getMyTickets(page, 10, orderText, defaultOrder, defaultType, (newTickets) => {
         setAllTickets((prevTickets) => [...prevTickets, ...newTickets]);

@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import {SafeAreaView, StyleSheet, Text, View, ScrollView} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View, ScrollView, BackHandler} from 'react-native';
 import Header from '../../components/Header';
 import DetailCard from '../../components/TicketBook/DetailCard';
 import { getTicketDetail } from '../../actions/ticket/ticket';
+import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
+import { State } from 'react-native-gesture-handler';
+import {useFocusEffect} from '@react-navigation/native';
 
 const TicketDetail = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -11,6 +14,27 @@ const TicketDetail = ({ route, navigation }) => {
   const { ticketId, title, date, time, location } = route.params; 
 
   const [ticket, setTicket] = useState(null);
+
+  const onSwipe = (event) => {
+    if (event.nativeEvent.state === State.END) {
+      navigation.navigate("MainStack");
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        navigation.navigate("MainStack");
+        return true;
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+      };
+    }, [])
+  );
 
   useEffect(() => {
     dispatch(getTicketDetail(ticketId))
@@ -33,17 +57,25 @@ const TicketDetail = ({ route, navigation }) => {
 
 
   return (
-    <SafeAreaView style={styles.container}>
-        <View style={{paddingHorizontal: 20, backgroundColor: '#fff'}}>
-          <Header title="스토리 카드 보기" backDestination="MainStack"/>
-        </View> 
-        <ScrollView style={styles.cardContainer}>
-          {
-            ticket === null ? <Text>Loading...</Text> : 
-            <DetailCard ticket={ticket} ticketId ={ticketId}/>
-          }
-        </ScrollView>
-    </SafeAreaView>
+    <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+    <PanGestureHandler onHandlerStateChange={onSwipe}>
+    <View style={{ flex: 1 }}>
+      <SafeAreaView style={styles.container}>
+          <View style={{paddingHorizontal: 20, backgroundColor: '#fff'}}>
+            <Header title="스토리 카드 보기" backDestination="MainStack"/>
+          </View> 
+          <ScrollView style={styles.cardContainer}>
+            {
+              ticket === null ? <Text>Loading...</Text> : 
+              <DetailCard ticket={ticket} ticketId ={ticketId}/>
+            }
+          </ScrollView>
+      </SafeAreaView>
+    </View>
+    </PanGestureHandler>
+    </GestureHandlerRootView>
+    </>
   );
 };
 

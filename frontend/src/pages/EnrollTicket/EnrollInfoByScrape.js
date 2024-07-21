@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image, TouchableOpacity, Modal } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import CategoryBtnContainer from '../../components/EnrollTicket/CategoryBtnContainer';
 import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
@@ -12,6 +12,8 @@ import defaultImage from '../../images/ticket_default_poster_movie.png'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DateTimePickerModal from 'react-native-modal-datetime-picker'; //
 import { CustomText, CustomTextInput } from '../../components/CustomText';
+import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
+import { State } from 'react-native-gesture-handler';
 
 const EnrollInfoByScrape = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -21,6 +23,19 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
 
   const [showContentDropdown, setShowContentDropdown] = useState(true);
   const [showLocationDropdown, setShowLocationDropdown] = useState(false);
+
+  const [modalVisible, setModalVisible] = useState(false); 
+
+  const onSwipe = (event) => {
+    if (event.nativeEvent.state === State.END) {
+      setModalVisible(true);
+    }
+  };
+
+  const handleBack = () => {
+    setModalVisible(false);
+    navigation.navigate("MainStack");
+  }
 
     //
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -221,6 +236,9 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   
   return (
     <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+    <PanGestureHandler onHandlerStateChange={onSwipe}>
+    <View style={{ flex: 1 }}>
       <EnrollHeader title="티켓 정보 입력" backDestination="MainStack" needAlert="true"/>
         <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
           <View style={{...styles.container, paddingBottom: 0}}>
@@ -458,6 +476,28 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
             </View>)
           }
         </KeyboardAwareScrollView>
+      </View>
+      </PanGestureHandler>
+      </GestureHandlerRootView>
+      <Modal  
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+          <View style={{ backgroundColor: 'white', width: 280, padding: 18, borderRadius: 10 }}>
+            <CustomText style={{color: '#000', fontSize: 16, textAlign: 'center', marginTop: 2, lineHeight: 25}} fontWeight="bold">이전으로 돌아가시겠어요? {'\n'} 지금까지의 작성은 저장되지 않습니다</CustomText>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 15 }}>
+              <TouchableOpacity onPress={() => setModalVisible(false)} style={{ backgroundColor: '#E8ECEF', width: 115, padding: 10, borderRadius: 10 }}>
+                <CustomText style={{ color: '#000', textAlign : 'center', fontSize: 17}} fontWeight="medium">취소</CustomText>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleBack} style={{ backgroundColor: '#5D70f9', width: 115, padding: 10, borderRadius: 10 }}>
+                <CustomText style={{ color: 'white', textAlign : 'center', fontSize: 17}} fontWeight="medium">확인</CustomText>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </>
   );
 };

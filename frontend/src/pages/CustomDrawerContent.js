@@ -6,11 +6,14 @@ import { useNavigation, CommonActions } from '@react-navigation/native';
 import iconx from '../images/icon_x.png'
 import {CustomText} from '../components/CustomText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logoutRequest } from '../actions/auth/auth';
+import { useDispatch } from 'react-redux';
 
 
 const CustomDrawerContent = ( props ) => {
 
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const [modalVisible, setModalVisible] = useState(false); 
 
@@ -26,6 +29,25 @@ const CustomDrawerContent = ( props ) => {
       console.error('Error during logout:', error);
     }
   };
+
+  // 지우면 안됨!! 
+  // const handleLogout = async () => {
+  //   try {
+  //     dispatch(logoutRequest(([result, response]) => {
+  //       if(result) {
+  //         setModalVisible(false);
+  //         navigation.navigate('Init');
+  //       } else {
+  //         setModalVisible(false);
+  //         alert('로그아웃 에러');
+  //       }
+  //     }));  
+
+  //   } catch (error) {
+  //     console.error('Error during logout:', error);
+  //     alert('로그아웃 에러');
+  //   }
+  // };
   
 
   return (

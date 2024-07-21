@@ -88,16 +88,16 @@ const App = () => {
   };
 
 
-  // useEffect(() => {
-  //   const logNavigationState = () => {
-  //     const state = navigationRef.getRootState();
-  //     console.log("Current Navigation State:", state.routes);
-  //   };
+  useEffect(() => {
+    const logNavigationState = () => {
+      const state = navigationRef.getRootState();
+      console.log("Current Navigation State:", state.routes);
+    };
 
-  //   const unsubscribe = navigationRef.addListener('state', logNavigationState);
+    const unsubscribe = navigationRef.addListener('state', logNavigationState);
 
-  //   return () => unsubscribe();
-  // }, [navigationRef]);
+    return () => unsubscribe();
+  }, [navigationRef]);
 
 
   const MainStackWithDrawer = () => (
@@ -141,7 +141,7 @@ const App = () => {
                 <Stack.Screen name="TicketDetail" component={TicketDetail} />
                 <Stack.Screen name="EditInfo" component={EditInfo} />
                 <Stack.Screen name="EditReview" component={EditReview} />
-                <Stack.Screen name="EditFinish" component={EditFinish} />
+                <Stack.Screen name="EditFinish" component={EditFinish} options={{ gestureEnabled: false }}/>
 
                 {/* Ticket Link */}
                 <Stack.Screen name="OAuthWebView" component={OAuthWebView} />

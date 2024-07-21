@@ -116,7 +116,7 @@ const EnrollByScrape = () => {
   
   return (
     <SafeAreaView style={styles.container}>
-        <EnrollHeader title={ isWebViewVisible ? '가져올 티켓 선택하기' : '온라인 티켓 등록하기' }/>
+        <EnrollHeader title={ isWebViewVisible ? '가져올 티켓 선택하기' : '온라인 티켓 등록하기' } backDestination="MainStack"/>
       {showCGVWebView ? (
         <WebView
           ref={webViewRef}

@@ -1,22 +1,14 @@
-import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Modal} from 'react-native';
+import React, {useEffect, useState, useCallback} from 'react';
+import {View, Text, TouchableOpacity, StyleSheet, Modal, BackHandler} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import { CustomText } from '../../components/CustomText';
+import AskGoBack from '../../components/EnrollTicket/AskGoBack';
 
 const EnrollHeader = ({title = '', backDestination, backParams, needAlert}) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false); 
 
-  // const onBackClick = () => {
-  //   if (backDestination) {
-  //     navigation.navigate(backDestination, backParams);
-  //   } else if (needAlert){
-  //     setModalVisible(true);
-  //   } else {
-  //     navigation.goBack();
-  //   }
-  // };
 
   const onBackClick = () => {
     if (needAlert) {
@@ -28,13 +20,33 @@ const EnrollHeader = ({title = '', backDestination, backParams, needAlert}) => {
     }
   };
 
+
   const handleBack = () => {
+    setModalVisible(false);
     if (backDestination) {
       navigation.navigate(backDestination, backParams);
     } else {
       navigation.goBack();
     }
   }
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        if (needAlert) {
+          setModalVisible(true);
+          return true; // Prevent default behavior (go back)
+        }
+        return false; // Allow default behavior
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+      };
+    }, [needAlert])
+  );
 
 
   return (
@@ -50,6 +62,7 @@ const EnrollHeader = ({title = '', backDestination, backParams, needAlert}) => {
       <View width={20} />
     </View>
 
+    {/* {modalVisible ? <AskGoBack /> : null} */}
 
     <Modal  
       // animationType="slide"

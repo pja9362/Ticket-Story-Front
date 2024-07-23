@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image, TouchableOpacity, Modal } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import CategoryBtnContainer from '../../components/EnrollTicket/CategoryBtnContainer';
 import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
@@ -12,6 +12,8 @@ import defaultImage from '../../images/ticket_default_poster_movie.png'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DateTimePickerModal from 'react-native-modal-datetime-picker'; //
 import { CustomText, CustomTextInput } from '../../components/CustomText';
+import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
+import { State } from 'react-native-gesture-handler';
 
 const EnrollInfoByScrape = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -21,6 +23,19 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
 
   const [showContentDropdown, setShowContentDropdown] = useState(true);
   const [showLocationDropdown, setShowLocationDropdown] = useState(false);
+
+  const [modalVisible, setModalVisible] = useState(false); 
+
+  const onSwipe = (event) => {
+    if (event.nativeEvent.state === State.END) {
+      setModalVisible(true);
+    }
+  };
+
+  const handleBack = () => {
+    setModalVisible(false);
+    navigation.navigate("MainStack");
+  }
 
     //
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -35,10 +50,14 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
       setDatePickerVisibility(false);
     };
   
-    const handleConfirmDate = (selectedDate) => {
-      const formattedDate = selectedDate.toISOString().split('T')[0].replace(/-/g, '.');
-      setDate(formattedDate);
+    const handleConfirmDate = async (selectedDate) => {
       hideDatePicker();
+
+      const timezoneOffset = 9 * 60 * 60 * 1000; // 9시간을 밀리초로 변환
+      const adjustedDate = new Date(selectedDate.getTime() + timezoneOffset);
+  
+      const formattedDate = await adjustedDate.toISOString().split('T')[0].replace(/-/g, '.');
+      setDate(formattedDate);
     };
   
     const showTimePicker = () => {
@@ -50,12 +69,21 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     };
   
     const handleConfirmTime = (selectedTime) => {
+      console.log(selectedTime);
+      hideTimePicker();
+
+      const roundedMinutes = Math.floor(selectedTime.getMinutes() / 5) * 5;
+      selectedTime.setMinutes(roundedMinutes);
+      selectedTime.setSeconds(0); // 초를 0으로 설정
+  
       const hours = selectedTime.getHours().toString().padStart(2, '0');
       const minutes = selectedTime.getMinutes().toString().padStart(2, '0');
       setTime(`${hours}:${minutes}`);
-      hideTimePicker();
+      setSelectedTime(selectedTime);
     };
   //
+
+  const [selectedTime, setSelectedTime] = useState(''); 
 
   const { ticketInfo } = route.params;
 
@@ -208,7 +236,10 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   
   return (
     <>
-      <EnrollHeader title="티켓 정보 입력" onIconClick={handleNext}/>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+    <PanGestureHandler onHandlerStateChange={onSwipe}>
+    <View style={{ flex: 1 }}>
+      <EnrollHeader title="티켓 정보 입력" backDestination="MainStack" needAlert="true"/>
         <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
           <View style={{...styles.container, paddingBottom: 0}}>
             <CustomText style={styles.sectionText} fontWeight="bold">
@@ -262,7 +293,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                         style={[styles.inputBox, { flex: 2}]}
                         value={date}
                         placeholder='YYYY.MM.DD'
-                        placeholderTextColor="#ccc"
+                        placeholderTextColor="#B6B6B6"
+                        textAlign="center"
                         editable={false}
                       />
                     </View>
@@ -274,7 +306,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                         style={[styles.inputBox, { flex: 1 }]}
                         value={time}
                         placeholder='HH:MM'
-                        placeholderTextColor="#ccc"
+                        placeholderTextColor="#B6B6B6"
+                        textAlign="center"
                         editable={false}
                       />
                     </View>
@@ -283,13 +316,17 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                   <DateTimePickerModal
                     isVisible={isDatePickerVisible}
                     mode="date"
+                    date={date !== '' ? new Date(date.replace(/\./g, '-')) : new Date()}
                     onConfirm={handleConfirmDate}
                     onCancel={hideDatePicker}
                     locale="ko"
+                    display="inline"
                   />
 
                   <DateTimePickerModal
                     isVisible={isTimePickerVisible}
+                    // date={selectedTime || new Date()}
+                    date={time ? new Date(`1970-01-01T${time}:00`) : new Date()}
                     mode="time"
                     onConfirm={handleConfirmTime}
                     onCancel={hideTimePicker}
@@ -308,7 +345,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                   { contentsId !== null &&
                         <Image style={styles.checkIcon} source={checkIcon} />
                   }
-                  <CustomTextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 검색' placeholderTextColor="#ccc"/>
+                  <CustomTextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 검색' placeholderTextColor="#B6B6B6"/>
                 </View>
                 {/* Content Lists Dropdown */}
                 {
@@ -338,8 +375,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                                 )}
                               </View>
                               <View style={styles.contentDetails}>
-                                <CustomText fontWeight="bold">{content.title}</CustomText>
-                                <CustomText>{content.detail.join(', ')}</CustomText>
+                                <CustomText style={{color: '#525252'}} fontWeight="bold">{content.title}</CustomText>
+                                <CustomText style={{color: '#8A8A8A'}} fontWeight="medium">{content.detail.join(', ')}</CustomText>
                               </View>
                             </TouchableOpacity>
                           </View>
@@ -368,7 +405,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                   { locationId !== null &&
                         <Image style={styles.checkIcon} source={checkIcon} />
                   }
-                  <CustomTextInput style={{...styles.inputBox, flex: 1}} value={location} onChangeText={(text) => {setLocation(text); setIsLocationSelected(false); setLocationId(null);}} placeholder={getCategoryPlaceholder(category, 'location')} placeholderTextColor="#ccc"/>
+                  <CustomTextInput style={{...styles.inputBox, flex: 1}} value={location} onChangeText={(text) => {setLocation(text); setIsLocationSelected(false); setLocationId(null);}} placeholder={getCategoryPlaceholder(category, 'location')} placeholderTextColor="#B6B6B6"/>
                 </View>
                 {/* Location Dropdown */}
                 {
@@ -388,7 +425,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                               style={styles.dropdownItemTouchable}
                             >
                               <View style={styles.locationDetails}>
-                                <CustomText style={{ flex: 1 }} fontWeight="bold">{location.name}</CustomText>
+                                <CustomText style={{ flex: 1, color: '#525252' }} fontWeight="bold">{location.name}</CustomText>
                                 <CustomText style={styles.subText}>{location.address}</CustomText>
                               </View>
                             </TouchableOpacity>
@@ -414,14 +451,14 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                   initialLocationDetail !=='' && (
                     <>
                       <CustomText style={styles.subsectionText}>관람 장소 (세부)</CustomText>
-                      <CustomTextInput style={styles.inputBox} value={locationDetail} onChangeText={setLocationDetail} placeholder={getCategoryPlaceholder(category, 'locationDetail')} placeholderTextColor="#ccc"/>
+                      <CustomTextInput style={styles.inputBox} value={locationDetail} onChangeText={setLocationDetail} placeholder={getCategoryPlaceholder(category, 'locationDetail')} placeholderTextColor="#B6B6B6"/>
                     </>
                   )
                 }
 
                 {/* Seats */}
                 <CustomText style={styles.subsectionText}>관람 좌석</CustomText>
-                <CustomTextInput style={styles.inputBox} value={seats} onChangeText={setSeats} placeholder={getCategoryPlaceholder(category, 'seats')} placeholderTextColor="#ccc"/>
+                <CustomTextInput style={styles.inputBox} value={seats} onChangeText={setSeats} placeholder={getCategoryPlaceholder(category, 'seats')} placeholderTextColor="#B6B6B6"/>
             </>
           }
           </View>
@@ -439,6 +476,28 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
             </View>)
           }
         </KeyboardAwareScrollView>
+      </View>
+      </PanGestureHandler>
+      </GestureHandlerRootView>
+      <Modal  
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+          <View style={{ backgroundColor: 'white', width: 280, padding: 18, borderRadius: 10 }}>
+            <CustomText style={{color: '#000', fontSize: 16, textAlign: 'center', marginTop: 2, lineHeight: 25}} fontWeight="bold">이전으로 돌아가시겠어요? {'\n'} 지금까지의 작성은 저장되지 않습니다</CustomText>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 15 }}>
+              <TouchableOpacity onPress={() => setModalVisible(false)} style={{ backgroundColor: '#E8ECEF', width: 115, padding: 10, borderRadius: 10 }}>
+                <CustomText style={{ color: '#000', textAlign : 'center', fontSize: 17}} fontWeight="medium">취소</CustomText>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleBack} style={{ backgroundColor: '#5D70f9', width: 115, padding: 10, borderRadius: 10 }}>
+                <CustomText style={{ color: 'white', textAlign : 'center', fontSize: 17}} fontWeight="medium">확인</CustomText>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </>
   );
 };
@@ -465,10 +524,11 @@ const styles = StyleSheet.create({
     },
     inputBox: {
       borderWidth: 1,
-      borderColor: '#000',
+      borderColor: '#B6B6B6',
       borderRadius: 5,
       height: 40,
       paddingHorizontal: 10,
+      color: '#525252',
     },
     dateInputContainer: {
       flexDirection: 'row',

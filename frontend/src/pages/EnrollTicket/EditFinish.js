@@ -1,15 +1,30 @@
-import React, {useEffect, useState} from 'react';
-import {View, Image, StyleSheet, Text, Button, TouchableOpacity} from 'react-native';
+import React, {useEffect, useState, useCallback} from 'react';
+import {View, Image, StyleSheet, Text, Button, TouchableOpacity, BackHandler} from 'react-native';
 import character from '../../images/character_black.png';
 import home from '../../images/icon_home.png';
 import storycard from '../../images/icon_storycard.png';
 import addticket from '../../images/icon_addticket.png';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 import BottomSheetMenu from '../../components/EnrollTicket/BottomSheetMenu';
+import {useFocusEffect} from '@react-navigation/native';
 
 const EditFinish = ({navigation, route}) => {
 
     const { ticket, ticketId, reviewDetails } = route.params;
+
+    useFocusEffect(
+        useCallback(() => {
+          const onBackPress = () => {
+            return true;
+          };
+    
+          BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    
+          return () => {
+            BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+          };
+        }, [])
+    );
 
 
     useEffect(() => {

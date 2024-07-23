@@ -23,7 +23,7 @@ const FindPassword = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const [validationNumber, setValidationNumber] = useState(''); 
-  const [isNumberValid, setIsNumberValid] = useState(false);
+  const [isNumberValid, setIsNumberValid] = useState(null);
   const [secondBtnClicked, setSecondBtnClicked] = useState(false);
 
   const [countdown, setCountdown] = useState(300); 
@@ -91,22 +91,27 @@ const FindPassword = () => {
     setSecondBtnClicked(true);
     console.log('인증번호 확인');
 
+    try {
     const passwordReset = await verfiyPasswordResetCode(id, validationNumber);
     console.log('뭐야....',passwordReset);
     
     if (passwordReset) {
       // navigation.navigate('ChangePW');
+      setIsNumberValid(true);
       navigation.replace('ChangePW');
-      console.log('뭐냐고!!!!');
     } else {
       setIsNumberValid(false);
-      console.log('읭!!!!');
+      alert('에러');
+    }
+    } catch {
+      setIsNumberValid(false);
     }
   }
 
   const handleTimeOver = () => {
     setModalVisible(false);
     setId('');
+    setCountdown(300);
   }
 
   return (
@@ -122,7 +127,7 @@ const FindPassword = () => {
               onChangeText={text => setId(text)}
               style={styles.inputBox}
               placeholder='example@naver.com'
-              placeholderTextColor="#ccc"
+              placeholderTextColor="#B6B6B6"
               keyboardType='email-address'
               autoCapitalize='none'
             />
@@ -151,6 +156,7 @@ const FindPassword = () => {
                   onChangeText={text => setValidationNumber(text)}
                   style={styles.inputBox}
                   placeholder='인증번호를 입력해주세요'
+                  placeholderTextColor="#B6B6B6"
                 />
                 <CustomText style={{ marginLeft: 10, color: '#FE5757' }}>{formattedTime()}</CustomText>
               </View>
@@ -181,11 +187,13 @@ const FindPassword = () => {
           onRequestClose={()=>setModalVisible(false)}
           >
               <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-                <View style={{ backgroundColor: 'white', height: 120, width: 280, padding: 18, borderRadius: 10 }}>
-                  <CustomText style={{color: '#000', fontSize: 16, textAlign: 'center', top: 5}} fontWeight="bold">입력 시간이 만료되었어요. {'\n'} 처음부터 다시 진행해 주세요.</CustomText>
-                  <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
-                    <TouchableOpacity onPress={handleTimeOver} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5, marginTop: 5}}>
-                      <CustomText style={{ color: 'white', textAlign : 'center'}} fontWeight="bold">확인</CustomText>
+                <View style={{ backgroundColor: 'white', height: 125, width: 240, padding: 18, borderRadius: 10 }}>
+                  {/* <CustomText style={{color: '#525252', fontSize: 16, textAlign: 'center', top: 5}} fontWeight="bold">입력 시간이 만료되었어요. {'\n'} 처음부터 다시 진행해 주세요.</CustomText> */}
+                  <CustomText style={{color: '#525252', fontSize: 16, textAlign: 'center'}} fontWeight="bold"> 입력 시간이 만료되었어요. </CustomText>
+                  <CustomText style={{color: '#B6B6B6', fontSize: 14, textAlign: 'center'}} fontWeight="bold"> 처음부터 다시 진행해 주세요. </CustomText>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 10 }}>
+                    <TouchableOpacity onPress={handleTimeOver} style={{ backgroundColor: '#5D70f9', width: 100, height: 40, padding: 10, borderRadius: 10, marginTop: 0}}>
+                      <CustomText style={{ color: 'white', textAlign : 'center', fontSize: 16}} fontWeight="bold">확인</CustomText>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -226,6 +234,7 @@ const styles = StyleSheet.create({
     height: 50,
     paddingHorizontal: 12,
     width: '100%',
+    color: '#525252',
   },
   findBtn: {
     margin: 30,

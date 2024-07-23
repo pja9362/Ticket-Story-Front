@@ -6,9 +6,12 @@ import {
   LOAD_MY_TICKETS_FAIL,
   LOAD_TICKET_DETAIL_SUCCESS,
   LOAD_TICKET_DETAIL_FAIL,
+  UPDATE_TICKET_SUCCESS,
+  RESET_UPDATE_TICKET
 } from './types';
 
-export const saveNewTicket = async (data) => {
+// export const saveNewTicket = async (data) => {
+  export const saveNewTicket = (data) => async dispatch => {
   try {
     const accessToken = await AsyncStorage.getItem('accessToken');
     console.log('Access token:', accessToken);
@@ -21,11 +24,25 @@ export const saveNewTicket = async (data) => {
       },
     });
     console.log('Save new ticket response:', response.data);
+
+    if (response.data !== null) {
+      dispatch({
+        type: UPDATE_TICKET_SUCCESS,
+      });
+    }
+
     return response.data;
   } catch (error) {
     console.error('Error saving new ticket:', error);
     throw error;
   }
+}
+
+
+export const resetUpdateTicket = () => async dispatch => {
+  dispatch({
+    type: RESET_UPDATE_TICKET,
+  })
 }
 
 export const deleteTicket = async (data) => {
@@ -79,7 +96,8 @@ export const getTicketDetails = async (data) => {
   }
 }
 
-export const updateReview = async (reviewId, data) => {
+// export const updateReview = async (reviewId, data) => {
+  export const updateReview = (reviewId, data) => async dispatch =>{
   try {
     const accessToken = await AsyncStorage.getItem('accessToken');
     console.log('Access token:', accessToken);
@@ -97,6 +115,13 @@ export const updateReview = async (reviewId, data) => {
       }
     });
     console.log('Update Review response:', response.data);
+
+    if (response.data !== null) {
+      dispatch({
+        type: UPDATE_TICKET_SUCCESS,
+      });
+    }
+
     return response.data;
   } catch (error) {
     console.error('Error updating Review:', error);
@@ -104,7 +129,32 @@ export const updateReview = async (reviewId, data) => {
   }
 }
 
-export const updateInfo = async (ticketId, data) => {
+export const updateReviewImage = async (reviewId, data) => {
+  try {
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    console.log('Access token:', accessToken);
+    console.log('updateReviewImage-----------------', reviewId);
+    console.log('Data-------------------', data);
+    const response = await axios.patch(`${API_URL}/api/v1/reviews/updateSingleReviewImage`, data, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+      params: {
+        reviewId: reviewId
+      }
+    });
+    console.log('Update Review Image response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating Review Image:', error);
+    throw error;
+  }
+}
+
+// export const updateInfo = async (ticketId, data) => {
+  export const updateInfo = (ticketId, data) => async dispatch => {
   try {
     const accessToken = await AsyncStorage.getItem('accessToken');
     console.log('Access token:', accessToken);
@@ -121,9 +171,16 @@ export const updateInfo = async (ticketId, data) => {
       }
     });
     console.log('Update Info response:', response.data);
+
+    if (response.data !== null) {
+      dispatch({
+        type: UPDATE_TICKET_SUCCESS,
+      });
+    }
+
     return response.data;
   } catch (error) {
-    console.error('Error updating Info:', error);
+    console.error('Error updating Info:', error.response.data);
     throw error;
   }
 }
@@ -164,23 +221,29 @@ export const saveImageAndPerformOCR = async (scannedImageUri) => {
   }
 };
 
-export const getMyTickets = (page, size, order, orderBy, callback) => async dispatch => {
+export const getMyTickets = (page, size, order, orderBy, category, callback) => async dispatch => {
   try {
     const accessToken = await AsyncStorage.getItem('accessToken');
-    const response = await axios.get(`${API_URL}/api/v1/ticket/getTicketBookTickets`, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json;charset=UTF-8',
-        'Authorization': `Bearer ${accessToken}`,
-      },
-      params: {
-        page: page,
-        pageSize: size,
-        order: order,
-        orderBy: orderBy,
-        category: ""
-      }
-    });
+    
+    if (accessToken === null) {
+      return;
+    }
+
+      const response = await axios.get(`${API_URL}/api/v1/ticket/getTicketBookTickets`, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json;charset=UTF-8',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        params: {
+          page: page,
+          pageSize: size,
+          order: order,
+          orderBy: orderBy,
+          category: category,
+        }
+      });
+
     if (response.data != null) {
       dispatch({
         type: LOAD_MY_TICKETS_SUCCESS,
@@ -189,6 +252,7 @@ export const getMyTickets = (page, size, order, orderBy, callback) => async disp
       callback(response.data.contents);
     }
     return response.data;
+
   } catch (error) {
     console.error('Error fetching my tickets:', error);
     dispatch({

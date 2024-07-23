@@ -6,11 +6,14 @@ import { useNavigation, CommonActions } from '@react-navigation/native';
 import iconx from '../images/icon_x.png'
 import {CustomText} from '../components/CustomText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logoutRequest } from '../actions/auth/auth';
+import { useDispatch } from 'react-redux';
 
 
 const CustomDrawerContent = ( props ) => {
 
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const [modalVisible, setModalVisible] = useState(false); 
 
@@ -26,6 +29,25 @@ const CustomDrawerContent = ( props ) => {
       console.error('Error during logout:', error);
     }
   };
+
+  // 지우면 안됨!! 
+  // const handleLogout = async () => {
+  //   try {
+  //     dispatch(logoutRequest(([result, response]) => {
+  //       if(result) {
+  //         setModalVisible(false);
+  //         navigation.navigate('Init');
+  //       } else {
+  //         setModalVisible(false);
+  //         alert('로그아웃 에러');
+  //       }
+  //     }));  
+
+  //   } catch (error) {
+  //     console.error('Error during logout:', error);
+  //     alert('로그아웃 에러');
+  //   }
+  // };
   
 
   return (
@@ -37,7 +59,7 @@ const CustomDrawerContent = ( props ) => {
     <DrawerContentScrollView {...props}>
     <View style={{ flex: 1 }}>
       {/* Navigation Items */}
-      <CustomText style={{marginLeft:20, fontSize : 18}} fontWeight="bold">이용 안내</CustomText>
+      <CustomText style={{marginLeft:20, fontSize : 18, color:"#525252"}} fontWeight="bold">이용 안내</CustomText>
       {/* <TouchableOpacity onPress={() => console.log('공지사항 클릭')} style={styles.menuItem}> */}
       <TouchableOpacity onPress={() => navigation.navigate('NoticeList')} style={styles.menuItem}>
         <CustomText style={styles.menuText} fontWeight="medium">공지사항</CustomText>
@@ -55,7 +77,7 @@ const CustomDrawerContent = ( props ) => {
         <CustomText style={styles.menuText} fontWeight="medium">오픈소스 라이선스</CustomText>
       </TouchableOpacity>
 
-      <CustomText style={{marginLeft:20, fontSize : 18, marginTop: 25}} fontWeight="bold">계정 관리</CustomText>
+      <CustomText style={{marginLeft:20, fontSize : 18, marginTop: 25, color:"#525252"}} fontWeight="bold">계정 관리</CustomText>
       <TouchableOpacity onPress={() => navigation.navigate('ChangePassword')} style={styles.menuItem}>
         <CustomText style={styles.menuText} fontWeight="medium">비밀번호 변경</CustomText>
       </TouchableOpacity>
@@ -126,6 +148,7 @@ const styles = StyleSheet.create({
   },
   menuText: {
     fontSize: 16,
+    color:"#525252",
   },
 });
 

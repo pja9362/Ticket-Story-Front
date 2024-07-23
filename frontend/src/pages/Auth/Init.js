@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, Image, Dimensions} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View, Image, Dimensions, BackHandler, Alert} from 'react-native';
 import logo from '../../images/logo.png';
 import WebView from 'react-native-webview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,6 +10,8 @@ import { API_URL } from '@env';
 import { handleOAuthKaKaoLogin, saveTokens } from '../../actions/auth/auth';
 import {CustomText} from '../../components/CustomText';
 // import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
+import Header from '../../components/Header';
+import { useDispatch } from 'react-redux';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -17,9 +19,32 @@ const windowHeight = Dimensions.get('window').height;
 const Init = ({navigation}) => {
 
   const webViewRef = useRef(null);
+  const dispatch = useDispatch();
 
   const [webViewVisible, setWebViewVisible] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState(null);
+
+  useEffect(() => {
+    const backAction = () => {
+      // 원하는 동작을 정의합니다. 여기서는 뒤로가기를 비활성화합니다.
+      // Alert.alert('알림', '이 페이지에서는 뒤로가기를 할 수 없습니다.', [
+      //   { text: '확인', onPress: () => null }
+      // ]);
+      console.log('cannot go back');
+      BackHandler.exitApp()
+      return true; // true를 반환하면 기본 뒤로가기 동작을 방지합니다.
+    };
+
+    // BackHandler에 이벤트 리스너를 추가합니다.
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+
+    // 컴포넌트 언마운트 시 이벤트 리스너를 제거합니다.
+    return () => backHandler.remove();
+  }, []);
+
 
   const handleKaKaoLogin = async () => {
     try {
@@ -33,17 +58,22 @@ const Init = ({navigation}) => {
     }
   };
 
+
   const handleSaveToken = async (url) => {
     try {
-      const response = await saveTokens(url);
+      // const response = await saveTokens(url);
+      dispatch(saveTokens(url, ([result, response]) => {
+        if(result) {
+          navigation.navigate('MainStack');
+        } else {
+          console.log('saveToken error');
+          Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
+        }
+      }))
 
-      await AsyncStorage.setItem('accessToken', response.accessToken);
-      console.log('Access token:', response.accessToken);
-      await AsyncStorage.setItem('refreshToken', response.refreshToken);
-
-      navigation.navigate('MainStack');
     } catch (error) {
       console.error('Error storing tokens:', error);
+      Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
     }
   };
 
@@ -59,55 +89,66 @@ const Init = ({navigation}) => {
     navigation.navigate('MainStack');
   }
 
+  const handleBackClick = () => {
+    console.log('??');
+    setWebViewVisible(false);
+    setRedirectUrl(null);
+  }
+
   return (
     <View style={styles.container}>
       {webViewVisible && (redirectUrl != null) ? (
-          <WebView
-            ref={webViewRef}
-            style={{... styles.webview, margin: 0, padding: 0}}
-            source={{ uri: redirectUrl }} 
-            onNavigationStateChange={handleOAuthNavigationChange}
-            onClose={() => setWebViewVisible(false)}
-          />
+        <>
+          <View style={{padding: 20, paddingTop: 0}}>
+            <Header title="카카오톡 로그인" backClick={handleBackClick}/> 
+          </View>
+            <WebView
+              ref={webViewRef}
+              style={{... styles.webview, margin: 0, padding: 0}}
+              source={{ uri: redirectUrl }} 
+              onNavigationStateChange={handleOAuthNavigationChange}
+              onClose={() => setWebViewVisible(false)}
+            />
+        </>
       )
     :
      (
       <View style={{padding: 38, flex: 1}}>
-      <View style={styles.title}>
-        <Image source={logo} style={styles.image} />
-      </View>
+        <View style={styles.title}>
+          <Image source={logo} style={styles.image} />
+        </View>
 
-      <TouchableOpacity
-          style={styles.snsBtn}
-          onPress={() => navigation.navigate('SignUp')}>
-          <View style={styles.signupContainer}>
-            <Image source={logo_ticket_white} style={styles.logo} />
-            <CustomText style={{...styles.text, color: '#fff'}}>티켓스토리 회원가입</CustomText>
-          </View> 
-      </TouchableOpacity>
-
-      <View style={styles.oauthBtnContainer}>
         <TouchableOpacity
-          onPress={handleKaKaoLogin}>
-          <Image
-            source={icon_kakao}
-            style={{width: 48, height: 48}}
-          />
+            style={styles.snsBtn}
+            onPress={() => navigation.navigate('SignUp')}>
+            <View style={styles.signupContainer}>
+              <Image source={logo_ticket_white} style={styles.logo} />
+              <CustomText style={{...styles.text, color: '#fff'}}>티켓스토리 회원가입</CustomText>
+            </View> 
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleAppleLogin}>
-          <Image
-            source={icon_apple}
-            style={{width: 48, height: 48}}
-          />
-        </TouchableOpacity>
-      </View>
 
-      <TouchableOpacity
-        style={styles.authBtnContainer}
-        onPress={() => navigation.navigate('Login')}>
-        <CustomText style={{textDecorationLine: 'underline', fontSize: 16, lineHeight: 40}}>로그인</CustomText>
-      </TouchableOpacity>
+        <View style={styles.oauthBtnContainer}>
+          <TouchableOpacity
+            onPress={handleKaKaoLogin}>
+            <Image
+              source={icon_kakao}
+              style={{width: 48, height: 48}}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={handleAppleLogin}>
+            <Image
+              source={icon_apple}
+              style={{width: 48, height: 48}}
+            />
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity
+          style={styles.authBtnContainer}
+          onPress={() => navigation.navigate('Login')}>
+          <CustomText style={{textDecorationLine: 'underline', fontSize: 16, lineHeight: 40, color: '#000000'}}>로그인</CustomText>
+        </TouchableOpacity>
       </View>
      )
     }

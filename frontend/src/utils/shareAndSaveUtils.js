@@ -2,7 +2,8 @@ import { captureRef } from 'react-native-view-shot';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
 import Share from 'react-native-share';
 import { Platform } from 'react-native';
-// import ImageResizer from 'react-native-image-resizer';
+import ImageResizer from 'react-native-image-resizer';
+
 
 export const handleShareBtn = async (viewRef) => {
     console.log('공유하기');
@@ -38,12 +39,15 @@ export const handleShareBtn = async (viewRef) => {
 
 
 export const handleSaveBtn = async (viewRef) => {
+    console.log('왱', viewRef);
     console.log('저장하기');
     try {
         const uri = await captureRef(viewRef, {
             format: 'jpg',
             quality: 0.8,
             result: 'tmpfile', 
+            // width: 100,
+            // height: 200,
         });
         await CameraRoll.saveAsset(uri);
         console.log('이미지가 저장되었습니다.');

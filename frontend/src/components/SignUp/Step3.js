@@ -7,13 +7,18 @@ import { signUpRequest } from '../../actions/auth/auth';
 import {CustomText, CustomTextInput} from '../CustomText';
 
 const Step3 = ({nextStep, handleChange, values}) => {
-  const [year, setYear] = useState('');
-  const [month, setMonth] = useState('');
-  const [day, setDay] = useState('');
+  // const [year, setYear] = useState('');
+  // const [month, setMonth] = useState('');
+  // const [day, setDay] = useState('');
+  const [year, setYear] = useState(values.birthday?.split('.')[0] || '');
+  const [month, setMonth] = useState(values.birthday?.split('.')[1] || '');
+  const [day, setDay] = useState(values.birthday?.split('.')[2] || '');
+
 
   const birthday = `${year}.${month}.${day}`;
 
-  const [gender, setGender] = useState('');
+  // const [gender, setGender] = useState('');
+  const [gender, setGender] = useState(values.gender || '');
   const [requiredAgreements, setRequiredAgreements] = useState({
     terms: false,
     personalInfo: false,
@@ -79,6 +84,8 @@ const Step3 = ({nextStep, handleChange, values}) => {
 
       nextStep();
     } catch (error) {
+      alert(`입력한 값이 올바른지
+다시 한번 확인해주세요`);
       console.error('Sign-up error:', error);
     }
   };
@@ -108,18 +115,18 @@ const Step3 = ({nextStep, handleChange, values}) => {
         <View style={styles.dateContainer}>
           <View style={styles.dateItem}>
             <CustomTextInput
-              style={{...styles.inputBox, width: 80}}
+              style={{...styles.inputBox, width: 70}}
               value={year}
               onChangeText={text => setYear(text)}
               keyboardType='numeric'
               placeholder="YYYY"
               placeholderTextColor="#ccc"
             />
-            <CustomText>년</CustomText>
+            <CustomText style={{color:'#525252'}}>년</CustomText>
           </View>
           <View style={styles.dateItem}>
             <CustomTextInput
-              style={{...styles.inputBox, width: 60}}
+              style={{...styles.inputBox, width: 54}}
               value={month}
               onChangeText={text => setMonth(text)}
               onBlur={handleMonthBlur}
@@ -127,11 +134,11 @@ const Step3 = ({nextStep, handleChange, values}) => {
               placeholder="MM"
               placeholderTextColor="#ccc"
             />
-            <CustomText>월</CustomText>
+            <CustomText style={{color:'#525252'}}>월</CustomText>
           </View>
           <View style={styles.dateItem}>
             <CustomTextInput
-              style={{...styles.inputBox, width: 60}}
+              style={{...styles.inputBox, width: 50}}
               value={day}
               onChangeText={text => setDay(text)}
               onBlur={handleDayBlur}
@@ -139,7 +146,7 @@ const Step3 = ({nextStep, handleChange, values}) => {
               placeholder="DD"
               placeholderTextColor="#ccc"
             />
-            <CustomText>일</CustomText>
+            <CustomText style={{color:'#525252'}}>일</CustomText>
           </View>
         </View>
       </View>
@@ -168,13 +175,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   inputBox: {
-    fontSize: 16,
+    fontSize: 14,
     borderWidth: 1,
     borderColor: '#D9D9D9',
     borderRadius: 5,
     paddingVertical: 9,
     paddingHorizontal: 12,
     textAlign: 'center',
+    height: 35,
+    color: '#525252',
   },
   genderContainer: {
     flexDirection: 'row',

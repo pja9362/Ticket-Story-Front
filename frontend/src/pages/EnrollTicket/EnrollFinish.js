@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {View, Image, StyleSheet, Text, Button, TouchableOpacity, Modal} from 'react-native';
+import React, {useState, useEffect, useCallback} from 'react';
+import {View, Image, StyleSheet, Text, Button, TouchableOpacity, Modal, BackHandler} from 'react-native';
 import ticket from '../../images/character_black.png';
 import home from '../../images/icon_home.png';
 import storycard from '../../images/icon_storycard.png';
@@ -8,6 +8,10 @@ import addticket from '../../images/icon_addticket.png';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 import BottomSheetMenu from '../../components/EnrollTicket/BottomSheetMenu';
 import { getTicketDetail, getTicketDetails } from '../../actions/ticket/ticket';
+import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
+import { State } from 'react-native-gesture-handler';
+import {useFocusEffect} from '@react-navigation/native';
+
 
 const EnrollFinish = ({navigation, route}) => {
     const dispatch = useDispatch();
@@ -18,7 +22,30 @@ const EnrollFinish = ({navigation, route}) => {
     const [reviewCardId, setReviewCardId] = useState(null);
     const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
 
+    const onSwipe = (event) => {
+      if (event.nativeEvent.state === State.END) {
+        navigation.navigate("MainStack");
+      }
+    };
+
+    useFocusEffect(
+      useCallback(() => {
+        const onBackPress = () => {
+          navigation.navigate("MainStack");
+          return true;
+        };
+  
+        BackHandler.addEventListener('hardwareBackPress', onBackPress);
+  
+        return () => {
+          BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+        };
+      }, [])
+    );
+
     useEffect(() => {
+        console.log('뭉', ticketId);
+
         dispatch(getTicketDetail(ticketId))
           .then((response) => {
             
@@ -46,7 +73,7 @@ const EnrollFinish = ({navigation, route}) => {
     closeBottomSheet();
     }
 
-    const hi = async() => {
+    const openStoryCard = async() => {
         console.log('되는거 확인해야해서',ticketId);
 
         const editInfo = {
@@ -106,6 +133,8 @@ const EnrollFinish = ({navigation, route}) => {
 
     return (
         <>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+        <PanGestureHandler onHandlerStateChange={onSwipe}>
         <View style={styles.container}>
             <Image source={ticket} style={styles.image} />
             <CustomText style={styles.mainText} fontWeight="medium">나의 <CustomText style={styles.mainText} fontWeight="bold">티켓스토리</CustomText>가 등록되었어요.</CustomText>
@@ -116,7 +145,7 @@ const EnrollFinish = ({navigation, route}) => {
                     <Image style={styles.homeIcon} source={home} />
                     <CustomText style={{...styles.btnText, color: '#fff'}} fontWeight="medium">홈으로 가기</CustomText>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.navButton} onPress={hi}>
+                <TouchableOpacity style={styles.navButton} onPress={openStoryCard}>
                     <Image style={styles.storyIcon} source={storycard} />
                     <CustomText style={styles.btnText} fontWeight="medium">스토리 카드 보기</CustomText>
                 </TouchableOpacity>
@@ -126,6 +155,8 @@ const EnrollFinish = ({navigation, route}) => {
                 </TouchableOpacity>
             </View>
         </View>
+        </PanGestureHandler>
+        </GestureHandlerRootView>
 
         <Modal  
             // animationType="slide"
@@ -154,6 +185,7 @@ const EnrollFinish = ({navigation, route}) => {
             onClick={onClick}
             />
         )}
+
         </>
     )
 }

@@ -36,10 +36,14 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
       setDatePickerVisibility(false);
     };
   
-    const handleConfirmDate = (selectedDate) => {
-      const formattedDate = selectedDate.toISOString().split('T')[0].replace(/-/g, '.');
-      setDate(formattedDate);
+    const handleConfirmDate = async (selectedDate) => {
       hideDatePicker();
+
+      const timezoneOffset = 9 * 60 * 60 * 1000; // 9시간을 밀리초로 변환
+      const adjustedDate = new Date(selectedDate.getTime() + timezoneOffset);
+  
+      const formattedDate = await adjustedDate.toISOString().split('T')[0].replace(/-/g, '.');
+      setDate(formattedDate);
     };
   
     const showTimePicker = () => {
@@ -51,12 +55,21 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     };
   
     const handleConfirmTime = (selectedTime) => {
+      console.log(selectedTime);
+      hideTimePicker();
+
+      const roundedMinutes = Math.floor(selectedTime.getMinutes() / 5) * 5;
+      selectedTime.setMinutes(roundedMinutes);
+      selectedTime.setSeconds(0); // 초를 0으로 설정
+  
       const hours = selectedTime.getHours().toString().padStart(2, '0');
       const minutes = selectedTime.getMinutes().toString().padStart(2, '0');
       setTime(`${hours}:${minutes}`);
-      hideTimePicker();
+      setSelectedTime(selectedTime);
     };
   //
+
+  const [selectedTime, setSelectedTime] = useState(''); 
 
 //   const { ticketInfo } = route.params;
   const { ticketId, ticketData } = route.params;
@@ -158,7 +171,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   
     if (isFormValid()) {
       try {
-        const updatedInfo = await updateInfo(ticketId, requestData);
+        // const updatedInfo = await updateInfo(ticketId, requestData);
+        const updatedInfo = await dispatch(updateInfo(ticketId, requestData));
         // navigation.navigate('EnrollFinish');
         navigation.navigate('EditFinish', { ticket: ticket, ticketId: ticketId, reviewDetails : reviewDetails });
       } catch (error) {
@@ -231,14 +245,6 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     setDate(new Date(date).toISOString().split('T')[0].replace(/-/g, '.'));
   }, []);
 
-  // useEffect(() => {
-  //   console.log('나는 귀여운 이노',date);
-  //   const handleConfirmDate = async () => {
-  //     const formattedDate = await date.toISOString().split('T')[0].replace(/-/g, '.');
-  //     console.log('나는 귀여운 이노2',formattedDate);
-  //     setDate(formattedDate);
-  //   };
-  // }, [date]);
 
   useEffect(() => {
     if (title.trim() !== '' && isContentVisible && isContentSelected === false) {
@@ -265,7 +271,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   
   return (
     <>
-      <EnrollHeader title="티켓 정보 입력" onIconClick={handleNext}/>
+      <EnrollHeader title="티켓 정보 수정" needAlert="true" />
         <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
           <View style={{...styles.container, paddingBottom: 0}}>
             <CustomText style={styles.sectionText} fontWeight="bold">
@@ -319,6 +325,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                         style={[styles.inputBox, { flex: 2}]}
                         value={date}
                         placeholder='YYYY.MM.DD'
+                        placeholderTextColor="#B6B6B6"
                         editable={false}
                       />
                     </View>
@@ -330,6 +337,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                         style={[styles.inputBox, { flex: 1 }]}
                         value={time}
                         placeholder='HH:MM'
+                        placeholderTextColor="#B6B6B6"
                         editable={false}
                       />
                     </View>
@@ -338,13 +346,17 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                   <DateTimePickerModal
                     isVisible={isDatePickerVisible}
                     mode="date"
+                    date={date !== '' ? new Date(date.replace(/\./g, '-')) : new Date()}
                     onConfirm={handleConfirmDate}
                     onCancel={hideDatePicker}
                     locale="ko"
+                    display="inline"
                   />
 
                   <DateTimePickerModal
                     isVisible={isTimePickerVisible}
+                    // date={selectedTime || new Date()}
+                    date={time ? new Date(`1970-01-01T${time}:00`) : new Date()}
                     mode="time"
                     onConfirm={handleConfirmTime}
                     onCancel={hideTimePicker}
@@ -363,7 +375,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                   { contentsId !== null &&
                         <Image style={styles.checkIcon} source={checkIcon} />
                   }
-                  <CustomTextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 제목'/>
+                  <CustomTextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 제목' placeholderTextColor="#B6B6B6"/>
                 </View>
                 {/* Content Lists Dropdown */}
                 {
@@ -393,8 +405,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                                 )}
                               </View>
                               <View style={styles.contentDetails}>
-                                <CustomText fontWeight="bold">{content.title}</CustomText>
-                                <CustomText>{content.detail.join(', ')}</CustomText>
+                                <CustomText style={{color: '#525252'}} fontWeight="bold">{content.title}</CustomText>
+                                <CustomText style={{color: '#8A8A8A'}}>{content.detail.join(', ')}</CustomText>
                               </View>
                             </TouchableOpacity>
                           </View>
@@ -423,7 +435,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                   { locationId !== null &&
                         <Image style={styles.checkIcon} source={checkIcon} />
                   }
-                  <CustomTextInput style={{...styles.inputBox, flex: 1}} value={location} onChangeText={(text) => {setLocation(text); setIsLocationSelected(false); setLocationId(null);}} placeholder={getCategoryPlaceholder(category, 'location')} />
+                  <CustomTextInput style={{...styles.inputBox, flex: 1}} value={location} onChangeText={(text) => {setLocation(text); setIsLocationSelected(false); setLocationId(null);}} placeholder={getCategoryPlaceholder(category, 'location')} placeholderTextColor="#B6B6B6"/>
                 </View>
                 {/* Location Dropdown */}
                 {
@@ -443,7 +455,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                               style={styles.dropdownItemTouchable}
                             >
                               <View style={styles.locationDetails}>
-                                <CustomText style={{ flex: 1 }} fontWeight="bold">{location.name}</CustomText>
+                                <CustomText style={{ flex: 1, color: '#525252' }} fontWeight="bold">{location.name}</CustomText>
                                 <CustomText style={styles.subText}>{location.address}</CustomText>
                               </View>
                             </TouchableOpacity>
@@ -465,18 +477,19 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                 }
 
                 {/* Location Detail */}
-                {
+                
+                {/* {
                   initialLocationDetail !=='' && (
-                    <>
+                    <> */}
                       <CustomText style={styles.subsectionText}>관람 장소 (세부)</CustomText>
-                      <CustomTextInput style={styles.inputBox} value={locationDetail} onChangeText={setLocationDetail} placeholder={getCategoryPlaceholder(category, 'locationDetail')}/>
-                    </>
+                      <CustomTextInput style={styles.inputBox} value={locationDetail} onChangeText={setLocationDetail} placeholder={getCategoryPlaceholder(category, 'locationDetail')} placeholderTextColor="#B6B6B6"/>
+                    {/* </>
                   )
-                }
+                } */}
 
                 {/* Seats */}
                 <CustomText style={styles.subsectionText}>관람 좌석</CustomText>
-                <CustomTextInput style={styles.inputBox} value={seats} onChangeText={setSeats} placeholder={getCategoryPlaceholder(category, 'seats')}/>
+                <CustomTextInput style={styles.inputBox} value={seats} onChangeText={setSeats} placeholder={getCategoryPlaceholder(category, 'seats')} placeholderTextColor="#B6B6B6"/>
             </>
           }
           </View>
@@ -520,10 +533,11 @@ const styles = StyleSheet.create({
     },
     inputBox: {
       borderWidth: 1,
-      borderColor: '#000',
+      borderColor: '#B6B6B6',
       borderRadius: 5,
       height: 40,
       paddingHorizontal: 10,
+      color: '#525252',
     },
     dateInputContainer: {
       flexDirection: 'row',

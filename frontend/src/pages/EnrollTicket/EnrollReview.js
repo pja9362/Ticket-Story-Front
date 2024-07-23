@@ -19,9 +19,13 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { saveNewTicket, uploadImage } from '../../actions/ticket/ticket';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 
+import { useDispatch } from 'react-redux';
+
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const EnrollReview = ({navigation, route}) => {
+  const dispatch = useDispatch();
+  
   const { title, ticketData } = route.params;
 
   useEffect(() => {
@@ -96,9 +100,11 @@ const EnrollReview = ({navigation, route}) => {
     try {
       setSaveProcessing(true);
       console.log("티켓 등록 요청", requestData);
-      const savedTicket = await saveNewTicket(requestData);
+      // const savedTicket = await saveNewTicket(requestData);
+      const savedTicket = await dispatch(saveNewTicket(requestData));
       const ticketId = savedTicket.value
-      console.log('Saved ticket:', ticketId); //
+      console.log('Saved ticket:', savedTicket.value); 
+      console.log('Saved ticket:', ticketId);
       navigation.navigate('EnrollFinish', {ticketId});
     } catch (error) {
       console.error('Error saving review:', error);
@@ -162,7 +168,7 @@ const EnrollReview = ({navigation, route}) => {
 
   return (
     <>
-      <EnrollHeader title="티켓 후기 입력" onIconClick={handleNext} />
+      <EnrollHeader title="콘텐츠 스토리 카드 입력" />
       <KeyboardAwareScrollView style={styles.container} showsVerticalScrollIndicator={false} ref={scrollViewRef}>
         <CustomText style={{fontSize: 16, color: '#525252', lineHeight: 24}} fontWeight="bold">
           관람한 <CustomText style={{color: '#5D70F9'}} fontWeight="bold">{title || '콘텐츠'}</CustomText>의 후기를 알려주세요.
@@ -180,7 +186,7 @@ const EnrollReview = ({navigation, route}) => {
             <TouchableOpacity onPress={handleImagePicker}>
               <Image source={addPhoto} style={styles.image} />
             </TouchableOpacity>
-            <CustomText style={{ width: 48, textAlign: 'center' }}>{selectedImages.length} / 1</CustomText>
+            <CustomText style={{ width: 48, textAlign: 'center', color: '#525252'}}>{selectedImages.length} / 1</CustomText>
           </View>
           <FlatList
             data={selectedImages}
@@ -198,7 +204,7 @@ const EnrollReview = ({navigation, route}) => {
         </View>
         <View style={styles.reviewTextContainer}>
           <CustomTextInput
-            style={{...styles.inputArea, height: 30, fontSize: 16, color: '#525252'}}
+            style={{...styles.inputArea, height: 30, fontSize: 16, color: '#000000'}}
             value={reviewTitle}
             maxLength={20}
             placeholder = "제목"
@@ -207,7 +213,7 @@ const EnrollReview = ({navigation, route}) => {
             fontWeight="bold"
           />
           <CustomTextInput
-            style={{...styles.inputArea, flex: 1}}
+            style={{...styles.inputArea, flex: 1, color: '#525252'}}
             multiline={true}
             placeholder="관람 후기를 입력해주세요"
             placeholderTextColor = "#D9D9D9"
@@ -277,7 +283,8 @@ const styles = StyleSheet.create({
   reviewTextContainer: {
     width: '100%',
     borderWidth: 1,
-    borderColor: '#000',
+    // borderColor: '#000',
+    borderColor: '#B6B6B6',
     borderRadius: 5,
     height: 250,
     marginVertical: 11,

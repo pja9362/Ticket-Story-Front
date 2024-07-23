@@ -13,11 +13,11 @@ const LicenseList = () => {
     <Header title='오픈소스 라이선스'/>
     <ScrollView showsVerticalScrollIndicator={false}>
     <View style={{ flex: 1 }}>
-      <TouchableOpacity onPress={() => navigation.navigate('AbslContent')} style={styles.menuItem}>
-        <CustomText style={styles.menuText} fontWeight="medium">absl</CustomText>
+      <TouchableOpacity onPress={() => navigation.navigate('IconoirContent')} style={styles.menuItem}>
+        <CustomText style={styles.menuText} fontWeight="medium">Iconoir</CustomText>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('ActivityContent')} style={styles.menuItem}>
-        <CustomText style={styles.menuText} fontWeight="medium">activity</CustomText>
+      <TouchableOpacity onPress={() => navigation.navigate('IconParkContent')} style={styles.menuItem}>
+        <CustomText style={styles.menuText} fontWeight="medium">IconPark</CustomText>
       </TouchableOpacity>
     </View>
     </ScrollView>

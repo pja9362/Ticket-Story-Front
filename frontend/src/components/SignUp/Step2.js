@@ -5,8 +5,10 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {CustomText, CustomTextInput} from '../CustomText';
 
 const Step2 = ({ nextStep, handleChange, values }) => {
-  const [password, setPassword] = useState('');
-  const [passwordCheck, setPasswordCheck] = useState('');
+  // const [password, setPassword] = useState('');
+  // const [passwordCheck, setPasswordCheck] = useState('');
+  const [password, setPassword] = useState(values.password || '');
+  const [passwordCheck, setPasswordCheck] = useState(values.password || '');
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordCheck, setShowPasswordCheck] = useState(false);
   const [showPasswordGuide, setShowPasswordGuide] = useState(false);
@@ -65,6 +67,7 @@ const Step2 = ({ nextStep, handleChange, values }) => {
             value={password}
             secureTextEntry={!showPassword}
             onChangeText={handlePasswordChange}
+            autoCapitalize='none'
           />
           <TouchableOpacity
             style={styles.iconContainer}
@@ -88,6 +91,7 @@ const Step2 = ({ nextStep, handleChange, values }) => {
             value={passwordCheck}
             secureTextEntry={!showPasswordCheck}
             onChangeText={(text) => setPasswordCheck(text)}
+            autoCapitalize='none'
           />
           <TouchableOpacity
             style={styles.iconContainer}
@@ -134,6 +138,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     height: 50,
     paddingHorizontal: 12,
+    color: '#525252',
   },
   iconContainer: {
     padding: 15,

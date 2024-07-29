@@ -50,6 +50,7 @@ const My = () => {
           });
       }
     }, [auth, dispatch])
+  // }, [dispatch])
   );
 
   const isLoaded = movieStats && playStats && musicalStats && sportsStats && locationCountStats && locationListStats;
@@ -155,6 +156,22 @@ const My = () => {
                       <CustomText style={styles.columnHeader} fontWeight="bold">장소명</CustomText>
                       <CustomText style={styles.columnHeader} fontWeight="bold">방문횟수</CustomText>
                     </View>
+
+                    {/* {locationListStats.length > 0 ? (
+                      locationListStats.slice(0, 10).map((location, index) => (
+                        <View key={index} style={styles.tableRow}>
+                          <CustomText style={styles.tableCell} fontWeight="medium">{location.locationType}</CustomText>
+                          <CustomText style={styles.tableCell} fontWeight="medium">{location.locationName}</CustomText>
+                          <CustomText style={styles.tableCell} fontWeight="medium">{location.count}</CustomText>
+                        </View>
+                      ))
+                    ) : (
+                      <View style={styles.tableRow}>
+                        <CustomText style={styles.tableCell} fontWeight="medium">hello</CustomText>
+                      </View>
+                    )} */}
+
+
                     {locationListStats.slice(0, 10).map((location, index) => (
                       <View key={index} style={styles.tableRow}>
                         <CustomText style={styles.tableCell} fontWeight="medium">{location.locationType}</CustomText>

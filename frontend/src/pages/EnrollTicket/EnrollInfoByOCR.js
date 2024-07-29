@@ -7,7 +7,8 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  Modal
+  Modal,
+  Platform
 } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -283,16 +284,9 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
     }
   }
 
-  return (
-    <>
-      {loading ? (
-          <LoadingScreen iconId={loadingIcon}/>
-      ) : (
-        <>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-        <PanGestureHandler onHandlerStateChange={onSwipe}>
-          <View style={{ flex: 1 }}>
-          <EnrollHeader
+  const content = (
+    <View style={{ flex : 1}}>
+      <EnrollHeader
             title="티켓 정보 입력"
             backDestination="MainStack"
             needAlert="true"
@@ -521,8 +515,23 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                   />
                 </View>
             </KeyboardAwareScrollView>
-          </View>
-          </PanGestureHandler>
+    </View>
+  )
+
+  return (
+    <>
+      {loading ? (
+          <LoadingScreen iconId={loadingIcon}/>
+      ) : (
+        <>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            {Platform.OS === 'ios' ? (
+              <PanGestureHandler onHandlerStateChange={onSwipe}>
+                {content}
+              </PanGestureHandler>
+            ) : (
+              content
+            )}
           </GestureHandlerRootView>
           {/* {modalVisible ? <AskGoBack backDestination="MainStack" /> : null} */}
         <Modal  

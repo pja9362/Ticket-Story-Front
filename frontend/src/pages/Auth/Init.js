@@ -12,6 +12,7 @@ import {CustomText} from '../../components/CustomText';
 // import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import Header from '../../components/Header';
 import { useDispatch } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -26,22 +27,16 @@ const Init = ({navigation}) => {
 
   useEffect(() => {
     const backAction = () => {
-      // 원하는 동작을 정의합니다. 여기서는 뒤로가기를 비활성화합니다.
-      // Alert.alert('알림', '이 페이지에서는 뒤로가기를 할 수 없습니다.', [
-      //   { text: '확인', onPress: () => null }
-      // ]);
       console.log('cannot go back');
       BackHandler.exitApp()
-      return true; // true를 반환하면 기본 뒤로가기 동작을 방지합니다.
+      return true; 
     };
 
-    // BackHandler에 이벤트 리스너를 추가합니다.
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       backAction
     );
 
-    // 컴포넌트 언마운트 시 이벤트 리스너를 제거합니다.
     return () => backHandler.remove();
   }, []);
 
@@ -64,7 +59,8 @@ const Init = ({navigation}) => {
       // const response = await saveTokens(url);
       dispatch(saveTokens(url, ([result, response]) => {
         if(result) {
-          navigation.navigate('MainStack');
+          // navigation.navigate('MainStack');
+          navigation.navigate('MainStackWithDrawer');
         } else {
           console.log('saveToken error');
           Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
@@ -78,11 +74,42 @@ const Init = ({navigation}) => {
   };
 
   const handleOAuthNavigationChange = (state) => {
+    console.log('Navigating to:', state.url);
     if (state.url.startsWith(`${API_URL}/api/v1/auth/oauth/kakao?code=`)) {
       setWebViewVisible(false);
       handleSaveToken(state.url);
     }
   }
+
+  // const handleSaveToken = async (url) => {
+  //   if (isTokenSaved) return;
+  
+  //   try {
+  //     setIsTokenSaved(true);
+  //     dispatch(saveTokens(url, ([result, response]) => {
+  //       if(result) {
+  //         navigation.navigate('MainStackWithDrawer');
+  //       } else {
+  //         console.log('saveToken error');
+  //         Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
+  //       }
+  //     }));
+  //   } catch (error) {
+  //     console.error('Error storing tokens:', error);
+  //     Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
+  //   }
+  // };
+  
+
+  // const [isTokenSaved, setIsTokenSaved] = useState(false);
+
+  // const handleOAuthNavigationChange = (state) => {
+  //   if (state.url.startsWith(`${API_URL}/api/v1/auth/oauth/kakao?code=`) && !isTokenSaved) {
+  //     setWebViewVisible(false);
+  //     setIsTokenSaved(true);
+  //     handleSaveToken(state.url);
+  //   }
+  // };
 
   const handleAppleLogin = () => {
     console.log('Apple Login');

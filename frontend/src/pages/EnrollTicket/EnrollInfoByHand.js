@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image, Modal } from 'react-native';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image, Modal, Keyboard, Platform } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
@@ -41,6 +41,23 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     setModalVisible(false);
     navigation.goBack();
   }
+
+  //
+  const scrollViewRef = useRef(null);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow);
+
+    return () => {
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
+  const handleKeyboardDidShow = () => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: true });
+    }
+  };
 
   // useEffect(() => { 
   //   navigation.addListener('beforeRemove', (e) => {
@@ -205,17 +222,15 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     }
   };
 
-  return (
-    <>
-    <GestureHandlerRootView style={{ flex: 1 }}>
-    <PanGestureHandler onHandlerStateChange={onSwipe}>
-      <View style={{ flex: 1 }}>
+
+  const content = (
+    <View style={{ flex: 1 }}>
       <EnrollHeader 
         title="티켓 정보 입력" 
         needAlert="true" 
         // onIconClick={() => isFormValid() ? navigation.navigate('EnrollReview', { title }) : alert('필수 입력 항목을 모두 입력해주세요!')} 
       />
-        <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
+        <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false} ref={scrollViewRef}>
           <View style={styles.container}>
             <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', gap: 5}}>
               <CustomText style={{ fontSize: 16, color: '#000' }} fontWeight="bold">
@@ -449,9 +464,22 @@ const EnrollInfoByHand = ({ route, navigation }) => {
             )
           }
         </KeyboardAwareScrollView>
-      </View>
-      </PanGestureHandler>
+    </View>
+  )
+  
+
+  return (
+    <>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        {Platform.OS === 'ios' ? (
+          <PanGestureHandler onHandlerStateChange={onSwipe}>
+            {content}
+          </PanGestureHandler>
+        ) : (
+          content
+        )}
       </GestureHandlerRootView>
+
     <Modal  
       transparent={true}
       visible={modalVisible}

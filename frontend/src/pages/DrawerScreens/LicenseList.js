@@ -13,11 +13,17 @@ const LicenseList = () => {
     <Header title='오픈소스 라이선스'/>
     <ScrollView showsVerticalScrollIndicator={false}>
     <View style={{ flex: 1 }}>
-      <TouchableOpacity onPress={() => navigation.navigate('IconoirContent')} style={styles.menuItem}>
+      <TouchableOpacity onPress={() => navigation.navigate('IconoirLicense')} style={styles.menuItem}>
         <CustomText style={styles.menuText} fontWeight="medium">Iconoir</CustomText>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('IconParkContent')} style={styles.menuItem}>
+      <TouchableOpacity onPress={() => navigation.navigate('IconParkLicense')} style={styles.menuItem}>
         <CustomText style={styles.menuText} fontWeight="medium">IconPark</CustomText>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('MicrosoftLicense')} style={styles.menuItem}>
+        <CustomText style={styles.menuText} fontWeight="medium">Microsoft Corporation</CustomText>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('PictogramLicense')} style={styles.menuItem}>
+        <CustomText style={styles.menuText} fontWeight="medium">Pictogrammers</CustomText>
       </TouchableOpacity>
     </View>
     </ScrollView>

@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Text, StyleSheet, Image, ScrollView } from 'rea
 import {CustomText} from '../../../components/CustomText';
 import Header from '../../../components/Header';
 
-const IconParkContent = () => {
+const IconParkLicense = () => {
 
   return (
     <View style={styles.container}>
@@ -249,4 +249,4 @@ const styles = StyleSheet.create({
   } 
 });
 
-export default IconParkContent;
+export default IconParkLicense;

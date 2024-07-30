@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Text, StyleSheet, Image, ScrollView } from 'rea
 import {CustomText} from '../../../components/CustomText';
 import Header from '../../../components/Header';
 
-const IconoirContent = () => {
+const IconoirLicense = () => {
 
   return (
     <View style={styles.container}>
@@ -75,4 +75,4 @@ const styles = StyleSheet.create({
   } 
 });
 
-export default IconoirContent;
+export default IconoirLicense;

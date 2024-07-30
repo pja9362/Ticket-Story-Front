@@ -1,15 +1,20 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, Image, Text } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, CommonActions } from '@react-navigation/native';
 import logo from '../../images/character_black.png';
 import {CustomText} from '../CustomText';
+// import { useNavigation, CommonActions } from '@react-navigation/native';
 
 const Step4 = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      navigation.navigate('MainStack');
+      // navigation.navigate('MainStackWithDrawer');
+      navigation.dispatch(CommonActions.reset({
+        index: 0,
+        routes: [{name: 'MainStackWithDrawer'}]
+      }))
     }, 1000);
 
     return () => clearTimeout(timeoutId); 

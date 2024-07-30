@@ -39,14 +39,14 @@ import ShowContentScreen from './src/pages/ShowContent';
 
 import NoticeList from './src/pages/DrawerScreens/NoticeList';
 import NoticeContent from './src/pages/DrawerScreens/ContentScreens/NoticeContent';
-import NoticeContent01 from './src/pages/DrawerScreens/ContentScreens/NoticeContent01';
-import NoticeContent02 from './src/pages/DrawerScreens/ContentScreens/NoticeContent02';
 import AskScreen from './src/pages/DrawerScreens/AskScreen';
 import ServiceScreen from './src/pages/DrawerScreens/ServiceScreen';
 import PrivacyScreen from './src/pages/DrawerScreens/PrivacyScreen';
 import LicenseList from './src/pages/DrawerScreens/LicenseList';
-import IconoirContent from './src/pages/DrawerScreens/ContentScreens/IconoirContent';
-import IconParkContent from './src/pages/DrawerScreens/ContentScreens/IconParkContent';
+import IconoirLicense from './src/pages/DrawerScreens/ContentScreens/IconoirLicense';
+import IconParkLicense from './src/pages/DrawerScreens/ContentScreens/IconParkLicense';
+import MicrosoftLicense from './src/pages/DrawerScreens/ContentScreens/MicrosoftLicense';
+import PictogramLicense from './src/pages/DrawerScreens/ContentScreens/PictogramLicense';
 import ChangePassword from './src/pages/DrawerScreens/ChangePassword';
 import ResignScreen from './src/pages/DrawerScreens/ResignScreen';
 import ResignReason from './src/pages/DrawerScreens/ResignReason';
@@ -63,18 +63,18 @@ const App = () => {
     const initialNavState = {
       routes: [
         {
-          name: 'MainStackWithDrawer',
-          state: {
-            routes: [
-              {
-                name: 'Init'
-              }
-            ]
-          }
+          name: 'Init',
+          // state: {
+          //   routes: [
+          //     {
+          //       name: 'Init'
+          //     }
+          //   ]
+          // }
         },
-        {
-          name: 'Init'
-        }
+        // {
+        //   name: 'Init'
+        // }
       ]
     };
 
@@ -152,14 +152,14 @@ const App = () => {
 
                 <Stack.Screen name="NoticeList" component={NoticeList} />
                 <Stack.Screen name="NoticeContent" component={NoticeContent} />
-                <Stack.Screen name="NoticeContent01" component={NoticeContent01} />
-                <Stack.Screen name="NoticeContent02" component={NoticeContent02} />
                 <Stack.Screen name="AskScreen" component={AskScreen} />
                 <Stack.Screen name="ServiceScreen" component={ServiceScreen} />
                 <Stack.Screen name="PrivacyScreen" component={PrivacyScreen} />
                 <Stack.Screen name="LicenseList" component={LicenseList} />
-                <Stack.Screen name="IconoirContent" component={IconoirContent} />
-                <Stack.Screen name="IconParkContent" component={IconParkContent} />
+                <Stack.Screen name="IconoirLicense" component={IconoirLicense} />
+                <Stack.Screen name="IconParkLicense" component={IconParkLicense} />
+                <Stack.Screen name="MicrosoftLicense" component={MicrosoftLicense} />
+                <Stack.Screen name="PictogramLicense" component={PictogramLicense} />
                 <Stack.Screen name="ChangePassword" component={ChangePassword} />
                 <Stack.Screen name="ResignScreen" component={ResignScreen} />
                 <Stack.Screen name="ResignReason" component={ResignReason} />

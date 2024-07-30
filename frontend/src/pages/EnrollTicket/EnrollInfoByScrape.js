@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image, TouchableOpacity, Modal, Platform } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import CategoryBtnContainer from '../../components/EnrollTicket/CategoryBtnContainer';
 import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
@@ -233,12 +233,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     }
   }, [location]);
 
-  
-  return (
-    <>
-    <GestureHandlerRootView style={{ flex: 1 }}>
-    <PanGestureHandler onHandlerStateChange={onSwipe}>
-    <View style={{ flex: 1 }}>
+  const content = (
+    <View style= {{ flex : 1 }}>
       <EnrollHeader title="티켓 정보 입력" backDestination="MainStack" needAlert="true"/>
         <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
           <View style={{...styles.container, paddingBottom: 0}}>
@@ -345,7 +341,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                   { contentsId !== null &&
                         <Image style={styles.checkIcon} source={checkIcon} />
                   }
-                  <CustomTextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 검색' placeholderTextColor="#B6B6B6"/>
+                  <CustomTextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 검색' placeholderTextColor="#B6B6B6" />
                 </View>
                 {/* Content Lists Dropdown */}
                 {
@@ -476,8 +472,20 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
             </View>)
           }
         </KeyboardAwareScrollView>
-      </View>
-      </PanGestureHandler>
+    </View>
+  )
+
+  
+  return (
+    <>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        {Platform.OS === 'ios' ? (
+          <PanGestureHandler onHandlerStateChange={onSwipe}>
+            {content}
+          </PanGestureHandler>
+        ) : (
+          content
+        )}
       </GestureHandlerRootView>
       <Modal  
           transparent={true}

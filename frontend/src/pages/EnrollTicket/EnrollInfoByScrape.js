@@ -233,6 +233,28 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     }
   }, [location]);
 
+  const handleTitleChange = (text) => {
+    if (text.length <= 30) {
+      console.log(text.length);
+      setTitle(text);
+      setIsContentSelected(false);
+      setContentsId(null);
+    } else {
+      alert('콘텐츠 제목은 30자 이내로 입력해주세요.');
+    }
+  };
+
+  const handleLocationChange = (text) => {
+    if (text.length <= 20) {
+      console.log(text.length);
+      setLocation(text);
+      setIsLocationSelected(false);
+      setLocationId(null);
+    } else {
+      alert('관람 장소는 20자 이내로 입력해주세요.');
+    }
+  };
+
   const content = (
     <View style= {{ flex : 1 }}>
       <EnrollHeader title="티켓 정보 입력" backDestination="MainStack" needAlert="true"/>
@@ -341,7 +363,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                   { contentsId !== null &&
                         <Image style={styles.checkIcon} source={checkIcon} />
                   }
-                  <CustomTextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 검색' placeholderTextColor="#B6B6B6" />
+                  <CustomTextInput style={{...styles.inputBox, flex: 1, paddingRight: 30}} value={title} onChangeText={handleTitleChange} placeholder='콘텐츠 검색' placeholderTextColor="#B6B6B6" />
                 </View>
                 {/* Content Lists Dropdown */}
                 {
@@ -401,7 +423,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                   { locationId !== null &&
                         <Image style={styles.checkIcon} source={checkIcon} />
                   }
-                  <CustomTextInput style={{...styles.inputBox, flex: 1}} value={location} onChangeText={(text) => {setLocation(text); setIsLocationSelected(false); setLocationId(null);}} placeholder={getCategoryPlaceholder(category, 'location')} placeholderTextColor="#B6B6B6"/>
+                  <CustomTextInput style={{...styles.inputBox, flex: 1, paddingRight: 30}} value={location} onChangeText={handleLocationChange} placeholder={getCategoryPlaceholder(category, 'location')} placeholderTextColor="#B6B6B6"/>
                 </View>
                 {/* Location Dropdown */}
                 {

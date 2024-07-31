@@ -92,7 +92,6 @@ const DetailCard = ({ ticket, ticketId }) => {
       }
 
     const handleImageEdit = async () => {
-        console.log('밍밍');
 
         try {
     
@@ -164,11 +163,11 @@ const DetailCard = ({ ticket, ticketId }) => {
                                         {!hideImageInfo && (
                                         <>
                                             <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Date</CustomText>
-                                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="bold">{ticket.date}</CustomText>
+                                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.date}</CustomText>
                                             <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Time</CustomText>
-                                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="bold">{ticket.time}</CustomText>
+                                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.time}</CustomText>
                                             <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Place</CustomText>
-                                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="bold">{ticket.location}</CustomText>
+                                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.location}</CustomText>
                                         </>
                                         )}
                                     </View>
@@ -181,7 +180,7 @@ const DetailCard = ({ ticket, ticketId }) => {
                     <View style={styles.contentContainer}>
                         <View style={styles.titleContainer}>
                             {(!hideReviewTitle && !hideReviewInfo) && (
-                                <CustomText style={{...styles.mainText, flex: 1}} fontWeight="bold">{ticket.title}</CustomText>
+                                <CustomText style={{...styles.mainText, flex: 0.65}} fontWeight="bold">{ticket.title}</CustomText>
                             )}
                             <Image source={iconLogo} style={{position: 'absolute', width : 110, height : 42, right : -18, top: -18}} />
                         </View>
@@ -199,7 +198,7 @@ const DetailCard = ({ ticket, ticketId }) => {
                              )}
 
                                 <View style={styles.reviewContainer}>
-                                    <CustomText style={{...styles.mainText, color: '#525252', fontSize: 16}} fontWeight="bold"> {ticket.reviewTitle}</CustomText>
+                                    <CustomText style={{...styles.mainText, color: '#000000', fontSize: 14}} fontWeight="bold"> {ticket.reviewTitle}</CustomText>
                                     <CustomText style={styles.text} fontWeight="medium">{ticket.reviewDetails}</CustomText>
                                 </View>
                             </>
@@ -340,15 +339,15 @@ const styles = StyleSheet.create({
     reviewContainer: {
         position: 'absolute',
         left : 18,
-        top: 95,
+        top: 90,
     },
     mainText: {
         color: '#525252',
-        fontSize: 18,
+        fontSize: 16,
     },
     subText: {
         color: '#B6B6B6',
-        fontSize: 14,
+        fontSize: 12,
         textAlign: 'right',
     },
     text: {

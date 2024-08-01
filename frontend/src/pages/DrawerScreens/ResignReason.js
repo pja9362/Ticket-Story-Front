@@ -22,7 +22,7 @@ const ResignReason = ({route}) => {
                 setModalVisible(false);
                 navigation.navigate('Init');
             } else {
-                console.log('dddd');
+                // console.log('dddd');
             }
 
         } catch (error){

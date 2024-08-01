@@ -11,7 +11,6 @@ const NavHeader = () => {
   const navigation = useNavigation();
 
   const handleHamburger = () => {
-    console.log('dd');
     console.log(navigation)
     // console.log(navigation.dispatch(DrawerActions))
     navigation.openDrawer();

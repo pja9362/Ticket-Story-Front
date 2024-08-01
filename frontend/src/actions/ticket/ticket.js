@@ -264,7 +264,6 @@ export const getMyTickets = (page, size, order, orderBy, category, callback) => 
 
 export const getTicketDetail = (ticketId) => async dispatch => {
   try {
-    console.log('dd', ticketId);
     const accessToken = await AsyncStorage.getItem('accessToken');
     const response = await axios.get(`${API_URL}/api/v1/reviews/getReviewDetails`, {
       headers: {

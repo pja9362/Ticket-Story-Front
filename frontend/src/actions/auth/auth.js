@@ -109,7 +109,7 @@ export const signInRequest = (id, password, callback) => async dispatch => {
         payload: response.data,
       });
 
-      console.log('왜안돼2');
+      // console.log('왜안돼2');
       dispatch({
         type: UPDATE_TICKET_SUCCESS,
       })
@@ -151,7 +151,6 @@ export const logoutRequest = (callback) => async dispatch => {
         type: LOGOUT_SUCCESS,
         payload: response.data,
       });
-      console.log('??');
       // return;
       // return response.data;
       if(callback) callback([true, response.data]);
@@ -270,7 +269,6 @@ export const verfiyPasswordResetCode = async (userId, code) => {
 
     if(response.data.accessToken !== null) {
       await AsyncStorage.setItem('accessToken', response.data.accessToken);
-      console.log('dfdfdfdff',AsyncStorage.getItem('accessToken'));
       return response.data;
       // if(callback) callback([true, response.data]);
     } else {

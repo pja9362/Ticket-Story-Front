@@ -117,7 +117,6 @@ const Init = ({navigation}) => {
   }
 
   const handleBackClick = () => {
-    console.log('??');
     setWebViewVisible(false);
     setRedirectUrl(null);
   }

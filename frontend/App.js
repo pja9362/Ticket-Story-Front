@@ -91,7 +91,8 @@ const App = () => {
   useEffect(() => {
     const logNavigationState = () => {
       const state = navigationRef.getRootState();
-      console.log("Current Navigation State:", state.routes);
+      // navigation state 로그 출력 주석처리
+      // console.log("Current Navigation State:", state.routes);
     };
 
     const unsubscribe = navigationRef.addListener('state', logNavigationState);

@@ -51,11 +51,6 @@ const Login = () => {
     }))
   }
 
-  useEffect(() => {
-    console.log('isValid:', isValid);
-    console.log('disabled:', !isValid);
-  }, [isValid]);
-
   const handleFindPW = () => {
     navigation.navigate('FindPassword');
   }

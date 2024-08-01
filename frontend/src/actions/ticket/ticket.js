@@ -277,7 +277,6 @@ export const getTicketDetail = (ticketId) => async dispatch => {
       }
     });
     if (response.data != null) {
-      console.log('??:', response.data);
       dispatch({
         type: LOAD_TICKET_DETAIL_SUCCESS,
         payload: response.data,

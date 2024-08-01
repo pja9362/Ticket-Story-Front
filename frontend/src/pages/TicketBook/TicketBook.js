@@ -85,9 +85,9 @@ const TicketBook = () => {
   };
 
   const refreshTickets = useCallback(async () => {
-    console.log(4444);
+    // console.log(4444);
     if (auth) {
-      console.log(5555);
+      // console.log(5555);
       dispatch(getMyTickets(0, (pageRef.current + 1) * 10, orderText, defaultOrder, defaultType, (newTickets) => {
         setAllTickets([]);
         setAllTickets(newTickets);
@@ -102,9 +102,9 @@ const TicketBook = () => {
 
   useEffect(() => {
     if (ticketUpdated) {
-      console.log(1111);
+      // console.log(1111);
       const refreshAndReset = async () => {
-        console.log(2222);
+        // console.log(2222);
         await refreshTickets();
         dispatch(resetUpdateTicket());
       };
@@ -115,7 +115,7 @@ const TicketBook = () => {
 
 
   useEffect(() => {
-    console.log(3333);
+    // console.log(3333);
     if (auth && page > 0) {
       dispatch(getMyTickets(page, 10, orderText, defaultOrder, defaultType, (newTickets) => {
         setAllTickets((prevTickets) => [...prevTickets, ...newTickets]);

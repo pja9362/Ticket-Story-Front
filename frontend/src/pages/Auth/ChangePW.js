@@ -27,7 +27,7 @@ const ChangePW = () => {
     const handleNext = async () => {
         if (isValid) {
             // navigation.navigate('MainStack');
-            console.log('11111', password);
+            // console.log('11111', password);
             const newPassword = await resetPassword(password);
 
             if (newPassword) {

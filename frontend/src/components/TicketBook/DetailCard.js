@@ -127,10 +127,6 @@ const DetailCard = ({ ticket, ticketId }) => {
 
     }
 
-    useEffect(() => {
-        console.log('fdfdfdfadsfafdsd', ticket.reviewTitle !== '' && ticket.reviewDetails !== '');
-    }, []);
-
     return (
         ticket &&
         <View style={styles.container}>

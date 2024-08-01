@@ -11,6 +11,7 @@ const EnrollHeader = ({title = '', backDestination, backParams, needAlert}) => {
 
 
   const onBackClick = () => {
+    console.log("Back PARAMS1: ", backParams);
     if (needAlert) {
       setModalVisible(true);
     } else if (backDestination) {
@@ -22,6 +23,7 @@ const EnrollHeader = ({title = '', backDestination, backParams, needAlert}) => {
 
 
   const handleBack = () => {
+    console.log("Back PARAMS2: ", backParams);
     setModalVisible(false);
     if (backDestination) {
       navigation.navigate(backDestination, backParams);
@@ -33,6 +35,7 @@ const EnrollHeader = ({title = '', backDestination, backParams, needAlert}) => {
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => {
+        console.log("Back PARAMS3: ", backParams);
         if (needAlert) {
           setModalVisible(true);
           return true; // Prevent default behavior (go back)

@@ -4,14 +4,18 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import { CustomText } from '../../components/CustomText';
 import AskGoBack from '../../components/EnrollTicket/AskGoBack';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EnrollHeader = ({title = '', backDestination, backParams, needAlert}) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false); 
 
-
   const onBackClick = () => {
-    console.log("Back PARAMS1: ", backParams);
+    if (backParams) {
+      AsyncStorage.setItem('tempReviewTitle', backParams.reviewTitle);
+      AsyncStorage.setItem('tempReviewContent', backParams.reviewContent);
+    }
+
     if (needAlert) {
       setModalVisible(true);
     } else if (backDestination) {
@@ -23,7 +27,10 @@ const EnrollHeader = ({title = '', backDestination, backParams, needAlert}) => {
 
 
   const handleBack = () => {
-    console.log("Back PARAMS2: ", backParams);
+    // asyncstroage에 저장된 임시 리뷰 제거
+    AsyncStorage.removeItem('tempReviewTitle');
+    AsyncStorage.removeItem('tempReviewContent');
+
     setModalVisible(false);
     if (backDestination) {
       navigation.navigate(backDestination, backParams);

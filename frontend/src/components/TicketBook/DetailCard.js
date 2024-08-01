@@ -60,8 +60,8 @@ const DetailCard = ({ ticket, ticketId }) => {
         if (ticket.reviewTitle == '' && ticket.reviewDetails == '') {
             setReviewVisible(true);
         } else {
-            console.log('ticket이 뭐야?', ticket);
-            console.log('ticketId이 뭐야?', ticketId);
+            console.log('ticket info', ticket);
+            console.log('ticketId', ticketId);
             navigation.navigate('ShowContentView', {ticket: ticket, ticketId : ticketId});
         }
     }

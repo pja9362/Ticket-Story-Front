@@ -18,6 +18,7 @@ import CustomCheckbox from '../../components/EnrollTicket/CustomCheckbox';
 import ImagePicker from 'react-native-image-crop-picker';
 import { saveNewTicket, uploadImage } from '../../actions/ticket/ticket';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useDispatch } from 'react-redux';
 
@@ -48,6 +49,20 @@ const EnrollReview = ({navigation, route}) => {
   const maxHeight = 200; // 최대 높이 설정
 
   const scrollViewRef = useRef(null);
+
+  useEffect(() => {
+    const getTempReview = async () => {
+      const tempReviewTitle = await AsyncStorage.getItem('tempReviewTitle');
+      const tempReviewContent = await AsyncStorage.getItem('tempReviewContent');
+      if (tempReviewTitle) {
+        setReviewTitle(tempReviewTitle);
+      }
+      if (tempReviewContent) {
+        setReviewContent(tempReviewContent);
+      }
+    };
+    getTempReview();
+  }, []);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow);
@@ -105,6 +120,11 @@ const EnrollReview = ({navigation, route}) => {
       const ticketId = savedTicket.value
       console.log('Saved ticket:', savedTicket.value); 
       console.log('Saved ticket:', ticketId);
+
+      // asyncstroage에 저장된 임시 리뷰 제거
+      AsyncStorage.removeItem('tempReviewTitle');
+      AsyncStorage.removeItem('tempReviewContent');
+
       navigation.navigate('EnrollFinish', {ticketId});
     } catch (error) {
       console.error('Error saving review:', error);
@@ -166,9 +186,10 @@ const EnrollReview = ({navigation, route}) => {
     }
   };
 
+
   return (
     <>
-      <EnrollHeader title="콘텐츠 스토리 카드 입력" />
+      <EnrollHeader title="콘텐츠 스토리 카드 입력" backParams={{reviewTitle, reviewContent}} />
       <KeyboardAwareScrollView style={styles.container} showsVerticalScrollIndicator={false} ref={scrollViewRef}>
         <CustomText style={{fontSize: 16, color: '#525252', lineHeight: 24}} fontWeight="bold">
           관람한 <CustomText style={{color: '#5D70F9'}} fontWeight="bold">{title || '콘텐츠'}</CustomText>의 후기를 알려주세요.

@@ -30,7 +30,7 @@ const ShowContent = ({ route }) => {
         .then((response) => {
 
           setReviewEdit(response.reviewId);
-          console.log('33223232',reviewEdit);
+        //   console.log('33223232',reviewEdit);
 
         })
     }, []);

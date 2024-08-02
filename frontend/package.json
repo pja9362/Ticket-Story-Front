@@ -25,6 +25,7 @@
     "dotenv": "^16.4.4",
     "react": "18.2.0",
     "react-native": "0.72.6",
+    "react-native-background-timer": "^2.4.1",
     "react-native-canvas": "^0.1.40",
     "react-native-config": "^1.5.1",
     "react-native-document-scanner-plugin": "^0.9.1",

@@ -9,9 +9,10 @@ import {
 } from 'react-native';
 import Header from '../../components/Header';
 import { checkIdDuplicate, sendEmail, verfiyPasswordResetCode, sendPasswordResetEmail } from '../../actions/auth/auth';
-import { startCountdown, formatTime } from '../../utils/countdownUtils';
+import { formatTime } from '../../utils/countdownUtils';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 import { useNavigation } from '@react-navigation/native';
+import BackgroundTimer from 'react-native-background-timer'; // 백그라운드에서 타이머를 설정
 
 const FindPassword = () => {
   const navigation = useNavigation();
@@ -27,25 +28,54 @@ const FindPassword = () => {
   const [secondBtnClicked, setSecondBtnClicked] = useState(false);
 
   const [countdown, setCountdown] = useState(300); 
+
   useEffect(() => {
     let timer;
-  
+
     if (isEmailSent && countdown > 0) {
-      timer = startCountdown(countdown, newSeconds => setCountdown(newSeconds));
-    } else if (countdown === 0) {
-      console.log('인증번호가 만료되었습니다. 다시 인증번호를 받아주세요.');
-      setModalVisible(true);
-      setIsEmailSent(false);
+      // BackgroundTimer를 사용하여 타이머 설정
+      timer = BackgroundTimer.setInterval(() => {
+        setCountdown(prevCountdown => {
+          if (prevCountdown > 0) {
+            return prevCountdown - 1;
+          } else {
+            BackgroundTimer.clearInterval(timer);
+            console.log('인증번호가 만료되었습니다. 다시 인증번호를 받아주세요.');
+            setModalVisible(true);
+            setIsEmailSent(false);
+            return 0;
+          }
+        });
+      }, 1000);
     }
-  
+
     return () => {
-      clearInterval(timer);
+      // BackgroundTimer에서 타이머 제거
+      BackgroundTimer.clearInterval(timer);
     };
   }, [isEmailSent, countdown]);
+  
+  const formattedTime = () => formatTime(countdown);
 
-  const formattedTime = () => {
-    return formatTime(countdown);
-  };
+  // useEffect(() => {
+  //   let timer;
+  
+  //   if (isEmailSent && countdown > 0) {
+  //     timer = startCountdown(countdown, newSeconds => setCountdown(newSeconds));
+  //   } else if (countdown === 0) {
+  //     console.log('인증번호가 만료되었습니다. 다시 인증번호를 받아주세요.');
+  //     setModalVisible(true);
+  //     setIsEmailSent(false);
+  //   }
+  
+  //   return () => {
+  //     clearInterval(timer);
+  //   };
+  // }, [isEmailSent, countdown]);
+
+  // const formattedTime = () => {
+  //   return formatTime(countdown);
+  // };
 
 
   const isValidEmail = (email) => {

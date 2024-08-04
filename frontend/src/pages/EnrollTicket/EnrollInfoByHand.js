@@ -172,9 +172,10 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   //
 
   const handleContentSelect = (content) => {
-    console.log(content);
     setTitle(content.title);
     setContentsId(content.content_id);
+
+    console.log('어찌뜨는데?', content);
     content.location_id !== null && setLocation(content.location_name); 
     content.location_id !== null && setLocationId(content.location_id);
     content.location_name !== null && setIsLocationSelected(true);

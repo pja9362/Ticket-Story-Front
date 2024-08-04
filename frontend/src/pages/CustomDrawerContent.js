@@ -23,7 +23,6 @@ const CustomDrawerContent = ( props ) => {
       await AsyncStorage.removeItem('refreshToken');
       
       setModalVisible(false);
-  
       navigation.navigate('Init');
     } catch (error) {
       console.error('Error during logout:', error);

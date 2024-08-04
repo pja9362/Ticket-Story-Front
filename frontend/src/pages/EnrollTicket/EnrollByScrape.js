@@ -167,43 +167,55 @@ const EnrollByScrape = () => {
               style={styles.button}
               onPress={() => handleScraping({ platform: 'cgv' })}
             >
-              <Image source={logo_cgv} style={styles.logoImage} />
-              <CustomText style={styles.btnText} fontWeight="bold">CGV</CustomText>
+              <View style={styles.imageContainer}>
+                <Image source={logo_cgv} style={styles.logoImage} />
+                <CustomText style={styles.btnText} fontWeight="bold">CGV</CustomText>
+              </View>
             </TouchableOpacity>
             <TouchableOpacity 
               style={styles.button}
               onPress={() => handleScraping({ platform: 'megabox' })}
             >
-              <Image source={logo_megabox} style={styles.logoImage} />
-              <CustomText style={styles.btnText} fontWeight="bold">메가박스</CustomText>
+              <View style={styles.imageContainer}>
+                <Image source={logo_megabox} style={styles.logoImage} />
+                <CustomText style={styles.btnText} fontWeight="bold">메가박스</CustomText>
+              </View>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
               onPress={() => handleScraping({ platform: 'lottecinema' })}
             >
-              <Image source={logo_lottecinema} style={styles.logoImage} />
-              <CustomText style={styles.btnText} fontWeight="bold">롯데시네마</CustomText>
+              <View style={styles.imageContainer}>
+                <Image source={logo_lottecinema} style={styles.logoImage} />
+                <CustomText style={styles.btnText} fontWeight="bold">롯데시네마</CustomText>
+              </View>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
               onPress={() => handleScraping({ platform: 'interpark' })}
             >
-              <Image source={logo_interpark} style={styles.logoImage} />
-              <CustomText style={styles.btnText} fontWeight="bold">인터파크 티켓</CustomText>
+              <View style={styles.imageContainer}>
+                <Image source={logo_interpark} style={styles.logoImage} />
+                <CustomText style={styles.btnText} fontWeight="bold">인터파크 티켓</CustomText>
+              </View>
             </TouchableOpacity>
             <TouchableOpacity 
               style={styles.button}
               onPress={() => handleScraping({ platform: 'ticketlink' })}
             >
-              <Image source={logo_ticketlink} style={styles.logoImage} />
-              <CustomText style={styles.btnText} fontWeight="bold">티켓링크</CustomText>
+              <View style={styles.imageContainer}>
+                <Image source={logo_ticketlink} style={styles.logoImage} />
+                <CustomText style={styles.btnText} fontWeight="bold">티켓링크</CustomText>
+              </View>
             </TouchableOpacity>
             <TouchableOpacity 
               style={styles.button}
               onPress={() => handleScraping({ platform: 'yes24' })}
             >
-              <Image source={logo_yes24} style={styles.logoImage} />
-              <CustomText style={styles.btnText} fontWeight="bold">YES24 티켓</CustomText>
+              <View style={styles.imageContainer}>
+                <Image source={logo_yes24} style={styles.logoImage} />
+                <CustomText style={styles.btnText} fontWeight="bold">예스24 티켓</CustomText>
+              </View>
             </TouchableOpacity>
           </View>
         </>
@@ -211,7 +223,6 @@ const EnrollByScrape = () => {
     </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -234,8 +245,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 60,
   },
   button: {
-    width: '30%', 
+    width: '30%',
     marginBottom: 10,
+    alignItems: 'center',
+  },
+  imageContainer: {
+    alignItems: 'center',
   },
   logoImage: {
     width: 80,
@@ -243,10 +258,11 @@ const styles = StyleSheet.create({
   },
   btnText: {
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: 13,
     color: '#525252',
     paddingTop: 5,
     paddingBottom: 15,
+    // backgroundColor: 'red'
   },
   guideText: {
     fontSize: 16,

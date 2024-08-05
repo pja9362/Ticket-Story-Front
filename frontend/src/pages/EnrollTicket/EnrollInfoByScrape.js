@@ -189,6 +189,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     // setLocationId(content.location_id);
     content.location_id !== null && setLocationId(content.location_id);
     content.location_id !== null && setLocation(content.location_name);
+    // content.location_name !== null && setIsLocationSelected(true);
     setShowContentDropdown(false);
     content.location_id == null && handleLocationSearch(location);
     handleClearList('content');

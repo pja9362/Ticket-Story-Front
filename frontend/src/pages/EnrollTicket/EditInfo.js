@@ -128,6 +128,10 @@ const EnrollEdit = ({ route, navigation }) => {
     return title !== '' && date !== '' && time !== '' && location !== '' && isContentSelected == true && isLocationSelected == true; //
   };
 
+  useEffect(() => {
+    console.log(isLocationSelected);
+  }, [title])
+
 
   const handleNext = async () => {
     const { category: mappedCategory, categoryDetail: mappedCategoryDetail } = getMappedDetailCategory(category, categoryDetail);
@@ -212,9 +216,12 @@ const EnrollEdit = ({ route, navigation }) => {
   const handleContentSelect = (content) => {
     setTitle(content.title);
     setContentsId(content.content_id);
+
+    console.log('어찌뜨는데?', content);
     // setLocationId(content.location_id);
     content.location_id !== null && setLocationId(content.location_id);
     content.location_id !== null && setLocation(content.location_name);
+    content.location_name !== null && setIsLocationSelected(true);
     setShowContentDropdown(false);
     content.location_id == null && handleLocationSearch(location);
     handleClearList('content');

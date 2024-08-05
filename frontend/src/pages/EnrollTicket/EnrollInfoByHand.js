@@ -172,9 +172,10 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   //
 
   const handleContentSelect = (content) => {
-    console.log(content);
     setTitle(content.title);
     setContentsId(content.content_id);
+
+    console.log('어찌뜨는데?', content);
     content.location_id !== null && setLocation(content.location_name); 
     content.location_id !== null && setLocationId(content.location_id);
     content.location_name !== null && setIsLocationSelected(true);
@@ -251,6 +252,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
       <EnrollHeader 
         title="티켓 정보 입력" 
         needAlert="true" 
+        backDestination="MainStack"
         // onIconClick={() => isFormValid() ? navigation.navigate('EnrollReview', { title }) : alert('필수 입력 항목을 모두 입력해주세요!')} 
       />
         <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false} ref={scrollViewRef}>

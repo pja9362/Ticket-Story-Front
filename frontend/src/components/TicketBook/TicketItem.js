@@ -261,15 +261,15 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
 
           {dropdownVisible && isFront && (
             // <View style={{position: 'absolute', right: 10, top: 10, backgroundColor: '#fff', borderRadius: 5, padding: 10, gap: 15}}>
-            <View style={{position: 'absolute', right: moderateScale(10), top: verticalScale(10), backgroundColor: '#fff', borderRadius: 5, padding: moderateScale(10), gap: verticalScale(15)}}>
-              <TouchableOpacity onPress={handleInfoEdit}>
-                <CustomText style={{color: '#000', fontSize: scale(15)}} fontWeight="semibold">정보 수정</CustomText>
+            <View style={{position: 'absolute', right: moderateScale(10), top: verticalScale(10), backgroundColor: '#fff', borderRadius: 5, paddingVertical: moderateScale(12), gap: verticalScale(16), width: moderateScale(95)}}>
+              <TouchableOpacity style={{paddingHorizontal: moderateScale(14)}} onPress={handleInfoEdit}>
+                <CustomText style={{color: '#525252', fontSize: scale(15)}} fontWeight="semibold">정보 수정</CustomText>
               </TouchableOpacity>
-              <TouchableOpacity onPress={handleReviewEdit}>
-                <CustomText style={{color: '#000', fontSize: scale(15)}} fontWeight="semibold">리뷰 수정</CustomText>
+              <TouchableOpacity style={{paddingHorizontal: moderateScale(14)}} onPress={handleReviewEdit}>
+                <CustomText style={{color: '#525252', fontSize: scale(15)}} fontWeight="semibold">리뷰 수정</CustomText>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => setModalVisible(true)}>
-                <CustomText style={{color: '#000', fontSize: scale(15)}} fontWeight="semibold">삭제</CustomText>
+              <TouchableOpacity style={{paddingHorizontal: moderateScale(14)}} onPress={() => setModalVisible(true)}>
+                <CustomText style={{color: '#525252', fontSize: scale(15)}} fontWeight="semibold">삭제</CustomText>
               </TouchableOpacity>
             </View>
           )}

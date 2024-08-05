@@ -22,6 +22,7 @@ const CustomDrawerContent = ( props ) => {
       await AsyncStorage.removeItem('accessToken');
       await AsyncStorage.removeItem('refreshToken');
       
+      props.navigation.closeDrawer()
       setModalVisible(false);
       navigation.navigate('Init');
     } catch (error) {

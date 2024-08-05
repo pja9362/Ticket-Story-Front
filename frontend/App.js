@@ -63,18 +63,18 @@ const App = () => {
     const initialNavState = {
       routes: [
         {
-          name: 'Init',
-          // state: {
-          //   routes: [
-          //     {
-          //       name: 'Init'
-          //     }
-          //   ]
-          // }
+          name: 'MainStackWithDrawer',
+          state: {
+            routes: [
+              {
+                name: 'Init'
+              }
+            ]
+          }
         },
-        // {
-        //   name: 'Init'
-        // }
+        {
+          name: 'Init'
+        }
       ]
     };
 
@@ -92,7 +92,7 @@ const App = () => {
     const logNavigationState = () => {
       const state = navigationRef.getRootState();
       // navigation state 로그 출력 주석처리
-      // console.log("Current Navigation State:", state.routes);
+      console.log("Current Navigation State:", state.routes);
     };
 
     const unsubscribe = navigationRef.addListener('state', logNavigationState);

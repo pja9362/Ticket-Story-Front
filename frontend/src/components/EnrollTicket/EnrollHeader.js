@@ -1,10 +1,11 @@
 import React, {useEffect, useState, useCallback} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, Modal, BackHandler} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Modal, BackHandler, Image} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import { CustomText } from '../../components/CustomText';
 import AskGoBack from '../../components/EnrollTicket/AskGoBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import backButton from './../../images/back_button.png';
 
 const EnrollHeader = ({title = '', backDestination, backParams, needAlert}) => {
   const navigation = useNavigation();
@@ -63,9 +64,12 @@ const EnrollHeader = ({title = '', backDestination, backParams, needAlert}) => {
     <>
     <View style={styles.container}>
       <TouchableOpacity onPress={onBackClick}>
-        <Icon name="chevron-back-sharp" size={20} color="black" />
+        {/* <Icon name="chevron-back-sharp" size={20} color="black" /> */}
+        <Image source={backButton} style={{width: 28, height: 28}}/>
       </TouchableOpacity>
-      <CustomText style={styles.title} fontWeight="bold">{title}</CustomText>
+      <View style={styles.titleContainer} pointerEvents="none">
+        <CustomText style={styles.title} fontWeight="bold">{title}</CustomText>
+      </View>
       {/* <TouchableOpacity onPress={onIconClick}>
         <Icon name="chevron-forward-sharp" size={20} color="black" />
       </TouchableOpacity> */}
@@ -107,10 +111,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: '#fff',
+    alignItems: 'center',
   },
   title: {
     fontSize: 16,
     color: '#525252',
+  },
+  titleContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    alignItems: 'center',
   },
 });
 

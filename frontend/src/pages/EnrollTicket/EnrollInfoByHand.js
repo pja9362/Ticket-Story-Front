@@ -252,6 +252,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
       <EnrollHeader 
         title="티켓 정보 입력" 
         needAlert="true" 
+        backDestination="MainStack"
         // onIconClick={() => isFormValid() ? navigation.navigate('EnrollReview', { title }) : alert('필수 입력 항목을 모두 입력해주세요!')} 
       />
         <KeyboardAwareScrollView style={{backgroundColor: '#fff'}} showsVerticalScrollIndicator={false} ref={scrollViewRef}>

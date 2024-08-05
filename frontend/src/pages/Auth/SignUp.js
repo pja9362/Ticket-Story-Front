@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import Header from '../../components/Header';
 import Step1 from '../../components/SignUp/Step1';
 import Step2 from '../../components/SignUp/Step2';
@@ -8,6 +8,7 @@ import Step4 from '../../components/SignUp/Step4';
 import LineIndicator from '../../components/SignUp/LineIndicator';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {CustomText} from '../../components/CustomText';
+import backButton from '../../images/back_button.png';
 
 const SignUp = ({navigation}) => {
   const [step, setStep] = useState(1);
@@ -42,12 +43,15 @@ const SignUp = ({navigation}) => {
       <View style={styles.headerContainer}>
         {step !== 4 ? (
           <TouchableOpacity onPress={previousStep}>
-            <Icon name="chevron-back-sharp" size={20} color="black" />
+            {/* <Icon name="chevron-back-sharp" size={20} color="black" /> */}
+            <Image source={backButton} style={{width: 28, height: 28}}/>
           </TouchableOpacity>
         ) : (
           <View width={20} />
         )}
-        <CustomText style={styles.title} fontWeight="bold">회원가입</CustomText>
+        <View style={styles.titleContainer} pointerEvents="none">
+          <CustomText style={styles.title} fontWeight="bold">회원가입</CustomText>
+        </View>
         <View width={20} />
       </View>
 
@@ -94,11 +98,19 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#fff',  
+    backgroundColor: '#fff',
+    alignItems: 'center',
   },
   title: {
     fontSize: 16,
     color: '#525252',
+  },
+  titleContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    // backgroundColor: 'red'
   },
 });
 

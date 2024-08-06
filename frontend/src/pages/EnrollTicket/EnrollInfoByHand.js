@@ -513,10 +513,10 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     >
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
         <View style={{ backgroundColor: 'white', width: 280, padding: 18, borderRadius: 10 }}>
-          <CustomText style={{color: '#000', fontSize: 16, textAlign: 'center', marginTop: 2, lineHeight: 25}} fontWeight="bold">이전으로 돌아가시겠어요? {'\n'} 지금까지의 작성은 저장되지 않습니다</CustomText>
+          <CustomText style={{color: '#525252', fontSize: 16, textAlign: 'center', marginTop: 2, lineHeight: 25}} fontWeight="bold">이전으로 돌아가시겠어요? {'\n'} <CustomText style={{color: '#B6B6B6'}} fontWeight="bold">지금까지의 작성은 저장되지 않습니다</CustomText></CustomText>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 15 }}>
             <TouchableOpacity onPress={() => setModalVisible(false)} style={{ backgroundColor: '#E8ECEF', width: 115, padding: 10, borderRadius: 10 }}>
-              <CustomText style={{ color: '#000', textAlign : 'center', fontSize: 17}} fontWeight="medium">취소</CustomText>
+              <CustomText style={{ color: '#525252', textAlign : 'center', fontSize: 17}} fontWeight="medium">취소</CustomText>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleBack} style={{ backgroundColor: '#5D70f9', width: 115, padding: 10, borderRadius: 10 }}>
               <CustomText style={{ color: 'white', textAlign : 'center', fontSize: 17}} fontWeight="medium">확인</CustomText>

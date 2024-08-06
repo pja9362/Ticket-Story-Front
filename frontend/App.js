@@ -63,16 +63,6 @@ const App = () => {
     const initialNavState = {
       routes: [
         {
-          name: 'MainStackWithDrawer',
-          state: {
-            routes: [
-              {
-                name: 'Init'
-              }
-            ]
-          }
-        },
-        {
           name: 'Init'
         }
       ]

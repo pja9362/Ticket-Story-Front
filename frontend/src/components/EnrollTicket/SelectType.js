@@ -193,17 +193,17 @@ const styles = StyleSheet.create({
   },
   sectionText: {
     fontSize: 16,
-    color: '#000',
+    color: '#525252',
     marginBottom: 20,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 25,
+    gap: 8,
   },
   categoryBox: {
     backgroundColor: '#B6B6B6',
-    borderRadius: 10,
+    borderRadius: 12,
     paddingVertical: 12,
     flex: 1,
     alignItems: 'center',

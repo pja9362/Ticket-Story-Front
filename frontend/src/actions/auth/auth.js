@@ -120,7 +120,7 @@ export const signInRequest = (id, password, callback) => async dispatch => {
     }
   }
   catch (error) {
-    console.error('Sign-in error:', error);
+    console.error('Sign-in error:', error.response.data);
     if(callback) callback([false, error]);
   }
 }

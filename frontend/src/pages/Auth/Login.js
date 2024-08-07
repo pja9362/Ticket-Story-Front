@@ -57,7 +57,7 @@ const Login = () => {
 
   return (
     <View style={styles.container}>
-      <Header title='로그인'/>
+      <Header title='로그인' backDestination='Init'/>
 
       <View style={styles.formContainer}>
         <CustomText style={styles.sectionText} fontWeight="bold">아이디</CustomText>

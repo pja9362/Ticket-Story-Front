@@ -479,8 +479,18 @@ const EnrollInfoByHand = ({ route, navigation }) => {
               )
             }
           </View>
-          {
+          {/* {
             isFormValid() && (
+              <View style={styles.floatingButtonContainer}>
+              <NextBtn
+                isDisabled={!isFormValid()}
+                onPress={() => { handleNext(); }}
+              />
+            </View>
+            )
+          } */}
+          {
+            isDateTimeInputFinish && isContentSelected && (
               <View style={styles.floatingButtonContainer}>
               <NextBtn
                 isDisabled={!isFormValid()}
@@ -580,6 +590,7 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     width: '100%',
     alignItems: 'center',
+    marginTop : 100
   },
   // dropdown
   dropdown: {

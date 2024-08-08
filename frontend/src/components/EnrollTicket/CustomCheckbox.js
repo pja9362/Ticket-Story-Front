@@ -8,9 +8,9 @@ const CustomCheckbox = ({ checked, onPress, label}) => {
   return (
     <View style={{alignItems: 'center', display: 'flex', flexDirection: 'row', marginLeft: 10}}>
         <TouchableOpacity style={styles.checkboxButton} onPress={onPress}>
-            <Image source={checked ? iconChecked : iconUnchecked} style={styles.checkboxImage} />
+          <Image source={checked ? iconChecked : iconUnchecked} style={styles.checkboxImage} />
+          <CustomText style={styles.checkboxText} fontWeight="bold">{label}</CustomText>
         </TouchableOpacity>
-        <CustomText style={styles.checkboxText} fontWeight="bold">{label}</CustomText>
     </View>
   );
 };

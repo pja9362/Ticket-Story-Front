@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   sliderText: {
     fontSize: 16,
     marginTop: 5,
-    color: '#000',
+    color: '#525252',
   },
   slider: {
     flex: 1,
@@ -74,11 +74,12 @@ const styles = StyleSheet.create({
     color: '#5D70F9',
   },
   ticketIcon: {
-    width: 52,
-    height: 52,
+    width: 65,
+    height: 65,
   },
   ticketIconContainer: {
     alignItems: 'center',
+    marginLeft: -5,
   }
 });
 

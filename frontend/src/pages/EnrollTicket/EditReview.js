@@ -183,7 +183,7 @@ const EditReview = ({navigation, route}) => {
 
         <SliderRating category="seat" value={seatRating} onValueChange={handleSliderChange} />
         
-        <CustomText style={styles.sectionText}>작품 후기</CustomText>
+        <CustomText style={styles.sectionText}>사진 첨부 <CustomText style={{ fontSize: 12, marginTop: 5, color: '#939393'}}> 사진 첨부는 한 장씩 가능합니다. </CustomText> </CustomText>
 
         <View style={styles.reviewImageContainer}>
           <View>
@@ -206,6 +206,9 @@ const EditReview = ({navigation, route}) => {
             )}
           />
         </View>
+
+        <CustomText style={styles.sectionTextTwo}>관람 후기</CustomText>
+
         <View style={styles.reviewTextContainer}>
           <CustomTextInput
             style={{...styles.inputArea, height: 30, fontSize: 16, color: '#000000'}}
@@ -251,7 +254,13 @@ const styles = StyleSheet.create({
   sectionText: {
     fontSize: 16,
     marginTop: 5,
-    color: '#000',
+    color: '#525252',
+  },
+  sectionTextTwo: {
+    fontSize: 16,
+    marginTop: 22,
+    marginBottom: 5,
+    color: '#525252',
   },
   image: {
     width: 48,
@@ -264,6 +273,7 @@ const styles = StyleSheet.create({
   reviewImageContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginTop: 8,
     gap: 17,
   },
   deleteIconContainer: {

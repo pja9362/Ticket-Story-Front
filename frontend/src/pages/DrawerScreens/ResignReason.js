@@ -89,14 +89,14 @@ const ResignReason = ({route}) => {
                 >
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
                     <View style={{ backgroundColor: 'white', width: 280, padding: 18, borderRadius: 10 }}>
-                    <CustomText style={{color: '#000', fontSize: 18, textAlign: 'center', marginTop: 4, lineHeight: 30}} fontWeight="bold">
+                    <CustomText style={{color: '#525252', fontSize: 18, textAlign: 'center', marginTop: 4, lineHeight: 30}} fontWeight="bold">
                         탈퇴 시 저장한 티켓, 리뷰 등 {'\n'}
                         데이터가 모두 삭제되며 {'\n'}
                         복구할 수 없습니다. {'\n'}
                     </CustomText>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: -10 }}>
                         <TouchableOpacity onPress={() => setModalVisible(false)} style={{ backgroundColor: '#E8ECEF', width: 115, padding: 10, borderRadius: 10 }}>
-                        <CustomText style={{ color: '#000', textAlign : 'center', fontSize: 17 }} fontWeight="medium">취소</CustomText>
+                        <CustomText style={{ color: '#525252', textAlign : 'center', fontSize: 17 }} fontWeight="medium">취소</CustomText>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={handleIconDelete} style={{ backgroundColor: '#5D70f9', width: 115, padding: 10, borderRadius: 10 }}>
                         <CustomText style={{ color: 'white', textAlign : 'center', fontSize: 17 }} fontWeight="medium">탈퇴</CustomText>

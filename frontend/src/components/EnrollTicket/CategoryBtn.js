@@ -22,7 +22,7 @@ const CategoryBtn = ({ title, onPress, isSelected, isDisabled }) => {
 const styles = StyleSheet.create({
   categoryBox: {
     backgroundColor: '#B6B6B6',
-    borderRadius: 10,
+    borderRadius: 12,
     paddingVertical: 12,
     flex: 1,
     alignItems: 'center',

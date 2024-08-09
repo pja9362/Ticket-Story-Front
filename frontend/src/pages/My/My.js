@@ -40,7 +40,6 @@ const My = () => {
       if (auth) {
         dispatch(loadMyStatistics())
           .then((data) => {
-            // console.log('My Statistics', data);
             setMovieStats(data.movieStatistics);
             setPlayStats(data.playStatistics);
             setMusicalStats(data.musicalStatistics);
@@ -50,7 +49,6 @@ const My = () => {
           });
       }
     }, [auth, dispatch])
-  // }, [dispatch])
   );
 
   const isLoaded = movieStats && playStats && musicalStats && sportsStats && locationCountStats && locationListStats;

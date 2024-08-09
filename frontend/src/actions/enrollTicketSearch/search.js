@@ -6,16 +6,17 @@ import {
     SEARCH_CONTENT_CLEAR,
     SEARCH_LOCATION_CLEAR
 } from './types';
+import { requestWithRetry } from '../auth/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
 const API_URL = 'https://ticketstory.shop/api/v1/search';
 
 export const searchContent = (keyword, date, category, registerBy) => async dispatch => {
-    const token = await AsyncStorage.getItem('accessToken');
-    console.log('Token:', token);
+    return requestWithRetry(async () => {
+        const token = await AsyncStorage.getItem('accessToken');
+        console.log('콘텐츠 검색 Token:', token);
 
-    try {
         const response = await axios.get(
             `${API_URL}/autoComplete`,
             {
@@ -30,9 +31,7 @@ export const searchContent = (keyword, date, category, registerBy) => async disp
                 }
             }
         );          
-        console.log("RESPONSE", response.data);
-
-        if(response.status == 200) {
+        if (response.status == 200) {
             dispatch({
                 type: SEARCH_CONTENT_SUCCESS,
                 payload: response.data 
@@ -44,20 +43,14 @@ export const searchContent = (keyword, date, category, registerBy) => async disp
             });
             return [];
         }
-    } catch (error) {
-        dispatch({
-            type: SEARCH_CONTENT_FAIL
-        });
-        return [];
-    }
+    });
 };
 
 export const searchLocation = (keyword) => async dispatch => {
-    const token = await AsyncStorage.getItem('accessToken');
-
-    console.log("장소 검색", keyword)
-
-    try {
+    return requestWithRetry(async () => {
+        const token = await AsyncStorage.getItem('accessToken');
+        console.log("장소 검색 Token:", token)
+        
         const response = await axios.get(
             `${API_URL}/autoCompleteLocation`,
             {
@@ -69,9 +62,8 @@ export const searchLocation = (keyword) => async dispatch => {
                 }
             }
         );          
-        console.log("RESPONSE", response.data);
 
-        if(response.status == 200) {
+        if (response.status == 200) {
             dispatch({
                 type: SEARCH_LOCATION_SUCCESS,
                 payload: response.data 
@@ -83,13 +75,8 @@ export const searchLocation = (keyword) => async dispatch => {
             });
             return [];
         }
-    } catch (error) {
-        dispatch({
-            type: SEARCH_LOCATION_FAIL
-        });
-        return [];
-    }
-}
+    });
+};
 
 export const clearContent = () => async dispatch => {
     dispatch({

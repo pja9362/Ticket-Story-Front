@@ -4,12 +4,13 @@ import {
 } from './types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import {API_URL} from '@env';
+import { API_URL } from '@env';
+import { requestWithRetry } from '../auth/auth';
 
 export const loadMyStatistics = () => async dispatch => {
-    const token = await AsyncStorage.getItem('accessToken');
-
-    try {
+    return requestWithRetry(async () => {
+        const token = await AsyncStorage.getItem('accessToken');
+        console.log("나의 통계 Token:", token)
         const response = await axios.get(
             `${API_URL}/api/v1/statistics/getBasicStatistics`,
             {
@@ -19,11 +20,10 @@ export const loadMyStatistics = () => async dispatch => {
             }
         );
 
-        if(response.status == 200) {
-            console.log("RESPONSE", response.data);
+        if (response.status == 200) {
             dispatch({
                 type: LOAD_MY_STATISTICS_SUCCESS,
-                payload: response.data 
+                payload: response.data
             });
             return response.data;
         } else {
@@ -32,10 +32,10 @@ export const loadMyStatistics = () => async dispatch => {
             });
             return [];
         }
-    } catch (error) {
+    }).catch(error => {
         dispatch({
             type: LOAD_MY_STATISTICS_FAIL
         });
         return [];
-    }
-}
+    });
+};

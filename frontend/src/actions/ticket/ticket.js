@@ -9,34 +9,40 @@ import {
   UPDATE_TICKET_SUCCESS,
   RESET_UPDATE_TICKET
 } from './types';
+import { requestWithRetry } from '../auth/auth'
 
-// export const saveNewTicket = async (data) => {
-  export const saveNewTicket = (data) => async dispatch => {
-  try {
-    const accessToken = await AsyncStorage.getItem('accessToken');
-    console.log('Access token:', accessToken);
-    console.log('Data:', data)
-    const response = await axios.post(`${API_URL}/api/v1/ticket/saveNewTicket`, data, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json;charset=UTF-8',
-        'Authorization': `Bearer ${accessToken}`,
-      },
-    });
-    console.log('Save new ticket response:', response.data);
+export const saveNewTicket = (data) => async dispatch => {
+  return requestWithRetry(async () => {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      if (!accessToken) {
+          throw new Error('Access token is not available');
+      }
 
-    if (response.data !== null) {
-      dispatch({
-        type: UPDATE_TICKET_SUCCESS,
+      console.log('Access token:', accessToken);
+      console.log('Data:', data);
+
+      const response = await axios.post(`${API_URL}/api/v1/ticket/saveNewTicket`, data, {
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json;charset=UTF-8',
+              'Authorization': `Bearer ${accessToken}`,
+          },
       });
-    }
 
-    return response.data;
-  } catch (error) {
-    console.error('Error saving new ticket:', error);
-    throw error;
-  }
-}
+      console.log('Save new ticket response:', response.data);
+
+      if (response.data !== null) {
+          dispatch({
+              type: UPDATE_TICKET_SUCCESS,
+          });
+      }
+
+      return response.data;
+  }).catch(error => {
+      console.error('Error saving new ticket:', error);
+      throw error;
+  });
+};
 
 
 export const resetUpdateTicket = () => async dispatch => {
@@ -46,11 +52,15 @@ export const resetUpdateTicket = () => async dispatch => {
 }
 
 export const deleteTicket = async (data) => {
-  try {
+  return requestWithRetry(async () => {
     const accessToken = await AsyncStorage.getItem('accessToken');
-    console.log('Access token:', accessToken);
-    console.log('Data:', data)
-    const response = await axios.delete(`${API_URL}/api/v1/ticket/deleteTicket`,  {
+    if (!accessToken) {
+      throw new Error('Access token is not available');
+    }
+
+    console.log('Deleting ticket with data:', data);
+
+    const response = await axios.delete(`${API_URL}/api/v1/ticket/deleteTicket`, {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json;charset=UTF-8',
@@ -63,17 +73,20 @@ export const deleteTicket = async (data) => {
 
     console.log('Delete ticket response:', response.data);
     return response.data;
-  } catch (error) {
-    console.error('Error deleting ticket:', error);
+  }).catch(error => {
+    console.error('Delete ticket 요청 중 오류 발생:', error.message || error);
     throw error;
-  }
-}
+  });
+};
 
 export const getTicketDetails = async (data) => {
-  try {
+  return requestWithRetry(async () => {
     const accessToken = await AsyncStorage.getItem('accessToken');
-    console.log('Access token:', accessToken);
-    console.log('Data:', data)
+    
+    if (!accessToken) {
+        throw new Error('Access token is not available');
+    }
+
     const response = await axios.delete(`${API_URL}/api/v1/ticket/getTicketDetails`,  {
       headers: {
         'Accept': 'application/json',
@@ -84,25 +97,30 @@ export const getTicketDetails = async (data) => {
         ticketId: data.ticketId,
       }
     });
+
     console.log('ticket detail response:', response.data);
+    
     if (response.data !== null) {
       return response.data;
     } else {
       return null;
     }
-  } catch (error) {
-    console.error('Error getting ticket detail:', error);
-    throw error;
-  }
-}
 
-// export const updateReview = async (reviewId, data) => {
-  export const updateReview = (reviewId, data) => async dispatch =>{
-  try {
+  }).catch(error => {
+    console.error('getTicketDetails 요청 중 오류 발생:', error.message || error);
+    throw error;
+  });
+};
+
+export const updateReview = (reviewId, data) => async dispatch =>{
+  return requestWithRetry(async () => {
     const accessToken = await AsyncStorage.getItem('accessToken');
-    console.log('Access token:', accessToken);
-    console.log('editReview-----------------', reviewId);
-    console.log('Data-------------------', data);
+    if (!accessToken) {
+        throw new Error('Access token is not available');
+    }
+
+    console.log('Updating review with data:', data);
+
     const response = await axios.patch(`${API_URL}/api/v1/reviews/updateReview`, data, {
       headers: {
         'Accept': 'application/json',
@@ -110,10 +128,10 @@ export const getTicketDetails = async (data) => {
         'Authorization': `Bearer ${accessToken}`,
       },
       params: {
-        // ticketId: ticketId
         reviewId: reviewId
       }
     });
+
     console.log('Update Review response:', response.data);
 
     if (response.data !== null) {
@@ -123,18 +141,22 @@ export const getTicketDetails = async (data) => {
     }
 
     return response.data;
-  } catch (error) {
-    console.error('Error updating Review:', error);
+  }
+  ).catch(error => {
+    console.error('Update Review 요청 중 오류 발생:', error.message || error);
     throw error;
   }
+  );
 }
 
+
 export const updateReviewImage = async (reviewId, data) => {
-  try {
+  return requestWithRetry(async () => {
     const accessToken = await AsyncStorage.getItem('accessToken');
     console.log('Access token:', accessToken);
-    console.log('updateReviewImage-----------------', reviewId);
-    console.log('Data-------------------', data);
+
+    console.log('Updating review image with data:', data);
+
     const response = await axios.patch(`${API_URL}/api/v1/reviews/updateSingleReviewImage`, data, {
       headers: {
         'Accept': 'application/json',
@@ -145,21 +167,24 @@ export const updateReviewImage = async (reviewId, data) => {
         reviewId: reviewId
       }
     });
+
     console.log('Update Review Image response:', response.data);
     return response.data;
-  } catch (error) {
-    console.error('Error updating Review Image:', error);
+  }).catch(error => {
+    console.error('Update Review Image 요청 중 오류 발생:', error.message || error);
     throw error;
-  }
-}
+  });
+};
 
-// export const updateInfo = async (ticketId, data) => {
-  export const updateInfo = (ticketId, data) => async dispatch => {
-  try {
+export const updateInfo = (ticketId, data) => async dispatch => {
+  return requestWithRetry(async () => {
     const accessToken = await AsyncStorage.getItem('accessToken');
-    console.log('Access token:', accessToken);
-    console.log('editInfo-----------------', ticketId);
-    console.log('Data-------------------', data);
+    if (!accessToken) {
+        throw new Error('Access token is not available');
+    }
+
+    console.log('Updating Info with data:', data);
+
     const response = await axios.patch(`${API_URL}/api/v1/ticket/updateTicket`, data, {
       headers: {
         'Accept': 'application/json',
@@ -170,6 +195,7 @@ export const updateReviewImage = async (reviewId, data) => {
         ticketId: ticketId
       }
     });
+
     console.log('Update Info response:', response.data);
 
     if (response.data !== null) {
@@ -179,15 +205,14 @@ export const updateReviewImage = async (reviewId, data) => {
     }
 
     return response.data;
-  } catch (error) {
-    console.error('Error updating Info:', error.response.data);
+  }).catch(error => {
+    console.error('Update Info 요청 중 오류 발생:', error.message || error);
     throw error;
-  }
+  });
 }
 
-
 export const saveImageAndPerformOCR = async (scannedImageUri) => {
-  try {    
+  return requestWithRetry(async () => {
     const accessToken = await AsyncStorage.getItem('accessToken');
     console.log('Access token:', accessToken);
 
@@ -216,84 +241,89 @@ export const saveImageAndPerformOCR = async (scannedImageUri) => {
     
     await AsyncStorage.setItem('ticket', JSON.stringify(response.data));
     
-  } catch (error) {
-    console.error('Error saving image to file or performing OCR:', error);
-  }
+    return response.data;
+  }).catch(error => {
+    console.error('Error saving image to file or performing OCR:', error.message || error);
+    throw error;
+  });
 };
 
 export const getMyTickets = (page, size, order, orderBy, category, callback) => async dispatch => {
-  try {
-    const accessToken = await AsyncStorage.getItem('accessToken');
-    
-    if (accessToken === null) {
-      return;
-    }
+  return requestWithRetry(async () => {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      
+      if (!accessToken) {
+          throw new Error('Access token is not available');
+      }
 
       const response = await axios.get(`${API_URL}/api/v1/ticket/getTicketBookTickets`, {
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json;charset=UTF-8',
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        params: {
-          page: page,
-          pageSize: size,
-          order: order,
-          orderBy: orderBy,
-          category: category,
-        }
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json;charset=UTF-8',
+              'Authorization': `Bearer ${accessToken}`,
+          },
+          params: {
+              page: page,
+              pageSize: size,
+              order: order,
+              orderBy: orderBy,
+              category: category,
+          }
       });
 
-    if (response.data != null) {
+      if (response.data) {
+          dispatch({
+              type: LOAD_MY_TICKETS_SUCCESS,
+              payload: response.data,
+          });
+          callback(response.data.contents);
+      }
+      return response.data;
+  }).catch(error => {
       dispatch({
-        type: LOAD_MY_TICKETS_SUCCESS,
-        payload: response.data,
+          type: LOAD_MY_TICKETS_FAIL,
       });
-      callback(response.data.contents);
-    }
-    return response.data;
+      throw error;
+  });
+};
 
-  } catch (error) {
-    console.error('Error fetching my tickets:', error);
-    dispatch({
-      type: LOAD_MY_TICKETS_FAIL,
-    });
-    throw error;
-  }
-}
 
 export const getTicketDetail = (ticketId) => async dispatch => {
-  try {
-    const accessToken = await AsyncStorage.getItem('accessToken');
-    const response = await axios.get(`${API_URL}/api/v1/reviews/getReviewDetails`, {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json;charset=UTF-8',
-        'Authorization': `Bearer ${accessToken}`,
-      },
-      params: {
-        ticketId: ticketId,
-      }
-    });
-    if (response.data != null) {
-      dispatch({
-        type: LOAD_TICKET_DETAIL_SUCCESS,
-        payload: response.data,
-      });
-    }
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching ticket detail:', error.response.data);
-    dispatch({
-      type: LOAD_TICKET_DETAIL_FAIL,
-    });
-    throw error;
-  }
-}
+  return requestWithRetry(async () => {
+      const accessToken = await AsyncStorage.getItem('accessToken');
 
+      if (!accessToken) {
+          throw new Error('Access token is not available');
+      }
+
+      const response = await axios.get(`${API_URL}/api/v1/reviews/getReviewDetails`, {
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json;charset=UTF-8',
+              'Authorization': `Bearer ${accessToken}`,
+          },
+          params: {
+              ticketId: ticketId,
+          }
+      });
+
+      if (response.data) {
+          dispatch({
+              type: LOAD_TICKET_DETAIL_SUCCESS,
+              payload: response.data,
+          });
+      }
+      return response.data;
+  }).catch(error => {
+      dispatch({
+          type: LOAD_TICKET_DETAIL_FAIL,
+      });
+      throw error;
+  });
+};
 
 export const uploadImage = async (imageUri) => {
-  try {
+  return requestWithRetry(async () => {
     const accessToken = await AsyncStorage.getItem('accessToken');
     const formData = new FormData();
     formData.append('images', {
@@ -310,8 +340,8 @@ export const uploadImage = async (imageUri) => {
     });
 
     return response.data[0]; 
-  } catch (error) {
-    console.error('Error uploading image:', error);
+  }).catch(error => {
+    console.error('Error uploading image:', error.message || error);
     throw error;
-  }
+  });
 };

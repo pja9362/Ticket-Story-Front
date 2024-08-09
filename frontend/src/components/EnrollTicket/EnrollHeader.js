@@ -6,15 +6,24 @@ import { CustomText } from '../../components/CustomText';
 import AskGoBack from '../../components/EnrollTicket/AskGoBack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import backButton from './../../images/back_button.png';
+import { removeTempReviews } from '../../utils/removeTempReviewsUtils';
 
 const EnrollHeader = ({title = '', backDestination, backParams, needAlert}) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false); 
 
-  const onBackClick = () => {
+  const onBackClick = async () => {
     if (backParams) {
-      AsyncStorage.setItem('tempReviewTitle', backParams.reviewTitle);
-      AsyncStorage.setItem('tempReviewContent', backParams.reviewContent);
+      const tempReview = {
+        contentsId: backParams.contentsId,
+        contentsTitle: backParams.contentsTitle,
+        reviewTitle: backParams.reviewTitle,
+        reviewContent: backParams.reviewContent,
+        artRating: backParams.artRating,
+        seatRating: backParams.seatRating,
+        selectedImages: backParams.selectedImages,
+      };
+      await AsyncStorage.setItem(`tempReview_${backParams.contentsId || 'temp'}`, JSON.stringify(tempReview));
     }
 
     if (needAlert) {
@@ -27,10 +36,8 @@ const EnrollHeader = ({title = '', backDestination, backParams, needAlert}) => {
   };
 
 
-  const handleBack = () => {
-    // asyncstroage에 저장된 임시 리뷰 제거
-    AsyncStorage.removeItem('tempReviewTitle');
-    AsyncStorage.removeItem('tempReviewContent');
+  const handleBack = async () => {
+    await removeTempReviews();
 
     setModalVisible(false);
     if (backDestination) {

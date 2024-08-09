@@ -193,7 +193,6 @@ const TicketBook = () => {
     }));
   };
 
-
   return (
     <TouchableWithoutFeedback onPress={closeSelectBox}>
     <View style={{flex:1}}>

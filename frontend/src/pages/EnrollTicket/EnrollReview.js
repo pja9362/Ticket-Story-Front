@@ -31,6 +31,7 @@ const EnrollReview = ({navigation, route}) => {
 
   useEffect(() => {
     console.log("TICKET DATA", ticketData);
+    console.log("TICKET DATA", ticketData.contentsDetails.contentsId);
   }, []);
   
   const [sliderTouched, setSliderTouched] = useState(false);
@@ -52,18 +53,36 @@ const EnrollReview = ({navigation, route}) => {
 
   useEffect(() => {
     const getTempReview = async () => {
-      const tempReviewTitle = await AsyncStorage.getItem('tempReviewTitle');
-      const tempReviewContent = await AsyncStorage.getItem('tempReviewContent');
-      if (tempReviewTitle) {
-        setReviewTitle(tempReviewTitle);
-      }
-      if (tempReviewContent) {
-        setReviewContent(tempReviewContent);
+      const tempReview = await AsyncStorage.getItem(`tempReview_${ticketData.contentsDetails.contentsId}`);
+      
+      if (tempReview) {
+        const {
+          contentsId,
+          contentsTitle,
+          reviewTitle,
+          reviewContent,
+          artRating,
+          seatRating,
+          selectedImages,
+        } = JSON.parse(tempReview);
+      
+      
+        if (
+          (ticketData.contentsDetails.contentsId !== null && ticketData.contentsDetails.contentsId == contentsId) ||
+          ticketData.contentsDetails.title === contentsTitle
+        ) {
+          setReviewTitle(reviewTitle);
+          setReviewContent(reviewContent);
+          setArtRating(artRating);
+          setSeatRating(seatRating);
+          setSelectedImages(selectedImages);
+        }
       }
     };
+  
     getTempReview();
-  }, []);
-
+  }, [ticketData.contentsDetails.contentsId]);  
+  
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow);
 
@@ -122,8 +141,7 @@ const EnrollReview = ({navigation, route}) => {
       console.log('Saved ticket:', ticketId);
 
       // asyncstroage에 저장된 임시 리뷰 제거
-      AsyncStorage.removeItem('tempReviewTitle');
-      AsyncStorage.removeItem('tempReviewContent');
+      await AsyncStorage.removeItem(`tempReview_${ticketData.contentsDetails.contentsId}`);
 
       navigation.navigate('EnrollFinish', {ticketId});
     } catch (error) {
@@ -189,7 +207,18 @@ const EnrollReview = ({navigation, route}) => {
 
   return (
     <>
-      <EnrollHeader title="콘텐츠 스토리 카드 입력" backParams={{reviewTitle, reviewContent}} />
+      <EnrollHeader 
+          title="콘텐츠 스토리 카드 입력" 
+          backParams={{
+            reviewTitle,
+            reviewContent,
+            artRating,
+            seatRating,
+            selectedImages,
+            contentsId: ticketData.contentsDetails.contentsId,
+            contentsTitle: ticketData.contentsDetails.title
+          }} 
+      />
       <KeyboardAwareScrollView style={styles.container} showsVerticalScrollIndicator={false} ref={scrollViewRef}>
         <CustomText style={{fontSize: 16, color: '#525252', lineHeight: 24}} fontWeight="bold">
           관람한 <CustomText style={{color: '#5D70F9'}} fontWeight="bold">{title || '콘텐츠'}</CustomText>의 후기를 알려주세요.

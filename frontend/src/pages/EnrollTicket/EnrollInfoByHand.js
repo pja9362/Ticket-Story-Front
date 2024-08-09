@@ -25,10 +25,6 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   const { categoryInfo } = route.params;
   const { category, categoryDetail } = categoryInfo;
 
-  useEffect(() => {
-    console.log('categoryInfo:', categoryInfo);
-  }, []);
-
   const [modalVisible, setModalVisible] = useState(false); 
 
   const onSwipe = (event) => {
@@ -42,7 +38,6 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     navigation.goBack();
   }
 
-  //
   const scrollViewRef = useRef(null);
 
   useEffect(() => {
@@ -59,13 +54,6 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     }
   };
 
-  // useEffect(() => { 
-  //   navigation.addListener('beforeRemove', (e) => {
-  //     console.log('hello',e);
-  //   });
-  // }, []);
-
-  //
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 
@@ -86,14 +74,6 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     const formattedDate = await adjustedDate.toISOString().split('T')[0].replace(/-/g, '.');
     setDate(formattedDate);
   };
-
-  // const handleConfirmDate = async (selectedDate) => {
-  //   console.log('selectedDate',selectedDate);
-  //   const formattedDate = await selectedDate.toISOString().split('T')[0].replace(/-/g, '.');
-  //   console.log('formattedDate', formattedDate);
-  //   setDate(formattedDate);
-  //   hideDatePicker();
-  // };
 
   const showTimePicker = () => {
     setTimePickerVisibility(true);
@@ -116,7 +96,6 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     setSelectedTime(selectedTime);
 
   };
-//
   
   const [selectedTime, setSelectedTime] = useState(''); 
 
@@ -157,7 +136,6 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     }
   }, [location]);
 
-  //
   const handleNoItemSelect = () => {
     setShowContentDropdown(false);
     setIsContentSelected(true);
@@ -169,13 +147,10 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     setIsLocationSelected(true);
     setLocationId(null);
   }
-  //
-
   const handleContentSelect = (content) => {
     setTitle(content.title);
     setContentsId(content.content_id);
 
-    console.log('어찌뜨는데?', content);
     content.location_id !== null && setLocation(content.location_name); 
     content.location_id !== null && setLocationId(content.location_id);
     content.location_name !== null && setIsLocationSelected(true);
@@ -225,7 +200,6 @@ const EnrollInfoByHand = ({ route, navigation }) => {
 
   const handleTitleChange = (text) => {
     if (text.length <= 30) {
-      console.log(text.length);
       setTitle(text);
       setIsContentSelected(false);
       setContentsId(null);
@@ -236,7 +210,6 @@ const EnrollInfoByHand = ({ route, navigation }) => {
 
   const handleLocationChange = (text) => {
     if (text.length <= 20) {
-      console.log(text.length);
       setLocation(text);
       setIsLocationSelected(false);
       setLocationId(null);

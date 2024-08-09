@@ -93,28 +93,30 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
     console.log('click');
   };
 
+
   const handleIconDelete = async() => {
     const deleteTicketData = {
-      ticketId : ticketId
-    }
+      ticketId: ticketId
+    };
+  
     try {
-      console.log("티켓 삭제 요청", deleteTicketData);
+      console.log("Deleting ticket with data:", deleteTicketData);
       const response = await deleteTicket(deleteTicketData);
-      if (response.result) {
-        deleteTicketById(ticketId);
+      if (response && response.result) {
+        deleteTicketById(ticketId); // Assuming this is a valid function to remove from state
         setDropdownVisible(false);
         setModalVisible(false);
         console.log("Dropdown and Modal visibility set to false");
       } else {
-        alert('Fail');
+        alert('Failed to delete ticket.');
       }
-      console.log('Deleted ticket:', response);
+      
+      console.log('Deleted ticket response:', response);
     } catch (error) {
-      console.error('Error deleting ticket?:', error.response);
+      console.error('Error deleting ticket:', error.message || error);
+      alert('An error occurred while deleting the ticket.');
     }
-  };
-
-  
+  };  
 
   const handleInfoEdit = async() => {
     const editInfo = {

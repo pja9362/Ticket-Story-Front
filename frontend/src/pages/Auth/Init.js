@@ -17,6 +17,35 @@ import { useFocusEffect } from '@react-navigation/native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+const injectedJavaScript = `
+  (function() {
+    function sendMessageToReactNative(data) {
+      window.ReactNativeWebView.postMessage(data);
+    }
+
+    function extractTokens() {
+      // Adjust the selector and extraction logic according to your page structure
+      const tokenDataElement = document.querySelector('ul.obj.collapsible');
+      
+      if (tokenDataElement) {
+        const accessToken = tokenDataElement.querySelector('span[property="accessToken"]')?.textContent || '';
+        const refreshToken = tokenDataElement.querySelector('span[property="refreshToken"]')?.textContent || '';
+        
+        const tokenData = {
+          accessToken,
+          refreshToken
+        };
+        
+        sendMessageToReactNative(JSON.stringify(tokenData));
+      } else {
+        console.error('Token data element not found');
+      }
+    }
+
+    extractTokens();
+  })();
+`;
+
 const Init = ({navigation}) => {
 
   const webViewRef = useRef(null);
@@ -24,6 +53,7 @@ const Init = ({navigation}) => {
 
   const [webViewVisible, setWebViewVisible] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState(null);
+  const [lastUrl, setLastUrl] = useState(null);
 
   useEffect(() => {
     const backAction = () => {
@@ -44,72 +74,56 @@ const Init = ({navigation}) => {
   const handleKaKaoLogin = async () => {
     try {
       const response = await handleOAuthKaKaoLogin();
-
       setRedirectUrl(response);
       setWebViewVisible(true);
     } catch (error) {
-      console.error('KaKao Login error:', error);
+      console.error('HANDLE KAKAO LOGIN error:', error);
       throw error;
     }
   };
 
-
-  const handleSaveToken = async (url) => {
-    try {
-      // const response = await saveTokens(url);
-      dispatch(saveTokens(url, ([result, response]) => {
-        if(result) {
-          // navigation.navigate('MainStack');
-          navigation.navigate('MainStackWithDrawer');
-        } else {
-          console.log('saveToken error');
-          Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
-        }
-      }))
-
-    } catch (error) {
-      console.error('Error storing tokens:', error);
-      Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
+  const handleOAuthNavigationChange = async (navState) => {
+    if (navState.url.startsWith(`${API_URL}/api/v1/auth/oauth/kakao?code=`) && navState.url !== lastUrl) {
+      setLastUrl(navState.url);
+      // setWebViewVisible(false);
     }
   };
 
-  const handleOAuthNavigationChange = (state) => {
-    console.log('Navigating to:', state.url);
-    if (state.url.startsWith(`${API_URL}/api/v1/auth/oauth/kakao?code=`)) {
-      setWebViewVisible(false);
-      handleSaveToken(state.url);
-    }
-  }
+  const handleWebViewMessage = (event) => {
+    let data = event.nativeEvent.data;
 
-  // const handleSaveToken = async (url) => {
-  //   if (isTokenSaved) return;
-  
-  //   try {
-  //     setIsTokenSaved(true);
-  //     dispatch(saveTokens(url, ([result, response]) => {
-  //       if(result) {
-  //         navigation.navigate('MainStackWithDrawer');
-  //       } else {
-  //         console.log('saveToken error');
-  //         Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
-  //       }
-  //     }));
-  //   } catch (error) {
-  //     console.error('Error storing tokens:', error);
-  //     Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
-  //   }
-  // };
-  
+    // Remove HTML tags and parse JSON
+    const jsonString = data.replace(/<\/?[^>]+(>|$)/g, '');
+    const jsonData = JSON.parse(jsonString);
 
-  // const [isTokenSaved, setIsTokenSaved] = useState(false);
+    // console.log("data:", data);
+    console.log('parsed data:', jsonData);
 
-  // const handleOAuthNavigationChange = (state) => {
-  //   if (state.url.startsWith(`${API_URL}/api/v1/auth/oauth/kakao?code=`) && !isTokenSaved) {
-  //     setWebViewVisible(false);
-  //     setIsTokenSaved(true);
-  //     handleSaveToken(state.url);
-  //   }
-  // };
+    // Save tokens
+    const { accessToken, refreshToken } = jsonData;
+    console.log('accessToken:', accessToken);
+    console.log('refreshToken:', refreshToken);
+    
+  };
+
+  const handleSaveToken = async (url) => {
+    console.log('??? handleSaveToken:', url);
+    // try {
+    //   dispatch(saveTokens(url, ([result, response]) => {
+    //     console.log('saveToken:', result, response);
+    //     if(result) {
+    //       navigation.navigate('MainStackWithDrawer');
+    //     } else {
+    //       console.log('saveToken error');
+    //       Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
+    //     }
+    //   }))
+
+    // } catch (error) {
+    //   console.error('Error storing tokens:', error);
+    //   Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
+    // }
+  };
 
   const handleAppleLogin = () => {
     console.log('Apple Login');
@@ -134,6 +148,8 @@ const Init = ({navigation}) => {
               source={{ uri: redirectUrl }} 
               onNavigationStateChange={handleOAuthNavigationChange}
               onClose={() => setWebViewVisible(false)}
+              onMessage={handleWebViewMessage}
+              injectedJavaScript='window.ReactNativeWebView.postMessage(document.body.innerHTML); true;'
             />
         </>
       )

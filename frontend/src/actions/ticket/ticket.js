@@ -254,7 +254,7 @@ export const getMyTickets = (page, size, order, orderBy, category, callback) => 
     return response.data;
 
   } catch (error) {
-    console.error('Error fetching my tickets:', error);
+    console.error('Error fetching my tickets:', error.response.data);
     dispatch({
       type: LOAD_MY_TICKETS_FAIL,
     });

@@ -44,7 +44,6 @@ const EditReview = ({navigation, route}) => {
   const [saveProcessing, setSaveProcessing] = useState(false);
   const [imageProcessing, setImageProcessing] = useState(false);
 
-  //
   const [inputHeight, setInputHeight] = useState(0);
   const maxHeight = 200; // 최대 높이 설정
 

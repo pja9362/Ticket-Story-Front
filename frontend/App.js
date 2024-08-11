@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {AppState} from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import store, { persistor } from './src/store';
@@ -72,17 +73,15 @@ const App = () => {
     setIsReady(true);
   }, []);
 
-
   const screenOptions = {
     headerShown: false
   };
-
 
   useEffect(() => {
     const logNavigationState = () => {
       const state = navigationRef.getRootState();
       // navigation state 로그 출력 주석처리
-      console.log("Current Navigation State:", state.routes);
+      // console.log("Current Navigation State:", state.routes);
     };
 
     const unsubscribe = navigationRef.addListener('state', logNavigationState);

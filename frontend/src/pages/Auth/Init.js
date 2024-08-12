@@ -17,34 +17,11 @@ import { useFocusEffect } from '@react-navigation/native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const injectedJavaScript = `
-  (function() {
-    function sendMessageToReactNative(data) {
-      window.ReactNativeWebView.postMessage(data);
-    }
-
-    function extractTokens() {
-      // Adjust the selector and extraction logic according to your page structure
-      const tokenDataElement = document.querySelector('ul.obj.collapsible');
-      
-      if (tokenDataElement) {
-        const accessToken = tokenDataElement.querySelector('span[property="accessToken"]')?.textContent || '';
-        const refreshToken = tokenDataElement.querySelector('span[property="refreshToken"]')?.textContent || '';
-        
-        const tokenData = {
-          accessToken,
-          refreshToken
-        };
-        
-        sendMessageToReactNative(JSON.stringify(tokenData));
-      } else {
-        console.error('Token data element not found');
-      }
-    }
-
-    extractTokens();
-  })();
-`;
+const injectedJavaScript = `(function() {
+  window.postMessage = function(data) {
+    window.ReactNativeWebView.postMessage(data);
+  };
+})()`;
 
 const Init = ({navigation}) => {
 
@@ -53,7 +30,7 @@ const Init = ({navigation}) => {
 
   const [webViewVisible, setWebViewVisible] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState(null);
-  const [lastUrl, setLastUrl] = useState(null);
+  const [webViewOpacity, setWebViewOpacity] = useState(1);
 
   useEffect(() => {
     const backAction = () => {
@@ -82,47 +59,42 @@ const Init = ({navigation}) => {
     }
   };
 
-  const handleOAuthNavigationChange = async (navState) => {
-    if (navState.url.startsWith(`${API_URL}/api/v1/auth/oauth/kakao?code=`) && navState.url !== lastUrl) {
-      setLastUrl(navState.url);
-      // setWebViewVisible(false);
+  const handleOAuthNavigationChange = (navState) => {
+    if (navState.url.startsWith(`${API_URL}/api/v1/auth/oauth/kakao?code=`)) {
+      setWebViewOpacity(0);
+    } else {
+      setWebViewOpacity(1);
     }
   };
 
   const handleWebViewMessage = (event) => {
+    console.log('------WEBVIEW MESSAGE------');
+
     let data = event.nativeEvent.data;
 
-    // Remove HTML tags and parse JSON
-    const jsonString = data.replace(/<\/?[^>]+(>|$)/g, '');
-    const jsonData = JSON.parse(jsonString);
+    console.log('data:', data);
 
-    // console.log("data:", data);
-    console.log('parsed data:', jsonData);
+    // Remove HTML tags and parse JSON
+    const jsonString = data.replace(/<\/?[^>]+(>|$)/g, '') || '';
+    const jsonData = JSON.parse(jsonString);
 
     // Save tokens
     const { accessToken, refreshToken } = jsonData;
-    console.log('accessToken:', accessToken);
-    console.log('refreshToken:', refreshToken);
     
+    if (accessToken && refreshToken) {      
+      dispatch(saveTokens(jsonData, ([result, response]) => {
+        console.log('saveToken:', result, response);
+        if(result) {
+          navigation.navigate('MainStackWithDrawer');
+        } else {
+          console.log('saveToken error');
+          Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
+        }
+      })
+      );
+    } else {
+      console.log('No tokens found');
   };
-
-  const handleSaveToken = async (url) => {
-    console.log('??? handleSaveToken:', url);
-    // try {
-    //   dispatch(saveTokens(url, ([result, response]) => {
-    //     console.log('saveToken:', result, response);
-    //     if(result) {
-    //       navigation.navigate('MainStackWithDrawer');
-    //     } else {
-    //       console.log('saveToken error');
-    //       Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
-    //     }
-    //   }))
-
-    // } catch (error) {
-    //   console.error('Error storing tokens:', error);
-    //   Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
-    // }
   };
 
   const handleAppleLogin = () => {
@@ -144,12 +116,17 @@ const Init = ({navigation}) => {
           </View>
             <WebView
               ref={webViewRef}
-              style={{... styles.webview, margin: 0, padding: 0}}
+              style={{...styles.webview, margin: 0, padding: 0, opacity: webViewOpacity}}
               source={{ uri: redirectUrl }} 
               onNavigationStateChange={handleOAuthNavigationChange}
               onClose={() => setWebViewVisible(false)}
               onMessage={handleWebViewMessage}
-              injectedJavaScript='window.ReactNativeWebView.postMessage(document.body.innerHTML); true;'
+              injectedJavaScript={`
+                if (window.location.href.startsWith('${API_URL}/api/v1/auth/oauth/kakao?code=')) {
+                  window.ReactNativeWebView.postMessage(document.body.innerHTML);
+                }
+                true;
+              `}
             />
         </>
       )

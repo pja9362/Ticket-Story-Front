@@ -176,29 +176,49 @@ export const handleOAuthKaKaoLogin = async () => {
   }
 }
 
-export const saveTokens = (url, callback) => async dispatch => {
-  console.log("SAVE TOKEN 함수 실행", url);
-  // try {
-  //   const response = await axios.get(url);
-  //   console.log('SAVE TOKEN 함수 실행', url);
-  //   console.log('SAVE TOKEN 함수 실행 Token response:', response.data);
+export const saveTokens = (jsonData, callback) => async dispatch => {
+  try {
+    if(jsonData.accessToken !== null) {
+      await AsyncStorage.setItem('accessToken', jsonData.accessToken);
+      await AsyncStorage.setItem('refreshToken', jsonData.refreshToken);
+    }
+    dispatch({ type: LOGIN_SUCCESS, payload: jsonData });
+    dispatch({ type: UPDATE_TICKET_SUCCESS });
+    
+    if (callback) callback([true, jsonData]);
+    return jsonData;
 
-  //   if (response.data.accessToken !== null) {
-  //     await AsyncStorage.setItem('accessToken', response.data.accessToken);
-  //     await AsyncStorage.setItem('refreshToken', response.data.refreshToken);
+  } catch (error) {
+    console.error('Error storing tokens:', error);
+    if (callback) callback([false, error]);
+    throw error;
+  }
 
-  //     dispatch({ type: LOGIN_SUCCESS, payload: response.data });
-  //     dispatch({ type: UPDATE_TICKET_SUCCESS });
-
-  //     if (callback) callback([true, response.data]);
-  //   } else {
-  //     if (callback) callback([false, response.data]);
-  //   }
-  // } catch (error) {
-  //   console.error('Error storing tokens:', error);
-  //   if (callback) callback([false, error]);
-  // }
 }
+
+// export const saveTokens = (url, callback) => async dispatch => {
+//   console.log("SAVE TOKEN 함수 실행", url);
+//   // try {
+//   //   const response = await axios.get(url);
+//   //   console.log('SAVE TOKEN 함수 실행', url);
+//   //   console.log('SAVE TOKEN 함수 실행 Token response:', response.data);
+
+//   //   if (response.data.accessToken !== null) {
+//   //     await AsyncStorage.setItem('accessToken', response.data.accessToken);
+//   //     await AsyncStorage.setItem('refreshToken', response.data.refreshToken);
+
+//   //     dispatch({ type: LOGIN_SUCCESS, payload: response.data });
+//   //     dispatch({ type: UPDATE_TICKET_SUCCESS });
+
+//   //     if (callback) callback([true, response.data]);
+//   //   } else {
+//   //     if (callback) callback([false, response.data]);
+//   //   }
+//   // } catch (error) {
+//   //   console.error('Error storing tokens:', error);
+//   //   if (callback) callback([false, error]);
+//   // }
+// }
 
 export const sendPasswordResetEmail = async (email) => {
   const accessToken = await AsyncStorage.getItem('accessToken');

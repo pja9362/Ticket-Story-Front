@@ -53,8 +53,9 @@ const EnrollReview = ({navigation, route}) => {
 
   useEffect(() => {
     const getTempReview = async () => {
-      const tempReview = await AsyncStorage.getItem(`tempReview_${ticketData.contentsDetails.contentsId}`);
-      
+      // ticketData.contentsDetails.contentsId로 저장된 임시 리뷰 불러오기 만약 null이면 tempReview_temp로 불러오기
+      const tempReview = await AsyncStorage.getItem(`tempReview_${ticketData.contentsDetails.contentsId || 'temp'}`);
+
       if (tempReview) {
         const {
           contentsId,
@@ -69,7 +70,7 @@ const EnrollReview = ({navigation, route}) => {
       
         if (
           (ticketData.contentsDetails.contentsId !== null && ticketData.contentsDetails.contentsId == contentsId) ||
-          ticketData.contentsDetails.title === contentsTitle
+          ticketData.contentsDetails.title == contentsTitle
         ) {
           setReviewTitle(reviewTitle);
           setReviewContent(reviewContent);
@@ -140,8 +141,7 @@ const EnrollReview = ({navigation, route}) => {
       console.log('Saved ticket:', savedTicket.value); 
       console.log('Saved ticket:', ticketId);
 
-      // asyncstroage에 저장된 임시 리뷰 제거
-      await AsyncStorage.removeItem(`tempReview_${ticketData.contentsDetails.contentsId}`);
+      await AsyncStorage.removeItem(`tempReview_${ticketData.contentsDetails.contentsId || 'temp'}`);
 
       navigation.navigate('EnrollFinish', {ticketId});
     } catch (error) {

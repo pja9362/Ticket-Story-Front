@@ -98,48 +98,54 @@ export const sendEmail = async (userId) => {
 };
 
 export const signUpRequest = async (formData) => {
-  return requestWithRetry(async () => {
-    const response = await axios.post(
-      `${API_URL}/api/v1/auth/signup`,
-      {
-        id: formData.id,
-        password: formData.password,
-        birthday: formData.birthday,
-        gender: formData.gender.toUpperCase(),
-      },
-      { headers: { 'Content-Type': 'application/json' } }
-    );
+  return axios.post(
+    `${API_URL}/api/v1/auth/signup`,
+    {
+      id: formData.id,
+      password: formData.password,
+      birthday: formData.birthday,
+      gender: formData.gender.toUpperCase(),
+    },
+    { headers: { 'Content-Type': 'application/json' } }
+  ).then(response => {
     console.log('Sign-up response:', response.data);
     if (response.data.accessToken !== null) {
-      await AsyncStorage.setItem('accessToken', response.data.accessToken);
-      await AsyncStorage.setItem('refreshToken', response.data.refreshToken);
+      AsyncStorage.setItem('accessToken', response.data.accessToken);
+      AsyncStorage.setItem('refreshToken', response.data.refreshToken);
     }
     return response.data;
-  });
+  }).catch(error => {
+    console.error('Error signing up:', error);
+    throw error;
+  }
+  );
 };
 
 export const signInRequest = (id, password, callback) => async dispatch => {
   const body = JSON.stringify({ id, password });
 
-  return requestWithRetry(async () => {
-    const response = await axios.post(
-      `${API_URL}/api/v1/auth/login`,
-      body,
-      { headers: { 'Content-Type': 'application/json' } }
-    );
+  return axios.post(
+    `${API_URL}/api/v1/auth/login`,
+    body,
+    { headers: { 'Content-Type': 'application/json' } }
+  ).then(response => {
     console.log('Sign-in response:', response.data);
 
     if (response.data.accessToken !== null) {
       console.log('refreshToken', response.data.refreshToken);
-      await AsyncStorage.setItem('accessToken', response.data.accessToken);
-      await AsyncStorage.setItem('refreshToken', response.data.refreshToken);
+      AsyncStorage.setItem('accessToken', response.data.accessToken);
+      AsyncStorage.setItem('refreshToken', response.data.refreshToken);
       dispatch({ type: LOGIN_SUCCESS, payload: response.data });
       dispatch({ type: UPDATE_TICKET_SUCCESS });
 
       if (callback) callback([true, response.data]);
-    } else {
+    }
+    else {
       if (callback) callback([false, response.data]);
     }
+  }).catch(error => {
+    console.error('Error signing in:', error);
+    if (callback) callback([false, error]);
   });
 };
 

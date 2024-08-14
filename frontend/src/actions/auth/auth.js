@@ -182,6 +182,16 @@ export const handleOAuthKaKaoLogin = async () => {
   }
 }
 
+export const handleOAuthAppleLogin = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/api/v1/auth/oauth/apple/url`);
+    return response.data;
+  } catch (error) {
+    console.error('Apple login error:', error);
+    throw error;
+  }
+}
+
 export const saveTokens = (jsonData, callback) => async dispatch => {
   try {
     if(jsonData.accessToken !== null) {

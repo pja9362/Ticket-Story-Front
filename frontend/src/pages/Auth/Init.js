@@ -7,7 +7,7 @@ import icon_kakao from '../../images/icon_kakao.png';
 import icon_apple from '../../images/icon_apple.png';
 import logo_ticket_white from '../../images/logo_ticket_white.png';
 import { API_URL } from '@env';
-import { handleOAuthKaKaoLogin, saveTokens } from '../../actions/auth/auth';
+import { handleOAuthKaKaoLogin, handleOAuthAppleLogin, saveTokens } from '../../actions/auth/auth';
 import {CustomText} from '../../components/CustomText';
 // import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import Header from '../../components/Header';
@@ -28,6 +28,7 @@ const Init = ({navigation}) => {
   const webViewRef = useRef(null);
   const dispatch = useDispatch();
 
+  const [webViewTitle, setWebViewTitle] = useState('');
   const [webViewVisible, setWebViewVisible] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState(null);
   const [webViewOpacity, setWebViewOpacity] = useState(1);
@@ -51,6 +52,7 @@ const Init = ({navigation}) => {
   const handleKaKaoLogin = async () => {
     try {
       const response = await handleOAuthKaKaoLogin();
+      setWebViewTitle('카카오톡 로그인');
       setRedirectUrl(response);
       setWebViewVisible(true);
     } catch (error) {
@@ -60,8 +62,14 @@ const Init = ({navigation}) => {
   };
 
   const handleOAuthNavigationChange = (navState) => {
+    console.log('------NAVIGATION CHANGE------');
+    console.log('navState:', navState.url);
     if (navState.url.startsWith(`${API_URL}/api/v1/auth/oauth/kakao?code=`)) {
       setWebViewOpacity(0);
+      console.log("Kakao Login Success!");
+    } else if (navState.url.startsWith(`${API_URL}/api/v1/auth/oauth/apple?code=`)) {
+      setWebViewOpacity(0);
+      console.log("Apple Login Success!");
     } else {
       setWebViewOpacity(1);
     }
@@ -71,8 +79,6 @@ const Init = ({navigation}) => {
     console.log('------WEBVIEW MESSAGE------');
 
     let data = event.nativeEvent.data;
-
-    console.log('data:', data);
 
     // Remove HTML tags and parse JSON
     const jsonString = data.replace(/<\/?[^>]+(>|$)/g, '') || '';
@@ -97,9 +103,17 @@ const Init = ({navigation}) => {
   };
   };
 
-  const handleAppleLogin = () => {
+  const handleAppleLogin = async () => {
     console.log('Apple Login');
-    navigation.navigate('MainStack');
+    try {
+      const response = await handleOAuthAppleLogin();
+      setWebViewTitle('애플 로그인');
+      setRedirectUrl(response);
+      setWebViewVisible(true);
+    } catch (error) {
+      console.error('HANDLE KAKAO LOGIN error:', error);
+      throw error;
+    }
   }
 
   const handleBackClick = () => {
@@ -112,7 +126,7 @@ const Init = ({navigation}) => {
       {webViewVisible && (redirectUrl != null) ? (
         <>
           <View style={{padding: 20, paddingTop: 0}}>
-            <Header title="카카오톡 로그인" backClick={handleBackClick}/> 
+            <Header title={webViewTitle} backClick={handleBackClick}/> 
           </View>
             <WebView
               ref={webViewRef}
@@ -123,6 +137,8 @@ const Init = ({navigation}) => {
               onMessage={handleWebViewMessage}
               injectedJavaScript={`
                 if (window.location.href.startsWith('${API_URL}/api/v1/auth/oauth/kakao?code=')) {
+                  window.ReactNativeWebView.postMessage(document.body.innerHTML);
+                } else if (window.location.href.startsWith('${API_URL}/api/v1/auth/oauth/apple?code=')) {
                   window.ReactNativeWebView.postMessage(document.body.innerHTML);
                 }
                 true;

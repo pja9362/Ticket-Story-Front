@@ -30,8 +30,8 @@ const EnrollReview = ({navigation, route}) => {
   const { title, ticketData } = route.params;
 
   useEffect(() => {
-    console.log("TICKET DATA", ticketData);
-    console.log("TICKET DATA", ticketData.contentsDetails.contentsId);
+    console.log("TICKET DATA1", ticketData);
+    console.log("TICKET DATA2", ticketData.contentsDetails.contentsId);
   }, []);
   
   const [sliderTouched, setSliderTouched] = useState(false);
@@ -281,7 +281,7 @@ const EnrollReview = ({navigation, route}) => {
           />
         </View>
 
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 20}} >
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 20, marginBottom: 80}} >
           <NextButton isDisabled={saveProcessing || imageProcessing || artRating === 0 || seatRating === 0 || !sliderTouched} onPress={handleNext} />
         </View>
       </KeyboardAwareScrollView>  

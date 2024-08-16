@@ -203,8 +203,8 @@ const styles = StyleSheet.create({
     flex: 4
   },
   image: {
-    width: 114,
-    height: 105,
+    width: 137,
+    height: 152,
   },
   snsBtn: {
     flexDirection: 'row',

@@ -235,7 +235,7 @@ const EditReview = ({navigation, route}) => {
           />
         </View>
 
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 20}} >
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 20, marginBottom: 80}} >
           <NextButton isDisabled={saveProcessing || imageProcessing || artRating === 0 || seatRating === 0 } onPress={handleNext} />
         </View>
       </KeyboardAwareScrollView>

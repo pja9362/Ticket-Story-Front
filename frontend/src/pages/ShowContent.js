@@ -151,7 +151,7 @@ const ShowContent = ({ route }) => {
                 >
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
                       <View style={{ backgroundColor: 'white', height: 120, width: 280, padding: 18, borderRadius: 10 }}>
-                        <CustomText style={{color: '#000', fontSize: 16, textAlign: 'center', top: 5}} fontWeight="bold">리뷰카드가 앨범에 저장됐어요</CustomText>
+                        <CustomText style={{color: '#000', fontSize: 16, textAlign: 'center', top: 5}} fontWeight="bold">리뷰카드를 갤러리에 저장했어요</CustomText>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
                           <TouchableOpacity onPress={closeModal} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5, marginTop: 5}}>
                             <CustomText style={{ color: 'white', textAlign : 'center'}} fontWeight="bold">확인</CustomText>

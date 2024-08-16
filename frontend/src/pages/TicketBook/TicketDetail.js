@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#eeeeee',
   },
   cardContainer: {
-    padding: 20,
+    padding: 17,
     flex: 1,
   },
 });

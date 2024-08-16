@@ -8,9 +8,9 @@ import sportsTicket from '../../images/ticket_info_sports.png';
 import playTicket from '../../images/ticket_info_play.png';
 import musicalTicket from '../../images/ticket_info_musical.png';
 
-import movieBasicTicket from '../../images/ticket_default_poster_movie2.png';
-import performanceBasicTicket from '../../images/ticket_default_poster_performance2.png';
-import sportsBasicTicket from '../../images/ticket_default_poster_sports2.png';
+import movieBasicTicket from '../../images/ticket_default_poster_movie4.png';
+import performanceBasicTicket from '../../images/ticket_default_poster_performance4.png';
+import sportsBasicTicket from '../../images/ticket_default_poster_sports4.png';
 
 import iconReviewOn from '../../images/icon_ReviewOn.png';
 import iconReviewOff from '../../images/icon_ReviewOff.png';
@@ -198,7 +198,8 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
       <TouchableWithoutFeedback onPress={closeDropdown}>
         <View>
           <TouchableWithoutFeedback onPress={handlePress}>
-            <View style={styles.card}>
+            <View style={[styles.card, styles.textShadow]}>
+            {/* <View style={styles.card}> */}
               <Animated.View style={[styles.cardContainer, frontAnimatedStyle, imageUrl && styles.imageCard]}>
                 <ImageBackground 
                   source={imageUrl ? { uri: imageUrl } : basicTicketImageSource} 
@@ -212,7 +213,7 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
                 </ImageBackground>
               </Animated.View>
               <Animated.View style={[styles.cardContainer, styles.back, backAnimatedStyle]}>
-                <ImageBackground source={ticketImageSource} style={styles.imageBackground}>
+                <ImageBackground source={ticketImageSource} style={styles.imageBackground2}>
                   <View style={styles.overlay}>
                     <CustomText numberOfLines={2} style={styles.title} fontWeight="bold">{title}</CustomText>
                     <View style={styles.infoContainer}>
@@ -327,21 +328,37 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
 
 const styles = StyleSheet.create({
   imageBackground: {
+    width: imageWidth-14,
+    height: imageHeight-20,
+    resizeMode: 'cover',
+    // borderRadius: 10,
+  },
+  imageBackground2: {
     width: imageWidth,
     height: imageHeight,
     resizeMode: 'cover',
+    marginLeft: -4,
   },
   posterBackground: {
-    width: imageWidth-10,
-    height: imageHeight-10,
+    width: imageWidth-14,
+    height: imageHeight-20,
     resizeMode: 'cover',
   },
+  textShadow: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 5, // Android에서 그림자 효과를 추가하기 위해 사용
+  },
   imageCard: {
-    borderRadius: 10,
+    borderRadius: 9,
     overflow: 'hidden',
-    width: imageWidth - 10,
-    height: imageHeight - 18,
-    margin: 5,
+    // width: imageWidth - 10,
+    // height: imageHeight - 18,
+    width: imageWidth - 14,
+    height: imageHeight - 20,
+    // margin: 5,
   },
   overlay: {
     flex: 1,
@@ -380,12 +397,16 @@ const styles = StyleSheet.create({
   card: {
     width: imageWidth,
     height: imageHeight,
+    // width : 168,
+    // height : 240,
   },
   cardContainer: {
-    width: imageWidth,
-    height: imageHeight,
+    width: imageWidth-10,
+    height: imageHeight-10,
     position: 'absolute',
     backfaceVisibility: 'hidden',
+    margin: 5,
+    marginTop: 8,
   },
   back: {
     justifyContent: 'center',

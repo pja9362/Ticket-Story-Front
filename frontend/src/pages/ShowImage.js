@@ -82,6 +82,11 @@ const ShowImage = ({ route }) => {
         console.log('ImagePicker Error: ', error);
         } 
     };
+;
+
+
+    const shadowTextStyle = !darkText ? styles.textShadow : {};
+
 
     return (
         <SafeAreaView style={styles.container}>
@@ -116,15 +121,15 @@ const ShowImage = ({ route }) => {
                     <Image source={logo} style={styles.logo} />
                 )}
                 <View style={styles.overlay}>
-                    {(!hideImageTitle && !hideImageInfo) && <CustomText style={{ ...styles.overlayText, fontSize: 20, color: darkText ? '#525252' : '#fff'  }} fontWeight="bold">{ticket.title}</CustomText>}
+                    {(!hideImageTitle && !hideImageInfo) && <CustomText style={darkText ? { ...styles.overlayText, fontSize: 20, color: darkText ? '#525252' : '#fff'  } : { ...styles.overlayText, ...styles.textShadow, fontSize: 20, color: darkText ? '#525252' : '#fff'  }} fontWeight="bold">{ticket.title}</CustomText>}
                     {!hideImageInfo && (
                         <>
                             <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Date</CustomText>
-                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="bold">{ticket.date}</CustomText>
+                            <CustomText style={[styles.overlayText, shadowTextStyle, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.date}</CustomText>
                             <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Time</CustomText>
-                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="bold">{ticket.time}</CustomText>
+                            <CustomText style={[styles.overlayText, shadowTextStyle, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.time}</CustomText>
                             <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Place</CustomText>
-                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="bold">{ticket.location}</CustomText>
+                            <CustomText style={[styles.overlayText, shadowTextStyle, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.location}</CustomText>
                         </>
                     )}
                 </View>
@@ -152,7 +157,7 @@ const ShowImage = ({ route }) => {
                 >
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
                       <View style={{ backgroundColor: 'white', height: 120, width: 280, padding: 18, borderRadius: 10 }}>
-                        <CustomText style={{color: '#000', fontSize: 16, textAlign: 'center', top: 5}} fontWeight="bold">이미지카드가 앨범에 저장됐어요</CustomText>
+                        <CustomText style={{color: '#000', fontSize: 16, textAlign: 'center', top: 5}} fontWeight="bold">이미지카드를 갤러리에 저장했어요</CustomText>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
                           <TouchableOpacity onPress={closeModal} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5, marginTop: 5}}>
                             <CustomText style={{ color: 'white', textAlign : 'center'}} fontWeight="bold">확인</CustomText>
@@ -198,6 +203,19 @@ const styles = StyleSheet.create({
     overlayText: {
         color: '#fff',
         fontSize: 16,
+        // shadowColor: '#000',
+        // shadowOffset: { width: 0, height: 2 },
+        // shadowOpacity: 0.5,
+        // shadowRadius: 4,
+        // elevation: 5, // Android에서 그림자 효과를 추가하기 위해 사용
+        
+    },
+    textShadow: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 4,
+        elevation: 5, // Android에서 그림자 효과를 추가하기 위해 사용
     },
     overlayGuideText: {
         color: '#fff',

@@ -15,6 +15,7 @@ import defaultReviewImage from '../../images/default_reviewImage.png';
 import {CustomText} from '../CustomText';
 import { getTicketDetails, uploadImage, updateReviewImage } from '../../actions/ticket/ticket';
 import ImagePicker from 'react-native-image-crop-picker';
+import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
 
 const DetailCard = ({ ticket, ticketId }) => {
 
@@ -127,10 +128,15 @@ const DetailCard = ({ ticket, ticketId }) => {
 
     }
 
+    const shadowTextStyle = !darkText ? styles.textShadow : {};
+
+
     return (
         ticket &&
         <View style={styles.container}>
+        <ScrollView>
             <View ref={viewRef} collapsable={false}>
+            
                 <View style={styles.imageContainer}>
                     {/* <Swiper
                         showsButtons={true}
@@ -154,16 +160,16 @@ const DetailCard = ({ ticket, ticketId }) => {
                                     {/* Overlay Text */}
                                     <View style={styles.overlay}>
                                         {(!hideImageTitle && !hideImageInfo) && (
-                                        <CustomText style={{ ...styles.overlayText, fontSize: 20, color: darkText ? '#525252' : '#fff'  }} fontWeight="bold">{ticket.title}</CustomText>
+                                        <CustomText style={darkText ? { ...styles.overlayText, fontSize: moderateScale(20), color: darkText ? '#525252' : '#fff' } : {...styles.overlayText, ...styles.textShadow, fontSize: scale(20), color: darkText ? '#525252' : '#fff'}} fontWeight="bold">{ticket.title}</CustomText>
                                         )}
                                         {!hideImageInfo && (
                                         <>
                                             <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Date</CustomText>
-                                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.date}</CustomText>
+                                            <CustomText style={[styles.overlayText, shadowTextStyle, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.date}</CustomText>
                                             <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Time</CustomText>
-                                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.time}</CustomText>
+                                            <CustomText style={[styles.overlayText, shadowTextStyle, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.time}</CustomText>
                                             <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Place</CustomText>
-                                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.location}</CustomText>
+                                            <CustomText style={[styles.overlayText, shadowTextStyle, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.location}</CustomText>
                                         </>
                                         )}
                                     </View>
@@ -178,7 +184,7 @@ const DetailCard = ({ ticket, ticketId }) => {
                             {(!hideReviewTitle && !hideReviewInfo) && (
                                 <CustomText style={{...styles.mainText, flex: 0.65}} fontWeight="bold">{ticket.title}</CustomText>
                             )}
-                            <Image source={iconLogo} style={{position: 'absolute', width : 110, height : 42, right : -18, top: -18}} />
+                            <Image source={iconLogo} style={{position: 'absolute', width : scale(110), height : scale(42), right : scale(-18), top: verticalScale(-18)}} />
                         </View>
                         { (ticket.reviewTitle == '' && ticket.reviewDetails == '') ?
                             <View style={{alignItems:'center'}}>
@@ -210,6 +216,7 @@ const DetailCard = ({ ticket, ticketId }) => {
                     <Image source={iconSave} style={{width: 45, height: 45}} />
                 </TouchableOpacity>
             </View>
+        </ScrollView>
 
             {/* {modalVisible && (
             <SaveCardImage
@@ -225,7 +232,7 @@ const DetailCard = ({ ticket, ticketId }) => {
                 >
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
                       <View style={{ backgroundColor: 'white', height: 120, width: 280, padding: 18, borderRadius: 10 }}>
-                        <CustomText style={{color: '#000', fontSize: 16, textAlign: 'center', top: 5}} fontWeight="bold">스토리카드가 앨범에 저장됐어요</CustomText>
+                        <CustomText style={{color: '#000', fontSize: 16, textAlign: 'center', top: 5}} fontWeight="bold">스토리카드를 앨범에 저장했어요</CustomText>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
                           <TouchableOpacity onPress={()=>setModalVisible(false)} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5, marginTop: 5}}>
                             <CustomText style={{ color: 'white', textAlign : 'center'}} fontWeight="bold">확인</CustomText>
@@ -290,7 +297,8 @@ const styles = StyleSheet.create({
         paddingBottom: 50
     },
     imageContainer: {
-        height: 356,
+        width: scale(356),
+        height: scale(356),
     },
     slide: {
         flex: 1,
@@ -321,16 +329,17 @@ const styles = StyleSheet.create({
         height: 38,
     },
     contentContainer: {
-        padding: 20,
+        padding: moderateScale(20),
         backgroundColor: '#fff',
         borderBottomLeftRadius: 5,
         borderBottomRightRadius: 5,
-        height: 356,
+        width: scale(356),
+        height: scale(356),
     },
     titleContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        gap: 40,
+        gap: moderateScale(40),
     },
     reviewContainer: {
         position: 'absolute',
@@ -339,18 +348,18 @@ const styles = StyleSheet.create({
     },
     mainText: {
         color: '#525252',
-        fontSize: 16,
+        fontSize: scale(16),
     },
     subText: {
         color: '#B6B6B6',
-        fontSize: 12,
+        fontSize: scale(12),
         textAlign: 'right',
     },
     text: {
         color: '#525252',
-        fontSize: 14,
-        lineHeight: 18,
-        paddingVertical: 5,
+        fontSize: scale(14),
+        lineHeight: verticalScale(18),
+        paddingVertical: verticalScale(5),
     },
     btnContainer: {
         flexDirection: 'row',
@@ -363,29 +372,36 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        padding: 12,
+        padding: moderateScale(12),
     },
     overlayText: {
         color: '#fff',
-        fontSize: 16,
+        fontSize: scale(16),
+    },
+    textShadow: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 4,
+        elevation: 5, // Android에서 그림자 효과를 추가하기 위해 사용
     },
     overlayGuideText: {
         color: '#fff',
-        fontSize: 16,
-        marginTop: 4,
+        fontSize: scale(16),
+        marginTop: verticalScale(4),
     },
     logo: {
         position: 'absolute',
-        top: 2,
-        right: 2,
-        width: 110,
-        height: 42,
+        top: verticalScale(2),
+        right: moderateScale(2),
+        width: scale(110),
+        height: scale(42),
     },
     noReviewText: {
         position: 'absolute',
-        top : 120,
+        top : verticalScale(120),
         // left : 90,
-        fontSize : 18,
+        fontSize : scale(18),
         color: '#9A9A9A',
     },
 });

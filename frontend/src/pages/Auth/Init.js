@@ -7,7 +7,7 @@ import icon_kakao from '../../images/icon_kakao.png';
 import icon_apple from '../../images/icon_apple.png';
 import logo_ticket_white from '../../images/logo_ticket_white.png';
 import { API_URL } from '@env';
-import { handleOAuthKaKaoLogin, saveTokens } from '../../actions/auth/auth';
+import { handleOAuthKaKaoLogin, handleOAuthAppleLogin, saveTokens } from '../../actions/auth/auth';
 import {CustomText} from '../../components/CustomText';
 // import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import Header from '../../components/Header';
@@ -17,13 +17,21 @@ import { useFocusEffect } from '@react-navigation/native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+const injectedJavaScript = `(function() {
+  window.postMessage = function(data) {
+    window.ReactNativeWebView.postMessage(data);
+  };
+})()`;
+
 const Init = ({navigation}) => {
 
   const webViewRef = useRef(null);
   const dispatch = useDispatch();
 
+  const [webViewTitle, setWebViewTitle] = useState('');
   const [webViewVisible, setWebViewVisible] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState(null);
+  const [webViewOpacity, setWebViewOpacity] = useState(1);
 
   useEffect(() => {
     const backAction = () => {
@@ -44,76 +52,68 @@ const Init = ({navigation}) => {
   const handleKaKaoLogin = async () => {
     try {
       const response = await handleOAuthKaKaoLogin();
-
+      setWebViewTitle('카카오톡 로그인');
       setRedirectUrl(response);
       setWebViewVisible(true);
     } catch (error) {
-      console.error('KaKao Login error:', error);
+      console.error('HANDLE KAKAO LOGIN error:', error);
       throw error;
     }
   };
 
+  const handleOAuthNavigationChange = (navState) => {
+    console.log('------NAVIGATION CHANGE------');
+    console.log('navState:', navState.url);
+    if (navState.url.startsWith(`${API_URL}/api/v1/auth/oauth/kakao?code=`)) {
+      setWebViewOpacity(0);
+      console.log("Kakao Login Success!");
+    } else if (navState.url.startsWith(`${API_URL}/api/v1/auth/oauth/apple?code=`)) {
+      setWebViewOpacity(0);
+      console.log("Apple Login Success!");
+    } else {
+      setWebViewOpacity(1);
+    }
+  };
 
-  const handleSaveToken = async (url) => {
-    try {
-      // const response = await saveTokens(url);
-      dispatch(saveTokens(url, ([result, response]) => {
+  const handleWebViewMessage = (event) => {
+    console.log('------WEBVIEW MESSAGE------');
+
+    let data = event.nativeEvent.data;
+
+    // Remove HTML tags and parse JSON
+    const jsonString = data.replace(/<\/?[^>]+(>|$)/g, '') || '';
+    const jsonData = JSON.parse(jsonString);
+
+    // Save tokens
+    const { accessToken, refreshToken } = jsonData;
+    
+    if (accessToken && refreshToken) {      
+      dispatch(saveTokens(jsonData, ([result, response]) => {
+        console.log('saveToken:', result, response);
         if(result) {
-          // navigation.navigate('MainStack');
           navigation.navigate('MainStackWithDrawer');
         } else {
           console.log('saveToken error');
           Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
         }
-      }))
-
-    } catch (error) {
-      console.error('Error storing tokens:', error);
-      Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
-    }
+      })
+      );
+    } else {
+      console.log('No tokens found');
+  };
   };
 
-  const handleOAuthNavigationChange = (state) => {
-    console.log('Navigating to:', state.url);
-    if (state.url.startsWith(`${API_URL}/api/v1/auth/oauth/kakao?code=`)) {
-      setWebViewVisible(false);
-      handleSaveToken(state.url);
-    }
-  }
-
-  // const handleSaveToken = async (url) => {
-  //   if (isTokenSaved) return;
-  
-  //   try {
-  //     setIsTokenSaved(true);
-  //     dispatch(saveTokens(url, ([result, response]) => {
-  //       if(result) {
-  //         navigation.navigate('MainStackWithDrawer');
-  //       } else {
-  //         console.log('saveToken error');
-  //         Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
-  //       }
-  //     }));
-  //   } catch (error) {
-  //     console.error('Error storing tokens:', error);
-  //     Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
-  //   }
-  // };
-  
-
-  // const [isTokenSaved, setIsTokenSaved] = useState(false);
-
-  // const handleOAuthNavigationChange = (state) => {
-  //   if (state.url.startsWith(`${API_URL}/api/v1/auth/oauth/kakao?code=`) && !isTokenSaved) {
-  //     setWebViewVisible(false);
-  //     setIsTokenSaved(true);
-  //     handleSaveToken(state.url);
-  //   }
-  // };
-
-  const handleAppleLogin = () => {
+  const handleAppleLogin = async () => {
     console.log('Apple Login');
-    navigation.navigate('MainStack');
+    try {
+      const response = await handleOAuthAppleLogin();
+      setWebViewTitle('애플 로그인');
+      setRedirectUrl(response);
+      setWebViewVisible(true);
+    } catch (error) {
+      console.error('HANDLE KAKAO LOGIN error:', error);
+      throw error;
+    }
   }
 
   const handleBackClick = () => {
@@ -126,14 +126,23 @@ const Init = ({navigation}) => {
       {webViewVisible && (redirectUrl != null) ? (
         <>
           <View style={{padding: 20, paddingTop: 0}}>
-            <Header title="카카오톡 로그인" backClick={handleBackClick}/> 
+            <Header title={webViewTitle} backClick={handleBackClick}/> 
           </View>
             <WebView
               ref={webViewRef}
-              style={{... styles.webview, margin: 0, padding: 0}}
+              style={{...styles.webview, margin: 0, padding: 0, opacity: webViewOpacity}}
               source={{ uri: redirectUrl }} 
               onNavigationStateChange={handleOAuthNavigationChange}
               onClose={() => setWebViewVisible(false)}
+              onMessage={handleWebViewMessage}
+              injectedJavaScript={`
+                if (window.location.href.startsWith('${API_URL}/api/v1/auth/oauth/kakao?code=')) {
+                  window.ReactNativeWebView.postMessage(document.body.innerHTML);
+                } else if (window.location.href.startsWith('${API_URL}/api/v1/auth/oauth/apple?code=')) {
+                  window.ReactNativeWebView.postMessage(document.body.innerHTML);
+                }
+                true;
+              `}
             />
         </>
       )

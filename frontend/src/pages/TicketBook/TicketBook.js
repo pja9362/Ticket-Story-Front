@@ -169,6 +169,7 @@ const TicketBook = () => {
       setPage(0);
       setAllTickets([]);
       setAllTickets(newTickets);
+      setIsLoading(false);
     }));
 
   }, [orderText]);
@@ -185,6 +186,7 @@ const TicketBook = () => {
       setPage(0);
       setAllTickets([]);
       setAllTickets(newTickets);
+      setIsLoading(false);
     }));
   };
 
@@ -199,6 +201,7 @@ const TicketBook = () => {
       setPage(0);
       setAllTickets([]);
       setAllTickets(newTickets);
+      setIsLoading(false);
     }));
   };
 

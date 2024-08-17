@@ -12,7 +12,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import iconUp from '../../images/icon_up.png'
 import iconDown from '../../images/icon_down.png'
 import iconLine from '../../images/icon_line.png'
-
+import LoadingScreen from '../../components/LoadingScreen';
 
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
 const imageWidth = Dimensions.get('window').width * 0.45;
@@ -59,6 +59,19 @@ const TicketBook = () => {
     pageRef.current = page;
   }, [page])
 
+  // Loading
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadingIcon, setLoadingIcon] = useState(1);
+
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setLoadingIcon((prevIcon) => (prevIcon % 4) + 1);
+    }, 200);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   const openBottomSheet = () => {
     setBottomSheetVisible(true);
   };
@@ -86,19 +99,16 @@ const TicketBook = () => {
 
   const refreshTickets = useCallback(async () => {
     // console.log(4444);
-    if (auth) {
-      // console.log(5555);
       dispatch(getMyTickets(0, (pageRef.current + 1) * 10, orderText, defaultOrder, defaultType, (newTickets) => {
         setAllTickets([]);
         setAllTickets(newTickets);
         setTimeout(restoreScrollPosition, 0);
+        setIsLoading(false);
         console.log('allTickets',allTickets);
       }));
       setOpenOrder(false);
       setOpenType(false);
-    }
-  }, [auth, dispatch, defaultOrder, orderText, defaultType]);
-// }, [dispatch, defaultOrder, orderText, defaultType]);
+  }, [dispatch, defaultOrder, orderText, defaultType]);
 
   useEffect(() => {
     if (ticketUpdated) {
@@ -116,12 +126,13 @@ const TicketBook = () => {
 
   useEffect(() => {
     // console.log(3333);
-    if (auth && page > 0) {
+    if (page > 0) {
       dispatch(getMyTickets(page, 10, orderText, defaultOrder, defaultType, (newTickets) => {
         setAllTickets((prevTickets) => [...prevTickets, ...newTickets]);
+        setIsLoading(false);
       }));
     }
-  }, [auth, page]);
+  }, [page]);
 
 
   const handleScroll = (event) => {
@@ -134,7 +145,6 @@ const TicketBook = () => {
       }
     }
   };
-
 
 
   const deleteTicketById = (ticketId) => {
@@ -151,7 +161,6 @@ const TicketBook = () => {
   }
 
   useEffect(() => {
-
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollTo({ y: 0, animated: true });
     }
@@ -198,87 +207,84 @@ const TicketBook = () => {
     <View style={{flex:1}}>
     <SafeAreaView style={styles.container}>
       <NavHeader />
-        <View style={{flexDirection:'row', zIndex:1, alignItems: 'center', justifyContent: 'space-between'}}>
-          <View style={{flexDirection:'row'}}>
-            <DropDownPicker
-            style={{width: 130, minHeight: 30, borderColor: '#525252'}}
-            containerStyle={{marginLeft:15, marginBottom:15, width: 130, minHeight: 30}}
-            dropDownContainerStyle={{borderColor: '#525252'}}
-            labelStyle={{fontFamily: 'Pretendard-Medium', fontSize: 14}}
-            textStyle={{fontFamily: 'Pretendard-Regular', fontSize: 14}}
-            listItemContainerStyle={{height:30, borderBottomWidth: 1, borderBottomColor: '#EEEEEE', borderBottomStartRadius : 10, borderBottomEndRadius : 10}}
-            selectedItemLabelStyle={{fontFamily: 'Pretendard-Medium'}}
-            showTickIcon={false}
-            // ArrowUpIconComponent={({style}) => <MyArrowUpIcon style={style} />}
-            // ArrowDownIconComponent={({style}) => <MyArrowDownIcon style={style} />}
-            open={openOrder}
-            value={defaultOrder}
-            items={orders}
-            setOpen={setOpenOrder}
-            // setValue={setDefaultOrder}
-            setValue={(callback) => {
-              const value = callback(defaultOrder);
-              // setDefaultOrder(value);
-              onOrderChange(value);
-            }}
-            setItems={setOrders}
-            />
+      {
+        isLoading ? (
+          <LoadingScreen iconId={loadingIcon} showText={false} /> 
+        ) :
+        <>
+          <View style={{flexDirection:'row', zIndex:1, alignItems: 'center', justifyContent: 'space-between'}}>
+            <View style={{flexDirection:'row'}}>
+              <DropDownPicker
+                style={{width: 130, minHeight: 30, borderColor: '#525252'}}
+                containerStyle={{marginLeft:15, marginBottom:15, width: 130, minHeight: 30}}
+                dropDownContainerStyle={{borderColor: '#525252'}}
+                labelStyle={{fontFamily: 'Pretendard-Medium', fontSize: 14}}
+                textStyle={{fontFamily: 'Pretendard-Regular', fontSize: 14}}
+                listItemContainerStyle={{height:30, borderBottomWidth: 1, borderBottomColor: '#EEEEEE', borderBottomStartRadius : 10, borderBottomEndRadius : 10}}
+                selectedItemLabelStyle={{fontFamily: 'Pretendard-Medium'}}
+                showTickIcon={false}
+                open={openOrder}
+                value={defaultOrder}
+                items={orders}
+                setOpen={setOpenOrder}
+                setValue={(callback) => {
+                  const value = callback(defaultOrder);
+                  onOrderChange(value);
+                }}
+                setItems={setOrders}
+              />
 
-            <Image source={iconLine} style={{marginHorizontal: 7, width:1.5, height: 30}}/>
-            
-            <TouchableOpacity onPress={changeArrow} >
-              <Image source={orderText === 'DESC' ? iconDown : iconUp} style={{width: 35, height: 35, marginTop: -3, marginLeft: -6}}/>
-            </TouchableOpacity>
-          </View>
-
-          <DropDownPicker
-          style={{width: 90, minHeight: 30, borderColor: '#525252'}}
-          containerStyle={{marginBottom:15, width: 90, minHeight: 30, marginRight: 15}}
-          dropDownContainerStyle={{borderColor: '#525252'}}
-          labelStyle={{fontFamily: 'Pretendard-Medium', fontSize: 14}}
-          textStyle={{fontFamily: 'Pretendard-Regular', fontSize: 14}}
-          listItemContainerStyle={{height:30, borderBottomWidth: 1, borderBottomColor: '#EEEEEE', borderBottomStartRadius : 10, borderBottomEndRadius : 10}}
-          selectedItemLabelStyle={{fontFamily: 'Pretendard-Medium'}}
-          showTickIcon={false}
-          // ArrowUpIconComponent={({style}) => <MyArrowUpIcon style={style} />}
-          // ArrowDownIconComponent={({style}) => <MyArrowDownIcon style={style} />}
-          open={openType}
-          value={defaultType}
-          items={types}
-          setOpen={setOpenType}
-          // setValue={setDefaultType}
-          setValue={(callback) => {
-            const value = callback(defaultType);
-            // setDefaultType(value);
-            onTypeChange(value);
-          }}
-          setItems={setTypes}
-          />
-
-        </View>
+              <Image source={iconLine} style={{marginHorizontal: 7, width:1.5, height: 30}}/>
               
-      <ScrollView 
-        ref={scrollViewRef}
-        contentContainerStyle={styles.scrollViewContent}
-        onScroll={handleScroll}
-        scrollEventThrottle={300}>
-        <View style={styles.rowContainer}>
-          {allTickets && allTickets.length !== 0 ? allTickets.map((ticket, index) => (
-            <View key={index}>
-              <TicketItem {...ticket} deleteTicketById={deleteTicketById} />
-            </View>
-          ))
-          : (
-            <View style={styles.noTicketContainer}>
-              <Image source={noTicket} style={styles.ticketCard} />
-              <TouchableOpacity onPress={openBottomSheet}>
-                <Image source={addIcon} style={styles.addIcon} />
+              <TouchableOpacity onPress={changeArrow} >
+                <Image source={orderText === 'DESC' ? iconDown : iconUp} style={{width: 35, height: 35, marginTop: -3, marginLeft: -6}}/>
               </TouchableOpacity>
             </View>
-          )
-        }
-        </View>
-      </ScrollView>
+
+            <DropDownPicker
+              style={{width: 90, minHeight: 30, borderColor: '#525252'}}
+              containerStyle={{marginBottom:15, width: 90, minHeight: 30, marginRight: 15}}
+              dropDownContainerStyle={{borderColor: '#525252'}}
+              labelStyle={{fontFamily: 'Pretendard-Medium', fontSize: 14}}
+              textStyle={{fontFamily: 'Pretendard-Regular', fontSize: 14}}
+              listItemContainerStyle={{height:30, borderBottomWidth: 1, borderBottomColor: '#EEEEEE', borderBottomStartRadius : 10, borderBottomEndRadius : 10}}
+              selectedItemLabelStyle={{fontFamily: 'Pretendard-Medium'}}
+              showTickIcon={false}
+              open={openType}
+              value={defaultType}
+              items={types}
+              setOpen={setOpenType}
+              setValue={(callback) => {
+                const value = callback(defaultType);
+                onTypeChange(value);
+              }}
+              setItems={setTypes}
+            />
+          </View>
+          <ScrollView 
+            ref={scrollViewRef}
+            contentContainerStyle={styles.scrollViewContent}
+            onScroll={handleScroll}
+            scrollEventThrottle={300}>
+            <View style={styles.rowContainer}>
+              {allTickets && allTickets.length !== 0 ? allTickets.map((ticket, index) => (
+                <View key={index}>
+                  <TicketItem {...ticket} deleteTicketById={deleteTicketById} />
+                </View>
+              ))
+              : (
+                <View style={styles.noTicketContainer}>
+                  <Image source={noTicket} style={styles.ticketCard} />
+                  <TouchableOpacity onPress={openBottomSheet}>
+                    <Image source={addIcon} style={styles.addIcon} />
+                  </TouchableOpacity>
+                </View>
+              )
+            }
+            </View>
+          </ScrollView>
+        </>
+      }
       
     </SafeAreaView>
 

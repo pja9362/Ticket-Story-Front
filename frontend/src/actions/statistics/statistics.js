@@ -20,6 +20,8 @@ export const loadMyStatistics = () => async dispatch => {
             }
         );
 
+        console.log("나의 통계 Response:", response.data)
+
         if (response.status == 200) {
             dispatch({
                 type: LOAD_MY_STATISTICS_SUCCESS,

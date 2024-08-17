@@ -12,10 +12,6 @@ import closeIcon from '../images/icon_close.png';
 
 const LoadingScreen = ({ iconId, showText = true }) => {
     const navigation = useNavigation();
-    
-    useEffect(() => {
-        console.log('LoadingScreen rendered');
-    }, []);
 
     const loadingIcons = [loadingIcon1, loadingIcon2, loadingIcon3, loadingIcon4];
 

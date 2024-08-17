@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {Dimensions, SafeAreaView, View, Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {Dimensions, SafeAreaView, View, Image, StyleSheet, Platform, TouchableOpacity, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import WebView from 'react-native-webview';
 import {scrapeCGVTicketDetails, injectCGVScrapButton, scrapeInterparkTicketDetails, scrapeLotteCinemaTicketDetails, injectMegaboxScrapButton, scrapeMegaboxTicketDetails, scrapeYes24TicketDetails, injectTicketlinkScrapButton, scrapeTicketlinkTicketDetails} from '../../utils/scrapingUtils';
@@ -20,6 +20,9 @@ const EnrollByScrape = () => {
   const navigation = useNavigation();
 
   const webViewRef = useRef(null);
+
+  const isIOS = Platform.OS === 'ios';
+
   const [showCGVWebView, setShowCGVWebView] = useState(false);
   const [showInterparkWebView, setShowInterparkWebView] = useState(false);
   const [showLotteCinemaWebView, setShowLotteCinemaWebView] = useState(false);
@@ -100,7 +103,11 @@ const EnrollByScrape = () => {
     } else if (platform === 'yes24') {
       setShowYes24WebView(true);
     } else if (platform === 'ticketlink') {
-      setShowTicketlinkWebView(true);
+      if(isIOS) {
+        setShowTicketlinkWebView(true);
+      } else {
+        Alert.alert('준비 중입니다.');
+      }
     } 
   };
 
@@ -201,15 +208,6 @@ const EnrollByScrape = () => {
             </TouchableOpacity>
             <TouchableOpacity 
               style={styles.button}
-              onPress={() => handleScraping({ platform: 'ticketlink' })}
-            >
-              <View style={styles.imageContainer}>
-                <Image source={logo_ticketlink} style={styles.logoImage} />
-                <CustomText style={styles.btnText} fontWeight="bold">티켓링크</CustomText>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={styles.button}
               onPress={() => handleScraping({ platform: 'yes24' })}
             >
               <View style={styles.imageContainer}>
@@ -217,6 +215,17 @@ const EnrollByScrape = () => {
                 <CustomText style={styles.btnText} fontWeight="bold">예스24 티켓</CustomText>
               </View>
             </TouchableOpacity>
+            <TouchableOpacity 
+              style={[styles.button, !isIOS && styles.disabledButton]}
+              onPress={() => handleScraping({ platform: 'ticketlink' })}
+            >
+              <View style={styles.imageContainer}>
+                <Image source={logo_ticketlink} style={styles.logoImage} />
+                <CustomText style={styles.btnText} fontWeight="bold">티켓링크</CustomText>
+              </View>
+            </TouchableOpacity>
+
+            
           </View>
         </>
       )}
@@ -248,6 +257,9 @@ const styles = StyleSheet.create({
     width: '30%',
     marginBottom: 10,
     alignItems: 'center',
+  },
+  disabledButton: {
+    opacity: 0.5,
   },
   imageContainer: {
     alignItems: 'center',

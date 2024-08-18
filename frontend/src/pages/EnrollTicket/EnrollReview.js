@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
-  Keyboard
+  Keyboard,
+  Platform
 } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import SliderRating from '../../components/EnrollTicket/SliderRating';
@@ -19,6 +20,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { saveNewTicket, uploadImage } from '../../actions/ticket/ticket';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
 
 import { useDispatch } from 'react-redux';
 
@@ -220,23 +222,23 @@ const EnrollReview = ({navigation, route}) => {
           }} 
       />
       <KeyboardAwareScrollView style={styles.container} showsVerticalScrollIndicator={false} ref={scrollViewRef}>
-        <CustomText style={{fontSize: 16, color: '#525252', lineHeight: 24}} fontWeight="bold">
+        <CustomText style={{fontSize: scale(16), color: '#525252', lineHeight: scale(24)}} fontWeight="bold">
           관람한 <CustomText style={{color: '#5D70F9'}} fontWeight="bold">{title || '콘텐츠'}</CustomText>의 후기를 알려주세요.
         </CustomText>
-        <CustomText style={{ fontSize: 12, color: '#939393' }}>*표시는 필수 항목입니다.</CustomText>
+        <CustomText style={{ fontSize: scale(12), color: '#939393' }}>*표시는 필수 항목입니다.</CustomText>
 
         <SliderRating category="art" value={artRating} onValueChange={handleSliderChange} />
 
         <SliderRating category="seat" value={seatRating} onValueChange={handleSliderChange} />
         
-        <CustomText style={styles.sectionText}>사진 첨부 <CustomText style={{ fontSize: 12, marginTop: 5, color: '#939393'}}> 사진 첨부는 한 장씩 가능합니다. </CustomText> </CustomText>
+        <CustomText style={styles.sectionText}>사진 첨부 <CustomText style={{ fontSize: scale(12), marginTop: verticalScale(5), color: '#939393'}}> 사진 첨부는 한 장씩 가능합니다. </CustomText> </CustomText>
 
         <View style={styles.reviewImageContainer}>
           <View>
             <TouchableOpacity onPress={handleImagePicker}>
               <Image source={addPhoto} style={styles.image} />
             </TouchableOpacity>
-            <CustomText style={{ width: 48, textAlign: 'center', color: '#525252'}}>{selectedImages.length} / 1</CustomText>
+            <CustomText style={{ width: scale(48), textAlign: 'center', color: '#525252'}}>{selectedImages.length} / 1</CustomText>
           </View>
           <FlatList
             data={selectedImages}
@@ -257,7 +259,8 @@ const EnrollReview = ({navigation, route}) => {
 
         <View style={styles.reviewTextContainer}>
           <CustomTextInput
-            style={{...styles.inputArea, height: 30, fontSize: 16, color: '#000000'}}
+            // style={{...styles.inputArea, height: scale(30), fontSize: scale(16), color: '#000000', backgroundColor: 'blue'}}
+            style={{...styles.inputArea, paddingVertical: Platform.OS === 'android' ? 0 : verticalScale(4), fontSize: scale(16), color: '#000000'}}
             value={reviewTitle}
             maxLength={20}
             placeholder = "제목"
@@ -266,7 +269,7 @@ const EnrollReview = ({navigation, route}) => {
             fontWeight="bold"
           />
           <CustomTextInput
-            style={{...styles.inputArea, flex: 1, color: '#525252'}}
+            style={{...styles.inputArea, flex:1, color: '#525252', textAlignVertical: 'top', paddingVertical: verticalScale(4), fontSize: scale(14)}}
             multiline={true}
             placeholder="관람 후기를 입력해주세요"
             placeholderTextColor = "#D9D9D9"
@@ -281,7 +284,7 @@ const EnrollReview = ({navigation, route}) => {
           />
         </View>
 
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: 20, marginBottom: 80}} >
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: verticalScale(20), marginBottom: verticalScale(50)}} >
           <NextButton isDisabled={saveProcessing || imageProcessing || artRating === 0 || seatRating === 0 || !sliderTouched} onPress={handleNext} />
         </View>
       </KeyboardAwareScrollView>  
@@ -293,24 +296,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingHorizontal: 27,
-    paddingVertical: 12,
+    paddingHorizontal: scale(27),
+    paddingVertical: verticalScale(12),
   },
   sectionText: {
-    fontSize: 16,
-    marginTop: 5,
+    fontSize: scale(16),
+    marginTop: verticalScale(5),
     color: '#525252',
   },
   sectionTextTwo: {
-    fontSize: 16,
-    marginTop: 22,
-    marginBottom: 5,
+    fontSize: scale(16),
+    marginTop: verticalScale(22),
+    marginBottom: verticalScale(5),
     color: '#525252',
   },
   image: {
-    width: 48,
-    height: 48,
-    marginTop: 10,
+    width: scale(48),
+    height: scale(48),
+    marginTop: verticalScale(10),
   },
   inputArea: {
     width: '100%',
@@ -318,26 +321,26 @@ const styles = StyleSheet.create({
   reviewImageContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 8,
-    gap: 17,
+    marginTop: verticalScale(8),
+    gap: scale(17),
   },
   deleteIconContainer: {
     position: 'absolute',
-    top: 2,
-    right: 2,
+    top: verticalScale(2),
+    right: scale(2),
     backgroundColor: 'transparent',
   },
   deleteIcon: {
-    width: 14,
-    height: 14,
+    width: scale(14),
+    height: scale(14),
   },
   previewImageContainer: {
-    marginRight: 8,
+    marginRight: scale(8),
     position: 'relative',
   },
   previewImage: {
-    width: 72,
-    height: 72,
+    width: scale(72),
+    height: scale(72),
     borderRadius: 5,
   },
   reviewTextContainer: {
@@ -346,9 +349,9 @@ const styles = StyleSheet.create({
     // borderColor: '#000',
     borderColor: '#B6B6B6',
     borderRadius: 5,
-    height: 250,
-    marginVertical: 11,
-    padding: 12,
+    height: scale(250),
+    marginVertical: verticalScale(11),
+    padding: scale(12),
   },
   checkboxContainer: {
     flexDirection: 'row',

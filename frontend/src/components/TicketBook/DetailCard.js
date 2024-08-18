@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Modal} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
-import Swiper from 'react-native-swiper';
+// import Swiper from 'react-native-swiper';
 import { handleShareBtn, handleSaveBtn } from '../../utils/shareAndSaveUtils';
 import iconLeft from '../../images/icon_left_pagination.png';
 import iconRight from '../../images/icon_right_pagination.png';
@@ -16,6 +16,8 @@ import {CustomText} from '../CustomText';
 import { getTicketDetails, uploadImage, updateReviewImage } from '../../actions/ticket/ticket';
 import ImagePicker from 'react-native-image-crop-picker';
 import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
+import { TouchableWithoutFeedback } from 'react-native';
+
 
 const DetailCard = ({ ticket, ticketId }) => {
 
@@ -132,9 +134,16 @@ const DetailCard = ({ ticket, ticketId }) => {
 
 
     return (
-        ticket &&
+        ticket && (
         <View style={styles.container}>
-        <ScrollView>
+        {/* <ScrollView scrollEnabled={true}> */}
+        <ScrollView 
+                contentContainerStyle={styles.scrollViewContent} // 수정된 부분
+                scrollEnabled={true}
+                // Android에서 ScrollView가 작동하도록 하기 위해 이 속성을 추가했습니다.
+                overScrollMode="always" 
+                showsVerticalScrollIndicator={false} 
+        >
             <View ref={viewRef} collapsable={false}>
             
                 <View style={styles.imageContainer}>
@@ -145,39 +154,36 @@ const DetailCard = ({ ticket, ticketId }) => {
                         paginationStyle={{justifyContent: 'flex-end', right: 20, bottom: 10}}
                         nextButton={<Image source={iconRight} style={styles.arrowImage}/>}
                         prevButton={<Image source={iconLeft} style={styles.arrowImage}/>}
-                    > */}
-                        {/* {ticket.reviewImages.map((image, index) => ( */}
-
-                            {/* <TouchableOpacity key={index} style={styles.slide} onPress={()=>handleImagePress(index)}> */}
-                            <TouchableOpacity style={styles.slide} onPress={()=>handleImagePress()}>
+                    >
+                    {ticket.reviewImages.map((image, index) => (
+                    <TouchableOpacity key={index} style={styles.slide} onPress={()=>handleImagePress(index)}> */}
+                    <TouchableOpacity style={styles.slide} onPress={()=>handleImagePress()}>
+                        <>
+                            <Image source={ticket.reviewImages !== null ? {uri: ticket.reviewImages[0]} : defaultReviewImage} style={styles.image} />
+                            {darkText ? (
+                                <Image source={darklogo} style={styles.logo} />
+                            ) : (
+                                <Image source={logo} style={styles.logo} />
+                            )}
+                            {/* Overlay Text */}
+                            <View style={styles.overlay}>
+                            {/* <View style={[styles.overlay, styles.shadowTextStyle]}> */}
+                                {(!hideImageTitle && !hideImageInfo) && (
+                                <CustomText style={darkText ? { ...styles.overlayText, fontSize: moderateScale(20), color: darkText ? '#525252' : '#fff' } : {...styles.overlayText, ...styles.textShadow, fontSize: scale(20), color: darkText ? '#525252' : '#fff'}} fontWeight="bold">{ticket.title}</CustomText>
+                                )}
+                                {!hideImageInfo && (
                                 <>
-                                    <Image source={ticket.reviewImages !== null ? {uri: ticket.reviewImages[0]} : defaultReviewImage} style={styles.image} />
-                                    {darkText ? (
-                                        <Image source={darklogo} style={styles.logo} />
-                                    ) : (
-                                        <Image source={logo} style={styles.logo} />
-                                    )}
-                                    {/* Overlay Text */}
-                                    <View style={styles.overlay}>
-                                    {/* <View style={[styles.overlay, styles.shadowTextStyle]}> */}
-                                        {(!hideImageTitle && !hideImageInfo) && (
-                                        <CustomText style={darkText ? { ...styles.overlayText, fontSize: moderateScale(20), color: darkText ? '#525252' : '#fff' } : {...styles.overlayText, ...styles.textShadow, fontSize: scale(20), color: darkText ? '#525252' : '#fff'}} fontWeight="bold">{ticket.title}</CustomText>
-                                        )}
-                                        {!hideImageInfo && (
-                                        <>
-                                            <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Date</CustomText>
-                                            <CustomText style={[styles.overlayText, shadowTextStyle, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.date}</CustomText>
-                                            <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Time</CustomText>
-                                            <CustomText style={[styles.overlayText, shadowTextStyle, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.time}</CustomText>
-                                            <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Place</CustomText>
-                                            <CustomText style={[styles.overlayText, shadowTextStyle, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.location}</CustomText>
-                                        </>
-                                        )}
-                                    </View>
+                                    <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Date</CustomText>
+                                    <CustomText style={[styles.overlayText, shadowTextStyle, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.date}</CustomText>
+                                    <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Time</CustomText>
+                                    <CustomText style={[styles.overlayText, shadowTextStyle, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.time}</CustomText>
+                                    <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Place</CustomText>
+                                    <CustomText style={[styles.overlayText, shadowTextStyle, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.location}</CustomText>
                                 </>
-                            </TouchableOpacity>
-                        {/* ))} */}
-                    {/* </Swiper> */}
+                                )}
+                            </View>
+                        </>
+                    </TouchableOpacity>
                 </View>
                 <TouchableOpacity onPress={handleContentPress}>
                     <View style={styles.contentContainer}>
@@ -194,15 +200,15 @@ const DetailCard = ({ ticket, ticketId }) => {
                         :
                             <>
                              {!hideReviewInfo && (
-                                <View style={{position: 'absolute', top: 50, right: 23, gap : 2}}>
+                                <View style={{position: 'absolute', top: scale(50), right: scale(23), gap : scale(2)}}>
                                     <CustomText style={styles.subText} fontWeight="bold">{ticket.date}</CustomText>
                                     <CustomText style={styles.subText} fontWeight="bold">{ticket.location}</CustomText>
                                 </View>
                              )}
 
                                 <View style={styles.reviewContainer}>
-                                    <CustomText style={{...styles.mainText, color: '#000000', fontSize: 14}} fontWeight="bold"> {ticket.reviewTitle}</CustomText>
-                                    <CustomText style={styles.text} fontWeight="medium">{ticket.reviewDetails}</CustomText>
+                                    <CustomText style={{...styles.mainText, color: '#000000', fontSize: scale(14)}} fontWeight="bold"> {ticket.reviewTitle}</CustomText>
+                                    <CustomText style={{...styles.text, textAlign: 'justify'}}>{ticket.reviewDetails}</CustomText>
                                 </View>
                             </>
                         }
@@ -211,19 +217,13 @@ const DetailCard = ({ ticket, ticketId }) => {
             </View>
             <View style={styles.btnContainer}>
                 <TouchableOpacity onPress={handleShareBtnPress}>
-                    <Image source={iconShare} style={{width: 45, height: 45}} />
+                    <Image source={iconShare} style={{width: scale(45), height: scale(45)}} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handleSaveBtnPress}>
-                    <Image source={iconSave} style={{width: 45, height: 45}} />
+                    <Image source={iconSave} style={{width: scale(45), height: scale(45)}} />
                 </TouchableOpacity>
             </View>
         </ScrollView>
-
-            {/* {modalVisible && (
-            <SaveCardImage
-                closeModal={closeModal}
-            />
-            )} */}
 
             {modalVisible && (
                 <Modal  
@@ -289,13 +289,14 @@ const DetailCard = ({ ticket, ticketId }) => {
             )}
 
         </View>
+        )
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingBottom: 50
+        paddingBottom: 50,
     },
     imageContainer: {
         width: scale(356),
@@ -310,8 +311,6 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         resizeMode: 'cover',
-        // borderTopLeftRadius: 5,
-        // borderTopRightRadius: 5,
     },
     dot: {
         backgroundColor: '#fff',
@@ -332,8 +331,6 @@ const styles = StyleSheet.create({
     contentContainer: {
         padding: moderateScale(20),
         backgroundColor: '#fff',
-        borderBottomLeftRadius: 5,
-        borderBottomRightRadius: 5,
         width: scale(356),
         height: scale(356),
     },
@@ -344,8 +341,9 @@ const styles = StyleSheet.create({
     },
     reviewContainer: {
         position: 'absolute',
-        left : 18,
-        top: 90,
+        left : scale(18),
+        top: scale(90),
+        right : scale(20),
     },
     mainText: {
         color: '#525252',

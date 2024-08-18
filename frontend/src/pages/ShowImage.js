@@ -14,6 +14,7 @@ import {CustomText} from '../components/CustomText';
 import ImagePicker from 'react-native-image-crop-picker';
 import { uploadImage, updateReviewImage } from '../actions/ticket/ticket';
 import { useNavigation } from '@react-navigation/native';
+import {scale, verticalScale, moderateScale} from '../utils/sizeUtil'
 
 const ShowImage = ({ route }) => {
     const viewRef = useRef();
@@ -90,8 +91,8 @@ const ShowImage = ({ route }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={{ paddingHorizontal: 20, marginBottom: 28, backgroundColor: '#fff' }}>
-                <Header title="이미지 카드 보기" />
+            <View style={{ paddingHorizontal: scale(20), marginBottom: verticalScale(28), backgroundColor: '#fff' }}>
+                <Header title="이미지카드 보기" />
             </View>
 
             <View style={styles.checkboxContainer}>
@@ -121,7 +122,7 @@ const ShowImage = ({ route }) => {
                     <Image source={logo} style={styles.logo} />
                 )}
                 <View style={styles.overlay}>
-                    {(!hideImageTitle && !hideImageInfo) && <CustomText style={darkText ? { ...styles.overlayText, fontSize: 20, color: darkText ? '#525252' : '#fff'  } : { ...styles.overlayText, ...styles.textShadow, fontSize: 20, color: darkText ? '#525252' : '#fff'  }} fontWeight="bold">{ticket.title}</CustomText>}
+                    {(!hideImageTitle && !hideImageInfo) && <CustomText style={darkText ? { ...styles.overlayText, fontSize: scale(20), color: darkText ? '#525252' : '#fff'  } : { ...styles.overlayText, ...styles.textShadow, fontSize: scale(20), color: darkText ? '#525252' : '#fff'  }} fontWeight="bold">{ticket.title}</CustomText>}
                     {!hideImageInfo && (
                         <>
                             <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Date</CustomText>
@@ -136,16 +137,16 @@ const ShowImage = ({ route }) => {
             </View>
 
             <TouchableOpacity style={styles.selectBtn} onPress={handleSelectNewImage}>
-                <Image source={iconEdit} style={{ width: 24, height: 24, position: 'absolute', left: 18, top: 14 }} />
+                <Image source={iconEdit} style={{ width: scale(24), height: scale(24), position: 'absolute', left: scale(18), top: scale(14) }} />
                 <CustomText style={styles.btnText} fontWeight="medium">사진 다시 선택하기</CustomText>
             </TouchableOpacity>
 
             <View style={styles.btnContainer}>
                 <TouchableOpacity onPress={handleShareBtnPress}>
-                    <Image source={iconShare} style={{ width: 45, height: 45 }} />
+                    <Image source={iconShare} style={{ width: scale(45), height: scale(45) }} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handleSaveBtnPress}>
-                    <Image source={iconSave} style={{ width: 45, height: 45 }} />
+                    <Image source={iconSave} style={{ width: scale(45), height: scale(45) }} />
                 </TouchableOpacity>
             </View>
 
@@ -156,10 +157,10 @@ const ShowImage = ({ route }) => {
                 onRequestClose={closeModal}
                 >
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-                      <View style={{ backgroundColor: 'white', height: 120, width: 280, padding: 18, borderRadius: 10 }}>
-                        <CustomText style={{color: '#000', fontSize: 16, textAlign: 'center', top: 5}} fontWeight="bold">이미지카드를 갤러리에 저장했어요</CustomText>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
-                          <TouchableOpacity onPress={closeModal} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5, marginTop: 5}}>
+                      <View style={{ backgroundColor: 'white', height: scale(120), width: scale(280), padding: scale(18), borderRadius: 10 }}>
+                        <CustomText style={{color: '#525252', fontSize: scale(16), textAlign: 'center', top: scale(5)}} fontWeight="bold">이미지카드가 앨범에 저장되었어요</CustomText>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: verticalScale(20) }}>
+                          <TouchableOpacity onPress={closeModal} style={{ backgroundColor: '#5D70f9', width: scale(100), padding: scale(10), borderRadius: 5, marginTop: verticalScale(5)}}>
                             <CustomText style={{ color: 'white', textAlign : 'center'}} fontWeight="bold">확인</CustomText>
                           </TouchableOpacity>
                         </View>
@@ -177,8 +178,9 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     imageContainer: {
-        height: 356,
-        margin: 20,
+        width: scale(356),
+        height: scale(356),
+        margin: scale(20),
     },
     image: {
         width: '100%',
@@ -191,18 +193,18 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        padding: 10,
+        padding: scale(10),
     },
     logo: {
         position: 'absolute',
-        top: 2,
-        right: 2,
-        width: 110,
-        height: 42,
+        top: verticalScale(2),
+        right: scale(2),
+        width: scale(110),
+        height: scale(42),
     },
     overlayText: {
         color: '#fff',
-        fontSize: 16,
+        fontSize: scale(16),
         // shadowColor: '#000',
         // shadowOffset: { width: 0, height: 2 },
         // shadowOpacity: 0.5,
@@ -219,30 +221,30 @@ const styles = StyleSheet.create({
     },
     overlayGuideText: {
         color: '#fff',
-        fontSize: 16,
-        marginTop: 4,
+        fontSize: scale(16),
+        marginTop: verticalScale(4),
     },
     btnContainer: {
         flexDirection: 'row',
-        padding: 20,
-        gap: 45,
+        padding: scale(20),
+        gap: scale(45),
         justifyContent: 'center',
     },
     checkboxContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        right: 2,
-        gap: 5,
+        right: scale(2),
+        gap: scale(5),
     },
     selectBtn: {
         backgroundColor: '#fff',
-        marginHorizontal: 38,
+        marginHorizontal: scale(38),
         borderRadius: 10,
     },
     btnText: {
         color: '#525252',
-        fontSize: 18,
-        padding: 15,
+        fontSize: scale(18),
+        padding: scale(15),
         textAlign: 'center',
     },
 });

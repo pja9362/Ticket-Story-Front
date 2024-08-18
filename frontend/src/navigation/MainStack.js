@@ -84,6 +84,12 @@ const MainStack = ({ navigation }) => {
             height: verticalScale(95),
             backgroundColor: '#fff',
             padding: moderateScale(5),
+
+            shadowColor:"#000",
+            shadowOffset: { width:0, height:2 },
+            shadowOpacity: 0.5,
+            shadowRadius: 4,
+            elevation: 4
           },
           tabBarLabelStyle: {
             fontSize: moderateScale(13),
@@ -138,6 +144,13 @@ const MainStack = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  shadowWrapper: {
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 4,
+  },
   iconContainer: {
     justifyContent: 'center',
     alignItems: 'center',

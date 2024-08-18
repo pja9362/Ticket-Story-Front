@@ -1,11 +1,12 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, Platform} from 'react-native';
 import Slider from '@react-native-community/slider';
 import GoldTicketIcon from '../../images/icon_ticket_gold.png';
 import SilverTicketIcon from '../../images/icon_ticket_silver.png';
 import BronzeTicketIcon from '../../images/icon_ticket_bronze.png';
 import BlackTicketIcon from '../../images/icon_ticket_black.png';
 import { CustomText } from '../../components/CustomText';
+import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
 
 const SliderRating = ({category, value, onValueChange}) => {
   const getTicketIcon = () => {
@@ -51,19 +52,20 @@ const SliderRating = ({category, value, onValueChange}) => {
 
 const styles = StyleSheet.create({
   sliderText: {
-    fontSize: 16,
-    marginTop: 5,
+    fontSize: scale(16),
+    marginTop: verticalScale(5),
     color: '#525252',
   },
   slider: {
     flex: 1,
     height: 40,
+    transform: Platform.OS === 'android' ? [{ scaleY: 1.4 }] : [],
   },
   sliderValue: {
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: scale(20),
     color: '#525252',
-    width: 45,
+    width: scale(45),
   },
   sliderContainer: {
     display: 'flex',
@@ -74,12 +76,12 @@ const styles = StyleSheet.create({
     color: '#5D70F9',
   },
   ticketIcon: {
-    width: 65,
-    height: 65,
+    width: scale(65),
+    height: scale(65),
   },
   ticketIconContainer: {
     alignItems: 'center',
-    marginLeft: -5,
+    marginLeft: scale(-5),
   }
 });
 

@@ -11,7 +11,6 @@ const My = () => {
   const dispatch = useDispatch();
   const viewRef = useRef();
 
-  const auth = useSelector((state) => state.auth.isAuthenticated);
   const myStatistics = useSelector((state) => state.statistics.myStatistics);
 
   const [movieStats, setMovieStats] = useState(null);
@@ -37,7 +36,6 @@ const My = () => {
 
   useFocusEffect(
     useCallback(() => {
-      if (auth) {
         dispatch(loadMyStatistics())
           .then((data) => {
             setMovieStats(data.movieStatistics);
@@ -47,8 +45,7 @@ const My = () => {
             setLocationCountStats(data.locationTypeCount);
             setLocationListStats(data.locationCount);
           });
-      }
-    }, [auth, dispatch])
+    }, [dispatch])
   );
 
   const isLoaded = movieStats && playStats && musicalStats && sportsStats && locationCountStats && locationListStats;

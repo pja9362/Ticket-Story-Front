@@ -1,15 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {AppState} from 'react-native';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import store, { persistor } from './src/store';
-import {NavigationContainer, DefaultTheme, useNavigationContainerRef} from '@react-navigation/native';
+import {NavigationContainer, useNavigationContainerRef} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
-import { Text, TextInput, StatusBar } from 'react-native';
-import { setCustomText, setCustomTextInput } from 'react-native-global-props';
+import { StatusBar } from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { refreshTokens } from './src/actions/auth/auth';
+import SplashScreen from './src/pages/Auth/Splash';
 import InitScreen from './src/pages/Auth/Init';
 import LoginScreen from './src/pages/Auth/Login';
 import SignUpScreen from './src/pages/Auth/SignUp';
@@ -33,11 +34,8 @@ import EditInfo from './src/pages/EnrollTicket/EditInfo';
 import EditReview from './src/pages/EnrollTicket/EditReview';
 import EditFinish from './src/pages/EnrollTicket/EditFinish';
 import CustomDrawerContent from './src/pages/CustomDrawerContent';
-
-// dummy
 import ShowImageScreen from './src/pages/ShowImage';
 import ShowContentScreen from './src/pages/ShowContent';
-
 import NoticeList from './src/pages/DrawerScreens/NoticeList';
 import NoticeContent from './src/pages/DrawerScreens/ContentScreens/NoticeContent';
 import AskScreen from './src/pages/DrawerScreens/AskScreen';
@@ -60,18 +58,57 @@ const App = () => {
   const [isReady, setIsReady] = useState(false);
   const [initialState, setInitialState] = useState();
 
-  useEffect(() => {
-    const initialNavState = {
-      routes: [
-        {
-          name: 'Init'
-        }
-      ]
-    };
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [initialRoute, setInitialRoute] = useState(null);
 
-    setInitialState(initialNavState);
-    setIsReady(true);
+  const checkLoginStatus = async () => {
+    console.log('Checking login status...');
+    try {
+      const refreshToken = await AsyncStorage.getItem('refreshToken');
+      if (refreshToken) {
+        const response = await refreshTokens();
+        console.log("!!! 로그인 되어 있음 => MainStackWithDrawer로 이동")
+        console.log('Refresh Token Response:', response);
+        setIsLoggedIn(true);
+        setInitialRoute('MainStackWithDrawer');
+      } else {
+        console.log("!!! 로그인 되어 있지 않음 => Init으로 이동")
+        setIsLoggedIn(false);
+        setInitialRoute('Init');
+      }
+    } catch (error) {
+      console.error('Error checking login status:', error);
+      setIsLoggedIn(false);
+      setInitialRoute('Init');
+    }
+  };
+  
+  useEffect(() => {
+    const initializeApp = async () => {
+      await checkLoginStatus();
+    };
+  
+    initializeApp();
   }, []);
+  
+  useEffect(() => {
+    if (initialRoute) {
+      console.log("로그인 상태 확인 후 초기화면 세팅 => 로그인 여부: ", isLoggedIn);
+      console.log('초기화면 세팅 Initializing app... => ', initialRoute);
+  
+      const initialNavState = {
+        routes: [
+          {
+            name: initialRoute 
+          }
+        ]
+      };
+      setInitialState(initialNavState);
+      setIsReady(true);
+    }
+  }, [initialRoute]);
+  
+  
 
   const screenOptions = {
     headerShown: false
@@ -100,9 +137,8 @@ const App = () => {
   );
 
   if (!isReady) {
-    return null; 
+    return <SplashScreen />;
   }
-
 
   return (
     <SafeAreaProvider>
@@ -112,8 +148,8 @@ const App = () => {
           <PersistGate loading={null} persistor={persistor}>
             <NavigationContainer initialState={initialState} ref={navigationRef}>
               <Stack.Navigator screenOptions={screenOptions}>
-                <Stack.Screen name="Init" component={InitScreen} options={{ gestureEnabled: false }}/>
                 <Stack.Screen name="MainStackWithDrawer" component={MainStackWithDrawer} />
+                <Stack.Screen name="Init" component={InitScreen} options={{ gestureEnabled: false }}/>
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="SignUp" component={SignUpScreen} />
                 <Stack.Screen name="FindPassword" component={FindPasswordScreen} />
@@ -165,3 +201,4 @@ const App = () => {
 };
 
 export default App;
+

@@ -1,27 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, Image, Dimensions, BackHandler, Alert} from 'react-native';
+import {StyleSheet, TouchableOpacity, View, Image, Dimensions, BackHandler, Alert, Platform} from 'react-native';
 import logo from '../../images/logo.png';
 import WebView from 'react-native-webview';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import icon_kakao from '../../images/icon_kakao.png';
 import icon_apple from '../../images/icon_apple.png';
 import logo_ticket_white from '../../images/logo_ticket_white.png';
 import { API_URL } from '@env';
 import { handleOAuthKaKaoLogin, handleOAuthAppleLogin, saveTokens } from '../../actions/auth/auth';
 import {CustomText} from '../../components/CustomText';
-// import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import Header from '../../components/Header';
 import { useDispatch } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
-const injectedJavaScript = `(function() {
-  window.postMessage = function(data) {
-    window.ReactNativeWebView.postMessage(data);
-  };
-})()`;
 
 const Init = ({navigation}) => {
 
@@ -172,13 +163,16 @@ const Init = ({navigation}) => {
               style={{width: 48, height: 48}}
             />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={handleAppleLogin}>
-            <Image
-              source={icon_apple}
-              style={{width: 48, height: 48}}
-            />
-          </TouchableOpacity>
+
+          {Platform.OS == 'ios' && (
+            <TouchableOpacity
+              onPress={handleAppleLogin}>
+              <Image
+                source={icon_apple}
+                style={{width: 48, height: 48}}
+              />
+            </TouchableOpacity>
+          )}
         </View>
 
         <TouchableOpacity

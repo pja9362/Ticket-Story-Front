@@ -8,9 +8,11 @@ import {
 import {
   UPDATE_TICKET_SUCCESS
 } from './../ticket/types';
+import { useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
+// refresh success action
 export const refreshTokens = async () => {
   console.log("!!! 리프레시 토큰 재발급 요청!")
   const refreshToken = await AsyncStorage.getItem('refreshToken');
@@ -26,6 +28,7 @@ export const refreshTokens = async () => {
 
       await AsyncStorage.setItem('accessToken', response.data.accessToken);
       await AsyncStorage.setItem('refreshToken', response.data.refreshToken);
+      
       return response.data;
     } else {
       console.log("REFRESH TOKEN 만료");

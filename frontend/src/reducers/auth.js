@@ -24,7 +24,10 @@ const authReducer = (state = initialState, action) => {
                 isAuthenticated: false,
             };
         case REFRESH_SUCCESS:
-            return state;
+            return {
+                ...state,
+                isAuthenticated: true,
+            };
         case REFRESH_FAIL:
             return {
                 ...state,

@@ -211,10 +211,10 @@ const styles = StyleSheet.create({
         
     },
     textShadow: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.5,
-        shadowRadius: 4,
+        color: 'white', // 텍스트 색상과 일치하도록 설정
+        textShadowColor: 'rgba(0, 0, 0, 0.5)', // 그림자의 투명도를 조절
+        textShadowOffset: { width: 0, height: 2 }, // 그림자 오프셋
+        textShadowRadius: 4, // 그림자 블러 반경
         elevation: 5, // Android에서 그림자 효과를 추가하기 위해 사용
     },
     overlayGuideText: {

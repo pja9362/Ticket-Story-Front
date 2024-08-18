@@ -21,6 +21,8 @@ import {CustomText} from '../CustomText';
 
 import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
 
+import { Shadow } from 'react-native-shadow-2';
+
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
 const imageWidth = Dimensions.get('window').width * 0.45;
 
@@ -63,15 +65,20 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
   const [makeCardVisible, setMakeCardVisible] = useState(false); //
   const animation = useRef(new Animated.Value(0)).current;
 
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const handlePress = () => {
     if (!dropdownVisible) {
+      setIsAnimating(true);  // 애니메이션 시작
+
       setIsFront(!isFront);
       Animated.timing(animation, {
         toValue: isFront ? 180 : 0,
         duration: 500,
         useNativeDriver: true,
-      }).start();
+      }).start(() => {
+        setIsAnimating(false);  // 애니메이션 종료 후 상태 업데이트
+      });
     } else {
     setDropdownVisible(false);
     }
@@ -198,12 +205,14 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
       <TouchableWithoutFeedback onPress={closeDropdown}>
         <View>
           <TouchableWithoutFeedback onPress={handlePress}>
-            <View style={[styles.card, styles.textShadow]}>
+            <View style={[styles.card, styles.textShadow2]}>
             {/* <View style={styles.card}> */}
-              <Animated.View style={[styles.cardContainer, frontAnimatedStyle, imageUrl && styles.imageCard]}>
+              {/* <Animated.View style={[styles.cardContainer, frontAnimatedStyle, imageUrl && styles.imageCard ]}> */}
+              <Animated.View style={[styles.cardContainer, frontAnimatedStyle, imageUrl && styles.imageCard, !isAnimating && Platform.OS === 'android' ? styles.textShadow : {}]}>
                 <ImageBackground 
-                  source={imageUrl ? { uri: imageUrl } : basicTicketImageSource} 
+                  source={imageUrl ? { uri: imageUrl } : basicTicketImageSource}
                   style={imageUrl ? styles.posterBackground : styles.imageBackground}
+                  // style={[imageUrl ? styles.posterBackground : styles.imageBackground, styles.textShadow]}
                 >          
 
                   {imageUrl == null || imageUrl == "" && (
@@ -212,7 +221,8 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
 
                 </ImageBackground>
               </Animated.View>
-              <Animated.View style={[styles.cardContainer, styles.back, backAnimatedStyle]}>
+              <Animated.View style={[styles.cardContainer, styles.back, backAnimatedStyle ]}>
+              {/* <Animated.View style={[styles.cardContainer, styles.back, backAnimatedStyle, Platform.OS === 'android' ? styles.textShadow : null]}> */}
                 <ImageBackground source={ticketImageSource} style={styles.imageBackground2}>
                   <View style={styles.overlay}>
                     <CustomText numberOfLines={2} style={styles.title} fontWeight="bold">{title}</CustomText>
@@ -321,7 +331,6 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
 
         </View>
       </TouchableWithoutFeedback>
-
     </>
   );
 };
@@ -337,19 +346,31 @@ const styles = StyleSheet.create({
     width: imageWidth,
     height: imageHeight,
     resizeMode: 'cover',
-    marginLeft: -4,
+    // marginLeft: -4,
+    marginTop: verticalScale(8),
+
   },
   posterBackground: {
     width: imageWidth-14,
     height: imageHeight-20,
     resizeMode: 'cover',
   },
-  textShadow: {
+  textShadow2: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 4,
-    elevation: 5, // Android에서 그림자 효과를 추가하기 위해 사용
+    elevation: 4, // Android에서 그림자 효과를 추가하기 위해 사용
+  },
+  textShadow: {
+    flex:2,
+    backgroundColor:'white',
+    borderRadius:9,
+    shadowColor:"#000",
+    shadowOffset: { width:0, height:2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 4
   },
   imageCard: {
     borderRadius: 9,
@@ -401,8 +422,8 @@ const styles = StyleSheet.create({
     // height : 240,
   },
   cardContainer: {
-    width: imageWidth-10,
-    height: imageHeight-10,
+    width: imageWidth-14,
+    height: imageHeight-20,
     position: 'absolute',
     backfaceVisibility: 'hidden',
     margin: 5,
@@ -489,3 +510,4 @@ const styles = StyleSheet.create({
 });
 
 export default TicketItem;
+

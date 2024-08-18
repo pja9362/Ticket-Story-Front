@@ -563,7 +563,8 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     width: '100%',
     alignItems: 'center',
-    marginTop : 100,
+    marginTop : 60,
+    marginBottom : 60
   },
   // dropdown
   dropdown: {

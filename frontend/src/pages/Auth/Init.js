@@ -91,6 +91,8 @@ const Init = ({navigation}) => {
       dispatch(saveTokens(jsonData, ([result, response]) => {
         console.log('saveToken:', result, response);
         if(result) {
+          setWebViewVisible(false);
+          setRedirectUrl(null);
           navigation.navigate('MainStackWithDrawer');
         } else {
           console.log('saveToken error');

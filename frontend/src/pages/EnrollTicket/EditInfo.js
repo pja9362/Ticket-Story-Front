@@ -14,7 +14,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker'; //
 import { updateInfo } from '../../actions/ticket/ticket';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 
-const EnrollEdit = ({ route, navigation }) => {
+const EditInfo = ({ route, navigation }) => {
   const dispatch = useDispatch();
 
   const contentLists = useSelector(state => state.enrollTicketSearch.contentLists);
@@ -581,6 +581,7 @@ const styles = StyleSheet.create({
     floatingButtonContainer: {
       width: '100%',
       alignItems: 'center',
+      marginBottom : 80
     },
     // dropdown
     dropdown: {
@@ -639,4 +640,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default EnrollEdit;
+export default EditInfo;

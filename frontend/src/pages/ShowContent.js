@@ -12,6 +12,7 @@ import CustomCheckbox from '../components/EnrollTicket/CustomCheckbox';
 import {CustomText} from '../components/CustomText';
 import { getTicketDetail, getTicketDetails } from '../actions/ticket/ticket';
 import { useNavigation } from '@react-navigation/native';
+import {scale, verticalScale, moderateScale} from '../utils/sizeUtil'
 
 const ShowContent = ({ route }) => {
     const viewRef = useRef();
@@ -86,8 +87,8 @@ const ShowContent = ({ route }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={{paddingHorizontal: 20, marginBottom: 28, backgroundColor: '#fff' }}>
-                <Header title="리뷰 카드 보기"/>
+            <View style={{paddingHorizontal: scale(20), marginBottom: verticalScale(28), backgroundColor: '#fff' }}>
+                <Header title="리뷰카드 보기"/>
             </View> 
 
             <View style={styles.checkboxContainer}>
@@ -104,14 +105,14 @@ const ShowContent = ({ route }) => {
             </View>
             
             <View ref={viewRef} style={styles.contentContainer} collapsable={false}>
-                <Image source={iconLogo} style={{position: 'absolute', top: 3, right: 3, width: 120, height: 40,}} />
+                <Image source={iconLogo} style={{position: 'absolute', top: scale(3), right: scale(3), width: scale(120), height: scale(40),}} />
                 <View style={styles.overlay}>
                     <View style={styles.titleContainer}>
                         {
                             (!hideReviewTitle && !hideReviewInfo) && <CustomText style={{...styles.mainText, flex: 1}} fontWeight="bold">{ticket.title}</CustomText>
                         }
                     </View>
-                    <View style={{position: 'absolute', top: 30, right: 25,}}>
+                    <View style={{position: 'absolute', top: scale(30), right: scale(25)}}>
                         {
                             !hideReviewInfo && (
                                 <>
@@ -123,23 +124,23 @@ const ShowContent = ({ route }) => {
                     </View>
                 </View>
                 <View style={styles.reviewContainer}>
-                    <CustomText style={{...styles.mainText, color: '#525252', fontSize: 16}} fontWeight="bold"> {ticket.reviewTitle}</CustomText>
-                    <CustomText style={styles.text} fontWeight="medium">{ticket.reviewDetails}</CustomText>
+                    <CustomText style={{...styles.mainText, color: '#525252', fontSize: scale(16)}} fontWeight="bold"> {ticket.reviewTitle}</CustomText>
+                    <CustomText style={{...styles.text, textAlign: 'justify'}}>{ticket.reviewDetails}</CustomText>
                 </View>
             </View>
             
             {/* 버튼 내부 좌측에 edit icon */}
             <TouchableOpacity style={styles.selectBtn} onPress={handleEditContent}>
-                <Image source={iconEdit} style={{width: 24, height: 24, position: 'absolute', left: 18, top: 14}} />
+                <Image source={iconEdit} style={{width: scale(24), height: scale(24), position: 'absolute', left: scale(18), top: scale(14)}} />
                 <CustomText style={styles.btnText} fontWeight="medium">리뷰 수정하기</CustomText>
             </TouchableOpacity>
 
             <View style={styles.btnContainer}>
                 <TouchableOpacity onPress={handleShareBtnPress}>
-                    <Image source={iconShare} style={{width: 45, height: 45}} />
+                    <Image source={iconShare} style={{width: scale(45), height: scale(45)}} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handleSaveBtnPress}>
-                    <Image source={iconSave} style={{width: 45, height: 45}} />
+                    <Image source={iconSave} style={{width: scale(45), height: scale(45)}} />
                 </TouchableOpacity>
             </View>
 
@@ -150,10 +151,10 @@ const ShowContent = ({ route }) => {
                 onRequestClose={closeModal}
                 >
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-                      <View style={{ backgroundColor: 'white', height: 120, width: 280, padding: 18, borderRadius: 10 }}>
-                        <CustomText style={{color: '#000', fontSize: 16, textAlign: 'center', top: 5}} fontWeight="bold">리뷰카드가 앨범에 저장됐어요</CustomText>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: 20 }}>
-                          <TouchableOpacity onPress={closeModal} style={{ backgroundColor: '#5D70f9', width: 100, padding: 10, borderRadius: 5, marginTop: 5}}>
+                      <View style={{ backgroundColor: 'white', height: scale(120), width: scale(280), padding: scale(18), borderRadius: 10 }}>
+                        <CustomText style={{color: '#525252', fontSize: scale(16), textAlign: 'center', top: scale(5)}} fontWeight="bold">리뷰카드가 앨범에 저장되었어요</CustomText>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', marginTop: verticalScale(20) }}>
+                          <TouchableOpacity onPress={closeModal} style={{ backgroundColor: '#5D70f9', width: scale(100), padding: scale(10), borderRadius: 5, marginTop: verticalScale(5)}}>
                             <CustomText style={{ color: 'white', textAlign : 'center'}} fontWeight="bold">확인</CustomText>
                           </TouchableOpacity>
                         </View>
@@ -169,10 +170,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    imageContainer: {
-        height: 356,
-        margin: 20
-    },
     image: {
         width: '100%',
         height: '100%',
@@ -181,76 +178,66 @@ const styles = StyleSheet.create({
     },
     overlay: {
         position: 'absolute',
-        top: 20,
+        top: verticalScale(20),
         left: 0,
         right: 0,
-        padding: 10,
-    },
-    logo: {
-        position: 'absolute',
-        top: 5,
-        right: 10,
-        width: 100,
-        height: 40,
-    },    
-    overlayGuideText: {
-        color: '#fff',
-        fontSize: 16,
-        marginTop: 4,
+        padding: scale(10),
     },
     btnContainer: {
         flexDirection: 'row',
-        padding: 20,
-        gap: 45,
+        padding: scale(20),
+        gap: scale(45),
         justifyContent: 'center',
     },
     checkboxContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        gap: 5,
-        right: 2
+        gap: scale(5),
+        right: scale(2)
     },
     selectBtn: {
         backgroundColor: '#fff',
-        marginHorizontal: 38,
+        marginHorizontal: scale(38),
         borderRadius: 10
     },
     btnText: {
         color: '#525252',
-        fontSize: 18,
-        padding: 15,
+        fontSize: scale(18),
+        padding: scale(15),
         textAlign: 'center',
     },
     titleContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        bottom: 14,
-        left: 8,
-        gap: 40,
-        width: 200,
+        bottom: verticalScale(14),
+        left: scale(8),
+        gap: scale(40),
+        width: scale(200),
     },
     mainText: {
         color: '#525252',
-        fontSize: 18,
+        fontSize: scale(18),
     },
     subText: {
         color: '#B6B6B6',
-        fontSize: 14,
+        fontSize: scale(14),
         textAlign: 'right',
     },
     reviewContainer: {
-        marginTop: 75,
+        marginTop: verticalScale(75),
     },
     text: {
         color: '#525252',
-        fontSize: 14,
-        lineHeight: 18,
-        paddingVertical: 5,
+        fontSize: scale(14),
+        lineHeight: verticalScale(18),
+        paddingVertical: verticalScale(5),
     },
     contentContainer: {
-        height: 356,
-        margin: 20,
-        padding: 20,
+        width: scale(356),
+        height: scale(356),
+        // height: 356,
+        margin: scale(20),
+        padding: scale(20),
         backgroundColor: '#fff',
         // borderBottomLeftRadius: 5,
         // borderBottomRightRadius: 5,

@@ -55,15 +55,11 @@ const TicketDetail = ({ route, navigation }) => {
       })
   }, []);
 
-
-  return (
-    <>
-    <GestureHandlerRootView style={{ flex: 1 }}>
-    <PanGestureHandler onHandlerStateChange={onSwipe}>
+  const content = (
     <View style={{ flex: 1 }}>
       <SafeAreaView style={styles.container}>
           <View style={{paddingHorizontal: 20, backgroundColor: '#fff'}}>
-            <Header title="스토리 카드 보기" backDestination="MainStack"/>
+            <Header title="스토리카드 보기" backDestination="MainStack"/>
           </View> 
           <ScrollView style={styles.cardContainer}>
             {
@@ -73,11 +69,46 @@ const TicketDetail = ({ route, navigation }) => {
           </ScrollView>
       </SafeAreaView>
     </View>
-    </PanGestureHandler>
+  )
+
+  return (
+    <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+    {Platform.OS === 'ios' ? (
+      <PanGestureHandler onHandlerStateChange={onSwipe}>
+        {content}
+      </PanGestureHandler>
+    ) : (
+      content
+    )}
     </GestureHandlerRootView>
     </>
   );
 };
+
+
+//   return (
+//     <>
+//     <GestureHandlerRootView style={{ flex: 1 }}>
+//     <PanGestureHandler onHandlerStateChange={onSwipe}>
+//     <View style={{ flex: 1 }}>
+//       <SafeAreaView style={styles.container}>
+//           <View style={{paddingHorizontal: 20, backgroundColor: '#fff'}}>
+//             <Header title="스토리 카드 보기" backDestination="MainStack"/>
+//           </View> 
+//           <ScrollView style={styles.cardContainer}>
+//             {
+//               ticket === null ? <Text>Loading...</Text> : 
+//               <DetailCard ticket={ticket} ticketId ={ticketId}/>
+//             }
+//           </ScrollView>
+//       </SafeAreaView>
+//     </View>
+//     </PanGestureHandler>
+//     </GestureHandlerRootView>
+//     </>
+//   );
+// };
 
 
 const styles = StyleSheet.create({
@@ -86,7 +117,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#eeeeee',
   },
   cardContainer: {
-    padding: 20,
+    padding: 17,
     flex: 1,
   },
 });

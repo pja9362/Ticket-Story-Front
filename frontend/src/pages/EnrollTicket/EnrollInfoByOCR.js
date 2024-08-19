@@ -634,6 +634,7 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     width: '100%',
     alignItems: 'center',
+    marginBottom : 80
   },
   // dropdown
   dropdown: {

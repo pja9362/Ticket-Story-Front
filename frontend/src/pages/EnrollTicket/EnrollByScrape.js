@@ -11,6 +11,7 @@ import logo_lottecinema from '../../images/logo_lottecinema.png';
 import logo_megabox from '../../images/logo_megabox.png';
 import logo_yes24 from '../../images/logo_yes24.png';
 import logo_ticketlink from '../../images/logo_ticketlink.png';
+import logo_ticketlink_off from '../../images/logo_ticketlink_off.png';
 import { CustomText } from '../../components/CustomText';
 
 const windowWidth = Dimensions.get('window').width;
@@ -103,11 +104,7 @@ const EnrollByScrape = () => {
     } else if (platform === 'yes24') {
       setShowYes24WebView(true);
     } else if (platform === 'ticketlink') {
-      if(isIOS) {
-        setShowTicketlinkWebView(true);
-      } else {
-        Alert.alert('준비 중입니다.');
-      }
+      if(isIOS) setShowTicketlinkWebView(true);
     } 
   };
 
@@ -216,12 +213,13 @@ const EnrollByScrape = () => {
               </View>
             </TouchableOpacity>
             <TouchableOpacity 
-              style={[styles.button, !isIOS && styles.disabledButton]}
+              style={styles.button}
+              disabled={!isIOS}
               onPress={() => handleScraping({ platform: 'ticketlink' })}
             >
               <View style={styles.imageContainer}>
-                <Image source={logo_ticketlink} style={styles.logoImage} />
-                <CustomText style={styles.btnText} fontWeight="bold">티켓링크</CustomText>
+                <Image source={isIOS ? logo_ticketlink : logo_ticketlink_off} style={styles.logoImage} />
+                <CustomText style={[styles.btnText, !isIOS && {color: '#B6B6B6'}]} fontWeight="bold">티켓링크</CustomText>
               </View>
             </TouchableOpacity>
 
@@ -257,9 +255,6 @@ const styles = StyleSheet.create({
     width: '30%',
     marginBottom: 10,
     alignItems: 'center',
-  },
-  disabledButton: {
-    opacity: 0.5,
   },
   imageContainer: {
     alignItems: 'center',

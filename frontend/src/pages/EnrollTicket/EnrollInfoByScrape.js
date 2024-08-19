@@ -574,6 +574,7 @@ const styles = StyleSheet.create({
     floatingButtonContainer: {
       width: '100%',
       alignItems: 'center',
+      marginBottom : 80
     },
     // dropdown
     dropdown: {

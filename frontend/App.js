@@ -50,6 +50,8 @@ import ChangePassword from './src/pages/DrawerScreens/ChangePassword';
 import ResignScreen from './src/pages/DrawerScreens/ResignScreen';
 import ResignReason from './src/pages/DrawerScreens/ResignReason';
 
+import StatisticScreen from './src/pages/My/Stats';
+
 const App = () => {
   const Stack = createNativeStackNavigator();
   const Drawer = createDrawerNavigator();
@@ -74,6 +76,7 @@ const App = () => {
       } else {
         console.log("!!! 로그인 되어 있지 않음 => Init으로 이동")
         setIsLoggedIn(false);
+        // ! Init으로 바꿔야 함, 통계 탭 리뉴얼 작업 위해서 임시로 Statistics로 변경
         setInitialRoute('Init');
       }
     } catch (error) {
@@ -107,8 +110,6 @@ const App = () => {
       setIsReady(true);
     }
   }, [initialRoute]);
-  
-  
 
   const screenOptions = {
     headerShown: false
@@ -148,6 +149,8 @@ const App = () => {
           <PersistGate loading={null} persistor={persistor}>
             <NavigationContainer initialState={initialState} ref={navigationRef}>
               <Stack.Navigator screenOptions={screenOptions}>
+                {/* <Stack.Screen name="Statistics" component={StatisticScreen} /> */}
+                
                 <Stack.Screen name="MainStackWithDrawer" component={MainStackWithDrawer} />
                 <Stack.Screen name="Init" component={InitScreen} options={{ gestureEnabled: false }}/>
                 <Stack.Screen name="Login" component={LoginScreen} />

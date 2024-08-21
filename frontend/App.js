@@ -34,6 +34,7 @@ import EditInfo from './src/pages/EnrollTicket/EditInfo';
 import EditReview from './src/pages/EnrollTicket/EditReview';
 import EditFinish from './src/pages/EnrollTicket/EditFinish';
 import CustomDrawerContent from './src/pages/CustomDrawerContent';
+import ShowPaperScreen from './src/pages/ShowPaper';
 import ShowImageScreen from './src/pages/ShowImage';
 import ShowContentScreen from './src/pages/ShowContent';
 import NoticeList from './src/pages/DrawerScreens/NoticeList';
@@ -176,6 +177,7 @@ const App = () => {
                 <Stack.Screen name="OAuthWebView" component={OAuthWebView} />
                 <Stack.Screen name="TicketlinkWebView" component={TicketlinkWebView} />
 
+                <Stack.Screen name="ShowPaperView" component={ShowPaperScreen} />
                 <Stack.Screen name="ShowImageView" component={ShowImageScreen} />
                 <Stack.Screen name="ShowContentView" component={ShowContentScreen} />
 

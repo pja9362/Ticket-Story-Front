@@ -50,6 +50,11 @@ const DetailCard = ({ ticket, ticketId }) => {
     //     navigation.navigate('ShowImageView', {images: ticket.reviewImages, index: idx, ticket: ticket});
     // }
 
+    const handlePaperPress = () => {
+        navigation.navigate('ShowPaperView');
+        console.log('ddddd', ticket, 'eeeee', ticketId);
+    }
+
     const handleImagePress = () => {
         if (ticket.reviewImages !== null) {
             navigation.navigate('ShowImageView', {images: ticket.reviewImages[0], ticket: ticket, ticketId: ticketId});
@@ -143,7 +148,12 @@ const DetailCard = ({ ticket, ticketId }) => {
                 // Android에서 ScrollView가 작동하도록 하기 위해 이 속성을 추가했습니다.
                 overScrollMode="always" 
                 showsVerticalScrollIndicator={false} 
-        >
+        >   
+            <TouchableOpacity onPress={()=>handlePaperPress()} >
+                <View style={{width: scale(356), backgroundColor: '#FFF', marginBottom: verticalScale(10)}}>
+                    <CustomText style={{color:'#525252', padding: scale(12), fontSize: scale(14), textAlign: 'center'}} fontWeight='bold'> 관람 세부 정보 보기 </CustomText>
+                </View>
+            </TouchableOpacity>
             <View ref={viewRef} collapsable={false}>
             
                 <View style={styles.imageContainer}>
@@ -379,7 +389,7 @@ const styles = StyleSheet.create({
     },
     textShadow: {
         color: 'white', // 텍스트 색상과 일치하도록 설정
-        textShadowColor: 'rgba(0, 0, 0, 0.5)', // 그림자의 투명도를 조절
+        textShadowColor: 'rgba(0, 0, 0, 0.3)', // 그림자의 투명도를 조절
         textShadowOffset: { width: 0, height: 2 }, // 그림자 오프셋
         textShadowRadius: 4, // 그림자 블러 반경
         elevation: 5, // Android에서 그림자 효과를 추가하기 위해 사용

@@ -6,6 +6,7 @@ import Total from '../../components/Statistic/Total';
 import Movie from '../../components/Statistic/Movie';
 import Performance from '../../components/Statistic/Performance';
 import Sports from '../../components/Statistic/Sports';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const Stats = () => {
   const viewRef = useRef();
@@ -159,13 +160,68 @@ const Stats = () => {
         return 0;
     }
   }
+
+  const [openOrder, setOpenOrder] = useState(false);
+  const [defaultOrder, setDefaultOrder] = useState('everything');
+  const [orders, setOrders] = useState([
+    {label: '전체', value: 'everything'},
+    {label: '2024', value: '2024'},
+    {label: '2023', value: '2023'},
+    {label: '2021', value: '2021'},
+    {label: '2020', value: '2020'},
+    {label: '2019', value: '2019'},
+    {label: '2018', value: '2018'},
+    {label: '2017', value: '2017'},
+    {label: '2016', value: '2016'},
+    {label: '2015', value: '2015'},
+    {label: '2014', value: '2014'},
+    {label: '2013', value: '2013'},
+    {label: '2012', value: '2012'},
+    {label: '2011', value: '2011'},
+    {label: '2010', value: '2010'},
+    {label: '2009', value: '2009'},
+    {label: '2008', value: '2008'},
+    {label: '2007', value: '2007'},
+    {label: '2006', value: '2006'},
+    {label: '2005', value: '2005'},
+    {label: '2004', value: '2004'},
+    {label: '2003', value: '2003'},
+    {label: '2002', value: '2002'},
+    {label: '2001', value: '2001'},
+    {label: '2000', value: '2000'},
+  ]);
+
+  const onOrderChange = (value) => {
+    console.log(value);
+  };
   
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingVertical: 10, paddingHorizontal: 12 }}>
-        <View style={{ flex: 1 }} />
+      <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 10, paddingHorizontal: 12, zIndex:1 }}>
+        {/* <View style={{ flex: 1 }} /> */}
 
-        <CustomText style={{ color: '#525252', fontSize: 17, flex: 1 }} fontWeight="bold">나의 통계</CustomText>
+        <DropDownPicker
+          style={{width: 85, minHeight: 10, borderColor: '#525252'}}
+          containerStyle={{marginLeft:5, width: 85, minHeight: 30}}
+          dropDownContainerStyle={{borderColor: '#525252'}}
+          labelStyle={{fontFamily: 'Pretendard-Medium', fontSize: 12}}
+          textStyle={{fontFamily: 'Pretendard-Regular', fontSize: 12}}
+          listItemContainerStyle={{height:33, borderBottomWidth: 1, borderBottomColor: '#EEEEEE', borderBottomStartRadius : 10, borderBottomEndRadius : 10}}
+          selectedItemLabelStyle={{fontFamily: 'Pretendard-Medium'}}
+          showTickIcon={false}
+          open={openOrder}
+          value={defaultOrder}
+          items={orders}
+          setOpen={setOpenOrder}
+          setValue={(callback) => {
+            const value = callback(defaultOrder);
+            onOrderChange(value);
+          }}
+          setItems={setOrders}
+        />
+
+        {/* <CustomText style={{ color: '#525252', fontSize: 17, flex: 1 }} fontWeight="bold"> */}
+        <CustomText style={{ color: '#525252', marginLeft: 61, fontSize: 17, flex: 1 }} fontWeight="bold">나의 통계</CustomText>
 
         <TouchableOpacity style={{ width: 64, backgroundColor: '#EEEEEE', borderRadius: 50 }} onPress={handleShareBtnPress}>
           <CustomText style={{ color: '#525252', padding: 7 }} fontWeight="bold">공유하기</CustomText>

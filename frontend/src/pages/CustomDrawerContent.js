@@ -8,7 +8,8 @@ import {CustomText} from '../components/CustomText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logoutRequest } from '../actions/auth/auth';
 import { useDispatch } from 'react-redux';
-
+import { jwtDecode } from "jwt-decode";
+import "core-js/stable/atob";
 
 const CustomDrawerContent = ( props ) => {
 
@@ -48,8 +49,32 @@ const CustomDrawerContent = ( props ) => {
   //     alert('로그아웃 에러');
   //   }
   // };
-  
 
+
+const handleQuit = async () => {
+  try {
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    console.log(accessToken);
+
+    if (!accessToken) {
+      console.log("Access token not found");
+      return;
+    }
+    
+    const decoded = jwtDecode(accessToken);
+
+    if (decoded && (decoded.OAUTH_TYPE == 'KAKAO' || decoded.OAUTH_TYPE == 'APPLE')) {
+      console.log("소셜 로그인 유저")
+    } else {
+      console.log("일반 로그인 유저")
+      navigation.navigate('ResignScreen');
+    }
+    // 여기에서 OAUTH_TYPE 확인 후 처리
+  } catch (error) {
+    console.error('JWT Decoding Error:', error);
+  }
+};
+  
   return (
     <>
     <TouchableOpacity onPress={() => props.navigation.closeDrawer()} style={styles.closeButton}>
@@ -85,7 +110,7 @@ const CustomDrawerContent = ( props ) => {
       {/* <TouchableOpacity onPress={() => navigation.navigate('Init')} style={styles.menuItem}> */}
         <CustomText style={styles.menuText} fontWeight="medium">로그아웃</CustomText>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('ResignScreen')} style={styles.menuItem}>
+      <TouchableOpacity onPress={handleQuit} style={styles.menuItem}>
         <CustomText style={styles.menuText} fontWeight="medium">회원 탈퇴</CustomText>
       </TouchableOpacity>
 

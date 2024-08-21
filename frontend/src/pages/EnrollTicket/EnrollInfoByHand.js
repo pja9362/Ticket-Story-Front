@@ -177,7 +177,8 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     const ticketData = {
       registerBy: 'BASIC',
       category,
-      categoryDetail: categoryDetail === '메가박스' || categoryDetail === 'CGV' || categoryDetail === '롯데시네마' ? 'MOVIE' : categoryDetail,
+      // categoryDetail: categoryDetail === '메가박스' || categoryDetail === 'CGV' || categoryDetail === '롯데시네마' ? 'MOVIE' : categoryDetail,
+      categoryDetail : categoryDetail === '메가박스' ? 'MEGABOX' : categoryDetail === '롯데시네마' ? 'LOTTECINEMA' : categoryDetail,
       platform: '',
       ticketImg: '',
       contentsDetails: {

@@ -25,6 +25,8 @@ import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
 import { useDispatch } from 'react-redux';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
+import { State } from 'react-native-gesture-handler';
 
 const EnrollReview = ({navigation, route}) => {
   const dispatch = useDispatch();
@@ -206,9 +208,27 @@ const EnrollReview = ({navigation, route}) => {
     }
   };
 
+  const onSwipe = async (event) => {
+    if (event.nativeEvent.state === State.END) {
+      //
+      const backParams = {
+        reviewTitle,
+        reviewContent,
+        artRating,
+        seatRating,
+        selectedImages,
+        contentsId: ticketData.contentsDetails.contentsId,
+        contentsTitle: ticketData.contentsDetails.title
+      }
 
-  return (
-    <>
+      await AsyncStorage.setItem(`tempReview_${backParams.contentsId || 'temp'}`, JSON.stringify(backParams));
+      await navigation.goBack();
+    }
+  };
+
+  const content = (
+    // <>
+    <View style={{ flex: 1 }}>
       <EnrollHeader 
           title="콘텐츠 스토리 카드 입력" 
           backParams={{
@@ -285,9 +305,26 @@ const EnrollReview = ({navigation, route}) => {
         </View>
 
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', paddingVertical: verticalScale(20), marginBottom: verticalScale(50)}} >
-          <NextButton isDisabled={saveProcessing || imageProcessing || artRating === 0 || seatRating === 0 || !sliderTouched} onPress={handleNext} />
+          {/* <NextButton isDisabled={saveProcessing || imageProcessing || artRating === 0 || seatRating === 0 || !sliderTouched} onPress={handleNext} /> */}
+          <NextButton isDisabled={saveProcessing || imageProcessing || artRating === 0 || seatRating === 0 } onPress={handleNext} />
         </View>
       </KeyboardAwareScrollView>  
+    </View>
+    // </>
+  )
+
+
+  return (
+    <>
+      <GestureHandlerRootView style={{ flex: 1}}>
+        {Platform.OS === 'ios' ? (
+          <PanGestureHandler onHandlerStateChange={onSwipe}>
+            {content}
+          </PanGestureHandler>
+        ) : (
+          content
+        )}
+      </GestureHandlerRootView>
     </>
   );
 };
@@ -360,3 +397,4 @@ const styles = StyleSheet.create({
 });
 
 export default EnrollReview;
+

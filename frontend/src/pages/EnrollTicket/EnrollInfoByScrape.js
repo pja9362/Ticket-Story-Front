@@ -135,7 +135,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     const ticketData = {
       registerBy: 'SCRAPE',
       category: mappedCategory,
-      categoryDetail: mappedCategoryDetail,
+      // categoryDeatil: mappedCategoryDetail,
+      categoryDetail: mappedCategoryDetail === 'MOVIE' ? platform : mappedCategoryDetail,
       platform,
       ticketImg: '',
       contentsDetails: {

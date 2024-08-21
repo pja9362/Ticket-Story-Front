@@ -263,7 +263,8 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
     const ticketData = {
       registerBy: 'OCR',
       category: mappedCategory,
-      categoryDetail: mappedCategoryDetail,
+      // categoryDetail: mappedCategoryDetail,
+      categoryDetail: mappedCategoryDetail === '메가박스' ? 'MEGABOX' : mappedCategoryDetail === '롯데시네마' ? 'LOTTECINEMA' : mappedCategoryDetail,
       platform: '',
       ticketImg: '',
       contentsDetails: {

@@ -13,6 +13,7 @@ const EnrollHeader = ({title = '', backDestination, backParams, needAlert}) => {
   const [modalVisible, setModalVisible] = useState(false); 
 
   const onBackClick = async () => {
+    console.log('?', backParams);
     if (backParams) {
       const tempReview = {
         contentsId: backParams.contentsId,
@@ -47,14 +48,31 @@ const EnrollHeader = ({title = '', backDestination, backParams, needAlert}) => {
     }
   }
 
+
   useFocusEffect(
     useCallback(() => {
       const onBackPress = () => {
         console.log("Back PARAMS3: ", backParams);
+        if (backParams) {
+          console.log(1);
+          const tempReview = {
+            contentsId: backParams.contentsId,
+            contentsTitle: backParams.contentsTitle,
+            reviewTitle: backParams.reviewTitle,
+            reviewContent: backParams.reviewContent,
+            artRating: backParams.artRating,
+            seatRating: backParams.seatRating,
+            selectedImages: backParams.selectedImages,
+          };
+          AsyncStorage.setItem(`tempReview_${backParams.contentsId || 'temp'}`, JSON.stringify(tempReview));
+          console.log(2);
+        }
+
         if (needAlert) {
           setModalVisible(true);
           return true; // Prevent default behavior (go back)
         }
+        console.log(3);
         return false; // Allow default behavior
       };
 
@@ -63,8 +81,30 @@ const EnrollHeader = ({title = '', backDestination, backParams, needAlert}) => {
       return () => {
         BackHandler.removeEventListener('hardwareBackPress', onBackPress);
       };
-    }, [needAlert])
+    }, [needAlert,backParams])
   );
+
+
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const onBackPress = async() => {
+  //       console.log("Back PARAMS3: ", backParams);
+
+  //       // if (needAlert) {
+  //       //   setModalVisible(true);
+  //       //   return true; // Prevent default behavior (go back)
+  //       // }
+  //       // return false; // Allow default behavior
+  //     };
+
+  //     BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+  //     return () => {
+  //       BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+  //     };
+  //   }, [backParams])
+  // );
 
 
   return (

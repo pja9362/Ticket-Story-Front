@@ -60,11 +60,18 @@ const handleQuit = async () => {
       console.log("Access token not found");
       return;
     }
-    
+
     const decoded = jwtDecode(accessToken);
+
+    console.log(decoded);
+
+    if(decoded.OAUTH_TYPE != null) {
+      AsyncStorage.setItem('userType', decoded.OAUTH_TYPE);
+    }
 
     if (decoded && (decoded.OAUTH_TYPE == 'KAKAO' || decoded.OAUTH_TYPE == 'APPLE')) {
       console.log("소셜 로그인 유저")
+      navigation.navigate('ResignReason');
     } else {
       console.log("일반 로그인 유저")
       navigation.navigate('ResignScreen');

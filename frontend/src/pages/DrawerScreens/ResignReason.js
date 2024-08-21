@@ -1,28 +1,37 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Image, ScrollView, Modal } from 'react-native';
 import {CustomText} from '../../components/CustomText';
 import Header from '../../components/Header';
 import { deleteAccount } from '../../actions/auth/auth';
 import { useNavigation } from '@react-navigation/native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const ResignReason = ({route}) => {
     const navigation = useNavigation();
 
     const [reasonNumber, setReasonNumber] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
-
+    
     const handleIconDelete = async () => {
         
         try {
-            const deletedAccount = await deleteAccount(reasonNumber, route.params.token);
+            // async storage에서 userType 가져오기
+            const userType = await AsyncStorage.getItem('userType');
+            console.log('userType', userType);
 
-            console.log('WHYY????', deletedAccount)
-
-            if (deletedAccount) {
-                setModalVisible(false);
-                navigation.navigate('Init');
+            if (userType == 'KAKAO') {
+                console.log('카카오 탈퇴');
+            } else if (userType == 'APPLE') {
+                console.log('애플 탈퇴');
             } else {
-                // console.log('dddd');
+                console.log('일반 탈퇴');
+                const deletedAccount = await deleteAccount(reasonNumber, route.params.token);
+
+                console.log('WHYY????', deletedAccount)
+    
+                if (deletedAccount) {
+                    setModalVisible(false);
+                    navigation.navigate('Init');
+                } 
             }
 
         } catch (error){

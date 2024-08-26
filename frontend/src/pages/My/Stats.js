@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native';
 import { handleShareBtn } from '../../utils/shareAndSaveUtils';
 import { CustomText } from '../../components/CustomText';
@@ -6,11 +7,20 @@ import Total from '../../components/Statistic/Total';
 import Movie from '../../components/Statistic/Movie';
 import Performance from '../../components/Statistic/Performance';
 import Sports from '../../components/Statistic/Sports';
+import { loadMyStatistics } from '../../actions/statistics/statistics';
 
 const Stats = () => {
   const viewRef = useRef();
+  const dispatch = useDispatch();
 
   const [selectedTab, setSelectedTab] = useState('전체');
+
+  useEffect(() => {
+    dispatch(loadMyStatistics())
+      .then((response) => {
+        console.log('response:', response);
+      })
+  }, []);
 
   const dummyData = {
     totalStats: {
@@ -159,6 +169,7 @@ const Stats = () => {
         return 0;
     }
   }
+
   
   return (
     <SafeAreaView style={styles.container}>

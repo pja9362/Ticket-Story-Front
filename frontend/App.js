@@ -49,7 +49,7 @@ import PictogramLicense from './src/pages/DrawerScreens/ContentScreens/Pictogram
 import ChangePassword from './src/pages/DrawerScreens/ChangePassword';
 import ResignScreen from './src/pages/DrawerScreens/ResignScreen';
 import ResignReason from './src/pages/DrawerScreens/ResignReason';
-
+import SocialLogin from './src/pages/Auth/SocialLogin';
 import StatisticScreen from './src/pages/My/Stats';
 
 const App = () => {
@@ -192,6 +192,7 @@ const App = () => {
                 <Stack.Screen name="ChangePassword" component={ChangePassword} />
                 <Stack.Screen name="ResignScreen" component={ResignScreen} />
                 <Stack.Screen name="ResignReason" component={ResignReason} />
+                <Stack.Screen name="SocialLogin" component={SocialLogin} />
 
               </Stack.Navigator>
         

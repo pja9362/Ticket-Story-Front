@@ -5,6 +5,7 @@ import Header from '../../components/Header';
 import { deleteAccount } from '../../actions/auth/auth';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const ResignReason = ({route}) => {
     const navigation = useNavigation();
 
@@ -18,15 +19,13 @@ const ResignReason = ({route}) => {
             const userType = await AsyncStorage.getItem('userType');
             console.log('userType', userType);
 
-            if (userType == 'KAKAO') {
-                console.log('카카오 탈퇴');
-            } else if (userType == 'APPLE') {
-                console.log('애플 탈퇴');
+            if (userType == 'KAKAO' || userType == 'APPLE') {
+                console.log('소셜 탈퇴');
+                // navigate to SocialLogin 페이지, route params로 userType 전달
+                navigation.navigate('SocialLogin', {socialType: userType});
             } else {
                 console.log('일반 탈퇴');
                 const deletedAccount = await deleteAccount(reasonNumber, route.params.token);
-
-                console.log('WHYY????', deletedAccount)
     
                 if (deletedAccount) {
                     setModalVisible(false);

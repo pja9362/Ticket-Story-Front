@@ -195,6 +195,26 @@ export const handleOAuthAppleLogin = async () => {
   }
 }
 
+export const handleOAuthKAKAOQuit = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/api/v1/auth/oauth/kakao/unlink`);
+    return response.data;
+  } catch (error) {
+    console.error('Kakao Quit error:', error);
+    throw error;
+  }
+}
+
+export const handleOAuthAppleQuit = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/api/v1/auth/oauth/apple/unlink`);
+    return response.data;
+  } catch (error) {
+    console.error('Apple Quit error:', error);
+    throw error;
+  }
+}
+
 export const saveTokens = (jsonData, callback) => async dispatch => {
   try {
     if(jsonData.accessToken !== null) {
@@ -214,30 +234,6 @@ export const saveTokens = (jsonData, callback) => async dispatch => {
   }
 
 }
-
-// export const saveTokens = (url, callback) => async dispatch => {
-//   console.log("SAVE TOKEN 함수 실행", url);
-//   // try {
-//   //   const response = await axios.get(url);
-//   //   console.log('SAVE TOKEN 함수 실행', url);
-//   //   console.log('SAVE TOKEN 함수 실행 Token response:', response.data);
-
-//   //   if (response.data.accessToken !== null) {
-//   //     await AsyncStorage.setItem('accessToken', response.data.accessToken);
-//   //     await AsyncStorage.setItem('refreshToken', response.data.refreshToken);
-
-//   //     dispatch({ type: LOGIN_SUCCESS, payload: response.data });
-//   //     dispatch({ type: UPDATE_TICKET_SUCCESS });
-
-//   //     if (callback) callback([true, response.data]);
-//   //   } else {
-//   //     if (callback) callback([false, response.data]);
-//   //   }
-//   // } catch (error) {
-//   //   console.error('Error storing tokens:', error);
-//   //   if (callback) callback([false, error]);
-//   // }
-// }
 
 export const sendPasswordResetEmail = async (email) => {
   const accessToken = await AsyncStorage.getItem('accessToken');

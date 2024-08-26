@@ -12,7 +12,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import iconUp from '../../images/icon_up.png'
 import iconDown from '../../images/icon_down.png'
 import iconLine from '../../images/icon_line.png'
-import LoadingScreen from '../../components/LoadingScreen';
+// import LoadingScreen from '../../components/LoadingScreen';
 
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
 const imageWidth = Dimensions.get('window').width * 0.45;
@@ -59,19 +59,6 @@ const TicketBook = () => {
     pageRef.current = page;
   }, [page])
 
-  // Loading
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadingIcon, setLoadingIcon] = useState(1);
-
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setLoadingIcon((prevIcon) => (prevIcon % 4) + 1);
-    }, 200);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
   const openBottomSheet = () => {
     setBottomSheetVisible(true);
   };
@@ -103,7 +90,6 @@ const TicketBook = () => {
         setAllTickets([]);
         setAllTickets(newTickets);
         setTimeout(restoreScrollPosition, 0);
-        setIsLoading(false);
         console.log('allTickets',allTickets);
       }));
       setOpenOrder(false);
@@ -129,7 +115,6 @@ const TicketBook = () => {
     if (page > 0) {
       dispatch(getMyTickets(page, 10, orderText, defaultOrder, defaultType, (newTickets) => {
         setAllTickets((prevTickets) => [...prevTickets, ...newTickets]);
-        setIsLoading(false);
       }));
     }
   }, [page]);
@@ -168,8 +153,7 @@ const TicketBook = () => {
     dispatch(getMyTickets(0, 10, orderText, defaultOrder, defaultType, (newTickets) => {
       setPage(0);
       setAllTickets([]);
-      setAllTickets(newTickets);
-      setIsLoading(false);
+      setAllTickets(newTickets)
     }));
 
   }, [orderText]);
@@ -185,8 +169,7 @@ const TicketBook = () => {
     dispatch(getMyTickets(0, 10, orderText, value, defaultType, (newTickets) => {
       setPage(0);
       setAllTickets([]);
-      setAllTickets(newTickets);
-      setIsLoading(false);
+      setAllTickets(newTickets)
     }));
   };
 
@@ -200,8 +183,7 @@ const TicketBook = () => {
     dispatch(getMyTickets(0, 10, orderText, defaultOrder, value, (newTickets) => {
       setPage(0);
       setAllTickets([]);
-      setAllTickets(newTickets);
-      setIsLoading(false);
+      setAllTickets(newTickets)
     }));
   };
 
@@ -211,9 +193,6 @@ const TicketBook = () => {
     <SafeAreaView style={styles.container}>
       <NavHeader />
       {
-        isLoading ? (
-          <LoadingScreen iconId={loadingIcon} showText={false} /> 
-        ) :
         <>
           <View style={{flexDirection:'row', zIndex:1, alignItems: 'center', justifyContent: 'space-between'}}>
             <View style={{flexDirection:'row'}}>

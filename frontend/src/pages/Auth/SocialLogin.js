@@ -2,18 +2,17 @@ import React, { useState, useRef, useEffect } from 'react';
 import {View, Text, StyleSheet, Dimensions} from 'react-native';
 import WebView from 'react-native-webview';
 import Header from '../../components/Header';
-import { handleOAuthKaKaoLogin, handleOAuthAppleLogin, saveTokens } from '../../actions/auth/auth';
+import { handleOAuthKaKaoQuit, handleOAuthAppleQuit, deleteAccount } from '../../actions/auth/auth';
 import { API_URL } from '@env';
-import { useDispatch } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const SocialLogin = ({route, navigation}) => {
 
-    const {socialType} = route.params;
+    const {socialType, reasonNumber} = route.params;
 
-    const dispatch = useDispatch();
     const webViewRef = useRef(null);
 
     const [webViewTitle, setWebViewTitle] = useState('');
@@ -21,7 +20,6 @@ const SocialLogin = ({route, navigation}) => {
     const [webViewOpacity, setWebViewOpacity] = useState(1);
 
     useEffect(() => {
-        console.log('socialType:', socialType);
         if(socialType === 'KAKAO') {
             handleKaKaoLogin();
         } else if(socialType === 'APPLE') {
@@ -31,7 +29,7 @@ const SocialLogin = ({route, navigation}) => {
 
     const handleKaKaoLogin = async () => {
         try {
-          const response = await handleOAuthKaKaoLogin();
+          const response = await handleOAuthKaKaoQuit();
           setWebViewTitle('카카오톡 로그인');
           setRedirectUrl(response);
         } catch (error) {
@@ -58,35 +56,24 @@ const SocialLogin = ({route, navigation}) => {
         console.log('------WEBVIEW MESSAGE------');
     
         let data = event.nativeEvent.data;
-    
-        // Remove HTML tags and parse JSON
+
         const jsonString = data.replace(/<\/?[^>]+(>|$)/g, '') || '';
         const jsonData = JSON.parse(jsonString);
-    
-        // Save tokens
-        const { accessToken, refreshToken } = jsonData;
-        
-        if (accessToken && refreshToken) {      
-          dispatch(saveTokens(jsonData, ([result, response]) => {
-            console.log('saveToken:', result, response);
-            if(result) {
-              setRedirectUrl(null);
-              navigation.navigate('MainStackWithDrawer');
-            } else {
-              console.log('saveToken error');
-              Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
-            }
-          })
-          );
-        } else {
-          console.log('No tokens found');
-      };
+
+        if (jsonData.result) {
+            setWebViewOpacity(0);
+            deleteAccount(reasonNumber);
+            navigation.navigate('Init');
+        } 
+
+        AsyncStorage.removeItem('accessToken');
+        AsyncStorage.removeItem('refreshToken');
     };
     
     const handleAppleLogin = async () => {
         console.log('Apple Login');
         try {
-          const response = await handleOAuthAppleLogin();
+          const response = await handleOAuthAppleQuit();
           setWebViewTitle('애플 로그인');
           setRedirectUrl(response);
         } catch (error) {
@@ -94,7 +81,6 @@ const SocialLogin = ({route, navigation}) => {
           throw error;
         }
     }
-    
 
     const handleBackClick = () => {
         if (redirectUrl) {
@@ -119,9 +105,9 @@ const SocialLogin = ({route, navigation}) => {
                         onNavigationStateChange={handleOAuthNavigationChange}
                         onMessage={handleWebViewMessage}
                         injectedJavaScript={`
-                            if (window.location.href.startsWith('${API_URL}/api/v1/auth/oauth/kakao?code=')) {
+                            if (window.location.href.startsWith('${API_URL}/api/v1/auth/oauth/kakao/unlink?code=')) {
                                 window.ReactNativeWebView.postMessage(document.body.innerHTML);
-                            } else if (window.location.href.startsWith('${API_URL}/api/v1/auth/oauth/apple?code=')) {
+                            } else if (window.location.href.startsWith('${API_URL}/api/v1/auth/oauth/apple/unlink?code=')) {
                                 window.ReactNativeWebView.postMessage(document.body.innerHTML);
                             }
                             true;

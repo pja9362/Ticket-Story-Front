@@ -29,7 +29,7 @@ const ChangePassword = () => {
             if (passwordChecked) {
               // setModalVisible(true);
               setToken(passwordChecked.accessToken);
-              navigation.navigate('ResignReason', {token : passwordChecked.accessToken})
+              navigation.navigate('ResignReason')
               setErrorMessage('');
             } else {
                 alert('잠시후 다시 시도해주세요.')

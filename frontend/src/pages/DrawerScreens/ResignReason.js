@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Image, ScrollView, Modal } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, ScrollView, Modal } from 'react-native';
 import {CustomText} from '../../components/CustomText';
 import Header from '../../components/Header';
 import { deleteAccount } from '../../actions/auth/auth';
@@ -21,23 +21,24 @@ const ResignReason = ({route}) => {
 
             if (userType == 'KAKAO' || userType == 'APPLE') {
                 console.log('소셜 탈퇴');
-                // navigate to SocialLogin 페이지, route params로 userType 전달
-                navigation.navigate('SocialLogin', {socialType: userType});
+                navigation.navigate('SocialLogin', {socialType: userType, reasonNumber: reasonNumber});
             } else {
                 console.log('일반 탈퇴');
-                const deletedAccount = await deleteAccount(reasonNumber, route.params.token);
+                const deletedAccount = await deleteAccount(reasonNumber);
     
                 if (deletedAccount) {
+                    AsyncStorage.removeItem('accessToken');
+                    AsyncStorage.removeItem('refreshToken');
+
                     setModalVisible(false);
                     navigation.navigate('Init');
                 } 
             }
 
         } catch (error){
-            console.error('에러가 어떻게 나오는데?', error);
-            console.error('에러가 어떻게 나오는데?2', error.response.data);
             alert('나중에 다시 시도해주세요.');
             setModalVisible(false);
+            console.error('회원 탈퇴 실패', error);
         }
     }
 

@@ -4,6 +4,7 @@ import {View, Text, Image, Dimensions, StyleSheet, Platform} from 'react-native'
 import HomeScreen from '../pages/Home';
 import TicketBookScreen from '../pages/TicketBook/TicketBook';
 import MyScreen from '../pages/My/My';
+import StatsScreen from '../pages/My/Stats';
 import BottomSheetMenu from '../components/EnrollTicket/BottomSheetMenu';
 import {useRoute} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -129,7 +130,8 @@ const MainStack = ({ navigation }) => {
         <Tab.Screen
           name="Profile"
           options={{ headerShown: false, tabBarLabel: '나의 통계' }}
-          component={MyScreen}
+          // component={MyScreen}
+          component={StatsScreen}
         />
       </Tab.Navigator>
 

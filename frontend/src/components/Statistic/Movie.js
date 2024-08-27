@@ -2,26 +2,28 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { CustomText } from '../CustomText';
 
-const Movie = ({ dummyData }) => {
+const Movie = ({ data }) => {
 
     const getFilledBarStyle = (score) => ({
       height: '100%', 
       width: `${score}%`, 
       backgroundColor: '#5D70F9', 
       borderTopLeftRadius: 5,
-      borderBottomLeftRadius: 5
+      borderBottomLeftRadius: 5,
+      borderTopRightRadius: score == 100 ? 5 : 0,
+      borderBottomRightRadius: score == 100 ? 5 : 0,
     });
 
     const convertTabToViewCount = (tab) => {
         switch (tab) {
             case 'CGV':
-                return dummyData.cgvViewCount;
+                return data.cgvViewCount;
             case '메가박스':
-                return dummyData.megaboxViewCount;
+                return data.megaboxViewCount;
             case '롯데시네마':
-                return dummyData.lottecinemaViewCount;
+                return data.lottecinemaViewCount;
             case '독립영화관':
-                return dummyData.indieViewCount;
+                return data.indieViewCount;
             default:
                 return 0;
         }
@@ -45,7 +47,7 @@ const Movie = ({ dummyData }) => {
             {/* 평균 콘텐츠 점수 */}
             <View style={{ paddingBottom: 20, borderBottomColor: '#0000001A', borderBottomWidth: 1 }}>
                 <CustomText style={{ ...styles.mainText, marginVertical: 20 }} fontWeight="bold">영화 평균 콘텐츠 점수</CustomText>
-                {[dummyData.multiplexAverageScore, dummyData.indieAverageScore].map((score, index) => (
+                {[data.multiplexAverageScore, data.indieAverageScore].map((score, index) => (
                     <View key={index} style={styles.barRow}>
                         <CustomText style={{ ...styles.categoryText, width: 60, marginRight: 10, textAlign: 'right' }} fontWeight="bold">{['멀티플렉스', '독립영화관'][index]}</CustomText>
                         <View style={styles.bar}>
@@ -60,7 +62,7 @@ const Movie = ({ dummyData }) => {
             <View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' }}>
                   <CustomText style={{ ...styles.mainText, marginTop: 20}} fontWeight="bold">방문한 영화관</CustomText>
-                  <CustomText style={styles.locationText} fontWeight="bold">총<CustomText style={{ color: '#5D70F9', fontSize: 22 }} fontWeight="bold"> {dummyData.movieLocationCount} </CustomText>곳</CustomText>
+                  <CustomText style={styles.locationText} fontWeight="bold">총<CustomText style={{ color: '#5D70F9', fontSize: 22 }} fontWeight="bold"> {data.movieLocationCount} </CustomText>곳</CustomText>
                 </View>
                 
                 {/* locationCount  분류, 장소명, 방문횟수 */}
@@ -70,7 +72,7 @@ const Movie = ({ dummyData }) => {
                     <CustomText style={styles.columnHeader} fontWeight="bold">장소명</CustomText>
                     <CustomText style={styles.columnHeader} fontWeight="bold">방문횟수</CustomText>
                   </View>
-                    {dummyData.locationCount.map((location, index) => (
+                    {data.locationCount && data.locationCount.map((location, index) => (
                         <View key={index} style={styles.tableRow}>
                             <CustomText style={styles.tableCell} fontWeight="medium">{location.locationType}</CustomText>
                             <CustomText style={styles.tableCell} fontWeight="medium">{location.locationName}</CustomText>

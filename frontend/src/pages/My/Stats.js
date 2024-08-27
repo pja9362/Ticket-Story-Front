@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native';
 import { handleShareBtn } from '../../utils/shareAndSaveUtils';
 import { CustomText } from '../../components/CustomText';
@@ -7,7 +7,8 @@ import Total from '../../components/Statistic/Total';
 import Movie from '../../components/Statistic/Movie';
 import Performance from '../../components/Statistic/Performance';
 import Sports from '../../components/Statistic/Sports';
-import { loadMyStatistics } from '../../actions/statistics/statistics';
+import { loadMyStatistics, loadMovieStats, loadPerformanceStats, loadSportsStats } from '../../actions/statistics/statistics';
+import LoadingScreen from '../../components/LoadingScreen';
 
 const Stats = () => {
   const viewRef = useRef();
@@ -15,119 +16,17 @@ const Stats = () => {
 
   const [selectedTab, setSelectedTab] = useState('전체');
 
+  const basicStats = useSelector((state) => state.statistics.basicStats);
+  const sportsStats = useSelector((state) => state.statistics.sportsStats);
+  const performanceStats = useSelector((state) => state.statistics.performanceStats);
+  const movieStats = useSelector((state) => state.statistics.movieStats);
+
   useEffect(() => {
-    dispatch(loadMyStatistics())
-      .then((response) => {
-        console.log('response:', response);
-      })
+    dispatch(loadMyStatistics());
+    dispatch(loadMovieStats());
+    dispatch(loadPerformanceStats());
+    dispatch(loadSportsStats())
   }, []);
-
-  const dummyData = {
-    totalStats: {
-      viewCount: 63,
-      averageScore: 92,
-    },
-    movieStats: {
-      viewCount: 21,
-      averageScore: 92,
-    },
-    performanceStats: {
-      viewCount: 21,
-      averageScore: 82,
-    },
-    sportsStats: {
-      viewCount: 21,
-      averageScore: 82,
-    },
-    locationCountStats: {
-      movieLocationCount: 121,
-      performanceLocationCount: 121,
-      sportsLocationCount: 121,
-    },
-    locationListStats: [
-      { locationType: '영화관', locationName: 'CGV 강남', count: 12 },
-      { locationType: '영화관', locationName: 'CGV 홍대', count: 10 },
-      { locationType: '영화관', locationName: 'CGV 신촌', count: 8 },
-      { locationType: '영화관', locationName: 'CGV 강북', count: 7 },
-      { locationType: '영화관', locationName: 'CGV 강남', count: 6 },
-      { locationType: '영화관', locationName: 'CGV 홍대', count: 5 },
-      { locationType: '영화관', locationName: 'CGV 신촌', count: 4 },
-      { locationType: '영화관', locationName: 'CGV 강북', count: 3 },
-      { locationType: '영화관', locationName: 'CGV 강남', count: 2 },
-      { locationType: '영화관', locationName: 'CGV 홍대', count: 1 },
-    ],
-  };
-
-  const dummyMovieData = {
-    "cgvViewCount": 7,
-    "lottecinemaViewCount": 7,
-    "megaboxViewCount": 7,
-    "indieViewCount": 7,
-    "multiplexAverageScore": 92,
-    "indieAverageScore": 92,
-    "movieLocationCount": 121,
-    "locationCount": [
-      {
-        "locationType": "영화관",
-        "locationName": "CGV 강남",
-        "count": 12,
-      },
-      {
-        "locationType": "영화관",
-        "locationName": "CGV 홍대",
-        "count": 10,
-      },
-    ]
-  }
-
-  const dummyPerformanceData = {
-    "musicalViewCount": 7,
-    "dramaViewCount": 7,
-    "otherViewCount": 7,
-    "musicalAverageScore": 92,
-    "dramaAverageScore": 82,
-    "otherAverageScore": 82,
-    "playLocationCount": 121,
-    "locationCount": [
-      {
-        "locationType": "공연장",
-        "locationName": "예술의 전당",
-        "count": 12,
-      },
-      {
-        "locationType": "공연장",
-        "locationName": "세종문화회관",
-        "count": 10,
-      },  
-    ]
-  }
-
-  const dummySportsData = {
-    "baseballViewCount": 7,
-    "soccerViewCount": 7,
-    "otherViewCount": 7,
-    "baseballAverageScore": 92,
-    "soccerAverageScore": 82,
-    "otherAverageScore": 82,
-    "sportsLocationCount": 121,
-    "locationCount": [
-      {
-        "locationType": "경기장",
-        "locationName": "잠실야구장",
-        "count": 12,
-      },
-      {
-        "locationType": "경기장",
-        "locationName": "상암야구장",
-        "count": 10,
-      },
-      {
-        "locationType": "경기장",
-        "locationName": "대전한화생명이글스파크",
-        "count": 12,
-      }
-    ]
-  }
 
   const handleShareBtnPress = () => {
     handleShareBtn(viewRef);
@@ -138,19 +37,19 @@ const Stats = () => {
     switch (selectedTab) {
       case '영화':
         return (
-          <Movie dummyData={dummyMovieData} />
+          movieStats ? <Movie data={movieStats}/> : null
         );
       case '공연':
         return (
-          <Performance dummyData={dummyPerformanceData} />
+          performanceStats ? <Performance data={performanceStats}/> : null
         );
       case '스포츠':
         return (
-          <Sports dummyData={dummySportsData} />
+          sportsStats ? <Sports data={sportsStats}/> : null
         );
       default:
         return (
-          <Total dummyData={dummyData} />
+          basicStats ? <Total data={basicStats}/> : null
         );
     }
   };
@@ -158,19 +57,31 @@ const Stats = () => {
   const convertTabToViewCount = (tab) => {
     switch (tab) {
       case '전체':
-        return dummyData.totalStats.viewCount;
+        return basicStats ? basicStats.totalViewCount : 0;
       case '영화':
-        return dummyData.movieStats.viewCount;
+        return basicStats ? basicStats.movieViewCount : 0;
       case '공연':
-        return dummyData.performanceStats.viewCount;
+        return basicStats ? basicStats.performanceViewCount : 0;
       case '스포츠':
-        return dummyData.sportsStats.viewCount;
+        return basicStats ? basicStats.sportsViewCount : 0;
       default:
         return 0;
     }
   }
 
   
+  const isLoaded = movieStats && sportsStats && performanceStats && basicStats;
+
+  const [loadingIcon, setLoadingIcon] = useState(1);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setLoadingIcon((prevIcon) => (prevIcon % 4) + 1);
+    }, 200);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingVertical: 10, paddingHorizontal: 12 }}>
@@ -184,6 +95,7 @@ const Stats = () => {
       </View>
 
       {
+        !isLoaded ? <LoadingScreen iconId={loadingIcon} showText={false} /> :
           <ScrollView>
             <View
               collapsable={false}

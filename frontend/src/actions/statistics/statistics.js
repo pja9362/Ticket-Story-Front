@@ -16,7 +16,6 @@ import { requestWithRetry } from '../auth/auth';
 export const loadMyStatistics = () => async dispatch => {
     return requestWithRetry(async () => {
         const token = await AsyncStorage.getItem('accessToken');
-        console.log("나의 통계 Token:", token)
         const response = await axios.get(
             `${API_URL}/api/v1/statistics/getBasicStatistics`,
             {
@@ -30,6 +29,7 @@ export const loadMyStatistics = () => async dispatch => {
                 type: LOAD_MY_STATISTICS_SUCCESS,
                 payload: response.data
             });
+            // console.log("전체 통계", response.data);
             return response.data;
         } else {
             dispatch({
@@ -48,7 +48,6 @@ export const loadMyStatistics = () => async dispatch => {
 export const loadSportsStats = () => async dispatch => {
     return requestWithRetry(async () => {
         const token = await AsyncStorage.getItem('accessToken');
-        console.log("스포츠 통계 Token:", token)
         const response = await axios.get(
             `${API_URL}/api/v1/statistics/getSportsStatistics`,
             {
@@ -63,6 +62,7 @@ export const loadSportsStats = () => async dispatch => {
                 type: LOAD_SPORTS_STATS_SUCCESS,
                 payload: response.data
             });
+            // console.log("스포츠 통계", response.data);
             return response.data;
         } else {
             dispatch({
@@ -81,7 +81,6 @@ export const loadSportsStats = () => async dispatch => {
 export const loadPerformanceStats = () => async dispatch => {
     return requestWithRetry(async () => {
         const token = await AsyncStorage.getItem('accessToken');
-        console.log("공연 통계 Token:", token)
         const response = await axios.get(
             `${API_URL}/api/v1/statistics/getPerformanceStatistics`,
             {
@@ -96,6 +95,7 @@ export const loadPerformanceStats = () => async dispatch => {
                 type: LOAD_PERFORMANCE_STATS_SUCCESS,
                 payload: response.data
             });
+            // console.log("공연 통계", response.data);
             return response.data;
         } else {
             dispatch({
@@ -114,7 +114,6 @@ export const loadPerformanceStats = () => async dispatch => {
 export const loadMovieStats = () => async dispatch => {
     return requestWithRetry(async () => {
         const token = await AsyncStorage.getItem('accessToken');
-        console.log("영화 통계 Token:", token)
         const response = await axios.get(
             `${API_URL}/api/v1/statistics/getMovieStatistics`,
             {
@@ -129,6 +128,7 @@ export const loadMovieStats = () => async dispatch => {
                 type: LOAD_MOVIE_STATS_SUCCESS,
                 payload: response.data
             });
+            // console.log("영화 통계", response.data);
             return response.data;
         } else {
             dispatch({

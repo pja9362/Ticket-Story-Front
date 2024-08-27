@@ -2,14 +2,16 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { CustomText } from '../CustomText';
 
-const Total = ({dummyData}) => {
+const Total = ({data}) => {
 
   const getFilledBarStyle = (score) => ({
     height: '100%', 
     width: `${score}%`, 
     backgroundColor: '#5D70F9', 
     borderTopLeftRadius: 5,
-    borderBottomLeftRadius: 5
+    borderBottomLeftRadius: 5,
+    borderTopRightRadius: score == 100 ? 5 : 0,
+    borderBottomRightRadius: score == 100 ? 5 : 0,
   });
 
   return (
@@ -21,30 +23,30 @@ const Total = ({dummyData}) => {
                 <View style={styles.barRow}>
                 <CustomText style={{ ...styles.categoryText, width: 50, marginRight: 20, textAlign: 'right' }} fontWeight="bold">전체</CustomText>
                 <View style={styles.bar}>
-                    <View style={getFilledBarStyle(dummyData.totalStats.averageScore)} />
+                    <View style={getFilledBarStyle(data.totalAverageScore)} />
                 </View>
-                <CustomText style={styles.scoreText} fontWeight="bold">{dummyData.totalStats.viewCount != 0 ? dummyData.totalStats.averageScore : ""}</CustomText>
+                <CustomText style={styles.scoreText} fontWeight="bold">{data.totalViewCount != 0 ? data.totalAverageScore : ""}</CustomText>
                 </View>
                 <View style={styles.barRow}>
                 <CustomText style={{ ...styles.categoryText, width: 50, marginRight: 20, textAlign: 'right' }} fontWeight="bold">영화</CustomText>
                 <View style={styles.bar}>
-                    <View style={getFilledBarStyle(dummyData.movieStats.averageScore)} />
+                    <View style={getFilledBarStyle(data.movieAverageScore)} />
                 </View>
-                <CustomText style={styles.scoreText} fontWeight="bold">{dummyData.movieStats.viewCount != 0 ? dummyData.movieStats.averageScore : ""}</CustomText>
+                <CustomText style={styles.scoreText} fontWeight="bold">{data.movieViewCount != 0 ? data.movieAverageScore : ""}</CustomText>
                 </View>
                 <View style={styles.barRow}>
                 <CustomText style={{ ...styles.categoryText, width: 50, marginRight: 20, textAlign: 'right' }} fontWeight="bold">공연</CustomText>
                 <View style={styles.bar}>
-                    <View style={getFilledBarStyle(dummyData.performanceStats.averageScore)} />
+                    <View style={getFilledBarStyle(data.performanceAverageScore)} />
                 </View>
-                <CustomText style={styles.scoreText} fontWeight="bold">{dummyData.performanceStats.viewCount != 0 ? dummyData.performanceStats.averageScore : ""}</CustomText>
+                <CustomText style={styles.scoreText} fontWeight="bold">{data.performanceViewCount != 0 ? data.performanceAverageScore : ""}</CustomText>
                 </View>
                 <View style={styles.barRow}>
                 <CustomText style={{ ...styles.categoryText, width: 50, marginRight: 20, textAlign: 'right' }} fontWeight="bold">스포츠</CustomText>
                 <View style={styles.bar}>
-                    <View style={getFilledBarStyle(dummyData.sportsStats.averageScore)} />
+                    <View style={getFilledBarStyle(data.sportsAverageScore)} />
                 </View>
-                <CustomText style={styles.scoreText} fontWeight="bold">{dummyData.sportsStats.viewCount != 0 ? dummyData.sportsStats.averageScore : ""}</CustomText>
+                <CustomText style={styles.scoreText} fontWeight="bold">{data.sportsViewCount != 0 ? data.sportsAverageScore : ""}</CustomText>
                 </View>
             </View>
           </View>
@@ -53,12 +55,10 @@ const Total = ({dummyData}) => {
           <View>
             <CustomText style={{ ...styles.mainText, marginTop: 20}} fontWeight="bold">전체 방문한 문화 공간</CustomText>
             <View style={styles.locationContainer}>
-                <CustomText style={styles.locationText} fontWeight="bold">영화관 <CustomText style={{ color: '#5D70F9', fontSize: 22 }} fontWeight="bold"> {dummyData.locationCountStats.movieLocationCount} </CustomText>곳</CustomText>
-                <CustomText style={styles.locationText} fontWeight="bold">공연장 <CustomText style={{ color: '#5D70F9', fontSize: 22 }} fontWeight="bold"> {dummyData.locationCountStats.performanceLocationCount} </CustomText>곳</CustomText>
-                <CustomText style={styles.locationText} fontWeight="bold">경기장 <CustomText style={{ color: '#5D70F9', fontSize: 22 }} fontWeight="bold"> {dummyData.locationCountStats.sportsLocationCount} </CustomText>곳</CustomText>
+                <CustomText style={styles.locationText} fontWeight="bold">영화관 <CustomText style={{ color: '#5D70F9', fontSize: 22 }} fontWeight="bold"> {data.locationTypeCount.movieLocationCount} </CustomText>곳</CustomText>
+                <CustomText style={styles.locationText} fontWeight="bold">공연장 <CustomText style={{ color: '#5D70F9', fontSize: 22 }} fontWeight="bold"> {data.locationTypeCount.performanceLocationCount} </CustomText>곳</CustomText>
+                <CustomText style={styles.locationText} fontWeight="bold">경기장 <CustomText style={{ color: '#5D70F9', fontSize: 22 }} fontWeight="bold"> {data.locationTypeCount.sportsLocationCount} </CustomText>곳</CustomText>
             </View>
-
-            {/* locationCount  분류, 장소명, 방문횟수 */}
             <View>
                 <View style={styles.tableHeader}>
                 <CustomText style={styles.columnHeader} fontWeight="bold">분류</CustomText>
@@ -66,7 +66,7 @@ const Total = ({dummyData}) => {
                 <CustomText style={styles.columnHeader} fontWeight="bold">방문횟수</CustomText>
                 </View>
 
-                {dummyData.locationListStats.slice(0, 10).map((location, index) => (
+                {data.locationCount && data.locationCount.slice(0, 10).map((location, index) => (
                 <View key={index} style={styles.tableRow}>
                     <CustomText style={styles.tableCell} fontWeight="medium">{location.locationType}</CustomText>
                     <CustomText style={styles.tableCell} fontWeight="medium">{location.locationName}</CustomText>

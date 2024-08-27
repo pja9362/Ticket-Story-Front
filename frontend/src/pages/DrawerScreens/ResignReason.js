@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, Image, ScrollView, Modal } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, ScrollView, Modal } from 'react-native';
 import {CustomText} from '../../components/CustomText';
 import Header from '../../components/Header';
 import { deleteAccount } from '../../actions/auth/auth';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const ResignReason = ({route}) => {
     const navigation = useNavigation();
 
@@ -18,27 +19,26 @@ const ResignReason = ({route}) => {
             const userType = await AsyncStorage.getItem('userType');
             console.log('userType', userType);
 
-            if (userType == 'KAKAO') {
-                console.log('카카오 탈퇴');
-            } else if (userType == 'APPLE') {
-                console.log('애플 탈퇴');
+            if (userType == 'KAKAO' || userType == 'APPLE') {
+                console.log('소셜 탈퇴');
+                navigation.navigate('SocialLogin', {socialType: userType, reasonNumber: reasonNumber});
             } else {
                 console.log('일반 탈퇴');
-                const deletedAccount = await deleteAccount(reasonNumber, route.params.token);
-
-                console.log('WHYY????', deletedAccount)
+                const deletedAccount = await deleteAccount(reasonNumber);
     
                 if (deletedAccount) {
+                    AsyncStorage.removeItem('accessToken');
+                    AsyncStorage.removeItem('refreshToken');
+
                     setModalVisible(false);
                     navigation.navigate('Init');
                 } 
             }
 
         } catch (error){
-            console.error('에러가 어떻게 나오는데?', error);
-            console.error('에러가 어떻게 나오는데?2', error.response.data);
             alert('나중에 다시 시도해주세요.');
             setModalVisible(false);
+            console.error('회원 탈퇴 실패', error);
         }
     }
 

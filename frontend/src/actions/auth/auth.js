@@ -8,7 +8,6 @@ import {
 import {
   UPDATE_TICKET_SUCCESS
 } from './../ticket/types';
-import { useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
@@ -25,6 +24,8 @@ export const refreshTokens = async () => {
     );
     if (response.data.accessToken) {
       console.log('TOKEN 재발급 성공');
+      console.log('새로운 accessToken:', response.data.accessToken);
+      console.log('새로운 refreshToken:', response.data.refreshToken);
 
       await AsyncStorage.setItem('accessToken', response.data.accessToken);
       await AsyncStorage.setItem('refreshToken', response.data.refreshToken);
@@ -49,14 +50,14 @@ export const requestWithRetry = async (callback) => {
       console.log("토큰 만료 403 에러 발생, refresh token 요청해야 함")
       const newTokens = await refreshTokens();
       console.log("새 토큰 요청 성공 ", newTokens)
+
       const newAccess = await AsyncStorage.getItem('accessToken')
       const newRefresh = await AsyncStorage.getItem('refreshToken')
+
+      console.log("새로운 accessToken: ", newAccess)
+      console.log("새로운 refreshToken: ", newRefresh)
+
       if (newTokens) {
-
-        console.log("새 토큰 활용 콜백함수 실행")
-        console.log("새 액세스 토큰: ", newAccess)
-        console.log("새 리프레시 토큰: ", newRefresh)
-
         try {
           const retryResponse = await callback();
           console.log(retryResponse);
@@ -195,6 +196,41 @@ export const handleOAuthAppleLogin = async () => {
   }
 }
 
+export const handleOAuthKaKaoQuit = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/api/v1/auth/oauth/kakao/url`);
+
+    const originalUrl = response.data;
+    const modifiedUrl = originalUrl.replace(
+      '/api/v1/auth/oauth/kakao',
+      '/api/v1/auth/oauth/kakao/unlink'
+    );
+
+    return modifiedUrl;
+
+  } catch (error) {
+    console.error('Kakao Quit error:', error);
+    throw error;
+  }
+}
+
+export const handleOAuthAppleQuit = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/api/v1/auth/oauth/apple/url`);
+
+    const originalUrl = response.data;
+    const modifiedUrl = originalUrl.replace(
+      '/api/v1/auth/oauth/apple',
+      '/api/v1/auth/oauth/apple/unlink'
+    );
+
+    return modifiedUrl;
+  } catch (error) {
+    console.error('Apple Quit error:', error);
+    throw error;
+  }
+}
+
 export const saveTokens = (jsonData, callback) => async dispatch => {
   try {
     if(jsonData.accessToken !== null) {
@@ -214,30 +250,6 @@ export const saveTokens = (jsonData, callback) => async dispatch => {
   }
 
 }
-
-// export const saveTokens = (url, callback) => async dispatch => {
-//   console.log("SAVE TOKEN 함수 실행", url);
-//   // try {
-//   //   const response = await axios.get(url);
-//   //   console.log('SAVE TOKEN 함수 실행', url);
-//   //   console.log('SAVE TOKEN 함수 실행 Token response:', response.data);
-
-//   //   if (response.data.accessToken !== null) {
-//   //     await AsyncStorage.setItem('accessToken', response.data.accessToken);
-//   //     await AsyncStorage.setItem('refreshToken', response.data.refreshToken);
-
-//   //     dispatch({ type: LOGIN_SUCCESS, payload: response.data });
-//   //     dispatch({ type: UPDATE_TICKET_SUCCESS });
-
-//   //     if (callback) callback([true, response.data]);
-//   //   } else {
-//   //     if (callback) callback([false, response.data]);
-//   //   }
-//   // } catch (error) {
-//   //   console.error('Error storing tokens:', error);
-//   //   if (callback) callback([false, error]);
-//   // }
-// }
 
 export const sendPasswordResetEmail = async (email) => {
   const accessToken = await AsyncStorage.getItem('accessToken');
@@ -301,7 +313,9 @@ export const checkPassword = async password => {
   });
 };
 
-export const deleteAccount = async (survey, token) => {
+export const deleteAccount = async (survey) => {
+  const token = await AsyncStorage.getItem('accessToken');
+
   return requestWithRetry(async () => {
     const response = await axios.post(
       `${API_URL}/api/v1/auth/quitTicketStory`,
@@ -309,6 +323,7 @@ export const deleteAccount = async (survey, token) => {
       { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json;charset=UTF-8', 'Authorization': `Bearer ${token}` } }
     );
     console.log('Delete Account response:', response.data);
+
     return response.data;
   });
 };

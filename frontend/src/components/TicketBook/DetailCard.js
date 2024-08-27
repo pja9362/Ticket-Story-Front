@@ -50,10 +50,33 @@ const DetailCard = ({ ticket, ticketId }) => {
     //     navigation.navigate('ShowImageView', {images: ticket.reviewImages, index: idx, ticket: ticket});
     // }
 
-    const handlePaperPress = () => {
-        navigation.navigate('ShowPaperView');
-        console.log('ddddd', ticket, 'eeeee', ticketId);
-    }
+    // const handlePaperPress = () => {
+    //     navigation.navigate('ShowPaperView');
+
+    //     console.log('ddddd', ticket, 'eeeee', ticketId);
+    // }
+
+    const handlePaperPress = async() => {
+        const editReview = {
+          ticketId : ticketId
+        }
+        try {
+          const response = await getTicketDetails(editReview);
+          if (response !== null) {
+            console.log("성공", response);
+            
+            //navigate 하면서 response 값들 보내야함
+            navigation.navigate('ShowPaperView', {
+              ticketData : response,
+             });
+    
+          } else {
+            alert('Fail');
+          }
+        } catch (error) {
+          console.error('Error Editing ticket review1:', error.response);
+        }
+      }
 
     const handleImagePress = () => {
         if (ticket.reviewImages !== null) {

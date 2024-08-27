@@ -2,24 +2,26 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { CustomText } from '../CustomText';
 
-const Sports = ({ dummyData }) => {
+const Sports = ({ data }) => {
 
     const getFilledBarStyle = (score) => ({
         height: '100%', 
         width: `${score}%`, 
         backgroundColor: '#5D70F9', 
         borderTopLeftRadius: 5,
-        borderBottomLeftRadius: 5
+        borderBottomLeftRadius: 5,
+        borderTopRightRadius: score == 100 ? 5 : 0,
+        borderBottomRightRadius: score == 100 ? 5 : 0,
     });
 
     const convertTabToViewCount = (tab) => {
         switch (tab) {
             case '야구':
-                return dummyData.baseballViewCount;
+                return data.baseballViewCount;
             case '축구':
-                return dummyData.soccerViewCount;
+                return data.soccerViewCount;
             case '기타':
-                return dummyData.otherViewCount;
+                return data.otherViewCount;
             default:
                 return 0;
         }
@@ -43,7 +45,7 @@ const Sports = ({ dummyData }) => {
             {/* 평균 콘텐츠 점수 */}
             <View style={{ paddingBottom: 20, borderBottomColor: '#0000001A', borderBottomWidth: 1 }}>
                 <CustomText style={{ ...styles.mainText, marginVertical: 20 }} fontWeight="bold">경기 평균 콘텐츠 점수</CustomText>
-                {[dummyData.baseballAverageScore, dummyData.soccerAverageScore, dummyData.otherAverageScore].map((score, index) => (
+                {[data.baseballAverageScore, data.soccerAverageScore, data.otherAverageScore].map((score, index) => (
                     <View key={index} style={styles.barRow}>
                         <CustomText style={{ ...styles.categoryText, width: 60, marginRight: 12, textAlign: 'right' }} fontWeight="bold">{['야구', '축구', '기타'][index]}</CustomText>
                         <View style={styles.bar}>
@@ -59,7 +61,7 @@ const Sports = ({ dummyData }) => {
             <View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' }}>
                   <CustomText style={{ ...styles.mainText, marginTop: 20}} fontWeight="bold">방문한 경기장</CustomText>
-                  <CustomText style={styles.locationText} fontWeight="bold">총<CustomText style={{ color: '#5D70F9', fontSize: 22 }} fontWeight="bold"> {dummyData.sportsLocationCount} </CustomText>곳</CustomText>
+                  <CustomText style={styles.locationText} fontWeight="bold">총<CustomText style={{ color: '#5D70F9', fontSize: 22 }} fontWeight="bold"> {data.sportsLocationCount} </CustomText>곳</CustomText>
                 </View>
 
                 {/* locationCount  분류, 장소명, 방문횟수 */}
@@ -69,7 +71,7 @@ const Sports = ({ dummyData }) => {
                       <CustomText style={styles.columnHeader} fontWeight="bold">장소명</CustomText>
                       <CustomText style={styles.columnHeader} fontWeight="bold">방문횟수</CustomText>
                     </View>
-                    {dummyData.locationCount.map((location, index) => (
+                    {data.locationCount && data.locationCount.map((location, index) => (
                         <View key={index} style={styles.tableRow}>
                           <CustomText style={styles.tableCell} fontWeight="medium">{location.locationType}</CustomText>
                           <CustomText style={styles.tableCell} fontWeight="medium">{location.locationName}</CustomText>

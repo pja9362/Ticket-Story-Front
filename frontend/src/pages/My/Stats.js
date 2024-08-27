@@ -101,6 +101,7 @@ const Stats = () => {
   ]);
 
   const onOrderChange = (value) => {
+    setDefaultOrder(value);
     console.log(value);
   };
   

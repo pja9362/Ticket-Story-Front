@@ -64,6 +64,7 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [initialRoute, setInitialRoute] = useState(null);
 
+
   const checkLoginStatus = async () => {
     console.log('Checking login status...');
     try {

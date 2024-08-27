@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { SafeAreaView, Dimensions, View, TouchableOpacity, Text, StyleSheet, Image, ScrollView, ImageBackground } from 'react-native';
+import { SafeAreaView, Dimensions, View, TouchableOpacity, Text, StyleSheet, Image, ScrollView, ImageBackground, Platform } from 'react-native';
 import {CustomText} from '../components/CustomText';
 import Header from '../components/Header';
 import paperTicket from '../images/paper_ticket.png';
@@ -48,7 +48,10 @@ const ShowPaper = ({route}) => {
           <View style={{paddingHorizontal: 20, backgroundColor: '#fff'}}>
             <Header title="관람 세부 정보 보기" />
           </View> 
-          <ScrollView style={styles.cardContainer}>
+          <ScrollView 
+            style={styles.cardContainer}
+            contentContainerStyle={{ flexGrow: 1, paddingBottom: Platform.OS ==='android' ? verticalScale(20) : null}}
+          >
             <View style={styles.paperContainer}>
               <ImageBackground source={paperTicket} style={styles.image}>
                 <View style={styles.titleContainer}>
@@ -112,7 +115,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D9D9D9',
     borderRadius: 5,
     marginLeft: scale(4),
-    marginBottom: scale(15),
+    marginBottom: scale(30),
     // flex: 1,
   },
   image: {
@@ -123,6 +126,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: scale(24),
     color: '#525252',
+    right: scale(2),
+    // textAlign: 'center',
+    flexWrap: 'wrap',
+    // marginVertical: verticalScale(5), // Adjust vertical margin to handle wrapping
   },
   info: {
     fontSize: scale(16),
@@ -131,13 +138,21 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     marginLeft: scale(30),
-    marginVertical: verticalScale(110),
+    marginVertical: Platform.OS === 'ios' ? verticalScale(100) : verticalScale(100),
     height: imageHeight*0.3,
-    // backgroundColor:'red',
+    flex: 1,
+    justifyContent: 'center', // Center vertically
   },
   infoContainer: {
     marginLeft: scale(30),
-    marginVertical: verticalScale(-55),
+    top: Platform.OS === 'ios' ? verticalScale(15) : verticalScale(23),
+    marginVertical: Platform.OS === 'ios' ? verticalScale(-60) : verticalScale(-80),
+    flex: 3.6,
+  },
+  rateContainer: {
+    marginHorizontal: scale(30),
+    marginVertical: verticalScale(90),
+    flex: 0.75,
   },
   about:{
     color: '#525252',
@@ -149,22 +164,20 @@ const styles = StyleSheet.create({
     fontSize: scale(16),
     marginBottom: scale(20),
   },
-  rateContainer: {
-    marginHorizontal: scale(30),
-    marginVertical: verticalScale(100),
-  },
   barRow: {
     flexDirection: 'row',
     alignItems: 'center',
     // marginBottom: verticalScale(5),
   },
   scoreText: {
+    position: 'absolute',
     color: '#525252',
     fontSize: scale(24),
     marginLeft: scale(14),
     width: scale(40),
     // lineHeight: verticalScale(9),
-    paddingBottom: verticalScale(14),
+    right: scale(5),
+    paddingBottom: verticalScale(30),
     // marginBottom: verticalScale(14),
   },
 });

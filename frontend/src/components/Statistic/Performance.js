@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { CustomText } from '../CustomText';
 
 const Performance = ({ data }) => {
-
+  
     const getFilledBarStyle = (score) => ({
       height: '100%', 
       width: `${score}%`, 

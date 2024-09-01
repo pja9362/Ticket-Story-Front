@@ -7,6 +7,7 @@ import { getTicketDetail } from '../../actions/ticket/ticket';
 import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
 import { State } from 'react-native-gesture-handler';
 import {useFocusEffect} from '@react-navigation/native';
+import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
 
 const TicketDetail = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -117,7 +118,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#eeeeee',
   },
   cardContainer: {
-    padding: 17,
+    paddingLeft: scale(17),
+    paddingTop: scale(10),
+    // padding: 17,
     flex: 1,
   },
 });

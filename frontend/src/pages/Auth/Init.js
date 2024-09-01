@@ -58,7 +58,7 @@ const Init = ({navigation}) => {
     if (navState.url.startsWith(`${API_URL}/api/v1/auth/oauth/kakao?code=`)) {
       setWebViewOpacity(0);
       console.log("Kakao Login Success!");
-    } else if (navState.url.startsWith(`${API_URL}/api/v1/auth/oauth/apple?code=`)) {
+    } else if (navState.url == `${API_URL}/api/v1/auth/oauth/apple`) {
       setWebViewOpacity(0);
       console.log("Apple Login Success!");
     } else {
@@ -75,10 +75,13 @@ const Init = ({navigation}) => {
     const jsonString = data.replace(/<\/?[^>]+(>|$)/g, '') || '';
     const jsonData = JSON.parse(jsonString);
 
+    console.log('WEB VIEW, LOGIN SUCCESS! :', jsonData);
+
     // Save tokens
     const { accessToken, refreshToken } = jsonData;
     
     if (accessToken && refreshToken) {      
+      console.log('Tokens found');
       dispatch(saveTokens(jsonData, ([result, response]) => {
         console.log('saveToken:', result, response);
         if(result) {
@@ -131,7 +134,7 @@ const Init = ({navigation}) => {
               injectedJavaScript={`
                 if (window.location.href.startsWith('${API_URL}/api/v1/auth/oauth/kakao?code=')) {
                   window.ReactNativeWebView.postMessage(document.body.innerHTML);
-                } else if (window.location.href.startsWith('${API_URL}/api/v1/auth/oauth/apple?code=')) {
+                } else if (window.location.href == '${API_URL}/api/v1/auth/oauth/apple') {
                   window.ReactNativeWebView.postMessage(document.body.innerHTML);
                 }
                 true;

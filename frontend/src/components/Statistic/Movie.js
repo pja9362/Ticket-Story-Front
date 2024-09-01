@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { CustomText } from '../CustomText';
 
 const Movie = ({ data }) => {
+    console.log("MOVIE COMPONENT DATA:", data);
 
     const getFilledBarStyle = (score) => ({
       height: '100%', 

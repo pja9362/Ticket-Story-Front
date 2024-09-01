@@ -13,17 +13,22 @@ import axios from 'axios';
 import { API_URL } from '@env';
 import { requestWithRetry } from '../auth/auth';
 
-export const loadMyStatistics = () => async dispatch => {
+export const loadMyStatistics = (year) => async dispatch => {
     return requestWithRetry(async () => {
         const token = await AsyncStorage.getItem('accessToken');
-        const response = await axios.get(
-            `${API_URL}/api/v1/statistics/getBasicStatistics`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+        
+        let url = `${API_URL}/api/v1/statistics/getBasicStatistics`;
+        
+        if (year !== 'everything') {
+            url += `?year=${year}`;
+        }
+
+        const response = await axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${token}`
             }
-        );
+        });
+
         if (response.status == 200) {
             dispatch({
                 type: LOAD_MY_STATISTICS_SUCCESS,
@@ -45,17 +50,21 @@ export const loadMyStatistics = () => async dispatch => {
     });
 };
 
-export const loadSportsStats = () => async dispatch => {
+export const loadSportsStats = (year) => async dispatch => {
     return requestWithRetry(async () => {
         const token = await AsyncStorage.getItem('accessToken');
-        const response = await axios.get(
-            `${API_URL}/api/v1/statistics/getSportsStatistics`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+
+        let url = `${API_URL}/api/v1/statistics/getSportsStatistics`;
+        
+        if (year !== 'everything') {
+            url += `?year=${year}`;
+        }
+
+        const response = await axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${token}`
             }
-        );
+        });
 
         if (response.status == 200) {
             dispatch({
@@ -78,17 +87,21 @@ export const loadSportsStats = () => async dispatch => {
     });
 }
 
-export const loadPerformanceStats = () => async dispatch => {
+export const loadPerformanceStats = (year) => async dispatch => {
     return requestWithRetry(async () => {
         const token = await AsyncStorage.getItem('accessToken');
-        const response = await axios.get(
-            `${API_URL}/api/v1/statistics/getPerformanceStatistics`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+
+        let url = `${API_URL}/api/v1/statistics/getPerformanceStatistics`;
+        
+        if (year !== 'everything') {
+            url += `?year=${year}`;
+        }
+
+        const response = await axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${token}`
             }
-        );
+        });
 
         if (response.status == 200) {
             dispatch({
@@ -111,17 +124,21 @@ export const loadPerformanceStats = () => async dispatch => {
     });
 }
 
-export const loadMovieStats = () => async dispatch => {
+export const loadMovieStats = (year) => async dispatch => {
     return requestWithRetry(async () => {
         const token = await AsyncStorage.getItem('accessToken');
-        const response = await axios.get(
-            `${API_URL}/api/v1/statistics/getMovieStatistics`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+        
+        let url = `${API_URL}/api/v1/statistics/getMovieStatistics`;
+        
+        if (year !== 'everything') {
+            url += `?year=${year}`;
+        }
+
+        const response = await axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${token}`
             }
-        );
+        });
 
         if (response.status == 200) {
             dispatch({

@@ -187,6 +187,7 @@ export const handleOAuthKaKaoLogin = async () => {
 }
 
 export const handleOAuthAppleLogin = async () => {
+  console.log("APPLE LOGIN");
   try {
     const response = await axios.get(`${API_URL}/api/v1/auth/oauth/apple/url`);
     return response.data;

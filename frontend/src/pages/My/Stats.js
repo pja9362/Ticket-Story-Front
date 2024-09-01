@@ -155,12 +155,13 @@ const Stats = () => {
         !isLoaded ? <LoadingScreen iconId={loadingIcon} showText={false} /> :
           <ScrollView>
             <View
+              style={{backgroundColor: '#fff'}}
               collapsable={false}
               ref={viewRef}
             >
               <View style={styles.mainContent}>
                 {/* 분야별 관람 횟수 */}
-                <View style={{ paddingBottom: 20, borderBottomColor: '#0000001A', borderBottomWidth: 1 }}>
+                <View style={{ paddingTop: 10, paddingBottom: 20, borderBottomColor: '#0000001A', borderBottomWidth: 1 }}>
                   <CustomText style={{ ...styles.mainText, marginBottom: 20 }} fontWeight="bold">분야별 관람 횟수</CustomText>
                   <View style={styles.tabsContainer}>
                     {/* 4가지 탭으로 화면 구성 */}

@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { CustomText } from '../../components/CustomText';
 
-const CategoryBtn = ({ title, onPress, isSelected, isDisabled }) => {
+const CategoryBtn = ({ title, onPress, isSelected, isDisabled, makeSmall }) => {
   return (
     <TouchableOpacity
       style={[
@@ -12,7 +12,10 @@ const CategoryBtn = ({ title, onPress, isSelected, isDisabled }) => {
       onPress={onPress}
       disabled={isDisabled}
     >
-      <CustomText style={styles.categoryText} fontWeight="bold">
+      <CustomText
+        style={[ styles.categoryText, { fontSize: makeSmall ? 13 : 16 } ]}
+        fontWeight="bold"
+      >
         {title}
       </CustomText>
     </TouchableOpacity>

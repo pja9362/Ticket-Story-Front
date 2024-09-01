@@ -23,7 +23,24 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   const locationLists = useSelector(state => state.enrollTicketSearch.locationLists);
 
   const { categoryInfo } = route.params;
-  const { category, categoryDetail } = categoryInfo;
+  // const { category, categoryDetail } = categoryInfo;
+  const { category } = categoryInfo;
+  const [categoryDetail, setCategoryDetail] = useState(categoryInfo.categoryDetail);
+
+  useEffect(() => {
+    let transformedCategoryDetail = '';
+    if (categoryDetail === '메가박스') {
+      transformedCategoryDetail = 'MEGABOX';
+    } else if (categoryDetail === '롯데시네마') {
+      transformedCategoryDetail = 'LOTTECINEMA';
+    } else if (categoryDetail === '독립영화관') {
+      transformedCategoryDetail = 'ETC';
+    } else {
+      transformedCategoryDetail = categoryDetail;
+    }
+    setCategoryDetail(transformedCategoryDetail);
+  }, [categoryDetail]);
+
 
   const [modalVisible, setModalVisible] = useState(false); 
 
@@ -40,19 +57,19 @@ const EnrollInfoByHand = ({ route, navigation }) => {
 
   const scrollViewRef = useRef(null);
 
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow);
+  // useEffect(() => {
+  //   const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow);
 
-    return () => {
-      keyboardDidShowListener.remove();
-    };
-  }, []);
+  //   return () => {
+  //     keyboardDidShowListener.remove();
+  //   };
+  // }, []);
 
-  const handleKeyboardDidShow = () => {
-    if (scrollViewRef.current) {
-      scrollViewRef.current.scrollToEnd({ animated: true });
-    }
-  };
+  // const handleKeyboardDidShow = () => {
+  //   if (scrollViewRef.current) {
+  //     scrollViewRef.current.scrollToEnd({ animated: true });
+  //   }
+  // };
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
@@ -128,8 +145,9 @@ const EnrollInfoByHand = ({ route, navigation }) => {
 
   useEffect(() => {
     if (location.trim() !== '' && isLocationSelected === false) {
+      console.log(categoryDetail);
       const timeoutId = setTimeout(() => {
-        dispatch(searchLocation(location));
+        dispatch(searchLocation(location, category, categoryDetail));
         setShowLocationDropdown(true);
       }, 300);
       return () => clearTimeout(timeoutId);
@@ -178,7 +196,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
       registerBy: 'BASIC',
       category,
       // categoryDetail: categoryDetail === '메가박스' || categoryDetail === 'CGV' || categoryDetail === '롯데시네마' ? 'MOVIE' : categoryDetail,
-      categoryDetail : categoryDetail === '메가박스' ? 'MEGABOX' : categoryDetail === '롯데시네마' ? 'LOTTECINEMA' : categoryDetail,
+      categoryDetail : categoryDetail === '메가박스' ? 'MEGABOX' : categoryDetail === '롯데시네마' ? 'LOTTECINEMA' : categoryDetail === '독립영화관' ? 'ETC' : categoryDetail,
       platform: '',
       ticketImg: '',
       contentsDetails: {
@@ -219,7 +237,17 @@ const EnrollInfoByHand = ({ route, navigation }) => {
     }
   };
 
-
+  const parseLocation = (address) => {
+    const addressList = address && address.split(' ');
+    if (addressList == null) {
+      return '';
+    } else if (addressList.length == 1) {
+      return addressList[0];
+    } else {
+      return address.split(' ').slice(0, 2).join(' ')
+    }
+  }
+    
 
   const content = (
     <View style={{ flex: 1 }}>
@@ -310,7 +338,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                           <Image style={styles.checkIcon} source={checkIcon} />
                     }
                     {/* <CustomTextInput style={{...styles.inputBox, flex: 1}} value={title} onChangeText={(text) => {setTitle(text); setIsContentSelected(false); setContentsId(null);}} placeholder='콘텐츠 검색' placeholderTextColor="#B6B6B6"/> */}
-                    <CustomTextInput style={{ ...styles.inputBox, flex: 1, paddingRight: 30 }} value={title} onChangeText={handleTitleChange} placeholder='콘텐츠 제목' placeholderTextColor="#B6B6B6" />
+                    <CustomTextInput style={{ ...styles.inputBox, flex: 1, paddingRight: 30 }} value={title} onChangeText={handleTitleChange} placeholder={getCategoryPlaceholder(category, 'title')} placeholderTextColor="#B6B6B6" />
                   </View>
                   {/* Content Lists Dropdown */}
                   {
@@ -376,14 +404,14 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                       { locationId !== null &&
                             <Image style={styles.checkIcon} source={checkIcon} />
                       }
-                      {category === 'MOVIE' ? (
+                      {/* {category === 'MOVIE' ? (
                         <CustomTextInput
                           style={[styles.inputBox, { color: '#525252', textAlign: 'center', paddingHorizontal: 15, marginRight: 15}]}
                           value={categoryDetail}
                           editable={false}
                           fontWeight="bold"
                         />
-                      ) : null}
+                      ) : null} */}
                       <CustomTextInput
                         style={[styles.inputBox, { flex: 1, paddingRight: 30 }]}
                         value={location}
@@ -411,7 +439,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
                                 >
                                   <View style={styles.locationDetails}>
                                     <CustomText style={{ flex: 1, color: '#525252' }} fontWeight="bold">{location.name}</CustomText>
-                                    <CustomText style={styles.subText}>{location.address}</CustomText>
+                                    <CustomText style={styles.subText}>{parseLocation(location.address) || ''}</CustomText>
                                   </View>
                                 </TouchableOpacity>
                               </View>

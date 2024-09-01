@@ -53,13 +53,6 @@ const Stats = () => {
   const performanceStats = useSelector((state) => state.statistics.performanceStats);
   const movieStats = useSelector((state) => state.statistics.movieStats);
 
-  useEffect(() => {
-    dispatch(loadMyStatistics(defaultOrder));
-    dispatch(loadMovieStats(defaultOrder));
-    dispatch(loadPerformanceStats(defaultOrder));
-    dispatch(loadSportsStats(defaultOrder))
-  }, [defaultOrder]);
-  
   const handleShareBtnPress = () => {
     handleShareBtn(viewRef);
   };
@@ -108,6 +101,25 @@ const Stats = () => {
   
   const isLoaded = movieStats && sportsStats && performanceStats && basicStats;
 
+  useEffect(() => {
+    if (!isLoaded) {
+      dispatch(loadMyStatistics(defaultOrder));
+      dispatch(loadMovieStats(defaultOrder));
+      dispatch(loadPerformanceStats(defaultOrder));
+      dispatch(loadSportsStats(defaultOrder));
+    }
+  }, []); 
+  
+  useEffect(() => {
+    if (defaultOrder) {
+      dispatch(loadMyStatistics(defaultOrder));
+      dispatch(loadMovieStats(defaultOrder));
+      dispatch(loadPerformanceStats(defaultOrder));
+      dispatch(loadSportsStats(defaultOrder));
+    }
+  }, [defaultOrder]); 
+
+  
   const [loadingIcon, setLoadingIcon] = useState(1);
 
   useEffect(() => {
@@ -121,34 +133,36 @@ const Stats = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 10, paddingHorizontal: 12, zIndex:1 }}>
-        {/* <View style={{ flex: 1 }} /> */}
 
-        <DropDownPicker
-          style={{width: 85, minHeight: 10, borderColor: '#525252'}}
-          containerStyle={{marginLeft:5, width: 85, minHeight: 30}}
-          dropDownContainerStyle={{borderColor: '#525252'}}
-          labelStyle={{fontFamily: 'Pretendard-Medium', fontSize: 12}}
-          textStyle={{fontFamily: 'Pretendard-Regular', fontSize: 12}}
-          listItemContainerStyle={{height:33, borderBottomWidth: 1, borderBottomColor: '#EEEEEE', borderBottomStartRadius : 10, borderBottomEndRadius : 10}}
-          selectedItemLabelStyle={{fontFamily: 'Pretendard-Medium'}}
-          showTickIcon={false}
-          open={openOrder}
-          value={defaultOrder}
-          items={orders}
-          setOpen={setOpenOrder}
-          setValue={(callback) => {
-            const value = callback(defaultOrder);
-            onOrderChange(value);
-          }}
-          setItems={setOrders}
-        />
-
-        {/* <CustomText style={{ color: '#525252', fontSize: 17, flex: 1 }} fontWeight="bold"> */}
-        <CustomText style={{ color: '#525252', marginLeft: 61, fontSize: 17, flex: 1 }} fontWeight="bold">나의 통계</CustomText>
-
-        <TouchableOpacity style={{ width: 64, backgroundColor: '#EEEEEE', borderRadius: 50 }} onPress={handleShareBtnPress}>
-          <CustomText style={{ color: '#525252', padding: 7 }} fontWeight="bold">공유하기</CustomText>
-        </TouchableOpacity>
+        <View style={{flex: 1}}>
+          <DropDownPicker
+            style={{width: 85, minHeight: 10, borderColor: '#525252'}}
+            containerStyle={{marginLeft:5, width: 85, minHeight: 30}}
+            dropDownContainerStyle={{borderColor: '#525252'}}
+            labelStyle={{fontFamily: 'Pretendard-Medium', fontSize: 12}}
+            textStyle={{fontFamily: 'Pretendard-Regular', fontSize: 12}}
+            listItemContainerStyle={{height:33, borderBottomWidth: 1, borderBottomColor: '#EEEEEE', borderBottomStartRadius : 10, borderBottomEndRadius : 10}}
+            selectedItemLabelStyle={{fontFamily: 'Pretendard-Medium'}}
+            showTickIcon={false}
+            open={openOrder}
+            value={defaultOrder}
+            items={orders}
+            setOpen={setOpenOrder}
+            setValue={(callback) => {
+              const value = callback(defaultOrder);
+              onOrderChange(value);
+            }}
+            setItems={setOrders}
+          />
+        </View>
+        <View style={{flex: 1}}>
+          <CustomText style={{ color: '#525252', fontSize: 17, textAlign: 'center' }} fontWeight="bold">나의 통계</CustomText>
+        </View>
+        <View style={{flex: 1, alignItems: 'flex-end', paddingRight: 5}}>
+          <TouchableOpacity style={{width: 64, backgroundColor: '#EEEEEE', borderRadius: 50}} onPress={handleShareBtnPress}>
+            <CustomText style={{ color: '#525252', paddingVertical: 7, fontSize: 13, paddingHorizontal: 9 }} fontWeight="bold">공유하기</CustomText>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {

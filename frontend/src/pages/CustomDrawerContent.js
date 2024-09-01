@@ -1,7 +1,7 @@
 // import React from 'react';
 import React, {useState} from 'react';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
-import { View, TouchableOpacity, Text, StyleSheet, Image, Modal } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, Image, Modal, Alert } from 'react-native';
 import { useNavigation, CommonActions } from '@react-navigation/native';
 import iconx from '../images/icon_x.png'
 import {CustomText} from '../components/CustomText';
@@ -14,7 +14,6 @@ import "core-js/stable/atob";
 const CustomDrawerContent = ( props ) => {
 
   const navigation = useNavigation();
-  const dispatch = useDispatch();
 
   const [modalVisible, setModalVisible] = useState(false); 
 
@@ -50,37 +49,67 @@ const CustomDrawerContent = ( props ) => {
   //   }
   // };
 
+  const handleQuit = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      console.log(accessToken);
 
-const handleQuit = async () => {
-  try {
-    const accessToken = await AsyncStorage.getItem('accessToken');
-    console.log(accessToken);
+      if (!accessToken) {
+        console.log("Access token not found");
+        return;
+      }
 
-    if (!accessToken) {
-      console.log("Access token not found");
-      return;
+      const decoded = jwtDecode(accessToken);
+
+      console.log(decoded);
+
+      if(decoded.OAUTH_TYPE != null) {
+        AsyncStorage.setItem('userType', decoded.OAUTH_TYPE);
+      }
+
+      if (decoded && (decoded.OAUTH_TYPE == 'KAKAO' || decoded.OAUTH_TYPE == 'APPLE')) {
+        console.log("소셜 로그인 유저")
+        navigation.navigate('ResignReason');
+      } else {
+        console.log("일반 로그인 유저")
+        navigation.navigate('ResignScreen');
+      }
+      // 여기에서 OAUTH_TYPE 확인 후 처리
+    } catch (error) {
+      console.error('JWT Decoding Error:', error);
     }
+  };
 
-    const decoded = jwtDecode(accessToken);
+  const handleChangePW = async () => {
+    try {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      console.log(accessToken);
 
-    console.log(decoded);
+      if (!accessToken) {
+        console.log("Access token not found");
+        return;
+      }
 
-    if(decoded.OAUTH_TYPE != null) {
-      AsyncStorage.setItem('userType', decoded.OAUTH_TYPE);
+      const decoded = jwtDecode(accessToken);
+
+      console.log(decoded);
+
+      if(decoded.OAUTH_TYPE != null) {
+        AsyncStorage.setItem('userType', decoded.OAUTH_TYPE);
+      }
+
+      if (decoded && (decoded.OAUTH_TYPE == 'KAKAO' || decoded.OAUTH_TYPE == 'APPLE')) {
+        console.log("소셜 로그인 유저")
+        Alert.alert('소셜 로그인 유저는 비밀번호 변경이 불가합니다.');
+      } else {
+        console.log("일반 로그인 유저")
+        navigation.navigate('ChangePassword');
+      }
+    } catch (error) {
+      console.error('JWT Decoding Error:', error);
     }
-
-    if (decoded && (decoded.OAUTH_TYPE == 'KAKAO' || decoded.OAUTH_TYPE == 'APPLE')) {
-      console.log("소셜 로그인 유저")
-      navigation.navigate('ResignReason');
-    } else {
-      console.log("일반 로그인 유저")
-      navigation.navigate('ResignScreen');
-    }
-    // 여기에서 OAUTH_TYPE 확인 후 처리
-  } catch (error) {
-    console.error('JWT Decoding Error:', error);
   }
-};
+
   
   return (
     <>
@@ -110,7 +139,7 @@ const handleQuit = async () => {
       </TouchableOpacity>
 
       <CustomText style={{marginLeft:20, fontSize : 18, marginTop: 25, color:"#525252"}} fontWeight="bold">계정 관리</CustomText>
-      <TouchableOpacity onPress={() => navigation.navigate('ChangePassword')} style={styles.menuItem}>
+      <TouchableOpacity onPress={handleChangePW} style={styles.menuItem}>
         <CustomText style={styles.menuText} fontWeight="medium">비밀번호 변경</CustomText>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.menuItem}>

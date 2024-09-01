@@ -110,11 +110,6 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   const [category, setCategory] = useState(initialCategory === '뮤지컬' || initialCategory === '연극' ? '공연' : initialCategory);
   const [categoryDetail, setCategoryDetail] = useState(initialCategory === '뮤지컬' || initialCategory === '연극' ? initialCategory : '');
 
-  useEffect(() => {
-    console.log('제발',category, categoryDetail);
-  }, []);
-
-
   const categories = ['영화', '공연', '스포츠'];
   const detailCategories = {
     공연: ['뮤지컬', '연극', '기타'],
@@ -205,7 +200,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   const handleLocationSearch = (location) => {
     if(locationId !== null) return;
     else {
-      dispatch(searchLocation(location, category, categoryDetail));
+      dispatch(searchLocation(location));
       setShowLocationDropdown(true);
     }
   }
@@ -261,17 +256,6 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
       alert('관람 장소는 20자 이내로 입력해주세요.');
     }
   };
-
-  const parseLocation = (address) => {
-    const addressList = address && address.split(' ');
-    if (addressList == null) {
-      return '';
-    } else if (addressList.length == 1) {
-      return addressList[0];
-    } else {
-      return address.split(' ').slice(0, 2).join(' ')
-    }
-  }
 
   const content = (
     <View style= {{ flex : 1 }}>
@@ -381,7 +365,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                   { contentsId !== null &&
                         <Image style={styles.checkIcon} source={checkIcon} />
                   }
-                  <CustomTextInput style={{...styles.inputBox, flex: 1, paddingRight: 30}} value={title} onChangeText={handleTitleChange} placeholder={getCategoryPlaceholder(category, 'title')} placeholderTextColor="#B6B6B6" />
+                  <CustomTextInput style={{...styles.inputBox, flex: 1, paddingRight: 30}} value={title} onChangeText={handleTitleChange} placeholder='콘텐츠 검색' placeholderTextColor="#B6B6B6" />
                 </View>
                 {/* Content Lists Dropdown */}
                 {
@@ -462,7 +446,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                             >
                               <View style={styles.locationDetails}>
                                 <CustomText style={{ flex: 1, color: '#525252' }} fontWeight="bold">{location.name}</CustomText>
-                                <CustomText style={styles.subText}>{parseLocation(location.address) || ''}</CustomText>
+                                <CustomText style={styles.subText}>{location.address}</CustomText>
                               </View>
                             </TouchableOpacity>
                           </View>

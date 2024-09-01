@@ -136,7 +136,12 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   useEffect(() => {
     if (title.trim() !== '' && isContentSelected === false) {
       const timeoutId = setTimeout(() => {
-        dispatch(searchContent(title, date, category, 'BASIC'));
+        // dispatch(searchContent(title, date, category, 'BASIC'));
+        if (category === 'PERFORMANCE') {
+          dispatch(searchContent(title, date, categoryDetail, 'BASIC'));
+        } else {
+          dispatch(searchContent(title, date, category, 'BASIC'));
+        }
         setShowContentDropdown(true);
       }, 300);
       return () => clearTimeout(timeoutId);

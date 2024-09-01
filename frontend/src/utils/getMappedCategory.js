@@ -1,7 +1,7 @@
 export const getMappedDetailCategory = (category, categoryDetail) => {
     switch (category) {
-      // case '영화':
-      //   return { category: 'MOVIE', categoryDetail: 'MOVIE' };
+      case '영화':
+        return { category: 'MOVIE', categoryDetail: 'MOVIE' };
       case '공연':
         switch (categoryDetail) {
           case '뮤지컬':

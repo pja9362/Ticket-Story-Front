@@ -8,6 +8,7 @@ import {
 import {
   UPDATE_TICKET_SUCCESS
 } from './../ticket/types';
+import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
@@ -148,7 +149,17 @@ export const signInRequest = (id, password, callback) => async dispatch => {
       if (callback) callback([false, response.data]);
     }
   }).catch(error => {
-    console.error('Error signing in:', error);
+    console.log('Error signing in:', error.response.data);
+
+    const errorData = error.response.data;
+    if (errorData && errorData.errorCode == 'E003') {
+      Alert.alert(
+        '소셜 로그인 계정',
+        '이 계정은 소셜 로그인으로 가입 된 계정입니다. 소셜 로그인을 이용해주세요.',
+        [{ text: '확인' }]
+      );
+    }
+
     if (callback) callback([false, error]);
   });
 };

@@ -51,7 +51,7 @@ import ChangePassword from './src/pages/DrawerScreens/ChangePassword';
 import ResignScreen from './src/pages/DrawerScreens/ResignScreen';
 import ResignReason from './src/pages/DrawerScreens/ResignReason';
 import SocialLogin from './src/pages/Auth/SocialLogin';
-import StatisticScreen from './src/pages/My/Stats';
+import TutorialHome from './src/pages/Tutorial/TutorialHome';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -197,6 +197,7 @@ const App = () => {
                 <Stack.Screen name="ResignReason" component={ResignReason} />
                 <Stack.Screen name="SocialLogin" component={SocialLogin} />
 
+                <Stack.Screen name="TutorialHome" component={TutorialHome} />
               </Stack.Navigator>
         
             </NavigationContainer>

@@ -25,7 +25,7 @@ const NavHeader = () => {
         <Image source={iconHamburger} style={{width: 25, height: 22}}/>
       </TouchableOpacity>
       <Image source={logo} style={{width: 131, height: 44, marginBottom: 10, marginLeft: 20}}/>
-      <TouchableOpacity style={{width: 30, alignItems: 'flex-end'}}>
+      <TouchableOpacity onPress={()=> navigation.navigate("TutorialHome")} style={{width: 30, alignItems: 'flex-end'}}>
         <Image source={iconTutorial} style={{width: 24, height: 24}}/>
       </TouchableOpacity>
     </View>

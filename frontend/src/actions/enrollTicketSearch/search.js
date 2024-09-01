@@ -46,16 +46,19 @@ export const searchContent = (keyword, date, category, registerBy) => async disp
     });
 };
 
-export const searchLocation = (keyword) => async dispatch => {
+export const searchLocation = (keyword, category, categoryDetail) => async dispatch => {
     return requestWithRetry(async () => {
         const token = await AsyncStorage.getItem('accessToken');
         console.log("장소 검색 Token:", token)
         
         const response = await axios.get(
-            `${API_URL}/autoCompleteLocation`,
+            // `${API_URL}/autoCompleteLocation`,
+            `${API_URL}/autoCompleteLocationWithCategory`,
             {
                 params: {
-                    keyword: keyword
+                    keyword: keyword,
+                    category: category,
+                    categoryDetail : categoryDetail,
                 },
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -77,6 +80,7 @@ export const searchLocation = (keyword) => async dispatch => {
         }
     });
 };
+
 
 export const clearContent = () => async dispatch => {
     dispatch({

@@ -183,7 +183,7 @@ const EditReview = ({navigation, route}) => {
 
         <SliderRating category="seat" value={seatRating} onValueChange={handleSliderChange} />
         
-        <CustomText style={styles.sectionText}>사진 첨부 <CustomText style={{ fontSize: scale(12), marginTop: verticalScale(5), color: '#939393'}}> 사진 첨부는 한 장씩 가능합니다. </CustomText> </CustomText>
+        <CustomText style={styles.sectionText}>사진 첨부</CustomText>
 
         <View style={styles.reviewImageContainer}>
           <View>

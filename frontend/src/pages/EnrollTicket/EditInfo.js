@@ -108,6 +108,7 @@ const EditInfo = ({ route, navigation }) => {
 
   const categories = ['영화', '공연', '스포츠'];
   const detailCategories = {
+    영화: ['CGV', '메가박스', '롯데시네마', '독립영화관'],
     공연: ['뮤지컬', '연극', '기타'],
     스포츠: ['야구', '축구', '기타'],
   }
@@ -138,8 +139,9 @@ const EditInfo = ({ route, navigation }) => {
   
     const ticket = {
       registerBy: ticketData.registerBy,
-      category: mappedCategory,
-      categoryDetail: mappedCategoryDetail,
+      category: mappedCategory === '영화' ? 'MOVIE' : mappedCategory,
+      // categoryDetail: mappedCategoryDetail,
+      categoryDetail: mappedCategoryDetail === '메가박스' ? 'MEGABOX' : mappedCategoryDetail === '롯데시네마' ? 'LOTTECINEMA' : mappedCategoryDetail === '독립영화관' ? 'ETC' : mappedCategoryDetail,
       platform,
       ticketImg: '',
       contentsDetails: {
@@ -317,11 +319,13 @@ const EditInfo = ({ route, navigation }) => {
             {
               detailCategories[category] && (
                 <>
-                  <CustomText style={styles.sectionText} fontWeight="bold">관람한 {category == '공연' ? '공연 종류를' : '스포츠 종목을'} 선택해 주세요.</CustomText>
+                  {/* <CustomText style={styles.sectionText} fontWeight="bold">관람한 {category == '공연' ? '공연 종류를' : '스포츠 종목을'} 선택해 주세요.</CustomText> */}
+                  <CustomText style={styles.sectionText} fontWeight="bold">관람한 {category == '영화' ? '멀티플렉스를' : category == '공연' ? '공연 종류를' : '스포츠 종목을'} 선택해 주세요.</CustomText>
                   <CategoryBtnContainer
                     categories={detailCategories[category]}
                     selectedCategory={categoryDetail}
                     onSelectCategory={handleCategoryDetailSelect}
+                    makeSmall={category === '영화'} 
                   />
                 </>
               )
@@ -404,7 +408,7 @@ const EditInfo = ({ route, navigation }) => {
                   { contentsId !== null &&
                         <Image style={styles.checkIcon} source={checkIcon} />
                   }
-                  <CustomTextInput style={{...styles.inputBox, flex: 1, paddingRight: 30}} value={title} onChangeText={handleTitleChange} placeholder='콘텐츠 제목' placeholderTextColor="#B6B6B6"/>
+                  <CustomTextInput style={{...styles.inputBox, flex: 1, paddingRight: 30}} value={title} onChangeText={handleTitleChange} placeholder={getCategoryPlaceholder(category, 'title')} placeholderTextColor="#B6B6B6"/>
                   {/* <CustomTextInput style={{ ...styles.inputBox, flex: 1 }} value={title} onChangeText={(text) => { if (text.length <= 20) { setTitle(text); setIsContentSelected(false); setContentsId(null); } }} placeholder='콘텐츠 제목' placeholderTextColor="#B6B6B6" /> */}
                 </View>
                 {/* Content Lists Dropdown */}

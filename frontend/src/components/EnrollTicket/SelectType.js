@@ -82,6 +82,33 @@ const SelectType = ({onClick}) => {
               <CustomText style={styles.categoryText} fontWeight="bold">롯데시네마</CustomText>
             </TouchableOpacity>
           </View>
+          <View style={styles.addrow}>
+            <TouchableOpacity
+              style={[
+                styles.categoryBox,
+                categoryDetail === '독립영화관' && styles.category,
+                { flex: 0.317 },
+              ]}
+              onPress={() => handleCategoryDetailClick('독립영화관')}>
+              <CustomText style={styles.categoryText} fontWeight="bold">독립영화관</CustomText>
+            </TouchableOpacity>
+            {/* <TouchableOpacity
+              style={[
+                styles.categoryBox,
+                categoryDetail === '독립영화관' && styles.category,
+              ]}
+              onPress={() => handleCategoryDetailClick('독립영화관')}>
+              <CustomText style={styles.categoryText} fontWeight="bold">독립영화관</CustomText>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.categoryBox,
+                categoryDetail === '독립영화관' && styles.category,
+              ]}
+              onPress={() => handleCategoryDetailClick('독립영화관')}>
+              <CustomText style={styles.categoryText} fontWeight="bold">독립영화관</CustomText>
+            </TouchableOpacity> */}
+          </View>
         </>
       );
     } else if (category === '스포츠') {
@@ -200,6 +227,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     gap: 8,
+  },
+  addrow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap:8,
+    paddingTop: 10,
   },
   categoryBox: {
     backgroundColor: '#B6B6B6',

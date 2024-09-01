@@ -264,7 +264,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
       registerBy: 'OCR',
       category: mappedCategory,
       // categoryDetail: mappedCategoryDetail,
-      categoryDetail: mappedCategoryDetail === '메가박스' ? 'MEGABOX' : mappedCategoryDetail === '롯데시네마' ? 'LOTTECINEMA' : mappedCategoryDetail,
+      categoryDetail: mappedCategoryDetail === '메가박스' ? 'MEGABOX' : mappedCategoryDetail === '롯데시네마' ? 'LOTTECINEMA' : mappedCategoryDetail === '독립영화관' ? 'ETC' : mappedCategoryDetail,
       platform: '',
       ticketImg: '',
       contentsDetails: {
@@ -391,7 +391,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                     { contentsId !== null &&
                           <Image style={styles.checkIcon} source={checkIcon} />
                     }
-                    <CustomTextInput style={{...styles.inputBox, flex: 1, paddingRight: 30}} value={title} onChangeText={handleTitleChange} placeholder='콘텐츠 검색' placeholderTextColor="#B6B6B6"/> 
+                    <CustomTextInput style={{...styles.inputBox, flex: 1, paddingRight: 30}} value={title} onChangeText={handleTitleChange} placeholder={getCategoryPlaceholder(category, 'title')} placeholderTextColor="#B6B6B6"/> 
                   </View>
                   {/* Content Lists Dropdown */}
                   {

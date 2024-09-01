@@ -10,6 +10,7 @@ import Sports from '../../components/Statistic/Sports';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { loadMyStatistics, loadMovieStats, loadPerformanceStats, loadSportsStats } from '../../actions/statistics/statistics';
 import LoadingScreen from '../../components/LoadingScreen';
+import { setDefaultOrder } from '../../actions/ticket/ticket';
 
 const Stats = () => {
   const viewRef = useRef();
@@ -18,7 +19,8 @@ const Stats = () => {
   const [selectedTab, setSelectedTab] = useState('전체');
 
   const [openOrder, setOpenOrder] = useState(false);
-  const [defaultOrder, setDefaultOrder] = useState('everything');
+  // const [defaultOrder, setDefaultOrder] = useState('everything');
+  const defaultOrder = useSelector((state) => state.filter.defaultOrder);
   
   const [orders, setOrders] = useState([
     {label: '전체', value: 'everything'},
@@ -95,7 +97,7 @@ const Stats = () => {
   }
 
   const onOrderChange = (value) => {
-    setDefaultOrder(value);
+    dispatch(setDefaultOrder(value));
     console.log(value);
   };
   

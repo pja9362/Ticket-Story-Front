@@ -7,11 +7,13 @@ import {
   LOAD_TICKET_DETAIL_SUCCESS,
   LOAD_TICKET_DETAIL_FAIL,
   UPDATE_TICKET_SUCCESS,
-  RESET_UPDATE_TICKET
+  RESET_UPDATE_TICKET,
+  SET_DEFAULT_ORDER
 } from './types';
 import { requestWithRetry } from '../auth/auth'
+import { loadMyStatistics, loadMovieStats, loadPerformanceStats, loadSportsStats } from '../statistics/statistics';
 
-export const saveNewTicket = (data) => async dispatch => {
+export const saveNewTicket = (data) => async (dispatch, getState) => {
   return requestWithRetry(async () => {
       const accessToken = await AsyncStorage.getItem('accessToken');
       if (!accessToken) {
@@ -37,6 +39,12 @@ export const saveNewTicket = (data) => async dispatch => {
           });
       }
 
+      const { defaultOrder } = getState().filter;
+      dispatch(loadMyStatistics(defaultOrder));
+      dispatch(loadMovieStats(defaultOrder));
+      dispatch(loadPerformanceStats(defaultOrder));
+      dispatch(loadSportsStats(defaultOrder));
+
       return response.data;
   }).catch(error => {
       console.error('Error saving new ticket:', error);
@@ -50,7 +58,6 @@ export const resetUpdateTicket = () => async dispatch => {
     type: RESET_UPDATE_TICKET,
   })
 }
-
 export const deleteTicket = async (data) => {
   return requestWithRetry(async () => {
     const accessToken = await AsyncStorage.getItem('accessToken');
@@ -72,6 +79,7 @@ export const deleteTicket = async (data) => {
     });
 
     console.log('Delete ticket response:', response.data);
+
     return response.data;
   }).catch(error => {
     console.error('Delete ticket 요청 중 오류 발생:', error.message || error);
@@ -112,7 +120,7 @@ export const getTicketDetails = async (data) => {
   });
 };
 
-export const updateReview = (reviewId, data) => async dispatch =>{
+export const updateReview = (reviewId, data) => async (dispatch, getState) => {
   return requestWithRetry(async () => {
     const accessToken = await AsyncStorage.getItem('accessToken');
     if (!accessToken) {
@@ -138,6 +146,12 @@ export const updateReview = (reviewId, data) => async dispatch =>{
       dispatch({
         type: UPDATE_TICKET_SUCCESS,
       });
+
+      const { defaultOrder } = getState().filter;
+      dispatch(loadMyStatistics(defaultOrder));
+      dispatch(loadMovieStats(defaultOrder));
+      dispatch(loadPerformanceStats(defaultOrder));
+      dispatch(loadSportsStats(defaultOrder));
     }
 
     return response.data;
@@ -345,3 +359,8 @@ export const uploadImage = async (imageUri) => {
     throw error;
   });
 };
+
+export const setDefaultOrder = (order) => ({
+  type: SET_DEFAULT_ORDER,
+  payload: order,
+});

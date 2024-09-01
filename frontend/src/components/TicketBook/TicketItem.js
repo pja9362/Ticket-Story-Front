@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { View, Text, ImageBackground, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, TouchableOpacity, Image, Modal, Button, Platform} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadMyStatistics, loadMovieStats, loadPerformanceStats, loadSportsStats } from '../../actions/statistics/statistics';
 
 import movieTicket from '../../images/ticket_info_movie.png';
 import performanceTicket from '../../images/ticket_info_performance.png';
@@ -21,14 +23,15 @@ import {CustomText} from '../CustomText';
 
 import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
 
-import { Shadow } from 'react-native-shadow-2';
-
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
 const imageWidth = Dimensions.get('window').width * 0.45;
 
 const TicketItem = ({ category, title, date, time, location, seat, contentsRating, seatRating, imageUrl = null, ticketId, reviewId, deleteTicketById, reviewExists}) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
+  const defaultOrder = useSelector((state) => state.filter.defaultOrder);
+  
   let ticketImageSource;
   let basicTicketImageSource;
   switch (category) {
@@ -113,6 +116,13 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
         deleteTicketById(ticketId); // Assuming this is a valid function to remove from state
         setDropdownVisible(false);
         setModalVisible(false);
+
+        // 통계 업데이트
+        dispatch(loadMyStatistics(defaultOrder));
+        dispatch(loadMovieStats(defaultOrder));
+        dispatch(loadPerformanceStats(defaultOrder));
+        dispatch(loadSportsStats(defaultOrder));
+
         console.log("Dropdown and Modal visibility set to false");
       } else {
         alert('Failed to delete ticket.');

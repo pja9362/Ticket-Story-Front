@@ -16,7 +16,7 @@ export const handleShareBtn = async (viewRef) => {
 
         const shareOptions = {
             title: '공유하기',
-            url: Platform.OS === 'ios' ? `file://${uri}` : uri,
+            url: Platform.OS === 'ios' ? `file://${uri}` : `data:image/jpg;base64,${uri}`,
         };
 
         const sharePromise = Share.open(shareOptions);

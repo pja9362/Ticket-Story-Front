@@ -4,6 +4,7 @@ import enrollTicketSearchReducer from './enrollTicketSearch';
 import ticketReducer from './ticket';
 import statisticsReducer from './statistics';
 import overlayReducer from './overlaySlice';
+import filterReducer from './filter';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   ticket: ticketReducer,
   statistics: statisticsReducer,
   overlay: overlayReducer,
+  filter: filterReducer,
 });
 
 export default rootReducer;

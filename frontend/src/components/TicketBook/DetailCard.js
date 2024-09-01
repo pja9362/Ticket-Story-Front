@@ -177,7 +177,7 @@ const DetailCard = ({ ticket, ticketId }) => {
                     <CustomText style={{color:'#525252', padding: scale(12), fontSize: scale(14), textAlign: 'center'}} fontWeight='bold'> 관람 세부 정보 보기 </CustomText>
                 </View>
             </TouchableOpacity>
-            <View ref={viewRef} collapsable={false}>
+            <View style={styles.contentWrapper} ref={viewRef} collapsable={false}>
             
                 <View style={styles.imageContainer}>
                     {/* <Swiper
@@ -331,6 +331,9 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingBottom: 50,
     },
+    contentWrapper: {
+        width: scale(356),
+    },  
     imageContainer: {
         width: scale(356),
         height: scale(356),

@@ -185,12 +185,25 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
     }
   }, [ocrResponse]);
 
+  useEffect(() => {
+    console.log('1', category);
+    console.log('2', categoryDetail);
+  }, []);
+
 
   useEffect(() => {
     if (title.trim() !== '' && isContentSelected === false) {
       let mappedCategory = getMappedCategory(category);
       const timeoutId = setTimeout(() => {
-        dispatch(searchContent(title, date, mappedCategory, "OCR"));
+
+        if (category === 'PERFORMANCE') {
+          dispatch(searchContent(title, date, categoryDetail, 'OCR'));
+        } else {
+          dispatch(searchContent(title, date, category, 'OCR'));
+        }
+
+        // dispatch(searchContent(title, date, mappedCategory, "OCR"));
+
         setShowContentDropdown(true);
       }, 300);
       return () => clearTimeout(timeoutId);
@@ -200,7 +213,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
   useEffect(() => {
     if (location.trim() !== '' && isLocationSelected === false) {
       const timeoutId = setTimeout(() => {
-        dispatch(searchLocation(location));
+        dispatch(searchLocation(location, category, categoryDetail));
         setShowLocationDropdown(true);
       }, 300);
       return () => clearTimeout(timeoutId);
@@ -248,7 +261,8 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
   const handleLocationSearch = (location) => {
     if(locationId !== null) return;
     else {
-      dispatch(searchLocation(location));
+      // dispatch(searchLocation(location));
+      dispatch(searchLocation(location, category, categoryDetail));
       setShowLocationDropdown(true);
     }
   }
@@ -307,6 +321,17 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
       alert('관람 장소는 20자 이내로 입력해주세요.');
     }
   };
+
+  const parseLocation = (address) => {
+    const addressList = address && address.split(' ');
+    if (addressList == null) {
+      return '';
+    } else if (addressList.length == 1) {
+      return addressList[0];
+    } else {
+      return address.split(' ').slice(0, 2).join(' ')
+    }
+  }
 
   const content = (
     <View style={{ flex : 1}}>
@@ -451,14 +476,6 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                       { locationId !== null &&
                         <Image style={styles.checkIcon} source={checkIcon} />
                       }
-                      {category === 'MOVIE' ? (
-                        <CustomTextInput
-                          style={[styles.inputBox, {color: '#525252', textAlign: 'center', marginRight: 15}]}
-                          value={categoryDetail}
-                          editable={false}
-                          fontWeight="bold"
-                        />
-                      ) : null}
                       <CustomTextInput
                         style={[styles.inputBox, { flex: 1, paddingRight: 30 }]}
                         value={location}
@@ -487,7 +504,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
                               >
                                 <View style={styles.locationDetails}>
                                   <CustomText style={{ flex: 1, color: '#525252' }} fontWeight="bold">{location.name}</CustomText>
-                                  <CustomText style={styles.subText}>{location.address}</CustomText>
+                                  <CustomText style={styles.subText}>{parseLocation(location.address) || ''}</CustomText>
                                 </View>
                               </TouchableOpacity>
                             </View>

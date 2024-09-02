@@ -6,7 +6,7 @@ import getCategoryPlaceholder from '../../utils/getCategoryPlaceholder';
 import NextBtn from '../../components/EnrollTicket/NextBtn';
 import { searchContent, searchLocation, clearContent, clearLocation } from '../../actions/enrollTicketSearch/search';
 import { useDispatch, useSelector } from 'react-redux';
-import { getMappedDetailCategory, getMappedCategory } from '../../utils/getMappedCategory';
+import { getMappedDetailCategory } from '../../utils/getMappedCategory';
 import checkIcon from '../../images/icon_circleCheck.png';
 import defaultImage from '../../images/ticket_default_poster_movie.png'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -15,29 +15,45 @@ import { CustomText, CustomTextInput } from '../../components/CustomText';
 import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
 import { State } from 'react-native-gesture-handler';
 
+//콘텐츠 검색
+//영화 : MOVIE
+//뮤지컬 : MUSICAL
+//연극 : PLAY
+//공연(기타) : PERFORMANCE
+//스포츠 : SPORTS
+
+// 장소 검색 with Category
+// 영화 : MOVIE / CGV, MEGABOX, LOTTECINEMA, ETC 
+// 공연 : PERFORMANCE / 
+// 스포츠 : SPORTS / BASEBALL, SOCCER, ETC 
+
+// 등록
+// MOVIE / CGV MEGABOX LOTTECINEMA ETC
+// PERFORMANCE / MUSICAL PLAY PERFORMANCE
+// SPORTS / BASEBALL SOCCER ETC
+
 const EnrollInfoByScrape = ({ route, navigation }) => {
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-  const contentLists = useSelector(state => state.enrollTicketSearch.contentLists);
-  const locationLists = useSelector(state => state.enrollTicketSearch.locationLists);
+    const contentLists = useSelector(state => state.enrollTicketSearch.contentLists);
+    const locationLists = useSelector(state => state.enrollTicketSearch.locationLists);
 
-  const [showContentDropdown, setShowContentDropdown] = useState(true);
-  const [showLocationDropdown, setShowLocationDropdown] = useState(false);
+    const [showContentDropdown, setShowContentDropdown] = useState(true);
+    const [showLocationDropdown, setShowLocationDropdown] = useState(false);
 
-  const [modalVisible, setModalVisible] = useState(false); 
+    const [modalVisible, setModalVisible] = useState(false); 
 
-  const onSwipe = (event) => {
-    if (event.nativeEvent.state === State.END) {
-      setModalVisible(true);
+    const onSwipe = (event) => {
+      if (event.nativeEvent.state === State.END) {
+        setModalVisible(true);
+      }
+    };
+
+    const handleBack = () => {
+      setModalVisible(false);
+      navigation.navigate("MainStack");
     }
-  };
 
-  const handleBack = () => {
-    setModalVisible(false);
-    navigation.navigate("MainStack");
-  }
-
-    //
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 
@@ -53,7 +69,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     const handleConfirmDate = async (selectedDate) => {
       hideDatePicker();
 
-      const timezoneOffset = 9 * 60 * 60 * 1000; // 9시간을 밀리초로 변환
+      const timezoneOffset = 9 * 60 * 60 * 1000; 
       const adjustedDate = new Date(selectedDate.getTime() + timezoneOffset);
   
       const formattedDate = await adjustedDate.toISOString().split('T')[0].replace(/-/g, '.');
@@ -81,7 +97,6 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
       setTime(`${hours}:${minutes}`);
       setSelectedTime(selectedTime);
     };
-  //
 
   const [selectedTime, setSelectedTime] = useState(''); 
 
@@ -107,8 +122,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   const [locationDetail, setLocationDetail] = useState(initialLocationDetail);
   const [seats, setSeats] = useState(initialSeats.join(', '));
   const [platform, setPlatform] = useState(initialPlatform);
-  const [category, setCategory] = useState(initialCategory === '뮤지컬' || initialCategory === '연극' ? '공연' : initialCategory);
-  const [categoryDetail, setCategoryDetail] = useState(initialCategory === '뮤지컬' || initialCategory === '연극' ? initialCategory : '');
+  const [category, setCategory] = useState(initialCategory == '뮤지컬' || initialCategory == '연극' ? '공연' : initialCategory);
+  const [categoryDetail, setCategoryDetail] = useState(initialCategory === '영화' ? initialPlatform : '');
 
   const categories = ['영화', '공연', '스포츠'];
   const detailCategories = {
@@ -125,18 +140,15 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   };
 
   const isFormValid = () => {
-    return title !== '' && date !== '' && time !== '' && location !== '' && isContentSelected == true && isLocationSelected == true; //
+    return title !== '' && date !== '' && time !== '' && location !== '' && isContentSelected == true && isLocationSelected == true; 
   };
-
 
   const handleNext = async () => {
     const { category: mappedCategory, categoryDetail: mappedCategoryDetail } = getMappedDetailCategory(category, categoryDetail);
-  
     const ticketData = {
       registerBy: 'SCRAPE',
-      category: mappedCategory,
-      // categoryDeatil: mappedCategoryDetail,
-      categoryDetail: mappedCategoryDetail === 'MOVIE' ? platform : mappedCategoryDetail,
+      category: (mappedCategory == 'MUSICAL' || mappedCategory == 'PLAY') ? 'PERFORMANCE' : mappedCategory,
+      categoryDetail: (mappedCategory == 'MUSICAL' || mappedCategory == 'PLAY' || mappedCategory == 'PERFORMANCE') ? mappedCategory : mappedCategoryDetail,
       platform,
       ticketImg: '',
       contentsDetails: {
@@ -158,7 +170,6 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     }
   }
 
-  //
   const [isContentSelected, setIsContentSelected] = useState(false);
   const [isLocationSelected, setIsLocationSelected] = useState(false);
 
@@ -174,7 +185,6 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     setIsLocationSelected(true);
     setLocationId(null);
   }
-  //
 
   const handleClearList = (type) => {
     if (type === 'content') {
@@ -187,48 +197,46 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   const handleContentSelect = (content) => {
     setTitle(content.title);
     setContentsId(content.content_id);
-    // setLocationId(content.location_id);
-    content.location_id !== null && setLocationId(content.location_id);
-    content.location_id !== null && setLocation(content.location_name);
-    // content.location_name !== null && setIsLocationSelected(true);
+    if (content.location_id !== null) {
+      setLocationId(content.location_id);
+      setLocation(content.location_name);
+      setIsLocationSelected(true);
+    }
     setShowContentDropdown(false);
     content.location_id == null && handleLocationSearch(location);
     handleClearList('content');
-    setIsContentSelected(true); //
+    setIsContentSelected(true); 
   }
 
   const handleLocationSearch = (location) => {
+    const { category: mappedCategory, categoryDetail: mappedCategoryDetail } = getMappedDetailCategory(category, categoryDetail);
+    let parsedCategory = (mappedCategory == 'MUSICAL' || mappedCategory == 'PLAY') ? 'PERFORMANCE' : mappedCategory
     if(locationId !== null) return;
     else {
-      dispatch(searchLocation(location));
+      dispatch(searchLocation(location, parsedCategory, mappedCategoryDetail));
       setShowLocationDropdown(true);
     }
   }
 
   const isContentVisible = category !== '' && ((category != "영화" && categoryDetail !== '') || category == "영화");
 
-  // useEffect(() => {
-  //   if (title !== '' && isContentVisible) {
-  //     let mappedCategory = getMappedCategory(category);
-  //     dispatch(searchContent(title, date, mappedCategory, 'SCRAPE'));
-  //   }
-  // }, [category, categoryDetail]);
-
   useEffect(() => {
     if (title.trim() !== '' && isContentVisible && isContentSelected === false) {
-      let mappedCategory = getMappedCategory(category);
+      const { category: mappedCategory } = getMappedDetailCategory(category, categoryDetail);
       const timeoutId = setTimeout(() => {
+        console.log("~~~~ 콘텐츠 검색1")
         dispatch(searchContent(title, date, mappedCategory, 'SCRAPE'));
         setShowContentDropdown(true);
       }, 300);
       return () => clearTimeout(timeoutId);
     }
-  }, [title]);
+  }, [title, isContentVisible]);
 
   useEffect(() => {
-    if (location.trim() !== '' && isContentVisible && isLocationSelected === false) {
+    if (location.trim() !== '' && isContentVisible && isLocationSelected == false && isContentSelected == true) {
+      const { category: mappedCategory, categoryDetail: mappedCategoryDetail } = getMappedDetailCategory(category, categoryDetail);
       const timeoutId = setTimeout(() => {
-        dispatch(searchLocation(location));
+        dispatch(searchLocation(location, mappedCategory, mappedCategoryDetail));
         setShowLocationDropdown(true);
       }, 300);
       return () => clearTimeout(timeoutId);
@@ -379,7 +387,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                               style={styles.dropdownItemTouchable}
                             >
                               <View style={styles.imageContainer}>
-                                {content.imageUrl.length > 0 ? (
+                                {content.imageUrl && content.imageUrl.filter(url => url.trim() !== "").length > 0 ? (
                                   content.imageUrl.map((url, imageIndex) => (
                                     <Image
                                       key={imageIndex}
@@ -390,7 +398,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                                 ) : (
                                   <Image
                                     style={styles.posterImage}
-                                    source={{ defaultImage }}
+                                    source={defaultImage}
                                   />
                                 )}
                               </View>

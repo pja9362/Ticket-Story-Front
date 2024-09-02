@@ -15,7 +15,12 @@ const API_URL = 'https://ticketstory.shop/api/v1/search';
 export const searchContent = (keyword, date, category, registerBy) => async dispatch => {
     return requestWithRetry(async () => {
         const token = await AsyncStorage.getItem('accessToken');
-        console.log('콘텐츠 검색 Token:', token);
+        console.log('!!!!!! 콘텐츠 검색 Token:');
+
+        console.log("KEYWORD:", keyword)
+        console.log("DATE:", date)
+        console.log("CATEGORY:", category)
+        console.log("REGISTERBY:", registerBy)
 
         const response = await axios.get(
             `${API_URL}/autoComplete`,
@@ -30,7 +35,10 @@ export const searchContent = (keyword, date, category, registerBy) => async disp
                     Authorization: `Bearer ${token}`
                 }
             }
-        );          
+        );        
+        
+        console.log("!!!!!! 콘텐츠 검색 결과:")
+        console.log(response.data)
         if (response.status == 200) {
             dispatch({
                 type: SEARCH_CONTENT_SUCCESS,
@@ -49,10 +57,12 @@ export const searchContent = (keyword, date, category, registerBy) => async disp
 export const searchLocation = (keyword, category, categoryDetail) => async dispatch => {
     return requestWithRetry(async () => {
         const token = await AsyncStorage.getItem('accessToken');
-        console.log("장소 검색 Token:", token)
-        
+        console.log("######## 장소 검색 Token:")
+        console.log("KEYWORD:", keyword)
+        console.log("CATEGORY:", category)
+        console.log("CATEGORYDETAIL:", categoryDetail)
+
         const response = await axios.get(
-            // `${API_URL}/autoCompleteLocation`,
             `${API_URL}/autoCompleteLocationWithCategory`,
             {
                 params: {

@@ -13,13 +13,28 @@ import viewWay3 from '../../images/tutorial/tutorial_6.png';
 
 const { width } = Dimensions.get('window');
 
-// 함수로 각 이미지 클릭 시 동작 정의
-const onImagePress = (imageName) => {
-    // 이미지 클릭 시 동작 설정
-    console.log(imageName + " 클릭됨");
-};
+const TutorialHome = ({navigation}) => {
+    const onImagePress = (imageName) => {
+        switch(imageName) {
+            case 'enrollWay1':
+                navigation.navigate('TutorialScrape');
+                break;
+            case 'enrollWay2':
+                navigation.navigate('TutorialEnroll', {type: 'camera'});
+                break;
+            case 'enrollWay3':
+                navigation.navigate('TutorialEnroll', {type: 'hand'});
+                break;
+            case 'viewWay1':
+            case 'viewWay2':
+            case 'viewWay3':
+                navigation.navigate('TutorialView');
+                break;
+            default:
+                break;
+        }
+    };
 
-const TutorialHome = () => {
     return (
         <SafeAreaView style={styles.container}>
             <Header title="티켓스토리 이용방법" />

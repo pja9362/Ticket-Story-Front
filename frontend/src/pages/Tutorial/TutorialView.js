@@ -8,9 +8,10 @@ import tutorial_view3 from '../../images/tutorial/tutorial_view3.png';
 
 const { width } = Dimensions.get('window');
 
-const TutorialView = () => {
-    
-    const [selectedTab, setSelectedTab] = useState(0);
+const TutorialView = ({route}) => {
+    const { index } = route.params;
+
+    const [selectedTab, setSelectedTab] = useState(index ? index : 0);
 
     const renderContent = () => {
         switch(selectedTab) {

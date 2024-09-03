@@ -6,7 +6,7 @@ import tutorialHand from '../../images/tutorial/tutorial_hand.png';
 
 const { width } = Dimensions.get('window');
 
-const TutorialEnroll = ({navigation, route}) => {
+const TutorialEnroll = ({route}) => {
     const { type } = route.params;
     
     return (

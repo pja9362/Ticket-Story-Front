@@ -26,9 +26,13 @@ const TutorialHome = ({navigation}) => {
                 navigation.navigate('TutorialEnroll', {type: 'hand'});
                 break;
             case 'viewWay1':
+                navigation.navigate('TutorialView', {index: 0});
+                break;
             case 'viewWay2':
+                navigation.navigate('TutorialView', {index: 1});
+                break;
             case 'viewWay3':
-                navigation.navigate('TutorialView');
+                navigation.navigate('TutorialView', {index: 2});
                 break;
             default:
                 break;

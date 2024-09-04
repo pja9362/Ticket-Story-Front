@@ -265,6 +265,17 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     }
   };
 
+  const parseLocation = (address) => {
+    const addressList = address && address.split(' ');
+    if (addressList == null) {
+      return '';
+    } else if (addressList.length == 1) {
+      return addressList[0];
+    } else {
+      return address.split(' ').slice(0, 2).join(' ')
+    }
+  }
+
   const content = (
     <View style= {{ flex : 1 }}>
       <EnrollHeader title="티켓 정보 입력" backDestination="MainStack" needAlert="true"/>
@@ -454,7 +465,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                             >
                               <View style={styles.locationDetails}>
                                 <CustomText style={{ flex: 1, color: '#525252' }} fontWeight="bold">{location.name}</CustomText>
-                                <CustomText style={styles.subText}>{location.address}</CustomText>
+                                <CustomText style={styles.subText}>{parseLocation(location.address) || ''}</CustomText>
                               </View>
                             </TouchableOpacity>
                           </View>

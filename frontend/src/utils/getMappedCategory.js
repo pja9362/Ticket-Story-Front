@@ -7,13 +7,16 @@ export const getMappedDetailCategory = (category, categoryDetail) => {
             return { category: 'MOVIE', categoryDetail: 'CGV' };
           case 'lottecinema':
           case 'LOTTECINEMA':
+          case '롯데시네마':
             return { category: 'MOVIE', categoryDetail: 'LOTTECINEMA' };
           case 'megabox':
           case 'MEGABOX':
+          case '메가박스':
             return { category: 'MOVIE', categoryDetail: 'MEGABOX' };
           case 'etc':
           case 'ETC':
           case '기타':
+          case '독립영화관':
             return { category: 'MOVIE', categoryDetail: 'ETC' };
           default:
             return { category: 'MOVIE', categoryDetail: 'MOVIE' };

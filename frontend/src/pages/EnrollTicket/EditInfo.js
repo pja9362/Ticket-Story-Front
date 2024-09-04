@@ -85,6 +85,7 @@ const EditInfo = ({ route, navigation }) => {
 //     category: initialCategory = '',
 //   } = ticketInfo;
 
+
   const {
     title: initialTitle = '',
     date: initialDate = '',
@@ -103,8 +104,8 @@ const EditInfo = ({ route, navigation }) => {
   const [locationDetail, setLocationDetail] = useState(initialLocationDetail);
   const [seats, setSeats] = useState(initialSeats.join(', '));
   const [platform, setPlatform] = useState(ticketData.platform);
-  const [category, setCategory] = useState('');
-  const [categoryDetail, setCategoryDetail] = useState('');
+  const [category, setCategory] = useState(ticketData.category);
+  const [categoryDetail, setCategoryDetail] = useState(ticketData.categoryDetail);
 
   const categories = ['영화', '공연', '스포츠'];
   const detailCategories = {
@@ -231,9 +232,13 @@ const EditInfo = ({ route, navigation }) => {
   }
 
   const handleLocationSearch = (location) => {
+    const { category: mappedCategory, categoryDetail: mappedCategoryDetail } = getMappedDetailCategory(category, categoryDetail);
+    let parsedCategory = (mappedCategory == 'MUSICAL' || mappedCategory == 'PLAY') ? 'PERFORMANCE' : mappedCategory
+
     if(locationId !== null) return;
     else {
-      dispatch(searchLocation(location));
+      // dispatch(searchLocation(location, category, categoryDetail));
+      dispatch(searchLocation(location, parsedCategory, mappedCategoryDetail));
       setShowLocationDropdown(true);
     }
   }
@@ -269,8 +274,10 @@ const EditInfo = ({ route, navigation }) => {
 
   useEffect(() => {
     if (location.trim() !== '' && isContentVisible && isLocationSelected === false) {
+      const { category: mappedCategory, categoryDetail: mappedCategoryDetail } = getMappedDetailCategory(category, categoryDetail);
       const timeoutId = setTimeout(() => {
-        dispatch(searchLocation(location));
+        // dispatch(searchLocation(location, category, categoryDetail));
+        dispatch(searchLocation(location, mappedCategory, mappedCategoryDetail));
         setShowLocationDropdown(true);
       }, 300);
       return () => clearTimeout(timeoutId);
@@ -298,6 +305,17 @@ const EditInfo = ({ route, navigation }) => {
       alert('관람 장소는 20자 이내로 입력해주세요.');
     }
   };
+
+  const parseLocation = (address) => {
+    const addressList = address && address.split(' ');
+    if (addressList == null) {
+      return '';
+    } else if (addressList.length == 1) {
+      return addressList[0];
+    } else {
+      return address.split(' ').slice(0, 2).join(' ')
+    }
+  }
 
   
   return (
@@ -490,7 +508,7 @@ const EditInfo = ({ route, navigation }) => {
                             >
                               <View style={styles.locationDetails}>
                                 <CustomText style={{ flex: 1, color: '#525252' }} fontWeight="bold">{location.name}</CustomText>
-                                <CustomText style={styles.subText}>{location.address}</CustomText>
+                                <CustomText style={styles.subText}>{parseLocation(location.address) || ''}</CustomText>
                               </View>
                             </TouchableOpacity>
                           </View>

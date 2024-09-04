@@ -225,15 +225,12 @@ export const updateInfo = (ticketId, data) => async dispatch => {
   });
 }
 
-export const saveImageAndPerformOCR = async (scannedImageUri) => {
+export const saveImageAndPerformOCR = async (category, scannedImageUri) => {
   return requestWithRetry(async () => {
     const accessToken = await AsyncStorage.getItem('accessToken');
     console.log('Access token:', accessToken);
-
-    const category = "MOVIE";
-
-    console.log('Saving image and performing OCR:', scannedImageUri);
     
+    console.log("OCR 호출", category)
     await AsyncStorage.removeItem('ticket');
     
     const formData = new FormData();

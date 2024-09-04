@@ -5,7 +5,7 @@ import { saveImageAndPerformOCR } from '../../actions/ticket/ticket';
 import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import {useNavigation} from '@react-navigation/native';
 
-const OCR = ({ onNextStep }) => {
+const OCR = ({ onNextStep, category }) => {
   const navigation = useNavigation();
   
   const [scannedImage, setScannedImage] = useState();
@@ -44,28 +44,6 @@ const OCR = ({ onNextStep }) => {
   }, []);
   
 
-  
-  // const scanDocument = async () => {
-  //   try {
-  //     const { scannedImages } = await DocumentScanner.scanDocument({
-  //       // responseType: 'base64',
-  //       responseType: 'imageFilePath',
-  //       letUserAdjustCrop: true,
-  //     });
-
-  //     if (status === 'cancel') {
-  //       navigation.reset({routes: [{name: "HomeScreen"}]})
-  //      }
-
-  //     if (scannedImages.length > 0) {
-  //       setScannedImage(scannedImages[0]);
-  //       onNextStep(); 
-  //     }
-  //   } catch (error) {
-  //     console.error('Error scanning document:', error);
-  //   }
-  // };
-
   const scanDocument = async () => {
     try {
       const result = await DocumentScanner.scanDocument({
@@ -94,7 +72,7 @@ const OCR = ({ onNextStep }) => {
 
   useEffect(() => {
     if (scannedImage) {
-      saveImageAndPerformOCR(scannedImage);
+      saveImageAndPerformOCR(category, scannedImage);
     }
   }, [scannedImage]);
 

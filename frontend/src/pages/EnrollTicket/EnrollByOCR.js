@@ -9,6 +9,9 @@ import { CustomText } from '../../components/CustomText';
 const EnrollByOCR = ({route, navigation}) => {
   const {categoryInfo} = route.params;
 
+  console.log('categoryInfo:', categoryInfo);
+  console.log('categoryInfo:', categoryInfo.category);
+
   const [showGuide, setShowGuide] = useState(true);
 
   useEffect(() => {
@@ -48,7 +51,7 @@ const EnrollByOCR = ({route, navigation}) => {
           </CustomText>
         </View>
       ) : (
-        <OCR onNextStep={onNextStep}/>
+        <OCR onNextStep={onNextStep} category={categoryInfo.category}/>
       )}
     </>
   );

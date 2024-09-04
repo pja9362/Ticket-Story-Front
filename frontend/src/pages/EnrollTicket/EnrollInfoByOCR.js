@@ -186,12 +186,6 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
   }, [ocrResponse]);
 
   useEffect(() => {
-    console.log('1', category);
-    console.log('2', categoryDetail);
-  }, []);
-
-
-  useEffect(() => {
     if (title.trim() !== '' && isContentSelected === false) {
       let mappedCategory = getMappedCategory(category);
       const timeoutId = setTimeout(() => {
@@ -201,8 +195,6 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
         } else {
           dispatch(searchContent(title, date, category, 'OCR'));
         }
-
-        // dispatch(searchContent(title, date, mappedCategory, "OCR"));
 
         setShowContentDropdown(true);
       }, 300);

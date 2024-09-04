@@ -2,7 +2,13 @@ import React, { useState } from 'react';
 import Header from '../../components/Header';
 import { StyleSheet, SafeAreaView, ScrollView, Dimensions, View, Image, TouchableOpacity } from 'react-native';
 import { CustomText } from '../../components/CustomText';
-import tutorial_cgv from '../../images/tutorial/tutorial_cgv.png';
+
+import tutorial_cgv1 from '../../images/tutorial/tutorial_cgv1.png';
+import tutorial_cgv2 from '../../images/tutorial/tutorial_cgv2.png';
+import tutorial_cgv3 from '../../images/tutorial/tutorial_cgv3.png';
+import tutorial_cgv4 from '../../images/tutorial/tutorial_cgv4.png';
+import tutorial_cgv5 from '../../images/tutorial/tutorial_cgv5.png';
+
 import tutorial_lotte from '../../images/tutorial/tutorial_lottecinema.png';
 import tutorial_megabox from '../../images/tutorial/tutorial_megabox.png';
 import tutorial_interpark from '../../images/tutorial/tutorial_interpark.png';
@@ -17,7 +23,15 @@ const TutorialScrape = () => {
     const renderContent = () => {
         switch(selectedTab) {
             case 0:
-                return <Image source={tutorial_cgv} style={{...styles.image, aspectRatio: 0.15}} />;
+                return (
+                    <>
+                        <Image source={tutorial_cgv1} style={{...styles.image, aspectRatio: 0.75}} />
+                        <Image source={tutorial_cgv2} style={{...styles.image, aspectRatio: 0.75}} />
+                        <Image source={tutorial_cgv3} style={{...styles.image, aspectRatio: 0.75}} />
+                        <Image source={tutorial_cgv4} style={{...styles.image, aspectRatio: 0.75}} />
+                        <Image source={tutorial_cgv5} style={{...styles.image, aspectRatio: 0.75}} />
+                    </>
+                );
             case 1:
                 return <Image source={tutorial_megabox} style={{...styles.image, aspectRatio: 0.15}} />;
             case 2:

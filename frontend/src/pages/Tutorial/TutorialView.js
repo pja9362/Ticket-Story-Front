@@ -2,9 +2,16 @@ import React, { useState } from 'react';
 import Header from '../../components/Header';
 import { StyleSheet, SafeAreaView, ScrollView, Dimensions, View, Image, TouchableOpacity } from 'react-native';
 import { CustomText } from '../../components/CustomText';
-import tutorial_view1 from '../../images/tutorial/tutorial_view1.png';
-import tutorial_view2 from '../../images/tutorial/tutorial_view2.png';
-import tutorial_view3 from '../../images/tutorial/tutorial_view3.png';
+import ticketcard1 from '../../images/tutorial/ticketcard1.png';
+import ticketcard2 from '../../images/tutorial/ticketcard2.png';
+import ticketcard3 from '../../images/tutorial/ticketcard3.png';
+
+import storycard1 from '../../images/tutorial/storycard1.png';
+import storycard2 from '../../images/tutorial/storycard2.png';
+import storycard3 from '../../images/tutorial/storycard3.png';
+
+import detail1 from '../../images/tutorial/detail1.png';
+import detail2 from '../../images/tutorial/detail2.png';
 
 const { width } = Dimensions.get('window');
 
@@ -16,13 +23,36 @@ const TutorialView = ({route}) => {
     const renderContent = () => {
         switch(selectedTab) {
             case 0:
-                return <Image source={tutorial_view1} style={{...styles.image, aspectRatio: 0.3}} />;
+                return (
+                    <>
+                        <Image source={ticketcard1} style={{...styles.image, aspectRatio: 0.85}} />
+                        <Image source={ticketcard2} style={{...styles.image, aspectRatio: 0.85}} />
+                        <Image source={ticketcard3} style={{...styles.image, aspectRatio: 0.85}} />
+                    </>
+                )
             case 1:
-                return <Image source={tutorial_view2} style={{...styles.image, aspectRatio: 0.24}} />;
+                return (
+                    <>
+                        <Image source={storycard1} style={{...styles.image, aspectRatio: 0.6}} />
+                        <Image source={storycard2} style={{...styles.image, aspectRatio: 0.6}} />
+                        <Image source={storycard3} style={{...styles.image, aspectRatio: 0.6}} />
+                    </>
+                )
             case 2:
-                return <Image source={tutorial_view3} style={{...styles.image, aspectRatio: 0.4}} />;
+                return (
+                    <>
+                        <Image source={detail1} style={{...styles.image, aspectRatio: 0.85}} />
+                        <Image source={detail2} style={{...styles.image, aspectRatio: 0.85}} />
+                    </>
+                )
             default:
-                return <Image source={tutorial_view1} style={{...styles.image, aspectRatio: 0.15}} />;
+                return (
+                    <>
+                        <Image source={ticketcard1} style={{...styles.image, aspectRatio: 0.85}} />
+                        <Image source={ticketcard2} style={{...styles.image, aspectRatio: 0.85}} />
+                        <Image source={ticketcard3} style={{...styles.image, aspectRatio: 0.85}} />
+                    </>
+                )
         }
     }
 

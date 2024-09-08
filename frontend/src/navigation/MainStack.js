@@ -83,7 +83,7 @@ const MainStack = ({ navigation }) => {
         screenOptions={({ route }) => ({
           tabBarStyle: {
             // height: verticalScale(95),
-            height: Platform.OS === 'android' ? verticalScale(85) : verticalScale(95),
+            height: Platform.OS === 'android' ? verticalScale(75) : verticalScale(95),
             backgroundColor: '#fff',
             padding: moderateScale(5),
 
@@ -97,7 +97,7 @@ const MainStack = ({ navigation }) => {
             fontSize: moderateScale(13),
             color: route.name === 'Main' ? '#fff' : '#525252',
             // paddingBottom: Platform.OS === 'android' ? verticalScale(35) : verticalScale(10),
-            paddingBottom: Platform.OS === 'android' ? verticalScale(25) : verticalScale(10),
+            paddingBottom: Platform.OS === 'android' ? verticalScale(15) : verticalScale(10),
 
             // paddingTop: verticalScale(10),
             fontFamily: 'Pretendard-Bold',

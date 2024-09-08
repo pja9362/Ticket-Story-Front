@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.36)',
   },
   contentContainer: {
-    backgroundColor: '#EAEAEA',
+    backgroundColor: '#FFFFFF',
     alignItems: 'center',
     gap: 18,
     paddingTop: 20,

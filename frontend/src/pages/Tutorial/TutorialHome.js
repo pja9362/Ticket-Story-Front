@@ -45,7 +45,7 @@ const TutorialHome = ({navigation}) => {
             {/* 티켓 등록 방법 */}
             <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
                 <View style={styles.contentsContainer}>
-                    <CustomText style={styles.title}>티켓 등록 방법</CustomText>
+                    <CustomText style={styles.title} fontWeight="bold">티켓 등록 방법</CustomText>
                     {/* 세로로 한 줄 */}
                     <View style={styles.colButtonContainer}>
                         <TouchableOpacity onPress={() => onImagePress('enrollWay1')}>
@@ -62,7 +62,7 @@ const TutorialHome = ({navigation}) => {
                 
                 {/* 등록된 티켓 확인 방법 */}
                 <View style={{...styles.contentsContainer, marginBottom: 20}}>
-                    <CustomText style={styles.title}>등록된 티켓 확인 방법</CustomText>
+                    <CustomText style={styles.title} fontWeight="bold">등록된 티켓 확인 방법</CustomText>
                     {/* 가로로 한 줄 */}
                     <View style={styles.rowButtonContainer}>
                         <TouchableOpacity onPress={() => onImagePress('viewWay1')}>
@@ -95,7 +95,6 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 20,
-        fontWeight: 'bold',
         color: '#525252'
     },
     colButtonContainer: {

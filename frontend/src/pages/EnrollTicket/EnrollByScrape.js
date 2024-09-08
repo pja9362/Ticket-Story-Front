@@ -13,6 +13,7 @@ import logo_yes24 from '../../images/logo_yes24.png';
 import logo_ticketlink from '../../images/logo_ticketlink.png';
 import logo_ticketlink_off from '../../images/logo_ticketlink_off.png';
 import { CustomText } from '../../components/CustomText';
+import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -219,9 +220,10 @@ const EnrollByScrape = () => {
                 <Image source={isIOS ? logo_ticketlink : logo_ticketlink_off} style={styles.logoImage} />
                 <CustomText style={[styles.btnText, !isIOS && {color: '#B6B6B6'}]} fontWeight="bold">티켓링크</CustomText>
               </View>
-            </TouchableOpacity>
-
-            
+            </TouchableOpacity>            
+          </View>
+          <View>
+              <CustomText style={{fontSize: scale(12), marginBottom: verticalScale(320), color:'#5D70F9'}} fontWeight="semibold"> 티켓스토리는 타 사이트의 로그인 정보를 수집하지 않아요 </CustomText>
           </View>
         </>
       )}

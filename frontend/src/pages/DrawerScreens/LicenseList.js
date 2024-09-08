@@ -25,6 +25,12 @@ const LicenseList = () => {
       <TouchableOpacity onPress={() => navigation.navigate('PictogramLicense')} style={styles.menuItem}>
         <CustomText style={styles.menuText} fontWeight="medium">Pictogrammers</CustomText>
       </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('LucideLicense')} style={styles.menuItem}>
+        <CustomText style={styles.menuText} fontWeight="medium">Lucide</CustomText>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('MingcuteLicense')} style={styles.menuItem}>
+        <CustomText style={styles.menuText} fontWeight="medium">Mingcute</CustomText>
+      </TouchableOpacity>
     </View>
     </ScrollView>
     </View>

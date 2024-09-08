@@ -169,6 +169,7 @@ const ShowContent = ({ route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#EEEEEE'
     },
     image: {
         width: '100%',

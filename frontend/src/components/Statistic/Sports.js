@@ -68,13 +68,13 @@ const Sports = ({ data }) => {
                 <View>
                     <View style={styles.tableHeader}>
                       <CustomText style={styles.columnHeader} fontWeight="bold">분류</CustomText>
-                      <CustomText style={styles.columnHeader} fontWeight="bold">장소명</CustomText>
+                      <CustomText style={styles.mainColumnHeader} fontWeight="bold">장소명</CustomText>
                       <CustomText style={styles.columnHeader} fontWeight="bold">방문횟수</CustomText>
                     </View>
                     {data.locationCount && data.locationCount.map((location, index) => (
                         <View key={index} style={styles.tableRow}>
-                          <CustomText style={styles.tableCell} fontWeight="medium">{location.locationType}</CustomText>
-                          <CustomText style={styles.tableCell} fontWeight="medium">{location.locationName}</CustomText>
+                          <CustomText style={styles.tableCell} fontWeight="medium">경기장</CustomText>
+                          <CustomText style={styles.mainTableCell} fontWeight="medium">{location.locationName}</CustomText>
                           <CustomText style={styles.tableCell} fontWeight="medium">{location.count}</CustomText>
                         </View>
                     ))}
@@ -155,6 +155,17 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       gap: 60,
       justifyContent: 'center',
+    },
+    mainColumnHeader: {
+      flex: 3,
+      color: '#9A9A9A',
+      textAlign: 'center',
+      paddingVertical: 5,
+    },
+    mainTableCell: {
+      flex: 3,
+      color: '#9A9A9A',
+      textAlign: 'center',
     },
 });
 

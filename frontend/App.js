@@ -47,6 +47,8 @@ import IconoirLicense from './src/pages/DrawerScreens/ContentScreens/IconoirLice
 import IconParkLicense from './src/pages/DrawerScreens/ContentScreens/IconParkLicense';
 import MicrosoftLicense from './src/pages/DrawerScreens/ContentScreens/MicrosoftLicense';
 import PictogramLicense from './src/pages/DrawerScreens/ContentScreens/PictogramLicense';
+import LucideLicense from './src/pages/DrawerScreens/ContentScreens/LucideLicense';
+import MingcuteLicense from './src/pages/DrawerScreens/ContentScreens/MingcuteLicense';
 import ChangePassword from './src/pages/DrawerScreens/ChangePassword';
 import ResignScreen from './src/pages/DrawerScreens/ResignScreen';
 import ResignReason from './src/pages/DrawerScreens/ResignReason';
@@ -196,6 +198,8 @@ const App = () => {
                 <Stack.Screen name="IconParkLicense" component={IconParkLicense} />
                 <Stack.Screen name="MicrosoftLicense" component={MicrosoftLicense} />
                 <Stack.Screen name="PictogramLicense" component={PictogramLicense} />
+                <Stack.Screen name="LucideLicense" component={LucideLicense} />
+                <Stack.Screen name="MingcuteLicense" component={MingcuteLicense} />
                 <Stack.Screen name="ChangePassword" component={ChangePassword} />
                 <Stack.Screen name="ResignScreen" component={ResignScreen} />
                 <Stack.Screen name="ResignReason" component={ResignReason} />

@@ -415,7 +415,8 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
                               </View>
                               <View style={styles.contentDetails}>
                                 <CustomText style={{color: '#525252'}} fontWeight="bold">{content.title}</CustomText>
-                                <CustomText style={{color: '#8A8A8A'}} fontWeight="medium">{content.detail.join(', ')}</CustomText>
+                                {/* <CustomText style={{color: '#8A8A8A'}} fontWeight="medium">{content.detail.join(', ')}</CustomText> */}
+                                <CustomText style={{color: '#8A8A8A'}} fontWeight="medium">{content.detail.join('・')}</CustomText>
                               </View>
                             </TouchableOpacity>
                           </View>

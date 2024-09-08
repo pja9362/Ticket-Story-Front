@@ -122,15 +122,19 @@ const ShowImage = ({ route }) => {
                     <Image source={logo} style={styles.logo} />
                 )}
                 <View style={styles.overlay}>
-                    {(!hideImageTitle && !hideImageInfo) && <CustomText style={darkText ? { ...styles.overlayText, fontSize: scale(20), color: darkText ? '#525252' : '#fff'  } : { ...styles.overlayText, ...styles.textShadow, fontSize: scale(20), color: darkText ? '#525252' : '#fff'  }} fontWeight="bold">{ticket.title}</CustomText>}
+                    {/* {(!hideImageTitle && !hideImageInfo) && <CustomText style={darkText ? { ...styles.overlayText, fontSize: scale(20), color: darkText ? '#525252' : '#fff'  } : { ...styles.overlayText, ...styles.textShadow, fontSize: scale(20), color: darkText ? '#525252' : '#fff'  }} fontWeight="bold">{ticket.title}</CustomText>} */}
+                    {(!hideImageTitle && !hideImageInfo) && <CustomText style={darkText ? { ...styles.overlayText, fontSize: scale(20), color: darkText ? '#525252' : '#fff'  } : { ...styles.overlayText, fontSize: scale(20), color: darkText ? '#525252' : '#fff'  }} fontWeight="bold">{ticket.title}</CustomText>}
                     {!hideImageInfo && (
                         <>
                             <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Date</CustomText>
-                            <CustomText style={[styles.overlayText, shadowTextStyle, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.date}</CustomText>
+                            {/* <CustomText style={[styles.overlayText, shadowTextStyle, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.date}</CustomText> */}
+                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.date}</CustomText>
                             <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Time</CustomText>
-                            <CustomText style={[styles.overlayText, shadowTextStyle, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.time}</CustomText>
+                            {/* <CustomText style={[styles.overlayText, shadowTextStyle, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.time}</CustomText> */}
+                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.time}</CustomText>
                             <CustomText style={[styles.overlayGuideText, {color: darkText ? '#525252' : '#fff'}]}>Place</CustomText>
-                            <CustomText style={[styles.overlayText, shadowTextStyle, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.location}</CustomText>
+                            {/* <CustomText style={[styles.overlayText, shadowTextStyle, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.location}</CustomText> */}
+                            <CustomText style={[styles.overlayText, {color: darkText ? '#525252' : '#fff'}]} fontWeight="extrabold">{ticket.location}</CustomText>
                         </>
                     )}
                 </View>
@@ -176,6 +180,7 @@ const ShowImage = ({ route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#EEEEEE'
     },
     imageContainer: {
         width: scale(356),

@@ -37,11 +37,11 @@ const TicketBook = () => {
 
   const [openOrder, setOpenOrder] = useState(false);
   const [openType, setOpenType] = useState(false);
-  const [defaultOrder, setDefaultOrder] = useState('eventTime');
+  const [defaultOrder, setDefaultOrder] = useState('registerTime');
   const [defaultType, setDefaultType] = useState("");
   const [orders, setOrders] = useState([
-    {label: '관람일순', value: 'eventTime'},
     {label: '등록일순', value: 'registerTime'},
+    {label: '관람일순', value: 'eventTime'},
     {label: '콘텐츠 평점순', value: 'rating'},
   ]);
   const [types, setTypes] = useState([

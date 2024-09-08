@@ -96,7 +96,7 @@ const ShowPaper = ({route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#eeeeee',
+    backgroundColor: '#EEEEEE',
   },
   cardContainer: {
     paddingLeft: scale(17),

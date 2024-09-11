@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {View, TouchableOpacity, Image, Modal, StyleSheet} from 'react-native';
+import {CustomText} from '../CustomText';
+import {WebView} from 'react-native-webview';
 import noCheck from '../../images/no_check.png';
 import check from '../../images/check.png';
-import {CustomText, CustomTextInput} from '../CustomText';
+import backButton from '../../images/back_button.png';
 
-
-const AgreementItem = ({label, guideText, buttonText, isChecked, onPress}) => (
+const AgreementItem = ({label, guideText, buttonText, isChecked, onPress, onLabelPress}) => (
   <View style={styles.itemContainer}>
     <View style={styles.labelBox}>
       <CustomText style={styles.label}>{label}</CustomText>
@@ -23,7 +24,7 @@ const AgreementItem = ({label, guideText, buttonText, isChecked, onPress}) => (
         </View>
       </TouchableOpacity>
     </View>
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onLabelPress}>
       <CustomText style={styles.btnText}>{buttonText}</CustomText>
     </TouchableOpacity>
   </View>
@@ -36,6 +37,9 @@ const Agreement = ({updateAgreementStatus}) => {
     thirdPartyInfo: false,
     newsAndBenefits: false,
   });
+
+  const [webViewVisible, setWebViewVisible] = useState(false);
+  const [webViewUrl, setWebViewUrl] = useState('');
 
   const toggleAgreement = key => {
     const allAgreed = Object.values(agreements).every(value => value);
@@ -50,8 +54,7 @@ const Agreement = ({updateAgreementStatus}) => {
 
   const handlePressAllBtn = () => {
     const allAgreed = Object.values(agreements).every(value => value);
-    console.log('allAgreed:', allAgreed);
-  
+
     if (allAgreed) {
       setAgreements({
         terms: false,
@@ -70,12 +73,33 @@ const Agreement = ({updateAgreementStatus}) => {
       updateAgreementStatus('all', false);
     }
   };
-  
+
+  const handleLabelPress = (idx) => {
+    let url = '';
+    switch (idx) {
+      case 1:
+        url = 'https://sugar-dresser-cb0.notion.site/16ea3dbb19534ea3a14a567254f63168?pvs=4';
+        break;
+      case 2:
+        url = 'https://app.catchsecu.com/document/C/9a77778561d8ddc';
+        break;
+      case 3:
+        url = 'https://app.catchsecu.com/document/C/20c406134e3164f';
+        break;
+      default:
+        break;
+    }
+    if (url) {
+      setWebViewUrl(url);
+      setWebViewVisible(true);
+    }
+  }
+
   return (
     <>
       <View style={{marginLeft: 8}}>
         <View style={styles.allAgreement}>
-          <CustomText style={{color: '#525252',fontSize: 12}} fontWeight="bold">전체 동의하기</CustomText>
+          <CustomText style={{color: '#525252', fontSize: 12}} fontWeight="bold">전체 동의하기</CustomText>
           <TouchableOpacity onPress={() => handlePressAllBtn()}>
             <View>
               {Object.keys(agreements).every(key => agreements[key]) ? (
@@ -88,6 +112,7 @@ const Agreement = ({updateAgreementStatus}) => {
         </View>
         <CustomText style={[styles.guideText, { paddingTop: 0, paddingBottom: 15}]}>선택적 약관에 대한 동의를 포함합니다. 전체 동의하기 선택 후 선택적 약관에 대한 동의를 변경하실 수 있습니다.</CustomText>
       </View>
+
       <View style={styles.agreementLists}>
         <AgreementItem
           label="필수"
@@ -95,6 +120,7 @@ const Agreement = ({updateAgreementStatus}) => {
           buttonText="이용약관"
           isChecked={agreements.terms}
           onPress={() => toggleAgreement('terms')}
+          onLabelPress={() => handleLabelPress(1)}
         />
 
         <AgreementItem
@@ -103,6 +129,7 @@ const Agreement = ({updateAgreementStatus}) => {
           buttonText="필수 개인정보의 수집 및 사용"
           isChecked={agreements.personalInfo}
           onPress={() => toggleAgreement('personalInfo')}
+          onLabelPress={() => handleLabelPress(2)}
         />
 
         <AgreementItem
@@ -111,6 +138,7 @@ const Agreement = ({updateAgreementStatus}) => {
           buttonText="제3자에게 정보제공"
           isChecked={agreements.thirdPartyInfo}
           onPress={() => toggleAgreement('thirdPartyInfo')}
+          onLabelPress={() => handleLabelPress(3)}
         />
 
         <AgreementItem
@@ -120,6 +148,14 @@ const Agreement = ({updateAgreementStatus}) => {
           onPress={() => toggleAgreement('newsAndBenefits')}
         />
       </View>
+
+      {/* WebView Modal */}
+      <Modal visible={webViewVisible} onRequestClose={() => setWebViewVisible(false)}>
+        <TouchableOpacity style={{paddingTop: 16, paddingBottom: 10}} onPress={() => setWebViewVisible(false)}>
+          <Image source={backButton} style={{width: 28, height: 28, marginHorizontal: 20}}/>
+        </TouchableOpacity>
+        <WebView source={{ uri: webViewUrl }} />
+      </Modal>
     </>
   );
 };

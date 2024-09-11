@@ -18,6 +18,7 @@ const ResignReason = ({route}) => {
             // async storage에서 userType 가져오기
             const userType = await AsyncStorage.getItem('userType');
             console.log('userType', userType);
+            setModalVisible(false);
 
             if (userType == 'KAKAO' || userType == 'APPLE') {
                 console.log('소셜 탈퇴');

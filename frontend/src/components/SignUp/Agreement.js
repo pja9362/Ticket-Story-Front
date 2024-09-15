@@ -151,7 +151,7 @@ const Agreement = ({updateAgreementStatus}) => {
 
       {/* WebView Modal */}
       <Modal visible={webViewVisible} onRequestClose={() => setWebViewVisible(false)}>
-        <TouchableOpacity style={{paddingTop: 16, paddingBottom: 10}} onPress={() => setWebViewVisible(false)}>
+        <TouchableOpacity style={{paddingTop: 32, paddingBottom: 10}} onPress={() => setWebViewVisible(false)}>
           <Image source={backButton} style={{width: 28, height: 28, marginHorizontal: 20}}/>
         </TouchableOpacity>
         <WebView source={{ uri: webViewUrl }} />

@@ -41,7 +41,9 @@ const TutorialHome = ({navigation}) => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header title="티켓스토리 이용방법" />
+            <View style={{paddingHorizontal: 15}}>
+                <Header title="티켓스토리 이용방법" />
+            </View>
             {/* 티켓 등록 방법 */}
             <ScrollView style={{flex: 1}} contentContainerStyle={{flexGrow: 1}} showsVerticalScrollIndicator={false}>
                 <View style={styles.contentsContainer}>
@@ -85,17 +87,17 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        paddingHorizontal: 15,
         paddingTop: 5,
         paddingBottom: 15
     },
     contentsContainer: {
         marginTop: 15,
-        paddingHorizontal: 10
+        paddingHorizontal: 15
     },
     title: {
         fontSize: 20,
-        color: '#525252'
+        color: '#525252',
+        paddingHorizontal: 15
     },
     colButtonContainer: {
         flexDirection: 'column',

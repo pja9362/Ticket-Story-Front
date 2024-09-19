@@ -37,9 +37,6 @@ const SignUp = ({navigation}) => {
   return (
     <View style={styles.container}>
 
-      {/* <Header title="회원가입" /> */}
-
-
       <View style={styles.headerContainer}>
         {step !== 4 ? (
           <TouchableOpacity onPress={previousStep}>

@@ -7,9 +7,6 @@ import { signUpRequest } from '../../actions/auth/auth';
 import {CustomText, CustomTextInput} from '../CustomText';
 
 const Step3 = ({nextStep, handleChange, values}) => {
-  // const [year, setYear] = useState('');
-  // const [month, setMonth] = useState('');
-  // const [day, setDay] = useState('');
   const [year, setYear] = useState(values.birthday?.split('.')[0] || '');
   const [month, setMonth] = useState(values.birthday?.split('.')[1] || '');
   const [day, setDay] = useState(values.birthday?.split('.')[2] || '');

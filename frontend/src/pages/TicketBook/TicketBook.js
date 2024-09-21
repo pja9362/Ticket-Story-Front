@@ -200,8 +200,8 @@ const TicketBook = () => {
                 style={{width: 130, minHeight: 30, borderColor: '#525252'}}
                 containerStyle={{marginLeft:15, marginBottom:15, width: 130, minHeight: 30}}
                 dropDownContainerStyle={{borderColor: '#525252'}}
-                labelStyle={{fontFamily: 'Pretendard-Medium', fontSize: 14}}
-                textStyle={{fontFamily: 'Pretendard-Regular', fontSize: 14}}
+                labelStyle={{fontFamily: 'Pretendard-Medium', fontSize: 14, color: '#525252'}}
+                textStyle={{fontFamily: 'Pretendard-Regular', fontSize: 14, color: '#525252'}}
                 listItemContainerStyle={{height:30, borderBottomWidth: 1, borderBottomColor: '#EEEEEE', borderBottomStartRadius : 10, borderBottomEndRadius : 10}}
                 selectedItemLabelStyle={{fontFamily: 'Pretendard-Medium'}}
                 showTickIcon={false}
@@ -227,8 +227,8 @@ const TicketBook = () => {
               style={{width: 90, minHeight: 30, borderColor: '#525252'}}
               containerStyle={{marginBottom:15, width: 90, minHeight: 30, marginRight: 15}}
               dropDownContainerStyle={{borderColor: '#525252'}}
-              labelStyle={{fontFamily: 'Pretendard-Medium', fontSize: 14}}
-              textStyle={{fontFamily: 'Pretendard-Regular', fontSize: 14}}
+              labelStyle={{fontFamily: 'Pretendard-Medium', fontSize: 14, color: '#525252'}}
+              textStyle={{fontFamily: 'Pretendard-Regular', fontSize: 14, color: '#525252'}}
               listItemContainerStyle={{height:30, borderBottomWidth: 1, borderBottomColor: '#EEEEEE', borderBottomStartRadius : 10, borderBottomEndRadius : 10}}
               selectedItemLabelStyle={{fontFamily: 'Pretendard-Medium'}}
               showTickIcon={false}

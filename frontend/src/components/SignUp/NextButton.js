@@ -12,7 +12,7 @@ const NextButton = ({onClick, isValid = 'true', isLast, message}) => {
   };
 
   return (
-    <View style={{alignItems: 'center', marginTop: 22}}>
+    <View style={{alignItems: 'center', marginTop: isLast ? 0 : 22 }}>
       {
         message && <CustomText style={styles.errorMessage}>{message}</CustomText>
       }

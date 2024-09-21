@@ -70,17 +70,6 @@ const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [initialRoute, setInitialRoute] = useState(null);
 
-  useEffect(() => {
-    const logNavigationState = () => {
-      const state = navigationRef.getRootState();
-      console.log("Current Navigation State:", state.routes);
-    };
-
-    const unsubscribe = navigationRef.addListener('state', logNavigationState);
-
-    return () => unsubscribe();
-  }, [navigationRef]);
-
 
   const checkLoginStatus = async () => {
     console.log('Checking login status...');
@@ -131,45 +120,7 @@ const App = () => {
     }
   }, [initialRoute]);
 
-  // useEffect(() => {
-  //   if (initialRoute) {
-  //     console.log("로그인 상태 확인 후 초기화면 세팅 => 로그인 여부: ", isLoggedIn);
-  //     console.log('초기화면 세팅 Initializing app... => ', initialRoute);
-  
-  //     let initialNavState;
-  
-  //     if (initialRoute === 'Init') {
-  //       initialNavState = {
-  //         routes: [
-  //           {
-  //             name: 'MainStackWithDrawer',
-  //             state: {
-  //               routes: [
-  //                 {
-  //                   name: 'Init'
-  //                 }
-  //               ]
-  //             }
-  //           },
-  //           {
-  //             name: 'Init'
-  //           }
-  //         ]
-  //       };
-  //     } else {
-  //       initialNavState = {
-  //         routes: [
-  //           {
-  //             name: initialRoute,  
-  //           }
-  //         ],
-  //       };
-  //     }
 
-  //     setInitialState(initialNavState);
-  //     setIsReady(true);
-  //   }
-  // }, [initialRoute]);
   
 
   const screenOptions = {

@@ -1,19 +1,22 @@
-import React, {useState} from 'react';
-import {View, TouchableOpacity, Image, Modal, StyleSheet} from 'react-native';
-import {CustomText} from '../CustomText';
-import {WebView} from 'react-native-webview';
+import React, { useState } from 'react';
+import { View, TouchableOpacity, Image, Modal, StyleSheet, Dimensions } from 'react-native';
+import { CustomText } from '../CustomText';
+import { WebView } from 'react-native-webview';
 import noCheck from '../../images/no_check.png';
 import check from '../../images/check.png';
-import backButton from '../../images/back_button.png';
+import backButton from '../../images/back_button.png'; // 이 이미지는 사용되지 않는 것 같습니다. 필요 없다면 제거해주세요.
+import close from '../../images/icon_close.png';
 
-const AgreementItem = ({label, guideText, buttonText, isChecked, onPress, onLabelPress}) => (
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
+const AgreementItem = ({ label, guideText, buttonText, isChecked, onPress, onLabelPress }) => (
   <View style={styles.itemContainer}>
     <View style={styles.labelBox}>
       <CustomText style={styles.label}>{label}</CustomText>
     </View>
-    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
       <CustomText style={styles.guideText}>{guideText}</CustomText>
-
       <TouchableOpacity onPress={onPress}>
         <View style={styles.checkboxContainer}>
           {isChecked ? (
@@ -24,13 +27,15 @@ const AgreementItem = ({label, guideText, buttonText, isChecked, onPress, onLabe
         </View>
       </TouchableOpacity>
     </View>
-    <TouchableOpacity onPress={onLabelPress}>
-      <CustomText style={styles.btnText}>{buttonText}</CustomText>
-    </TouchableOpacity>
+    {buttonText && (
+      <TouchableOpacity onPress={onLabelPress}>
+        <CustomText style={styles.btnText}>{buttonText}</CustomText>
+      </TouchableOpacity>
+    )}
   </View>
 );
 
-const Agreement = ({updateAgreementStatus}) => {
+const Agreement = ({ updateAgreementStatus }) => {
   const [agreements, setAgreements] = useState({
     terms: false,
     personalInfo: false,
@@ -48,7 +53,7 @@ const Agreement = ({updateAgreementStatus}) => {
       ...prevAgreements,
       [key]: !prevAgreements[key],
     }));
-    
+
     updateAgreementStatus(key, allAgreed);
   };
 
@@ -95,12 +100,32 @@ const Agreement = ({updateAgreementStatus}) => {
     }
   }
 
+  const handleWebViewClose = () => {
+    setWebViewVisible(false);
+  }
+
   return (
     <>
-      <View style={{marginLeft: 8}}>
+      <Modal
+        visible={webViewVisible}
+        transparent={true}
+        onRequestClose={handleWebViewClose}
+        animationType="slide"
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.headerContainer}>
+            <TouchableOpacity style={styles.closeButton} onPress={handleWebViewClose}>
+              <Image source={close} style={styles.closeButtonImage} />
+            </TouchableOpacity>
+          </View>
+          <WebView source={{ uri: webViewUrl }} style={styles.webView} />
+        </View>
+      </Modal>
+
+      <View style={{ marginLeft: 8 }}>
         <View style={styles.allAgreement}>
-          <CustomText style={{color: '#525252', fontSize: 12}} fontWeight="bold">전체 동의하기</CustomText>
-          <TouchableOpacity onPress={() => handlePressAllBtn()}>
+          <CustomText style={{ color: '#525252', fontSize: 12 }} fontWeight="bold">전체 동의하기</CustomText>
+          <TouchableOpacity onPress={handlePressAllBtn}>
             <View>
               {Object.keys(agreements).every(key => agreements[key]) ? (
                 <Image source={check} style={styles.checkbox} />
@@ -110,7 +135,7 @@ const Agreement = ({updateAgreementStatus}) => {
             </View>
           </TouchableOpacity>
         </View>
-        <CustomText style={[styles.guideText, { paddingTop: 0, paddingBottom: 15}]}>선택적 약관에 대한 동의를 포함합니다. 전체 동의하기 선택 후 선택적 약관에 대한 동의를 변경하실 수 있습니다.</CustomText>
+        <CustomText style={[styles.guideText, { paddingTop: 0, paddingBottom: 15 }]}>선택적 약관에 대한 동의를 포함합니다. 전체 동의하기 선택 후 선택적 약관에 대한 동의를 변경하실 수 있습니다.</CustomText>
       </View>
 
       <View style={styles.agreementLists}>
@@ -148,19 +173,36 @@ const Agreement = ({updateAgreementStatus}) => {
           onPress={() => toggleAgreement('newsAndBenefits')}
         />
       </View>
-
-      {/* WebView Modal */}
-      <Modal visible={webViewVisible} onRequestClose={() => setWebViewVisible(false)}>
-        <TouchableOpacity style={{paddingTop: 32, paddingBottom: 10}} onPress={() => setWebViewVisible(false)}>
-          <Image source={backButton} style={{width: 28, height: 28, marginHorizontal: 20}}/>
-        </TouchableOpacity>
-        <WebView source={{ uri: webViewUrl }} />
-      </Modal>
     </>
   );
 };
 
 const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: windowWidth,
+    height: windowHeight,
+    backgroundColor: '#fff',
+  },
+  headerContainer: {
+    width: '100%',
+    paddingHorizontal: 20,
+    paddingTop: 50,
+    alignItems: 'flex-end',
+  },
+  closeButton: {
+    padding: 10,
+  },
+  closeButtonImage: {
+    width: 30,
+    height: 30,
+  },
+  webView: {
+    width: windowWidth,
+    height: windowHeight - 60, 
+  },
   allAgreement: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -200,8 +242,10 @@ const styles = StyleSheet.create({
   agreementLists: {
     borderWidth: 1,
     borderColor: '#D9D9D9',
-    borderRadius: 5,
-    paddingHorizontal: 18,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    backgroundColor: '#fff',
   },
 });
 

@@ -33,7 +33,7 @@ export const scrapeCGVTicketDetails = webViewRef => {
           var time = (rawDateTime.split(')')[1]).split('~')[0].trim();
           
           var locationElement = document.querySelector('.detail_info_list .map');
-          var rawLocation = locationElement.innerText.replace('map', '').trim();
+          var rawLocation = locationElement.innerText.replace('map', '').replace('CGV', '').replace('cgv','').trim();
           
           var locationParts = rawLocation.split(' ');
           var location = locationParts[0];

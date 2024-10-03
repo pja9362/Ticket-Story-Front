@@ -162,11 +162,10 @@ const EditReview = ({navigation, route}) => {
   };
 
   const handleChangeText = (text) => {
-    if (inputHeight <= maxHeight) {
+    if (text.length <= reviewContent.length || inputHeight <= maxHeight) {
       setReviewContent(text);
     } else {
       alert('더 이상 입력 불가');
-      setReviewContent(prevText => prevText.slice(0, -1)); // 마지막 입력 제거
     }
   };
 

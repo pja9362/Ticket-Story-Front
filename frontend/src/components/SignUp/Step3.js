@@ -39,10 +39,10 @@ const Step3 = ({nextStep, handleChange, values}) => {
   }, [year, month, day]);
 
   const isValid =
-    year !== '' &&
-    month !== '' &&
-    day !== '' &&
-    gender !== '' &&
+    // year !== '' &&
+    // month !== '' &&
+    // day !== '' &&
+    // gender !== '' &&
     requiredAgreements.terms &&
     requiredAgreements.personalInfo &&
     requiredAgreements.thirdPartyInfo;

@@ -11,6 +11,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { loadMyStatistics, loadMovieStats, loadPerformanceStats, loadSportsStats } from '../../actions/statistics/statistics';
 import LoadingScreen from '../../components/LoadingScreen';
 import { setDefaultOrder } from '../../actions/ticket/ticket';
+import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil';
 
 const Stats = () => {
   const viewRef = useRef();
@@ -162,8 +163,8 @@ const Stats = () => {
           <CustomText style={{ color: '#525252', fontSize: 17, textAlign: 'center' }} fontWeight="bold">나의 통계</CustomText>
         </View>
         <View style={{flex: 1, alignItems: 'flex-end', paddingRight: 5}}>
-          <TouchableOpacity style={{width: 64, backgroundColor: '#EEEEEE', borderRadius: 50}} onPress={handleShareBtnPress}>
-            <CustomText style={{ color: '#525252', paddingVertical: 7, fontSize: 13, paddingHorizontal: 9 }} fontWeight="bold">공유하기</CustomText>
+          <TouchableOpacity style={{width: scale(70), backgroundColor: '#EEEEEE', borderRadius: 50, justifyContent: 'center', alignItems: 'center'}} onPress={handleShareBtnPress}>
+            <CustomText style={{ color: '#525252', paddingVertical: verticalScale(7), fontSize: scale(13), paddingHorizontal: scale(9) }} fontWeight="bold">공유하기</CustomText>
           </TouchableOpacity>
         </View>
       </View>

@@ -10,11 +10,11 @@ const Step4 = () => {
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      // navigation.navigate('MainStackWithDrawer');
-      navigation.dispatch(CommonActions.reset({
-        index: 0,
-        routes: [{name: 'MainStackWithDrawer'}]
-      }))
+      navigation.navigate('AppGuide');
+      // navigation.dispatch(CommonActions.reset({
+      //   index: 0,
+      //   routes: [{name: 'AppGuide'}]
+      // }))
     }, 1000);
 
     return () => clearTimeout(timeoutId); 

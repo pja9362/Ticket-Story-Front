@@ -10,7 +10,10 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { refreshTokens } from './src/actions/auth/auth';
-import SplashScreen from './src/pages/Auth/Splash';
+
+import SplashScreen from 'react-native-splash-screen';
+
+import Splash from './src/pages/Auth/Splash';
 import InitScreen from './src/pages/Auth/Init';
 import LoginScreen from './src/pages/Auth/Login';
 import SignUpScreen from './src/pages/Auth/SignUp';
@@ -53,6 +56,7 @@ import ChangePassword from './src/pages/DrawerScreens/ChangePassword';
 import ResignScreen from './src/pages/DrawerScreens/ResignScreen';
 import ResignReason from './src/pages/DrawerScreens/ResignReason';
 import SocialLogin from './src/pages/Auth/SocialLogin';
+import AppGuide from './src/pages/Auth/AppGuide';
 
 import TutorialHome from './src/pages/Tutorial/TutorialHome';
 import TutorialEnroll from './src/pages/Tutorial/TutorialEnroll';
@@ -151,8 +155,14 @@ const App = () => {
     </Drawer.Navigator>
   );
 
+  useEffect(() => {
+    setTimeout(() => {
+      SplashScreen.hide();
+    }, 300);
+  }, []);
+
   if (!isReady) {
-    return <SplashScreen />;
+    return <Splash />;
   }
 
   return (
@@ -164,11 +174,11 @@ const App = () => {
             <NavigationContainer initialState={initialState} ref={navigationRef}>
               <Stack.Navigator screenOptions={screenOptions}>
                 {/* <Stack.Screen name="Statistics" component={StatisticScreen} /> */}
-  
                 <Stack.Screen name="MainStackWithDrawer" component={MainStackWithDrawer} />
                 <Stack.Screen name="Init" component={InitScreen} options={{ gestureEnabled: false }}/>
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="SignUp" component={SignUpScreen} />
+                <Stack.Screen name="AppGuide" component={AppGuide} />
                 <Stack.Screen name="FindPassword" component={FindPasswordScreen} />
                 <Stack.Screen name="ChangePW" component={ChangePWScreen} />
                 <Stack.Screen name="ChangePWFinish" component={ChangePWFinish} />

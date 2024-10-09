@@ -10,7 +10,10 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { refreshTokens } from './src/actions/auth/auth';
-import SplashScreen from './src/pages/Auth/Splash';
+
+import SplashScreen from 'react-native-splash-screen';
+
+import Splash from './src/pages/Auth/Splash';
 import InitScreen from './src/pages/Auth/Init';
 import LoginScreen from './src/pages/Auth/Login';
 import SignUpScreen from './src/pages/Auth/SignUp';
@@ -145,8 +148,14 @@ const App = () => {
     </Drawer.Navigator>
   );
 
+  useEffect(() => {
+    setTimeout(() => {
+      SplashScreen.hide();
+    }, 300);
+  }, []);
+
   if (!isReady) {
-    return <SplashScreen />;
+    return <Splash />;
   }
 
   return (

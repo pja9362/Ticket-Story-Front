@@ -44,12 +44,14 @@ const SignUp = ({navigation}) => {
             <Image source={backButton} style={{width: 28, height: 28}}/>
           </TouchableOpacity>
         ) : (
-          <View width={20} />
+          // <View width={20} />
+          <View style={{width: 28, height: 28}} />
         )}
         <View style={styles.titleContainer} pointerEvents="none">
           <CustomText style={styles.title} fontWeight="bold">회원가입</CustomText>
         </View>
-        <View width={20} />
+        {/* <View width={20} /> */}
+        <View style={{width: 28, height: 28}} />
       </View>
 
 

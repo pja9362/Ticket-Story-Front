@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import Header from '../../components/Header';
 import Step1 from '../../components/SignUp/Step1';
@@ -17,6 +17,7 @@ const SignUp = ({navigation}) => {
   const nextStep = () => {
     setStep(step + 1);
   };
+
 
   const previousStep = () => {
     if ( step !== 1) {

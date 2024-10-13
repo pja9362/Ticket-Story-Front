@@ -254,10 +254,10 @@ const TicketBook = () => {
               ))
               : (
                 <View style={styles.noTicketContainer}>
-                  <Image source={noTicket} style={styles.ticketCard} />
+                  {/* <Image source={noTicket} style={styles.ticketCard} />
                   <TouchableOpacity onPress={openBottomSheet}>
                     <Image source={addIcon} style={styles.addIcon} />
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </View>
               )
             }

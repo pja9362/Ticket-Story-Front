@@ -104,13 +104,16 @@ export const sendEmail = async (userId) => {
 };
 
 export const signUpRequest = async (formData) => {
+  console.log('formData: ',formData);
   return axios.post(
     `${API_URL}/api/v1/auth/signup`,
     {
       id: formData.id,
       password: formData.password,
-      birthday: formData.birthday,
-      gender: formData.gender.toUpperCase(),
+      birthday: formData.birthday == ".." ? '' : formData.birthday,
+      // birthday: formData.birthday,
+      gender: formData.gender ? formData.gender.toUpperCase() : '',
+      // gender: formData.gender.toUpperCase(),
     },
     { headers: { 'Content-Type': 'application/json' } }
   ).then(response => {
@@ -121,7 +124,7 @@ export const signUpRequest = async (formData) => {
     }
     return response.data;
   }).catch(error => {
-    console.error('Error signing up:', error);
+    console.error('Error signing up:', error.response.data);
     throw error;
   }
   );
@@ -298,18 +301,29 @@ export const verfiyPasswordResetCode = async (userId, code) => {
   });
 };
 
-export const resetPassword = async (password, token) => {
-  console.log('22222', password);
+export const resetPassword = async (password) => {
+  try {
+    console.log('22222', password);
+    const token = await AsyncStorage.getItem('accessToken');
 
-  return requestWithRetry(async () => {
-    const response = await axios.post(
-      `${API_URL}/api/v1/auth/password/changePassword`,
-      { password: password },
-      { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json;charset=UTF-8', 'Authorization': `Bearer ${token}` } }
-    );
-    console.log('Password reset response:', response.data);
-    return response.data;
-  });
+    if (!token) {
+      console.error('Token not found in AsyncStorage');
+      throw new Error('No access token found');
+    }
+
+    return requestWithRetry(async () => {
+      const response = await axios.post(
+        `${API_URL}/api/v1/auth/password/changePassword`,
+        { password: password },
+        { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json;charset=UTF-8', 'Authorization': `Bearer ${token}` } }
+      );
+      console.log('Password reset response:', response.data);
+      return response.data;
+    });
+  } catch (error) {
+    console.error('Error resetting password:', error);
+    throw error;
+  }
 };
 
 export const checkPassword = async password => {

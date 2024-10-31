@@ -12,6 +12,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import iconUp from '../../images/icon_up.png'
 import iconDown from '../../images/icon_down.png'
 import iconLine from '../../images/icon_line.png'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import LoadingScreen from '../../components/LoadingScreen';
 
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
@@ -86,12 +87,12 @@ const TicketBook = () => {
 
   const refreshTickets = useCallback(async () => {
     // console.log(4444);
-      dispatch(getMyTickets(0, (pageRef.current + 1) * 10, orderText, defaultOrder, defaultType, (newTickets) => {
-        setAllTickets([]);
-        setAllTickets(newTickets);
-        setTimeout(restoreScrollPosition, 0);
-        console.log('allTickets',allTickets);
-      }));
+    dispatch(getMyTickets(0, (pageRef.current + 1) * 10, orderText, defaultOrder, defaultType, (newTickets) => {
+      setAllTickets([]);
+      setAllTickets(newTickets);
+      setTimeout(restoreScrollPosition, 0);
+      console.log('allTickets',allTickets);
+    }));
       setOpenOrder(false);
       setOpenType(false);
   }, [dispatch, defaultOrder, orderText, defaultType]);
@@ -113,9 +114,9 @@ const TicketBook = () => {
   useEffect(() => {
     // console.log(3333);
     if (page > 0) {
-      dispatch(getMyTickets(page, 10, orderText, defaultOrder, defaultType, (newTickets) => {
-        setAllTickets((prevTickets) => [...prevTickets, ...newTickets]);
-      }));
+    dispatch(getMyTickets(page, 10, orderText, defaultOrder, defaultType, (newTickets) => {
+      setAllTickets((prevTickets) => [...prevTickets, ...newTickets]);
+    }));
     }
   }, [page]);
 
@@ -149,7 +150,6 @@ const TicketBook = () => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollTo({ y: 0, animated: true });
     }
-
     dispatch(getMyTickets(0, 10, orderText, defaultOrder, defaultType, (newTickets) => {
       setPage(0);
       setAllTickets([]);
@@ -165,7 +165,6 @@ const TicketBook = () => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollTo({ y: 0, animated: true });
     }
-
     dispatch(getMyTickets(0, 10, orderText, value, defaultType, (newTickets) => {
       setPage(0);
       setAllTickets([]);
@@ -179,7 +178,6 @@ const TicketBook = () => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollTo({ y: 0, animated: true });
     }
-
     dispatch(getMyTickets(0, 10, orderText, defaultOrder, value, (newTickets) => {
       setPage(0);
       setAllTickets([]);
@@ -200,8 +198,8 @@ const TicketBook = () => {
                 style={{width: 130, minHeight: 30, borderColor: '#525252'}}
                 containerStyle={{marginLeft:15, marginBottom:15, width: 130, minHeight: 30}}
                 dropDownContainerStyle={{borderColor: '#525252'}}
-                labelStyle={{fontFamily: 'Pretendard-Medium', fontSize: 14}}
-                textStyle={{fontFamily: 'Pretendard-Regular', fontSize: 14}}
+                labelStyle={{fontFamily: 'Pretendard-Medium', fontSize: 14, color: '#525252'}}
+                textStyle={{fontFamily: 'Pretendard-Regular', fontSize: 14, color: '#525252'}}
                 listItemContainerStyle={{height:30, borderBottomWidth: 1, borderBottomColor: '#EEEEEE', borderBottomStartRadius : 10, borderBottomEndRadius : 10}}
                 selectedItemLabelStyle={{fontFamily: 'Pretendard-Medium'}}
                 showTickIcon={false}
@@ -227,8 +225,8 @@ const TicketBook = () => {
               style={{width: 90, minHeight: 30, borderColor: '#525252'}}
               containerStyle={{marginBottom:15, width: 90, minHeight: 30, marginRight: 15}}
               dropDownContainerStyle={{borderColor: '#525252'}}
-              labelStyle={{fontFamily: 'Pretendard-Medium', fontSize: 14}}
-              textStyle={{fontFamily: 'Pretendard-Regular', fontSize: 14}}
+              labelStyle={{fontFamily: 'Pretendard-Medium', fontSize: 14, color: '#525252'}}
+              textStyle={{fontFamily: 'Pretendard-Regular', fontSize: 14, color: '#525252'}}
               listItemContainerStyle={{height:30, borderBottomWidth: 1, borderBottomColor: '#EEEEEE', borderBottomStartRadius : 10, borderBottomEndRadius : 10}}
               selectedItemLabelStyle={{fontFamily: 'Pretendard-Medium'}}
               showTickIcon={false}
@@ -256,10 +254,10 @@ const TicketBook = () => {
               ))
               : (
                 <View style={styles.noTicketContainer}>
-                  <Image source={noTicket} style={styles.ticketCard} />
+                  {/* <Image source={noTicket} style={styles.ticketCard} />
                   <TouchableOpacity onPress={openBottomSheet}>
                     <Image source={addIcon} style={styles.addIcon} />
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </View>
               )
             }

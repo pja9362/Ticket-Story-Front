@@ -244,7 +244,7 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   }, [location]);
 
   const handleTitleChange = (text) => {
-    if (text.length <= 30) {
+    if (text.length <= title.length || text.length <= 30) {
       console.log(text.length);
       setTitle(text);
       setIsContentSelected(false);

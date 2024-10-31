@@ -58,13 +58,13 @@ const BottomSheetMenu = ({closeBottomSheet, onClick}) => {
         {/* 바텀 시트 */}
         <Animated.View style={[styles.contentContainer, { transform: [{ translateY }] }]}>
           <TouchableOpacity onPress={() => onClick('scrape')} style={styles.textArea}>
-            <CustomText style={styles.btnText} fontWeight="bold">온라인 티켓 <CustomText style={styles.btnText} fontWeight="medium">등록하기</CustomText></CustomText>
+            <CustomText style={styles.btnText} fontWeight="extrabold">온라인 티켓 <CustomText style={styles.btnText} fontWeight="semibold">등록하기</CustomText></CustomText>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => onClick('camera')} style={styles.textArea}>
-            <CustomText style={styles.btnText} fontWeight="bold">카메라로 <CustomText style={styles.btnText} fontWeight="medium">티켓 등록하기</CustomText></CustomText>
+            <CustomText style={styles.btnText} fontWeight="extrabold">카메라로 <CustomText style={styles.btnText} fontWeight="semibold">티켓 등록하기</CustomText></CustomText>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => onClick('hand')} style={styles.textAreaF}>
-            <CustomText style={styles.btnText} fontWeight="bold">직접 입력으로 <CustomText style={styles.btnText} fontWeight="medium">티켓 등록하기</CustomText></CustomText>
+            <CustomText style={styles.btnText} fontWeight="extrabold">직접 입력으로 <CustomText style={styles.btnText} fontWeight="semibold">티켓 등록하기</CustomText></CustomText>
           </TouchableOpacity>
         </Animated.View>
       </View>
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     color: '#525252',
   },
   textArea: {
-    width: '100%',
+    width: '85%',
     borderBottomWidth: 1,
     paddingBottom: 6,
     borderBottomColor: '#D6D6D6',

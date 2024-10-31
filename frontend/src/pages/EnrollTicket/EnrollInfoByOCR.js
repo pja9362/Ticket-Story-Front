@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   Image,
   Modal,
-  Platform
+  Platform,
+  BackHandler
 } from 'react-native';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -35,11 +36,13 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
   const locationLists = useSelector(state => state.enrollTicketSearch.locationLists);
 
   const { categoryInfo } = route.params;
-  const { category, categoryDetail } = categoryInfo;
+  // const { category, categoryDetail } = categoryInfo;
 
     //
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
+    const [category, setCategory] = useState(categoryInfo.category);
+    const [categoryDetail, setCategoryDetail] = useState(categoryInfo.categoryDetail);
   
     const showDatePicker = () => {
       setDatePickerVisibility(true);
@@ -186,6 +189,20 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
   }, [ocrResponse]);
 
   useEffect(() => {
+    let transformedCategoryDetail = '';
+    if (categoryDetail === '메가박스') {
+      transformedCategoryDetail = 'MEGABOX';
+    } else if (categoryDetail === '롯데시네마') {
+      transformedCategoryDetail = 'LOTTECINEMA';
+    } else if (categoryDetail === '독립영화관') {
+      transformedCategoryDetail = 'ETC';
+    } else {
+      transformedCategoryDetail = categoryDetail;
+    }
+    setCategoryDetail(transformedCategoryDetail);
+  }, [categoryDetail]);
+
+  useEffect(() => {
     if (title.trim() !== '' && isContentSelected === false) {
       let mappedCategory = getMappedCategory(category);
       const timeoutId = setTimeout(() => {
@@ -293,7 +310,7 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
   }
 
   const handleTitleChange = (text) => {
-    if (text.length <= 30) {
+    if (text.length <= title.length || text.length <= 30) {
       console.log(text.length);
       setTitle(text);
       setIsContentSelected(false);
@@ -551,6 +568,29 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
             </KeyboardAwareScrollView>
     </View>
   )
+
+  useEffect(() => {
+    navigation.setOptions({ gestureEnabled: !loading })
+  }, [loading])
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        if (loading) {
+          return true; 
+        }
+
+        navigation.navigate("MainStack");
+        return true;
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+      };
+    }, [loading])
+  );
 
   return (
     <>

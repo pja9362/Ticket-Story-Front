@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import Header from '../../components/Header';
 import Step1 from '../../components/SignUp/Step1';
@@ -17,6 +17,7 @@ const SignUp = ({navigation}) => {
   const nextStep = () => {
     setStep(step + 1);
   };
+
 
   const previousStep = () => {
     if ( step !== 1) {
@@ -44,12 +45,14 @@ const SignUp = ({navigation}) => {
             <Image source={backButton} style={{width: 28, height: 28}}/>
           </TouchableOpacity>
         ) : (
-          <View width={20} />
+          // <View width={20} />
+          <View style={{width: 28, height: 28}} />
         )}
         <View style={styles.titleContainer} pointerEvents="none">
           <CustomText style={styles.title} fontWeight="bold">회원가입</CustomText>
         </View>
-        <View width={20} />
+        {/* <View width={20} /> */}
+        <View style={{width: 28, height: 28}} />
       </View>
 
 

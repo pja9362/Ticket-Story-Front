@@ -264,7 +264,7 @@ export const getMyTickets = (page, size, order, orderBy, category, callback) => 
       const accessToken = await AsyncStorage.getItem('accessToken');
       
       if (!accessToken) {
-          throw new Error('Access token is not available');
+        throw new Error('Access token is not available');
       }
 
       const response = await axios.get(`${API_URL}/api/v1/ticket/getTicketBookTickets`, {

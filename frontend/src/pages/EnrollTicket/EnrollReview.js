@@ -190,23 +190,14 @@ const EnrollReview = ({navigation, route}) => {
     setSelectedImages(newImages);
   };
 
-  // const handleReviewContentChange = (text) => {
-  //   const lines = text.split('\n');
-  //   if (lines.length > 5) {
-  //     console.log('5줄까지만 입력할 수 있습니다.');
-  //     return;
-  //   }
-  //   setReviewContent(text);
-  // };
-
   const handleChangeText = (text) => {
-    if (inputHeight <= maxHeight) {
+    if (text.length <= reviewContent.length || inputHeight <= maxHeight) {
       setReviewContent(text);
     } else {
       alert('더 이상 입력 불가');
-      setReviewContent(prevText => prevText.slice(0, -1)); // 마지막 입력 제거
     }
   };
+
 
   const onSwipe = async (event) => {
     if (event.nativeEvent.state === State.END) {
@@ -300,6 +291,7 @@ const EnrollReview = ({navigation, route}) => {
               const newHeight = e.nativeEvent.contentSize.height;
               setInputHeight(newHeight);
             }}
+            // onContentSizeChange={handleContentSizeChange}
             onFocus={handleKeyboardDidShow}
           />
         </View>

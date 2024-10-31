@@ -71,7 +71,7 @@ const Total = ({data}) => {
                     {/* <CustomText style={styles.tableCell} fontWeight="medium">{location.locationType}</CustomText> */}
                     <CustomText style={styles.tableCell} fontWeight="medium">
                       {location.locationType === 'MOVIE' ? '영화관' : 
-                      location.locationType === 'GENERAL' ? '공연장' : 
+                      location.locationType === 'OTHER' ? '공연장' : 
                       location.locationType === 'SPORTS' ? '경기장' : location.locationType}
                     </CustomText>
                     <CustomText style={styles.mainTableCell} fontWeight="medium">{location.locationName}</CustomText>

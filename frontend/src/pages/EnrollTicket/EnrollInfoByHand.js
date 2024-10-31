@@ -223,7 +223,7 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   };
 
   const handleTitleChange = (text) => {
-    if (text.length <= 30) {
+    if (text.length <= title.length || text.length <= 30) {
       setTitle(text);
       setIsContentSelected(false);
       setContentsId(null);

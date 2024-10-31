@@ -7,6 +7,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import { StatusBar } from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
+import { Platform } from 'react-native'; // 추가
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { refreshTokens } from './src/actions/auth/auth';
@@ -106,32 +107,79 @@ const App = () => {
     initializeApp();
   }, []);
   
+  // useEffect(() => {
+  //   if (initialRoute) {
+  //     console.log("로그인 상태 확인 후 초기화면 세팅 => 로그인 여부: ", isLoggedIn);
+  //     console.log('초기화면 세팅 Initializing app... => ', initialRoute);
+
+  //     const initialNavState = {
+  //       routes: [
+  //         {
+  //           name: initialRoute 
+  //         }
+  //       ]
+  //     };
+
+  //     setInitialState(initialNavState);
+  //     setIsReady(true);
+  //   }
+  // }, [initialRoute]);
+
   useEffect(() => {
     if (initialRoute) {
       console.log("로그인 상태 확인 후 초기화면 세팅 => 로그인 여부: ", isLoggedIn);
       console.log('초기화면 세팅 Initializing app... => ', initialRoute);
   
-      const initialNavState = {
-        routes: [
-          {
-            name: initialRoute 
-          }
-        ]
-      };
+      let initialNavState;
+  
+      // iOS에서만 'Init'인 경우에 MainStackWithDrawer로 설정
+      if (Platform.OS === 'ios' && initialRoute === 'Init') {
+        initialNavState = {
+          routes: [
+            {
+              name: 'MainStackWithDrawer',
+              state: {
+                routes: [
+                  {
+                    name: 'Init'
+                  }
+                ]
+              }
+            },
+            {
+              name: 'Init'
+            }
+          ]
+        };
+      } else {
+        // Android에서는 'Init'이 아닌 다른 경우에 기존 로직 사용
+        initialNavState = {
+          routes: [
+            {
+              name: initialRoute 
+            }
+          ]
+        };
+      }
+  
       setInitialState(initialNavState);
       setIsReady(true);
     }
   }, [initialRoute]);
+  
+  
 
   const screenOptions = {
     headerShown: false
   };
 
+  
+
   useEffect(() => {
     const logNavigationState = () => {
       const state = navigationRef.getRootState();
       // navigation state 로그 출력 주석처리
-      // console.log("Current Navigation State:", state.routes);
+      console.log("Current Navigation State:", state.routes);
     };
 
     const unsubscribe = navigationRef.addListener('state', logNavigationState);

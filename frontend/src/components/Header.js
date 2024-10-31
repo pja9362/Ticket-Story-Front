@@ -11,16 +11,13 @@ const Header = ({title = '', icon, onIconClick, backDestination, backParams, bac
   const onBackClick = () => { 
 
     if (backClick) {
-      console.log(1);
       backClick();
       return;
     }
 
     if (backDestination) {
-      console.log(2);
       navigation.navigate(backDestination, backParams);
     } else {
-      console.log(3);
       navigation.goBack();
     }
 

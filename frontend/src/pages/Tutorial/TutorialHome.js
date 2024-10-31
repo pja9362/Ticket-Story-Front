@@ -2,6 +2,7 @@ import React from 'react';
 import Header from '../../components/Header';
 import { ScrollView, StyleSheet, SafeAreaView, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { CustomText } from '../../components/CustomText';
+import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil';
 
 import enrollWay1 from '../../images/tutorial/tutorial_1.png';
 import enrollWay2 from '../../images/tutorial/tutorial_2.png';
@@ -95,9 +96,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15
     },
     title: {
-        fontSize: 20,
+        fontSize: scale(20),
         color: '#525252',
-        paddingHorizontal: 15
+        marginLeft: scale(10),
+        marginTop: scale(3),
+        marginBottom: verticalScale(8)
     },
     colButtonContainer: {
         flexDirection: 'column',

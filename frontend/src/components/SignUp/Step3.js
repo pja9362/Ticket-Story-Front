@@ -39,10 +39,10 @@ const Step3 = ({nextStep, handleChange, values}) => {
   }, [year, month, day]);
 
   const isValid =
-    year !== '' &&
-    month !== '' &&
-    day !== '' &&
-    gender !== '' &&
+    // year !== '' &&
+    // month !== '' &&
+    // day !== '' &&
+    // gender !== '' &&
     requiredAgreements.terms &&
     requiredAgreements.personalInfo &&
     requiredAgreements.thirdPartyInfo;
@@ -114,7 +114,14 @@ const Step3 = ({nextStep, handleChange, values}) => {
             <CustomTextInput
               style={{...styles.inputBox, width: 70}}
               value={year}
-              onChangeText={text => setYear(text)}
+              // onChangeText={text => setYear(text)}
+              onChangeText={text => {
+                // 숫자 4자리로 제한
+                const filteredText = text.replace(/[^0-9]/g, ''); // 숫자만 남기기
+                if (filteredText.length <= 4) {
+                  setYear(filteredText);
+                }
+              }}
               keyboardType='numeric'
               placeholder="YYYY"
               placeholderTextColor="#ccc"
@@ -125,7 +132,14 @@ const Step3 = ({nextStep, handleChange, values}) => {
             <CustomTextInput
               style={{...styles.inputBox, width: 54}}
               value={month}
-              onChangeText={text => setMonth(text)}
+              // onChangeText={text => setMonth(text)}
+              onChangeText={text => {
+                // 숫자 2자리로 제한
+                const filteredText = text.replace(/[^0-9]/g, ''); // 숫자만 남기기
+                if (filteredText.length <= 2) {
+                  setMonth(filteredText);
+                }
+              }}
               onBlur={handleMonthBlur}
               keyboardType='numeric'
               placeholder="MM"
@@ -137,7 +151,14 @@ const Step3 = ({nextStep, handleChange, values}) => {
             <CustomTextInput
               style={{...styles.inputBox, width: 50}}
               value={day}
-              onChangeText={text => setDay(text)}
+              // onChangeText={text => setDay(text)}
+              onChangeText={text => {
+                // 숫자 2자리로 제한
+                const filteredText = text.replace(/[^0-9]/g, ''); // 숫자만 남기기
+                if (filteredText.length <= 2) {
+                  setDay(filteredText);
+                }
+              }}
               onBlur={handleDayBlur}
               keyboardType='numeric'
               placeholder="DD"

@@ -14,7 +14,7 @@ const Step2 = ({ nextStep, handleChange, values }) => {
   const [showPasswordGuide, setShowPasswordGuide] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
+  const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&#^+=])[A-Za-z\d@$!%*?&#^+=]{8,16}$/;
 
   const isValid = password !== '' && password === passwordCheck && passwordRegex.test(password);
 

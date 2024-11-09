@@ -244,7 +244,7 @@ const DetailCard = ({ ticket, ticketId }) => {
                              )}
 
                                 <View style={styles.reviewContainer}>
-                                    <CustomText style={{...styles.mainText, color: '#000000', fontSize: scale(14)}} fontWeight="bold"> {ticket.reviewTitle}</CustomText>
+                                    <CustomText style={{...styles.mainText, fontSize: scale(16)}} fontWeight="bold"> {ticket.reviewTitle}</CustomText>
                                     <CustomText style={{...styles.text, textAlign: 'justify'}}>{ticket.reviewDetails}</CustomText>
                                 </View>
                             </>
@@ -399,6 +399,7 @@ const styles = StyleSheet.create({
         fontSize: scale(14),
         lineHeight: verticalScale(18),
         paddingVertical: verticalScale(5),
+        paddingTop: verticalScale(20)
     },
     btnContainer: {
         flexDirection: 'row',

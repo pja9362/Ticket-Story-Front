@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "647679699378",
+    "project_id": "ticketstory-68efa",
+    "storage_bucket": "ticketstory-68efa.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:647679699378:android:9b7f569fa0c9e517f41cab",
+        "android_client_info": {
+          "package_name": "com.ticketstory"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDz8-OJwhqOpj0YjFZq6bja2xo7w7-xVQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

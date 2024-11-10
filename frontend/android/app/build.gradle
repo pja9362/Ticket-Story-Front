@@ -1,5 +1,6 @@
 apply plugin: "com.android.application"
 apply plugin: "com.facebook.react"
+apply plugin: "com.google.gms.google-services"
 
 /**
  * This is the configuration block to customize your React Native Android app.
@@ -80,6 +81,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 25
         versionName "1.0.24"
+        multiDexEnabled true
     }
     signingConfigs {
         release {
@@ -110,13 +112,29 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
-    implementation project(':react-native-background-timer')  
+    // implementation platform('com.google.firebase:firebase-bom:32.2.0') // 추가
+    // implementation "com.google.firebase:firebase-analytics:19.0.0" // analytics를 사용하는 경우 추가
+    // implementation 'com.google.android.gms:play-services-measurement-api:19.0.0'
+    implementation 'com.google.android.gms:play-services-measurement-api:19.0.0'
+    implementation 'com.google.android.gms:play-services-measurement:19.0.0'
+    implementation 'com.google.android.gms:play-services-measurement-base:19.0.0'
+    implementation 'com.google.android.gms:play-services-measurement-sdk-api:19.0.0'
+
+    implementation 'com.google.firebase:firebase-analytics:19.0.0'
+    implementation 'com.google.firebase:firebase-auth:21.0.1'
+    implementation 'com.google.firebase:firebase-messaging:22.0.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
+
+    implementation project(':react-native-background-timer')
       
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
@@ -128,6 +146,18 @@ dependencies {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'com.google.android.gms:play-services-measurement:19.0.0'
+        force 'com.google.android.gms:play-services-measurement-api:19.0.0'
+        force 'com.google.android.gms:play-services-measurement-base:19.0.0'
+        force 'com.google.android.gms:play-services-measurement-sdk-api:19.0.0'
+        force 'com.google.firebase:firebase-analytics:19.0.0'
+        force 'com.google.firebase:firebase-auth:21.0.1'
+        force 'com.google.firebase:firebase-messaging:22.0.0'
     }
 }
 

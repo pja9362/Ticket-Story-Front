@@ -217,11 +217,11 @@ const styles = StyleSheet.create({
     },
     mainText: {
         color: '#525252',
-        fontSize: scale(18),
+        fontSize: scale(16),
     },
     subText: {
         color: '#B6B6B6',
-        fontSize: scale(14),
+        fontSize: scale(12),
         textAlign: 'right',
     },
     reviewContainer: {
@@ -232,6 +232,7 @@ const styles = StyleSheet.create({
         fontSize: scale(14),
         lineHeight: verticalScale(18),
         paddingVertical: verticalScale(5),
+        paddingTop: verticalScale(20)
     },
     contentContainer: {
         width: scale(356),

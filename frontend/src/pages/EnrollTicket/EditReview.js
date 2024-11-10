@@ -50,12 +50,22 @@ const EditReview = ({navigation, route}) => {
 
   const scrollViewRef = useRef(null);
 
+  // useEffect(() => {
+  //   const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow);
+  //   console.log('뭐냐대체');
+  //   return () => {
+  //     keyboardDidShowListener.remove();
+  //   };
+  // }, []);
+
   useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow);
-    console.log('뭐냐대체');
-    return () => {
-      keyboardDidShowListener.remove();
-    };
+    if (Platform.OS === 'ios') {
+      const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow);
+  
+      return () => {
+        keyboardDidShowListener.remove();
+      };
+    }
   }, []);
 
 
@@ -232,7 +242,7 @@ const EditReview = ({navigation, route}) => {
               const newHeight = e.nativeEvent.contentSize.height;
               setInputHeight(newHeight);
             }}
-            onFocus={handleKeyboardDidShow}
+            // onFocus={handleKeyboardDidShow}
           />
         </View>
 

@@ -88,19 +88,31 @@ const EnrollReview = ({navigation, route}) => {
     getTempReview();
   }, [ticketData.contentsDetails.contentsId]);  
   
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow);
 
-    return () => {
-      keyboardDidShowListener.remove();
-    };
+  // useEffect(() => {
+  //   const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow);
+
+  //   return () => {
+  //     keyboardDidShowListener.remove();
+  //   };
+  // }, []);
+  useEffect(() => {
+    if (Platform.OS === 'ios') {
+      const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow);
+  
+      return () => {
+        keyboardDidShowListener.remove();
+      };
+    }
   }, []);
+  
 
   const handleKeyboardDidShow = () => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollToEnd({ animated: true });
     }
   };
+
 
   const handleSliderChange = (category, rating) => {
     if (category === 'art') {
@@ -292,7 +304,7 @@ const EnrollReview = ({navigation, route}) => {
               setInputHeight(newHeight);
             }}
             // onContentSizeChange={handleContentSizeChange}
-            onFocus={handleKeyboardDidShow}
+            // onFocus={handleKeyboardDidShow}
           />
         </View>
 

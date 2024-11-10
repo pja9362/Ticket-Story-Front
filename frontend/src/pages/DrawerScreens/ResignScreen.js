@@ -15,7 +15,7 @@ const ChangePassword = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [token, setToken] = useState('');
 
-    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,16}$/;
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&#^+=])[A-Za-z\d@$!%*?&#^+=]{8,16}$/;
 
     const isValid = exPassword !== '' && passwordRegex.test(exPassword);
 

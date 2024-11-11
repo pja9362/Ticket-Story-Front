@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { SafeAreaView, ScrollView, StyleSheet, View, Image, Dimensions, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, View, Image, Dimensions, TouchableOpacity, TouchableWithoutFeedback, ActivityIndicator, Text } from 'react-native';
 import TicketItem from '../../components/TicketBook/TicketItem';
 import NavHeader from '../../components/NavHeader';
 import { useSelector, useDispatch } from 'react-redux';
 import { getMyTickets, resetUpdateTicket } from '../../actions/ticket/ticket';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import noTicket from '../../images/no_ticket.png';
 import addIcon from '../../images/icon_add_ticket.png';
 import BottomSheetMenu from '../../components/EnrollTicket/BottomSheetMenu';
@@ -13,7 +13,6 @@ import iconUp from '../../images/icon_up.png'
 import iconDown from '../../images/icon_down.png'
 import iconLine from '../../images/icon_line.png'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import LoadingScreen from '../../components/LoadingScreen';
 
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
 const imageWidth = Dimensions.get('window').width * 0.45;
@@ -22,13 +21,9 @@ const TicketBook = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const auth = useSelector((state) => state.auth.isAuthenticated);
-  const ticketData = useSelector((state) => state.ticket.myTickets);
-  // const totalPages = useSelector((state) => state.ticket.myTickets.totalPages);
   const totalElements = useSelector((state) => state.ticket.myTickets.totalElements);
   const ticketUpdated = useSelector((state) => state.ticket.ticketUpdated);
 
-  const [isDesc, setIsDesc] = useState(true);
   const [orderText, setOrderText] = useState('DESC')
 
   const [page, setPage] = useState(0);
@@ -51,6 +46,8 @@ const TicketBook = () => {
     {label: '공연', value: 'PERFORMANCE'},
     {label: '스포츠', value: 'SPORTS'},
   ]);
+
+  const [isLoading, setIsLoading] = useState(true)
 
   const scrollViewRef = useRef(null);
   const scrollPosition = useRef(0);
@@ -86,12 +83,13 @@ const TicketBook = () => {
   };
 
   const refreshTickets = useCallback(async () => {
-    // console.log(4444);
+    setIsLoading(true);
     dispatch(getMyTickets(0, (pageRef.current + 1) * 10, orderText, defaultOrder, defaultType, (newTickets) => {
       setAllTickets([]);
       setAllTickets(newTickets);
       setTimeout(restoreScrollPosition, 0);
       console.log('allTickets',allTickets);
+      setIsLoading(false);
     }));
       setOpenOrder(false);
       setOpenType(false);
@@ -114,9 +112,11 @@ const TicketBook = () => {
   useEffect(() => {
     // console.log(3333);
     if (page > 0) {
-    dispatch(getMyTickets(page, 10, orderText, defaultOrder, defaultType, (newTickets) => {
-      setAllTickets((prevTickets) => [...prevTickets, ...newTickets]);
-    }));
+      setIsLoading(true)
+      dispatch(getMyTickets(page, 10, orderText, defaultOrder, defaultType, (newTickets) => {
+        setAllTickets((prevTickets) => [...prevTickets, ...newTickets]);
+        setIsLoading(false)
+      }));
     }
   }, [page]);
 
@@ -150,10 +150,12 @@ const TicketBook = () => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollTo({ y: 0, animated: true });
     }
+    setIsLoading(true)
     dispatch(getMyTickets(0, 10, orderText, defaultOrder, defaultType, (newTickets) => {
       setPage(0);
       setAllTickets([]);
-      setAllTickets(newTickets)
+      setAllTickets(newTickets);
+      setIsLoading(false)
     }));
 
   }, [orderText]);
@@ -165,10 +167,12 @@ const TicketBook = () => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollTo({ y: 0, animated: true });
     }
+    setIsLoading(true)
     dispatch(getMyTickets(0, 10, orderText, value, defaultType, (newTickets) => {
       setPage(0);
       setAllTickets([]);
       setAllTickets(newTickets)
+      setIsLoading(false)
     }));
   };
 
@@ -178,10 +182,12 @@ const TicketBook = () => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollTo({ y: 0, animated: true });
     }
+    setIsLoading(true)
     dispatch(getMyTickets(0, 10, orderText, defaultOrder, value, (newTickets) => {
       setPage(0);
       setAllTickets([]);
       setAllTickets(newTickets)
+      setIsLoading(false)
     }));
   };
 
@@ -241,31 +247,35 @@ const TicketBook = () => {
               setItems={setTypes}
             />
           </View>
-          <ScrollView 
-            ref={scrollViewRef}
-            contentContainerStyle={styles.scrollViewContent}
-            onScroll={handleScroll}
-            scrollEventThrottle={300}>
-            <View style={styles.rowContainer}>
-              {allTickets && allTickets.length !== 0 ? allTickets.map((ticket, index) => (
-                <View key={index}>
-                  <TicketItem {...ticket} deleteTicketById={deleteTicketById} />
-                </View>
-              ))
-              : (
-                <View style={styles.noTicketContainer}>
-                  {/* <Image source={noTicket} style={styles.ticketCard} />
-                  <TouchableOpacity onPress={openBottomSheet}>
-                    <Image source={addIcon} style={styles.addIcon} />
-                  </TouchableOpacity> */}
-                </View>
-              )
-            }
+          {isLoading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#0000ff" />
             </View>
-          </ScrollView>
+          ) : (
+            <ScrollView
+              ref={scrollViewRef}
+              contentContainerStyle={styles.scrollViewContent}
+              onScroll={handleScroll}
+              scrollEventThrottle={300}
+            >
+              <View style={styles.rowContainer}>
+                {allTickets.length > 0 ? allTickets.map((ticket, index) => (
+                  <View key={index}>
+                    <TicketItem {...ticket} deleteTicketById={(ticketId) => setAllTickets(allTickets.filter(ticket => ticket.ticketId !== ticketId))} />
+                  </View>
+                )) : (
+                  <View style={styles.noTicketContainer}>
+                    <Image source={noTicket} style={styles.ticketCard} />
+                    <TouchableOpacity onPress={openBottomSheet}>
+                      <Image source={addIcon} style={styles.addIcon} />
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+            </ScrollView>
+          )}
         </>
       }
-      
     </SafeAreaView>
 
     {bottomSheetVisible && (
@@ -283,6 +293,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center'
   },
   scrollViewContent: {
     width: '92%',

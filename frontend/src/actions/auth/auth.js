@@ -14,7 +14,7 @@ import axios from 'axios';
 
 // refresh success action
 export const refreshTokens = async () => {
-  console.log("!!! 리프레시 토큰 재발급 요청!")
+  // console.log("!!! 리프레시 토큰 재발급 요청!")
   const refreshToken = await AsyncStorage.getItem('refreshToken');
 
   try {
@@ -24,9 +24,9 @@ export const refreshTokens = async () => {
       { headers: { 'Content-Type': 'application/json' } }
     );
     if (response.data.accessToken) {
-      console.log('TOKEN 재발급 성공');
-      console.log('새로운 accessToken:', response.data.accessToken);
-      console.log('새로운 refreshToken:', response.data.refreshToken);
+      // console.log('TOKEN 재발급 성공');
+      // console.log('새로운 accessToken:', response.data.accessToken);
+      // console.log('새로운 refreshToken:', response.data.refreshToken);
 
       await AsyncStorage.setItem('accessToken', response.data.accessToken);
       await AsyncStorage.setItem('refreshToken', response.data.refreshToken);
@@ -49,15 +49,15 @@ export const requestWithRetry = async (callback) => {
     return response;
   } catch (error) {
     if (error.response && error.response.status === 403) {
-      console.log("토큰 만료 403 에러 발생, refresh token 요청해야 함")
+      // console.log("토큰 만료 403 에러 발생, refresh token 요청해야 함")
       const newTokens = await refreshTokens();
-      console.log("새 토큰 요청 성공 ", newTokens)
+      // console.log("새 토큰 요청 성공 ", newTokens)
 
       const newAccess = await AsyncStorage.getItem('accessToken')
       const newRefresh = await AsyncStorage.getItem('refreshToken')
 
-      console.log("새로운 accessToken: ", newAccess)
-      console.log("새로운 refreshToken: ", newRefresh)
+      // console.log("새로운 accessToken: ", newAccess)
+      // console.log("새로운 refreshToken: ", newRefresh)
 
       if (newTokens) {
         try {
@@ -277,13 +277,17 @@ export const sendPasswordResetEmail = async (email) => {
       { headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` } }
     );
     console.log('Password reset email response:', response.data);
+
+    await AsyncStorage.setItem('accessToken', response.data.accessToken);
+    await AsyncStorage.setItem('refreshToken', response.data.refreshToken);
+
     return response.data;
   });
 };
 
 export const verfiyPasswordResetCode = async (userId, code) => {
   const body = JSON.stringify({ userId, code });
-
+  console.log("!!!!!!!!!!!!!! BODY", body)
   return requestWithRetry(async () => {
     const response = await axios.post(
       `${API_URL}/api/v1/auth/password/verifyCertificationCode`,
@@ -301,14 +305,10 @@ export const verfiyPasswordResetCode = async (userId, code) => {
   });
 };
 
-export const resetPassword = async (password) => {
+export const resetPassword = async (password, token) => {
   try {
-    console.log('22222', password);
-    const token = await AsyncStorage.getItem('accessToken');
-
     if (!token) {
-      console.error('Token not found in AsyncStorage');
-      throw new Error('No access token found');
+      token = await AsyncStorage.getItem('accessToken')
     }
 
     return requestWithRetry(async () => {
@@ -328,7 +328,8 @@ export const resetPassword = async (password) => {
 
 export const checkPassword = async password => {
   const token = await AsyncStorage.getItem('accessToken');
-
+  console.log("~~~~~~~~~ TOKEN: ", token);
+  console.log("~~~~~~~~~ PASSWORD: ", password);
   return requestWithRetry(async () => {
     const response = await axios.post(
       `${API_URL}/api/v1/auth/password/getChangeAuth`,
@@ -336,6 +337,8 @@ export const checkPassword = async password => {
       { headers: { 'Accept': 'application/json', 'Content-Type': 'application/json;charset=UTF-8', 'Authorization': `Bearer ${token}` } }
     );
     console.log('Password check response:', response.data);
+
+    
     return response.data;
   });
 };

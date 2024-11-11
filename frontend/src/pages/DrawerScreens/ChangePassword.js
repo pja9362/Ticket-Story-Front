@@ -27,9 +27,8 @@ const ChangePassword = () => {
 
     const handleNext = async () => {
         if (isValid) {
-
             const passwordChecked = await checkPassword(exPassword);
-            console.log('뿡이',passwordChecked);
+            
             if (passwordChecked) {
                 const newPassword = await resetPassword(password, passwordChecked.accessToken);
                 if (newPassword) {
@@ -41,9 +40,6 @@ const ChangePassword = () => {
             } else {
                 setErrorMessage('기존 비밀번호가 일치하지 않아요.');
             }
-
-            // alert('아직 개발안함');
-            // navigation.navigate('MainStack');
             navigation.navigate('ChangePWFinish');
         } else {
             if(password !== passwordCheck) {

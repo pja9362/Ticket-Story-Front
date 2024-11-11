@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import Header from '../../components/Header';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
@@ -26,8 +26,6 @@ const ChangePW = () => {
 
     const handleNext = async () => {
         if (isValid) {
-            // navigation.navigate('MainStack');
-            // console.log('11111', password);
             const newPassword = await resetPassword(password);
 
             if (newPassword) {

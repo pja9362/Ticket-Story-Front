@@ -82,12 +82,12 @@ const App = () => {
       const refreshToken = await AsyncStorage.getItem('refreshToken');
       if (refreshToken) {
         const response = await refreshTokens();
-        console.log("!!! 로그인 되어 있음 => MainStackWithDrawer로 이동")
+        // console.log("!!! 로그인 되어 있음 => MainStackWithDrawer로 이동")
         console.log('Refresh Token Response:', response);
         setIsLoggedIn(true);
         setInitialRoute('MainStackWithDrawer');
       } else {
-        console.log("!!! 로그인 되어 있지 않음 => Init으로 이동")
+        // console.log("!!! 로그인 되어 있지 않음 => Init으로 이동")
         setIsLoggedIn(false);
         // ! Init으로 바꿔야 함, 통계 탭 리뉴얼 작업 위해서 임시로 Statistics로 변경
         setInitialRoute('Init');
@@ -106,24 +106,6 @@ const App = () => {
   
     initializeApp();
   }, []);
-  
-  // useEffect(() => {
-  //   if (initialRoute) {
-  //     console.log("로그인 상태 확인 후 초기화면 세팅 => 로그인 여부: ", isLoggedIn);
-  //     console.log('초기화면 세팅 Initializing app... => ', initialRoute);
-
-  //     const initialNavState = {
-  //       routes: [
-  //         {
-  //           name: initialRoute 
-  //         }
-  //       ]
-  //     };
-
-  //     setInitialState(initialNavState);
-  //     setIsReady(true);
-  //   }
-  // }, [initialRoute]);
 
   useEffect(() => {
     if (initialRoute) {
@@ -179,7 +161,7 @@ const App = () => {
     const logNavigationState = () => {
       const state = navigationRef.getRootState();
       // navigation state 로그 출력 주석처리
-      console.log("Current Navigation State:", state.routes);
+      // console.log("Current Navigation State:", state.routes);
     };
 
     const unsubscribe = navigationRef.addListener('state', logNavigationState);

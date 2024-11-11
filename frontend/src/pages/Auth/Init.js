@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {StyleSheet, TouchableOpacity, View, Image, Dimensions, BackHandler, Alert, Platform} from 'react-native';
 import logo from '../../images/logo.png';
+import backgroundImage from '../../images/background_login.png';
 import WebView from 'react-native-webview';
 import icon_kakao from '../../images/icon_kakao.png';
 import icon_apple from '../../images/icon_apple.png';
@@ -121,9 +122,7 @@ const Init = ({navigation}) => {
     <View style={styles.container}>
       {webViewVisible && (redirectUrl != null) ? (
         <>
-          <View style={{padding: 20, paddingTop: 0}}>
             <Header title={webViewTitle} backClick={handleBackClick}/> 
-          </View>
             <WebView
               ref={webViewRef}
               style={{...styles.webview, margin: 0, padding: 0, opacity: webViewOpacity}}
@@ -144,9 +143,9 @@ const Init = ({navigation}) => {
       )
     :
      (
-      <View style={{padding: 38, flex: 1}}>
+      <View style={{padding: 20, flex: 1}}>
         <View style={styles.title}>
-          <Image source={logo} style={styles.image} />
+          <Image source={backgroundImage} style={styles.backgroundImg} />
         </View>
 
         <TouchableOpacity
@@ -208,11 +207,7 @@ const styles = StyleSheet.create({
   title: {
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 4
-  },
-  image: {
-    width: 137,
-    height: 152,
+    flex: 12
   },
   snsBtn: {
     flexDirection: 'row',
@@ -221,7 +216,8 @@ const styles = StyleSheet.create({
     gap: 10,
     backgroundColor: '#525252',
     padding: 8,
-    marginBottom: 20,
+    margin: 20,
+    marginTop: 0,
     borderRadius: 6,
   },
   signupContainer: {
@@ -233,6 +229,10 @@ const styles = StyleSheet.create({
     width: 30,  
     height: 30, 
   },
+  backgroundImg: {
+    width: '100%',
+    height: '100%',
+  },
   authBtnContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
   oauthBtnContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    flex: 1,
+    flex: 2,
     gap: 25,
   },
 });

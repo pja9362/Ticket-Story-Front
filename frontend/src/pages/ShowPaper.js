@@ -74,7 +74,7 @@ const ShowPaper = ({route}) => {
                     <View style={styles.bar}>
                       <View style={getFilledBarStyle(artRating)} />
                     </View>
-                    <CustomText style={styles.scoreText} fontWeight="bold"> {artRating} </CustomText>
+                    <CustomText style={styles.scoreTextOne} fontWeight="bold"> {artRating} </CustomText>
                   </View>
                   <CustomText style={styles.about} fontWeight="medium"> 나의 좌석 평점 </CustomText>
                   <View style={styles.barRow}>
@@ -169,10 +169,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // marginBottom: verticalScale(5),
   },
+  scoreTextOne: {
+    position: 'absolute',
+    color: '#525252',
+    fontSize: scale(20),
+    marginLeft: scale(14),
+    width: scale(40),
+    // lineHeight: verticalScale(9),
+    right: scale(5),
+    paddingBottom: verticalScale(55),
+  },
   scoreText: {
     position: 'absolute',
     color: '#525252',
-    fontSize: scale(24),
+    fontSize: scale(20),
     marginLeft: scale(14),
     width: scale(40),
     // lineHeight: verticalScale(9),

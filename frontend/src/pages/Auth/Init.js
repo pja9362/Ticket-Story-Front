@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {StyleSheet, TouchableOpacity, View, Image, Dimensions, BackHandler, Alert, Platform} from 'react-native';
 import logo from '../../images/logo.png';
-import backgroundImage from '../../images/background_login.png';
+import backgroundImage from '../../images/background_login_4.png';
 import WebView from 'react-native-webview';
 import icon_kakao from '../../images/icon_kakao.png';
 import icon_apple from '../../images/icon_apple.png';
@@ -11,6 +11,7 @@ import { handleOAuthKaKaoLogin, handleOAuthAppleLogin, saveTokens } from '../../
 import {CustomText} from '../../components/CustomText';
 import Header from '../../components/Header';
 import { useDispatch } from 'react-redux';
+import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -147,7 +148,7 @@ const Init = ({navigation}) => {
         <View style={styles.title}>
           <Image source={backgroundImage} style={styles.backgroundImg} />
         </View>
-
+        
         <TouchableOpacity
             style={styles.snsBtn}
             onPress={() => navigation.navigate('SignUp')}>
@@ -207,7 +208,7 @@ const styles = StyleSheet.create({
   title: {
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 12
+    flex: 12,
   },
   snsBtn: {
     flexDirection: 'row',
@@ -219,11 +220,12 @@ const styles = StyleSheet.create({
     margin: 20,
     marginTop: 0,
     borderRadius: 6,
+    top: verticalScale(20),
   },
   signupContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5
+    gap: 5,
   },
   logo: {
     width: 30,  
@@ -231,18 +233,22 @@ const styles = StyleSheet.create({
   },
   backgroundImg: {
     width: '100%',
-    height: '100%',
+    height: '200%',
+    top: verticalScale(72),
+    resizeMode: 'contain',
   },
   authBtnContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     marginBottom: '35%',
+    top: verticalScale(40)
   },
   oauthBtnContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     flex: 2,
     gap: 25,
+    top: verticalScale(30),
   },
 });
 

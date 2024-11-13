@@ -74,7 +74,7 @@ const ShowPaper = ({route}) => {
                     <View style={styles.bar}>
                       <View style={getFilledBarStyle(artRating)} />
                     </View>
-                    <CustomText style={styles.scoreTextOne} fontWeight="bold"> {artRating} </CustomText>
+                    <CustomText style={artRating === 100 ? styles.scoreTextOne : styles.scoreText} fontWeight="bold"> {artRating} </CustomText>
                   </View>
                   <CustomText style={styles.about} fontWeight="medium"> 나의 좌석 평점 </CustomText>
                   <View style={styles.barRow}>

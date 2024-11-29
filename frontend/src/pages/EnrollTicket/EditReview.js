@@ -25,6 +25,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import { useDispatch } from 'react-redux';
 
+import analytics from '@react-native-firebase/analytics';
+
 const EditReview = ({navigation, route}) => {
   const dispatch = useDispatch();
   
@@ -127,6 +129,7 @@ const EditReview = ({navigation, route}) => {
       
       // navigation.navigate('EditFinish', { ticket: ticket, ticketId: ticketId });
       navigation.navigate('EditFinish', { ticket: ticket, ticketId: ticketId, reviewDetails : reviewDetails });
+      analytics().logEvent('review_edit')
 
     } catch (error) {
       console.error('Error saving review:', error);

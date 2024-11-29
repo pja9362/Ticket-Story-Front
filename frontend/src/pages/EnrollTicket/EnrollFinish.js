@@ -47,10 +47,7 @@ const EnrollFinish = ({navigation, route}) => {
         console.log('뭉', ticketId);
 
         // 페이지 조회 이벤트 기록
-        analytics().logEvent('page_view', {
-            screen_name: 'EnrollFinish',
-            screen_class: 'EnrollFinish'
-        });
+        analytics().logEvent('ticket_register')
 
         dispatch(getTicketDetail(ticketId))
           .then((response) => {

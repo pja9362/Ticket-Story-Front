@@ -12,6 +12,7 @@ import {CustomText} from '../../components/CustomText';
 import Header from '../../components/Header';
 import { useDispatch } from 'react-redux';
 import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
+import analytics from '@react-native-firebase/analytics';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -48,6 +49,7 @@ const Init = ({navigation}) => {
       setWebViewTitle('카카오톡 로그인');
       setRedirectUrl(response);
       setWebViewVisible(true);
+      analytics().logEvent('main_kakao_click')
     } catch (error) {
       console.error('HANDLE KAKAO LOGIN error:', error);
       throw error;
@@ -60,9 +62,11 @@ const Init = ({navigation}) => {
     if (navState.url.startsWith(`${API_URL}/api/v1/auth/oauth/kakao?code=`)) {
       setWebViewOpacity(0);
       console.log("Kakao Login Success!");
+      analytics().logEvent('login', {method: 'kakao'});
     } else if (navState.url == `${API_URL}/api/v1/auth/oauth/apple`) {
       setWebViewOpacity(0);
       console.log("Apple Login Success!");
+      analytics().logEvent('login', {method: 'apple'});
     } else {
       setWebViewOpacity(1);
     }
@@ -98,6 +102,7 @@ const Init = ({navigation}) => {
       );
     } else {
       console.log('No tokens found');
+      Alert.alert('소셜 로그인 에러. 잠시후 이용해주세요.');
   };
   };
 
@@ -108,10 +113,16 @@ const Init = ({navigation}) => {
       setWebViewTitle('애플 로그인');
       setRedirectUrl(response);
       setWebViewVisible(true);
+      analytics().logEvent('main_apple_click')
     } catch (error) {
       console.error('HANDLE KAKAO LOGIN error:', error);
       throw error;
     }
+  }
+
+  const handleLoginClick = () => {
+    navigation.navigate('Login')
+    analytics().logEvent('main_general_click')
   }
 
   const handleBackClick = () => {
@@ -180,7 +191,7 @@ const Init = ({navigation}) => {
 
         <TouchableOpacity
           style={styles.authBtnContainer}
-          onPress={() => navigation.navigate('Login')}>
+          onPress={handleLoginClick}>
           <CustomText style={{textDecorationLine: 'underline', fontSize: 16, lineHeight: 40, color: '#000000'}}>로그인</CustomText>
         </TouchableOpacity>
       </View>

@@ -13,6 +13,7 @@ import {CustomText} from '../components/CustomText';
 import { getTicketDetail, getTicketDetails } from '../actions/ticket/ticket';
 import { useNavigation } from '@react-navigation/native';
 import {scale, verticalScale, moderateScale} from '../utils/sizeUtil'
+import analytics from '@react-native-firebase/analytics';
 
 const ShowContent = ({ route }) => {
     const viewRef = useRef();
@@ -44,6 +45,7 @@ const ShowContent = ({ route }) => {
 
     const handleShareBtnPress = () => {
         handleShareBtn(viewRef);
+        analytics().logEvent('reviewcard_share_click');
     }
 
     const handleSaveBtnPress = async() => {
@@ -51,6 +53,7 @@ const ShowContent = ({ route }) => {
             const response = await handleSaveBtn(viewRef);
             console.log(response);
             setModalVisible(true);
+            analytics().logEvent('reviewcard_save_click');
         } catch (error) {
         console.error('Error Saving ticket?:', error.response);
         }
@@ -61,6 +64,9 @@ const ShowContent = ({ route }) => {
     // }
 
     const handleEditContent = async() => {
+        
+        analytics().logEvent('reviewcard_review_edit_click');
+
         const editReview = {
           ticketId : ticketId
         }

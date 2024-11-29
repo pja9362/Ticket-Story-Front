@@ -14,6 +14,7 @@ import logo_ticketlink from '../../images/logo_ticketlink.png';
 import logo_ticketlink_off from '../../images/logo_ticketlink_off.png';
 import { CustomText } from '../../components/CustomText';
 import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
+import analytics from '@react-native-firebase/analytics';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -106,7 +107,8 @@ const EnrollByScrape = () => {
       setShowYes24WebView(true);
     } else if (platform === 'ticketlink') {
       if(isIOS) setShowTicketlinkWebView(true);
-    } 
+    }
+    analytics().logEvent('ticket_online_external_click',{site:platform})
   };
 
   const handleMessage = (event, source) => {

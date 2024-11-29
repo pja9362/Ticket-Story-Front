@@ -6,6 +6,7 @@ import { CustomText } from '../../components/CustomText';
 import home from '../../images/icon_home.png';
 import storycard from '../../images/icon_storycard.png';
 import addticket from '../../images/icon_addticket.png';
+import analytics from '@react-native-firebase/analytics';
 // import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
 
 const OCRFail = ({navigation, route}) => {
@@ -13,7 +14,13 @@ const OCRFail = ({navigation, route}) => {
 
   useEffect(() => {
     console.log('categoryInfo in OCRFail : ',categoryInfo);
+    analytics().logEvent('ticket_camera_ocr_fail');
   },[]);
+
+  const ocrAgain = () => {
+    navigation.replace('EnrollByOCR', {categoryInfo})
+    analytics().logEvent('ticket_camera_ocr_redo');
+  }
 
   return (
     <View style={styles.container}>

@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-nativ
 import NextButton from './NextButton';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {CustomText, CustomTextInput} from '../CustomText';
+import analytics from '@react-native-firebase/analytics';
 
 const Step2 = ({ nextStep, handleChange, values }) => {
   // const [password, setPassword] = useState('');
@@ -31,6 +32,7 @@ const Step2 = ({ nextStep, handleChange, values }) => {
 
   useEffect(() => {
     console.log('Step2: ', values);
+    analytics().logEvent('sign_up_try_general', {step: '2'});
   }, []);
 
   const handleNext = () => {

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import {CustomText} from './CustomText';
 import {useNavigation} from '@react-navigation/native';
+import analytics from '@react-native-firebase/analytics';
 
 import loadingIcon1 from '../images/icon_loading1.png';
 import loadingIcon2 from '../images/icon_loading2.png';
@@ -14,6 +15,10 @@ const LoadingScreen = ({ iconId, showText = true }) => {
     const navigation = useNavigation();
 
     const loadingIcons = [loadingIcon1, loadingIcon2, loadingIcon3, loadingIcon4];
+
+    useEffect(() => {
+        analytics().logEvent('ticket_camera_ocr');
+    }, []);
 
     const onCloseGuide = () => {
         navigation.navigate('MainStack');

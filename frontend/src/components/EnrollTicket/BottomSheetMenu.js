@@ -2,6 +2,7 @@ import React, {useRef, useEffect} from 'react';
 import {View, Text, StyleSheet, Modal, TouchableOpacity, Animated, Easing} from 'react-native';
 import {CustomText} from '../CustomText';
 import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil';
+import analytics from '@react-native-firebase/analytics';
 
 const BottomSheetMenu = ({closeBottomSheet, onClick}) => {
   const slideAnim = useRef(new Animated.Value(0)).current;  
@@ -44,6 +45,21 @@ const BottomSheetMenu = ({closeBottomSheet, onClick}) => {
     outputRange: [300, 0],
   });
 
+  const handleOnlineRegister = () => {
+    onClick('scrape')
+    analytics().logEvent('ticket_online_click')
+  }
+
+  const handleCameraRegister = () => {
+    onClick('camera')
+    analytics().logEvent('ticket_camera_click')
+  }
+
+  const handleWriteRegister = () => {
+    onClick('hand')
+    analytics().logEvent('ticket_manual_click')
+  }
+
   return (
     <Modal transparent={true} visible={true} onRequestClose={closeAndAnimate} animationType='none'>
       <View style={{flex: 1, justifyContent: 'flex-end'}}>
@@ -57,13 +73,13 @@ const BottomSheetMenu = ({closeBottomSheet, onClick}) => {
 
         {/* 바텀 시트 */}
         <Animated.View style={[styles.contentContainer, { transform: [{ translateY }] }]}>
-          <TouchableOpacity onPress={() => onClick('scrape')} style={styles.textArea}>
+          <TouchableOpacity onPress={handleOnlineRegister} style={styles.textArea}>
             <CustomText style={styles.btnText} fontWeight="extrabold">온라인 티켓 <CustomText style={styles.btnText} fontWeight="semibold">등록하기</CustomText></CustomText>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => onClick('camera')} style={styles.textArea}>
+          <TouchableOpacity onPress={handleCameraRegister} style={styles.textArea}>
             <CustomText style={styles.btnText} fontWeight="extrabold">카메라로 <CustomText style={styles.btnText} fontWeight="semibold">티켓 등록하기</CustomText></CustomText>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => onClick('hand')} style={styles.textAreaF}>
+          <TouchableOpacity onPress={handleWriteRegister} style={styles.textAreaF}>
             <CustomText style={styles.btnText} fontWeight="extrabold">직접 입력으로 <CustomText style={styles.btnText} fontWeight="semibold">티켓 등록하기</CustomText></CustomText>
           </TouchableOpacity>
         </Animated.View>

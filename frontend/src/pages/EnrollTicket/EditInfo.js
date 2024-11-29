@@ -13,6 +13,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import DateTimePickerModal from 'react-native-modal-datetime-picker'; //
 import { updateInfo } from '../../actions/ticket/ticket';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
+import analytics from '@react-native-firebase/analytics';
 
 const EditInfo = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -182,6 +183,7 @@ const EditInfo = ({ route, navigation }) => {
         const updatedInfo = await dispatch(updateInfo(ticketId, requestData));
         // navigation.navigate('EnrollFinish');
         navigation.navigate('EditFinish', { ticket: ticket, ticketId: ticketId, reviewDetails : reviewDetails });
+        analytics().logEvent('ticketcard_info_edit')
       } catch (error) {
         console.error('Error Updating Info:', error);
       }

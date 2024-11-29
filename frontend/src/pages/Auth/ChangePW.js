@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import Header from '../../components/Header';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 import { resetPassword } from '../../actions/auth/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import analytics from '@react-native-firebase/analytics';
 
 const ChangePW = () => {
     const navigation = useNavigation();
@@ -20,6 +21,10 @@ const ChangePW = () => {
 
     const isValid = password !== '' && password === passwordCheck && passwordRegex.test(password);
 
+    useEffect(() => {
+        analytics().logEvent('pw_reset_try', {step: '3'});
+    }, []);
+
     const handlePasswordChange = (text) => {
         setPassword(text);
     };
@@ -32,6 +37,7 @@ const ChangePW = () => {
                 console.log('비밀번호 변경 완료 페이지로 넘어가기');
                 await AsyncStorage.removeItem('accessToken');
                 navigation.navigate('ChangePWFinish');
+                analytics().logEvent('pw_reset');
             } else {
                 console.log('실패');
             }

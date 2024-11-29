@@ -3,10 +3,17 @@ import { View, StyleSheet, Image, Text } from 'react-native';
 import { useNavigation, CommonActions } from '@react-navigation/native';
 import logo from '../../images/character_black.png';
 import {CustomText} from '../CustomText';
+import analytics from '@react-native-firebase/analytics';
 // import { useNavigation, CommonActions } from '@react-navigation/native';
 
 const Step4 = () => {
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const today = new Date();
+    const formattedDate = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
+    analytics().logEvent('sign_up', {method: 'general', signup_date: formattedDate});
+  }, []);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {

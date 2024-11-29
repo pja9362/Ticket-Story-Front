@@ -5,6 +5,7 @@ import GenderButton from './GenderButton';
 import Agreement from './Agreement';
 import { signUpRequest } from '../../actions/auth/auth';
 import {CustomText, CustomTextInput} from '../CustomText';
+import analytics from '@react-native-firebase/analytics';
 
 const Step3 = ({nextStep, handleChange, values}) => {
   const [year, setYear] = useState(values.birthday?.split('.')[0] || '');
@@ -33,6 +34,10 @@ const Step3 = ({nextStep, handleChange, values}) => {
     const formattedDay = day.length === 1 ? `0${day}` : day;
     setDay(formattedDay);
   };
+
+  useEffect(() => {
+    analytics().logEvent('sign_up_try_general', {step: '3'});
+  }, []);
 
   useEffect(() => {
     handleChange('birthday', birthday);

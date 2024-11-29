@@ -12,6 +12,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import navIcon from '../images/navIcon_ticket.png';
 import {scale, verticalScale, moderateScale} from '../utils/sizeUtil'
 import NavHeader from '../components/NavHeader';
+import analytics from '@react-native-firebase/analytics';
 
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
 const imageWidth = Dimensions.get('window').width * 0.45;
@@ -133,6 +134,11 @@ const MainStack = ({ navigation }) => {
           options={{ headerShown: false, tabBarLabel: '나의 통계' }}
           // component={MyScreen}
           component={StatsScreen}
+          listeners={{
+            tabPress: () => {
+              analytics().logEvent('mydata_click');
+            },
+          }}
         />
       </Tab.Navigator>
 

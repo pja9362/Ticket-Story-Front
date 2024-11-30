@@ -29,6 +29,13 @@ const EnrollInfoByHand = ({ route, navigation }) => {
   const [categoryDetail, setCategoryDetail] = useState(categoryInfo.categoryDetail);
 
   useEffect(() => {
+    analytics().logScreenView({
+      screen_name: '직접 입력 티켓 등록 - 정보 입력',
+      screen_class: 'ticket_register'
+    })
+  },[]);
+
+  useEffect(() => {
     let transformedCategoryDetail = '';
     if (categoryDetail === '메가박스') {
       transformedCategoryDetail = 'MEGABOX';

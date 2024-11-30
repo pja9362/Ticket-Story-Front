@@ -5,6 +5,7 @@ import {CustomText} from '../../components/CustomText';
 import Header from '../../components/Header';
 import { useSelector, useDispatch } from 'react-redux';
 import { getNotices, getNoticeDetails } from '../../actions/notice/notice';
+import analytics from '@react-native-firebase/analytics';
 
 const NoticeList = () => {
   const dispatch = useDispatch();
@@ -15,6 +16,13 @@ const NoticeList = () => {
   const [page, setPage] = useState(0);
   const [allNotices, setAllNotices] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
+
+  useEffect(() => {
+    analytics().logScreenView({
+      screen_name: '공지사항',
+      screen_class: 'menu'
+    })
+  }, [])
 
 
   const refreshNotices = useCallback(() => {
@@ -59,7 +67,6 @@ const NoticeList = () => {
   const handleDetail = async (noticeId) => {
     const gotNoticeDetails = await getNoticeDetails(noticeId)
     if (gotNoticeDetails) {
-      console.log(gotNoticeDetails)
       navigation.navigate('NoticeContent', {gotNoticeDetails});
     } else {
       alert('공지사항 조회 실패');

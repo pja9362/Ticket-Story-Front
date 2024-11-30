@@ -23,6 +23,10 @@ const ChangePW = () => {
 
     useEffect(() => {
         analytics().logEvent('pw_reset_try', {step: '3'});
+        analytics().logScreenView({
+            screen_name: '비밀번호 재설정',
+            screen_class: 'password'
+        })
     }, []);
 
     const handlePasswordChange = (text) => {
@@ -37,7 +41,13 @@ const ChangePW = () => {
                 console.log('비밀번호 변경 완료 페이지로 넘어가기');
                 await AsyncStorage.removeItem('accessToken');
                 navigation.navigate('ChangePWFinish');
+
                 analytics().logEvent('pw_reset');
+                analytics().logScreenView({
+                  screen_name: '비밀번호 재설정 완료',
+                  screen_class: 'password'
+                })
+                
             } else {
                 console.log('실패');
             }

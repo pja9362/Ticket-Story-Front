@@ -18,6 +18,10 @@ const LoadingScreen = ({ iconId, showText = true }) => {
 
     useEffect(() => {
         analytics().logEvent('ticket_camera_ocr');
+        analytics().logScreenView({
+            screen_name: '카메라 티켓 등록 - OCR 로딩',
+            screen_class: 'ticket_register'
+        })
     }, []);
 
     const onCloseGuide = () => {

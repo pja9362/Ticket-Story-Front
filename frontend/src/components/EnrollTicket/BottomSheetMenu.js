@@ -53,11 +53,19 @@ const BottomSheetMenu = ({closeBottomSheet, onClick}) => {
   const handleCameraRegister = () => {
     onClick('camera')
     analytics().logEvent('ticket_camera_click')
+    analytics().logScreenView({
+      screen_name: '카메라 티켓 등록',
+      screen_class: 'ticket_register'
+    })
   }
 
   const handleWriteRegister = () => {
     onClick('hand')
     analytics().logEvent('ticket_manual_click')
+    analytics().logScreenView({
+      screen_name: '직접 입력 티켓 등록',
+      screen_class: 'ticket_register'
+    })
   }
 
   return (

@@ -32,6 +32,10 @@ const FindPassword = () => {
 
   useEffect(() => {
     analytics().logEvent('pw_reset_try', {step: '1'});
+    analytics().logScreenView({
+      screen_name: '비밀번호 재설정',
+      screen_class: 'password'
+    })
   }, []);
 
   useEffect(() => {

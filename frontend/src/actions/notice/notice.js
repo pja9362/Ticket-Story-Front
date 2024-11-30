@@ -17,7 +17,7 @@ export const getNotices = async (page, callback) => {
           page: page
         }
       });
-      console.log('ㄷㄱㄷㄱ',response.data);
+
       if (response.data != null) {
         callback(response.data.contents);
       }
@@ -42,7 +42,7 @@ export const getNotices = async (page, callback) => {
           noticeId : noticeId
         }
       });
-      console.log('ㄷㄱㄷㄱ',response.data);
+
       return response.data;
     } catch (error) {
       console.error('Error fetching notices details:', error.response.data);

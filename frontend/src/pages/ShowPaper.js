@@ -4,6 +4,7 @@ import {CustomText} from '../components/CustomText';
 import Header from '../components/Header';
 import paperTicket from '../images/paper_ticket.png';
 import {scale, verticalScale, moderateScale} from '../utils/sizeUtil'
+import analytics from '@react-native-firebase/analytics';
 
 
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
@@ -31,6 +32,13 @@ const ShowPaper = ({route}) => {
     ticketData.categoryDetail === 'ETC' ? '・기타' : 
     ''
   );
+
+  useEffect(() => {
+    analytics().logScreenView({
+        screen_name: '관람 세부 정보 보기',
+        screen_class: 'storycard'
+    })
+  }, [])
 
   const getFilledBarStyle = (score) => ({
     height: '100%',

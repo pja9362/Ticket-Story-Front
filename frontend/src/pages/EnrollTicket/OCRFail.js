@@ -15,6 +15,10 @@ const OCRFail = ({navigation, route}) => {
   useEffect(() => {
     console.log('categoryInfo in OCRFail : ',categoryInfo);
     analytics().logEvent('ticket_camera_ocr_fail');
+    analytics().logScreenView({
+      screen_name: '카메라 티켓 등록 - OCR 실패',
+      screen_class: 'ticket_register'
+    })
   },[]);
 
   const ocrAgain = () => {

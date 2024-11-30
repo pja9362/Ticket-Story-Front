@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import {Dimensions, SafeAreaView, View, Image, StyleSheet, Platform, TouchableOpacity, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import WebView from 'react-native-webview';
@@ -32,6 +32,13 @@ const EnrollByScrape = () => {
   const [showMegaboxWebView, setShowMegaboxWebView] = useState(false);
   const [showYes24WebView, setShowYes24WebView] = useState(false);
   const [showTicketlinkWebView, setShowTicketlinkWebView] = useState(false);
+
+  useEffect(() => {
+    analytics().logScreenView({
+        screen_name: '온라인 티켓 등록',
+        screen_class: 'ticket_register'
+    })
+  }, [])
 
   const isWebViewVisible = showCGVWebView || showInterparkWebView || showLotteCinemaWebView || showMegaboxWebView || showYes24WebView || showTicketlinkWebView;
 

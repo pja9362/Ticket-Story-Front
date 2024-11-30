@@ -28,6 +28,12 @@ const EditInfo = ({ route, navigation }) => {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 
+    useEffect(() => {
+      analytics().logScreenView({
+        screen_name: '티켓 정보 수정',
+        screen_class: 'ticket_edit'
+      })
+    }, [])
   
     const showDatePicker = () => {
       setDatePickerVisibility(true);
@@ -184,6 +190,10 @@ const EditInfo = ({ route, navigation }) => {
         // navigation.navigate('EnrollFinish');
         navigation.navigate('EditFinish', { ticket: ticket, ticketId: ticketId, reviewDetails : reviewDetails });
         analytics().logEvent('ticketcard_info_edit')
+        analytics().logScreenView({
+          screen_name: '티켓 정보 수정 완료',
+          screen_class: 'ticket_edit'
+        })
       } catch (error) {
         console.error('Error Updating Info:', error);
       }

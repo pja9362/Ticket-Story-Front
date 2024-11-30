@@ -39,6 +39,10 @@ const EnrollReview = ({navigation, route}) => {
     console.log("TICKET DATA1", ticketData);
     console.log("TICKET DATA2", ticketData.contentsDetails.contentsId);
     analytics().logEvent('ticket_register_review');
+    analytics().logScreenView({
+      screen_name: '콘텐츠 스토리 카드 입력',
+      screen_class: 'ticket_register'
+    })
   }, []);
   
   const [sliderTouched, setSliderTouched] = useState(false);

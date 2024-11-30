@@ -1,5 +1,5 @@
 // import React from 'react';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { DrawerContentScrollView } from '@react-navigation/drawer';
 import { View, TouchableOpacity, Text, StyleSheet, Image, Modal, Alert } from 'react-native';
 import { useNavigation, CommonActions } from '@react-navigation/native';
@@ -22,6 +22,13 @@ const CustomDrawerContent = ( props ) => {
 
   const [webViewVisible, setWebViewVisible] = useState(false);
   const [webViewUrl, setWebViewUrl] = useState('');
+
+  useEffect(() => {
+    analytics().logScreenView({
+      screen_name: '메인 메뉴',
+      screen_class: 'menu'
+    })
+  }, [])
 
   const handleLogout = async () => {
     try {
@@ -124,9 +131,21 @@ const CustomDrawerContent = ( props ) => {
     switch (idx) {
       case 1: // 서비스 이용약관
         url = 'https://sugar-dresser-cb0.notion.site/16ea3dbb19534ea3a14a567254f63168?pvs=4';
+
+        analytics().logScreenView({
+          screen_name: '서비스 이용약관',
+          screen_class: 'menu'
+        })
+
         break;
       case 2: // 개인정보 처리방침
         url = 'https://app.catchsecu.com/document/C/9a77778561d8ddc';
+        
+        analytics().logScreenView({
+          screen_name: '개인정보 처리방침',
+          screen_class: 'menu'
+        })
+
         break;
       default:
         break;

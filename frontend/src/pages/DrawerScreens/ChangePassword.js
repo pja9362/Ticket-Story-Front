@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import Header from '../../components/Header';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 import { checkPassword, resetPassword } from '../../actions/auth/auth';
+import analytics from '@react-native-firebase/analytics';
 
 const ChangePassword = () => {
     const navigation = useNavigation();
@@ -16,6 +17,13 @@ const ChangePassword = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordCheck, setShowPasswordCheck] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+
+    useEffect(() => {
+        analytics().logScreenView({
+          screen_name: '비밀번호 변경',
+          screen_class: 'password'
+        })
+    }, [])
 
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&#^+=])[A-Za-z\d@$!%*?&#^+=]{8,16}$/;
 
@@ -34,6 +42,11 @@ const ChangePassword = () => {
                 if (newPassword) {
                     console.log('비밀번호 변경 완료 페이지로 넘어가기');
                     navigation.navigate('ChangePWFinish');
+                    
+                    analytics().logScreenView({
+                        screen_name: '비밀번호 변경 완료',
+                        screen_class: 'password'
+                    })
                 } else {
                     console.log('실패');
                 }

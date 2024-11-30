@@ -27,6 +27,10 @@ const Step1 = ({nextStep, handleChange, values}) => {
   useEffect(() => {
     console.log('Step1: ', values);
     analytics().logEvent('sign_up_try_general', {step: '1'});
+    analytics().logScreenView({
+      screen_name: '아이디',
+      screen_class: 'signup'
+    })
   }, []);
 
   const handleIdCheck = async () => {

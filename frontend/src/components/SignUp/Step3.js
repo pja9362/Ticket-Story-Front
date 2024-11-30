@@ -37,6 +37,10 @@ const Step3 = ({nextStep, handleChange, values}) => {
 
   useEffect(() => {
     analytics().logEvent('sign_up_try_general', {step: '3'});
+    analytics().logScreenView({
+      screen_name: '개인정보',
+      screen_class: 'signup'
+    })
   }, []);
 
   useEffect(() => {

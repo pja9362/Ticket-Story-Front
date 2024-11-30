@@ -32,6 +32,13 @@ const DetailCard = ({ ticket, ticketId }) => {
     const [imageVisible, setImageVisible] = useState(false);
     const [reviewVisible, setReviewVisible] = useState(false);
 
+    useEffect(() => {
+        analytics().logScreenView({
+            screen_name: '스토리카드 보기',
+            screen_class: 'storycard'
+        })
+    }, [])
+
 
     const handleShareBtnPress = () => {
         handleShareBtn(viewRef);
@@ -69,9 +76,8 @@ const DetailCard = ({ ticket, ticketId }) => {
             //navigate 하면서 response 값들 보내야함
             navigation.navigate('ShowPaperView', {
               ticketData : response,
-             });
-
-             analytics().logEvent('storycard_detail_info_click');
+            });
+            analytics().logEvent('storycard_detail_info_click');
           } else {
             alert('Fail');
           }
@@ -86,12 +92,20 @@ const DetailCard = ({ ticket, ticketId }) => {
         } else {
             // alert('등록된 사진이 없어요. 등록하러 가실래요?');
             setImageVisible(true);
+            analytics().logScreenView({
+                screen_name: '사진 미등록 모달',
+                screen_class: 'myreview_modal'
+            })
         }
     }
 
     const handleContentPress = () => {
         if (ticket.reviewTitle == '' && ticket.reviewDetails == '') {
             setReviewVisible(true);
+            analytics().logScreenView({
+                screen_name: '리뷰 미등록 모달',
+                screen_class: 'myreview_modal'
+            })
         } else {
             console.log('ticket info', ticket);
             console.log('ticketId', ticketId);

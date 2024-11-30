@@ -1,11 +1,19 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import {CustomText} from '../../components/CustomText';
 import Header from '../../components/Header';
 import askInfo from '../../images/ask_info.png';
 import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
+import analytics from '@react-native-firebase/analytics';
 
 const AskScreen = () => {
+
+  useEffect(() => {
+    analytics().logScreenView({
+      screen_name: '문의하기',
+      screen_class: 'menu'
+    })
+  }, [])
 
   return (
     <View style={styles.container}>

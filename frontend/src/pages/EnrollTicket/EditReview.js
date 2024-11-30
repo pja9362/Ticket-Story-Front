@@ -52,6 +52,13 @@ const EditReview = ({navigation, route}) => {
 
   const scrollViewRef = useRef(null);
 
+  useEffect(() => {
+    analytics().logScreenView({
+      screen_name: '티켓 리뷰 수정',
+      screen_class: 'ticket_edit'
+    })
+  }, [])
+
   // useEffect(() => {
   //   const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', handleKeyboardDidShow);
   //   console.log('뭐냐대체');
@@ -130,6 +137,10 @@ const EditReview = ({navigation, route}) => {
       // navigation.navigate('EditFinish', { ticket: ticket, ticketId: ticketId });
       navigation.navigate('EditFinish', { ticket: ticket, ticketId: ticketId, reviewDetails : reviewDetails });
       analytics().logEvent('review_edit')
+      analytics().logScreenView({
+        screen_name: '티켓 리뷰 수정 완료',
+        screen_class: 'ticket_edit'
+      })
 
     } catch (error) {
       console.error('Error saving review:', error);

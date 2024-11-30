@@ -18,6 +18,13 @@ const Stats = () => {
   const viewRef = useRef();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    analytics().logScreenView({
+      screen_name: '나의 통계',
+      screen_class: 'mydata'
+    })
+  }, [])
+
   const [selectedTab, setSelectedTab] = useState('전체');
 
   const [openOrder, setOpenOrder] = useState(false);

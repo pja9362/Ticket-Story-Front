@@ -132,6 +132,13 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
     스포츠: ['야구', '축구', '기타'],
   }
 
+  useEffect(() => {
+    analytics().logScreenView({
+      screen_name: '온라인 티켓 등록 - 스크랩 정보 확인',
+      screen_class: 'ticket_register'
+    })
+  },[]);
+
   const handleCategorySelect = (selectedCategory) => {
     setCategory(selectedCategory);
   };

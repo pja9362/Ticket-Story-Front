@@ -13,6 +13,7 @@ import { formatTime } from '../../utils/countdownUtils';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 import { useNavigation } from '@react-navigation/native';
 import BackgroundTimer from 'react-native-background-timer'; // 백그라운드에서 타이머를 설정
+import analytics from '@react-native-firebase/analytics';
 
 const FindPassword = () => {
   const navigation = useNavigation();
@@ -27,7 +28,11 @@ const FindPassword = () => {
   const [isNumberValid, setIsNumberValid] = useState(null);
   const [secondBtnClicked, setSecondBtnClicked] = useState(false);
 
-  const [countdown, setCountdown] = useState(300); 
+  const [countdown, setCountdown] = useState(300);
+
+  useEffect(() => {
+    analytics().logEvent('pw_reset_try', {step: '1'});
+  }, []);
 
   useEffect(() => {
     let timer;
@@ -105,6 +110,7 @@ const FindPassword = () => {
           setErrorMessage('');
           setFirstBtnText('인증번호 발송됨');
           setIsEmailSent(true);
+          analytics().logEvent('pw_reset_try', {step: '2'});
 
           } else {
             console.log('뭔가 잘못됨');

@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import EnrollHeader from '../../components/EnrollTicket/EnrollHeader';
 // import TicketAgreement from '../../components/EnrollTicket/TicketAgreement';
 import SelectType from '../../components/EnrollTicket/SelectType';
+import analytics from '@react-native-firebase/analytics';
 
 const EnrollAgreement = ({route, navigation}) => {
   const { action } = route.params;
@@ -14,8 +15,10 @@ const EnrollAgreement = ({route, navigation}) => {
 
     if (action === 'hand') {
       navigation.navigate('EnrollInfoByHand', { categoryInfo });
+      analytics().logEvent('ticket_manual_category', {contents: categoryInfo.category, place: categoryInfo.categoryDetail});
     } else if (action === 'camera') {
       navigation.navigate('EnrollByOCR', { categoryInfo });
+      analytics().logEvent('ticket_camera_category', {contents: categoryInfo.category, place: categoryInfo.categoryDetail});
     }
   };
 

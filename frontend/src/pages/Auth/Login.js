@@ -12,6 +12,7 @@ import { signInRequest } from '../../actions/auth/auth';
 import { useDispatch } from 'react-redux';
 import { useNavigation, CommonActions } from '@react-navigation/native';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
+import analytics from '@react-native-firebase/analytics';
 
 const Login = () => {
   const navigation = useNavigation();
@@ -21,6 +22,13 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    analytics().logScreenView({
+      screen_name: '로그인',
+      screen_class: 'login'
+    })
+  }, []);
 
   const isValid = id !== '' && password !== '';
 
@@ -44,6 +52,7 @@ const Login = () => {
           index: 0,
           routes: [{name: 'MainStackWithDrawer'}]
         }))
+        analytics().logEvent('login', {method: 'general'});
       } else {
         setErrorMessage('아이디 혹은 비밀번호가 일치하지 않아요.');
         console.log('login error:', response);

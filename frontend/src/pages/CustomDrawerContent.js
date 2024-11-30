@@ -12,6 +12,7 @@ import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
 import {WebView} from 'react-native-webview';
 import backButton from '../images/back_button.png';
+import analytics from '@react-native-firebase/analytics';
 
 const CustomDrawerContent = ( props ) => {
 
@@ -75,9 +76,11 @@ const CustomDrawerContent = ( props ) => {
       if (decoded && (decoded.OAUTH_TYPE == 'KAKAO' || decoded.OAUTH_TYPE == 'APPLE')) {
         console.log("소셜 로그인 유저")
         navigation.navigate('ResignReason');
+        analytics().logEvent('withdrawal_click')
       } else {
         console.log("일반 로그인 유저")
         navigation.navigate('ResignScreen');
+        analytics().logEvent('withdrawal_click')
       }
       // 여기에서 OAUTH_TYPE 확인 후 처리
     } catch (error) {
@@ -133,6 +136,11 @@ const CustomDrawerContent = ( props ) => {
       setWebViewVisible(true);
     }
   }
+
+  const handleNoticeClick = () => {
+    navigation.navigate('NoticeList')
+    analytics().logEvent('notice_click')
+  }
   
   return (
     <>
@@ -145,7 +153,7 @@ const CustomDrawerContent = ( props ) => {
         {/* Navigation Items */}
         <CustomText style={{marginLeft:20, fontSize : 18, color:"#525252"}} fontWeight="bold">이용 안내</CustomText>
         {/* <TouchableOpacity onPress={() => console.log('공지사항 클릭')} style={styles.menuItem}> */}
-        <TouchableOpacity onPress={() => navigation.navigate('NoticeList')} style={styles.menuItem}>
+        <TouchableOpacity onPress={handleNoticeClick} style={styles.menuItem}>
           <CustomText style={styles.menuText} fontWeight="medium">공지사항</CustomText>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('AskScreen')} style={styles.menuItem}>

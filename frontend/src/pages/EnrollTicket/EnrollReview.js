@@ -28,6 +28,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
 import { State } from 'react-native-gesture-handler';
 
+import analytics from '@react-native-firebase/analytics';
+
 const EnrollReview = ({navigation, route}) => {
   const dispatch = useDispatch();
   
@@ -36,6 +38,7 @@ const EnrollReview = ({navigation, route}) => {
   useEffect(() => {
     console.log("TICKET DATA1", ticketData);
     console.log("TICKET DATA2", ticketData.contentsDetails.contentsId);
+    analytics().logEvent('ticket_register_review');
   }, []);
   
   const [sliderTouched, setSliderTouched] = useState(false);

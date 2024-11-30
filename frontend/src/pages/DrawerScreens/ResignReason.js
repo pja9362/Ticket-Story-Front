@@ -5,24 +5,42 @@ import Header from '../../components/Header';
 import { deleteAccount } from '../../actions/auth/auth';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import analytics from '@react-native-firebase/analytics';
 
 const ResignReason = ({route}) => {
     const navigation = useNavigation();
 
     const [reasonNumber, setReasonNumber] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
+
+    const today = new Date();
+    const formattedDate = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
     
     const handleIconDelete = async () => {
         
         try {
+            // reasonNumber 값 매핑
+            const reasonMap = {
+                1: 'contents',
+                2: 'ticket',
+                3: 'function',
+                4: 'usage',
+                5: 'error',
+                'x': 'skip',
+            };
+            const reason = reasonMap[reasonNumber] || 'unknown'; // 매핑되지 않은 경우 대비하여 기본값 설정
+
             // async storage에서 userType 가져오기
             const userType = await AsyncStorage.getItem('userType');
             console.log('userType', userType);
             setModalVisible(false);
 
+            analytics().logEvent('withdrawal_try', {reason})
+
             if (userType == 'KAKAO' || userType == 'APPLE') {
                 console.log('소셜 탈퇴');
                 navigation.navigate('SocialLogin', {socialType: userType, reasonNumber: reasonNumber});
+                analytics().logEvent('withdrawal', {withdrawal_date: formattedDate})
             } else {
                 console.log('일반 탈퇴');
                 const deletedAccount = await deleteAccount(reasonNumber);
@@ -33,6 +51,8 @@ const ResignReason = ({route}) => {
 
                     setModalVisible(false);
                     navigation.navigate('Init');
+
+                    analytics().logEvent('withdrawal', {withdrawal_date: formattedDate})
                 } 
             }
 

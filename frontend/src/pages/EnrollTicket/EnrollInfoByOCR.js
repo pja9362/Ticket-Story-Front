@@ -28,6 +28,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
 import { State } from 'react-native-gesture-handler';
 import AskGoBack from '../../components/EnrollTicket/AskGoBack';
+import analytics from '@react-native-firebase/analytics';
 
 const EnrollInfoByOCR = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -304,6 +305,9 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
   
     if (isFormValid()) {
         navigation.navigate('EnrollReview', { title, ticketData })
+
+        const logDate = date.replace(/\./g, '');
+        analytics().logEvent('ticket_camera_info',{date: logDate, place: location, place_detail: locationDetail, place_seat: seats})
     } else {
       alert('필수 입력 항목을 모두 입력해주세요!');
     }

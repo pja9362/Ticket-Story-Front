@@ -12,6 +12,7 @@ import { loadMyStatistics, loadMovieStats, loadPerformanceStats, loadSportsStats
 import LoadingScreen from '../../components/LoadingScreen';
 import { setDefaultOrder } from '../../actions/ticket/ticket';
 import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil';
+import analytics from '@react-native-firebase/analytics';
 
 const Stats = () => {
   const viewRef = useRef();
@@ -59,6 +60,7 @@ const Stats = () => {
 
   const handleShareBtnPress = () => {
     handleShareBtn(viewRef);
+    analytics().logEvent('mydata_share_click')
   };
 
   // 선택된 탭에 따라 다른 콘텐츠를 렌더링

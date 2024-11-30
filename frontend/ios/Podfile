@@ -49,6 +49,7 @@ target 'frontend' do
   flags = get_default_flags()
   
   pod 'GoogleUtilities', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
 
   use_react_native!(
     :path => config[:reactNativePath],

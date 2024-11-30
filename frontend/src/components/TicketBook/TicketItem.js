@@ -23,6 +23,8 @@ import {CustomText} from '../CustomText';
 
 import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
 
+import analytics from '@react-native-firebase/analytics';
+
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
 const imageWidth = Dimensions.get('window').width * 0.45;
 
@@ -96,11 +98,13 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
       time : time,
       location : location
      });
+     analytics().logEvent('myreview_click');
   };
 
   const handleIconEditClick = () => {
     setDropdownVisible(!dropdownVisible);
     console.log('click');
+    analytics().logEvent('ticketcard_menu_click');
   };
 
 
@@ -124,6 +128,8 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
         dispatch(loadSportsStats(defaultOrder));
 
         console.log("Dropdown and Modal visibility set to false");
+
+        analytics().logEvent('ticketcard_delete')
       } else {
         alert('Failed to delete ticket.');
       }
@@ -151,6 +157,8 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
           ticketData : response
         });
 
+        analytics().logEvent('ticketcard_info_edit_click')
+
       } else {
         alert('Fail');
       }
@@ -176,6 +184,8 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
           ticketData : response,
           reviewId : reviewId
          });
+         
+         analytics().logEvent('ticketcard_review_edit_click')
 
       } else {
         alert('Fail');
@@ -183,6 +193,11 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
     } catch (error) {
       console.error('Error Editing ticket review:', error.response);
     }
+  }
+
+  const handleDelete = () => {
+    setModalVisible(true)
+    analytics().logEvent('ticketcard_delete_click')
   }
 
   const closeDropdown = () => {
@@ -291,7 +306,7 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
               <TouchableOpacity style={{paddingHorizontal: moderateScale(14)}} onPress={handleReviewEdit}>
                 <CustomText style={{color: '#525252', fontSize: scale(15)}} fontWeight="semibold">리뷰 수정</CustomText>
               </TouchableOpacity>
-              <TouchableOpacity style={{paddingHorizontal: moderateScale(14)}} onPress={() => setModalVisible(true)}>
+              <TouchableOpacity style={{paddingHorizontal: moderateScale(14)}} onPress={handleDelete}>
                 <CustomText style={{color: '#525252', fontSize: scale(15)}} fontWeight="semibold">삭제</CustomText>
               </TouchableOpacity>
             </View>

@@ -14,6 +14,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker'; //
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
 import { State } from 'react-native-gesture-handler';
+import analytics from '@react-native-firebase/analytics';
 
 //콘텐츠 검색
 //영화 : MOVIE
@@ -165,6 +166,9 @@ const EnrollInfoByScrape = ({ route, navigation }) => {
   
     if (isFormValid()) {
         navigation.navigate('EnrollReview', { title, ticketData })
+
+        const logDate = date.replace(/\./g, '');
+        analytics().logEvent('ticket_online_info',{date: logDate, place: location, place_detail: locationDetail, place_seat: seats})
     } else {
       alert('필수 입력 항목을 모두 입력해주세요!');
     }

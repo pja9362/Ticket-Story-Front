@@ -15,6 +15,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { uploadImage, updateReviewImage } from '../actions/ticket/ticket';
 import { useNavigation } from '@react-navigation/native';
 import {scale, verticalScale, moderateScale} from '../utils/sizeUtil'
+import analytics from '@react-native-firebase/analytics';
 
 const ShowImage = ({ route }) => {
     const viewRef = useRef();
@@ -37,6 +38,7 @@ const ShowImage = ({ route }) => {
 
     const handleShareBtnPress = () => {
         handleShareBtn(viewRef);
+        analytics().logEvent('imagecard_share_click');
     };
 
     const handleSaveBtnPress = async() => {
@@ -44,6 +46,7 @@ const ShowImage = ({ route }) => {
             const response = await handleSaveBtn(viewRef);
             console.log(response);
             setModalVisible(true);
+            analytics().logEvent('imagecard_save_click');
         } catch (error) {
         console.error('Error Saving ticket?:', error.response);
         }
@@ -52,6 +55,7 @@ const ShowImage = ({ route }) => {
     const handleSelectNewImage = async () => {
         console.log('사진 다시 선택하기 버튼 클릭');
         console.log(ticketId)
+        analytics().logEvent('imagecard_reselect_click');
 
         try {
     

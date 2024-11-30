@@ -11,7 +11,7 @@ import { getTicketDetail, getTicketDetails } from '../../actions/ticket/ticket';
 import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
 import { State } from 'react-native-gesture-handler';
 import {useFocusEffect} from '@react-navigation/native';
-
+import analytics from '@react-native-firebase/analytics';
 
 const EnrollFinish = ({navigation, route}) => {
     const dispatch = useDispatch();
@@ -45,6 +45,9 @@ const EnrollFinish = ({navigation, route}) => {
 
     useEffect(() => {
         console.log('뭉', ticketId);
+
+        // 페이지 조회 이벤트 기록
+        analytics().logEvent('ticket_register')
 
         dispatch(getTicketDetail(ticketId))
           .then((response) => {

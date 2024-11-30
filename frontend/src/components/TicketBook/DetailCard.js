@@ -17,6 +17,7 @@ import { getTicketDetails, uploadImage, updateReviewImage } from '../../actions/
 import ImagePicker from 'react-native-image-crop-picker';
 import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
 import { TouchableWithoutFeedback } from 'react-native';
+import analytics from '@react-native-firebase/analytics';
 
 
 const DetailCard = ({ ticket, ticketId }) => {
@@ -34,6 +35,7 @@ const DetailCard = ({ ticket, ticketId }) => {
 
     const handleShareBtnPress = () => {
         handleShareBtn(viewRef);
+        analytics().logEvent('storycard_share_click');
     }
 
     const handleSaveBtnPress = async() => {
@@ -41,6 +43,7 @@ const DetailCard = ({ ticket, ticketId }) => {
             const response = await handleSaveBtn(viewRef);
             console.log(response);
             setModalVisible(true);
+            analytics().logEvent('storycard_save_click');
         } catch (error) {
         console.error('Error Saving ticket?:', error.response);
         }
@@ -62,14 +65,13 @@ const DetailCard = ({ ticket, ticketId }) => {
         }
         try {
           const response = await getTicketDetails(editReview);
-          if (response !== null) {
-            console.log("성공", response);
-            
+          if (response !== null) {            
             //navigate 하면서 response 값들 보내야함
             navigation.navigate('ShowPaperView', {
               ticketData : response,
              });
-    
+
+             analytics().logEvent('storycard_detail_info_click');
           } else {
             alert('Fail');
           }

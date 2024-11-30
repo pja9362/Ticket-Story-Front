@@ -9,6 +9,7 @@ import {
 import NextButton from './NextButton';
 import { checkIdDuplicate } from '../../actions/auth/auth';
 import {CustomText, CustomTextInput} from '../CustomText';
+import analytics from '@react-native-firebase/analytics';
 
 const Step1 = ({nextStep, handleChange, values}) => {
   // const [id, setId] = useState('');
@@ -25,6 +26,7 @@ const Step1 = ({nextStep, handleChange, values}) => {
 
   useEffect(() => {
     console.log('Step1: ', values);
+    analytics().logEvent('sign_up_try_general', {step: '1'});
   }, []);
 
   const handleIdCheck = async () => {

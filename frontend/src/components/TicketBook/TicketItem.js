@@ -198,6 +198,10 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
   const handleDelete = () => {
     setModalVisible(true)
     analytics().logEvent('ticketcard_delete_click')
+    analytics().logScreenView({
+      screen_name: '티켓 삭제 모달',
+      screen_class: 'ticket_edit'
+    })
   }
 
   const closeDropdown = () => {
@@ -223,6 +227,14 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
   const backAnimatedStyle = {
     transform: [{ rotateY: backInterpolate }],
   };
+
+  const NoReviewOrImage = () => {
+    setMakeCardVisible(true)
+    analytics().logScreenView({
+      screen_name: '리뷰 및 사진 미등록 모달',
+      screen_class: 'myreview_modal'
+    })
+  }
 
 
   return (
@@ -266,7 +278,7 @@ const TicketItem = ({ category, title, date, time, location, seat, contentsRatin
                     <View style={styles.buttonContainer}>
                       <TouchableOpacity 
                         // onPress={reviewId !== 0 ? handleReviewClick : () => setMakeCardVisible(true)}
-                        onPress={reviewExists ? handleReviewClick : () => setMakeCardVisible(true)}
+                        onPress={reviewExists ? handleReviewClick : NoReviewOrImage}
                         style={[styles.reviewButton, { opacity: !isFront ? 1 : 0 }]}
                         // activeOpacity={reviewId !== 0 ? 0.2 : 1} // 터치 가능한 경우 activeOpacity 적용
                         activeOpacity={reviewExists ? 0.2 : 1} 

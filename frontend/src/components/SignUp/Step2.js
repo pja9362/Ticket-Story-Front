@@ -33,6 +33,10 @@ const Step2 = ({ nextStep, handleChange, values }) => {
   useEffect(() => {
     console.log('Step2: ', values);
     analytics().logEvent('sign_up_try_general', {step: '2'});
+    analytics().logScreenView({
+      screen_name: '비밀번호',
+      screen_class: 'signup'
+    })
   }, []);
 
   const handleNext = () => {

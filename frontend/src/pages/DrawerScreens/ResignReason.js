@@ -16,6 +16,13 @@ const ResignReason = ({route}) => {
     const today = new Date();
     const formattedDate = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
     
+    useEffect(() => {
+        analytics().logScreenView({
+          screen_name: '회원탈퇴',
+          screen_class: 'withdrawal'
+        })
+    }, [])
+
     const handleIconDelete = async () => {
         
         try {
@@ -41,6 +48,10 @@ const ResignReason = ({route}) => {
                 console.log('소셜 탈퇴');
                 navigation.navigate('SocialLogin', {socialType: userType, reasonNumber: reasonNumber});
                 analytics().logEvent('withdrawal', {withdrawal_date: formattedDate})
+                analytics().logScreenView({
+                    screen_name: '회원탈퇴 완료',
+                    screen_class: 'withdrawal'
+                })
             } else {
                 console.log('일반 탈퇴');
                 const deletedAccount = await deleteAccount(reasonNumber);
@@ -53,6 +64,10 @@ const ResignReason = ({route}) => {
                     navigation.navigate('Init');
 
                     analytics().logEvent('withdrawal', {withdrawal_date: formattedDate})
+                    analytics().logScreenView({
+                        screen_name: '회원탈퇴 완료',
+                        screen_class: 'withdrawal'
+                    })
                 } 
             }
 

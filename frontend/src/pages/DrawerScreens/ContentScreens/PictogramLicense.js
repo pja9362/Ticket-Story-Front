@@ -1,9 +1,17 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import {CustomText} from '../../../components/CustomText';
 import Header from '../../../components/Header';
+import analytics from '@react-native-firebase/analytics';
 
 const PictogramLicense = () => {
+
+  useEffect(() => {
+    analytics().logScreenView({
+      screen_name: '오픈소스 라이선스',
+      screen_class: 'menu'
+    })
+  }, [])
 
   return (
     <View style={styles.container}>

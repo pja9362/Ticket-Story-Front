@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../../components/Header';
 import { StyleSheet, SafeAreaView, ScrollView, Dimensions, View, Image, TouchableOpacity } from 'react-native';
+import analytics from '@react-native-firebase/analytics';
 import { CustomText } from '../../components/CustomText';
 import ticketcard1 from '../../images/tutorial/ticketcard1.png';
 import ticketcard2 from '../../images/tutorial/ticketcard2.png';
@@ -23,6 +24,10 @@ const TutorialView = ({route}) => {
     const renderContent = () => {
         switch(selectedTab) {
             case 0:
+                analytics().logScreenView({
+                    screen_name: '이용방법 - 티켓카드',
+                    screen_class: 'howtouse'
+                })
                 return (
                     <>
                         <Image source={ticketcard1} style={{...styles.image, aspectRatio: 0.85}} />
@@ -31,6 +36,10 @@ const TutorialView = ({route}) => {
                     </>
                 )
             case 1:
+                analytics().logScreenView({
+                    screen_name: '이용방법 - 스토리카드',
+                    screen_class: 'howtouse'
+                })
                 return (
                     <>
                         <Image source={storycard1} style={{...styles.image, aspectRatio: 0.6}} />
@@ -39,6 +48,10 @@ const TutorialView = ({route}) => {
                     </>
                 )
             case 2:
+                analytics().logScreenView({
+                    screen_name: '이용방법 - 세부정보',
+                    screen_class: 'howtouse'
+                })
                 return (
                     <>
                         <Image source={detail1} style={{...styles.image, aspectRatio: 0.85}} />

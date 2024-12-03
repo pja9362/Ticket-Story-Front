@@ -13,6 +13,7 @@ import iconUp from '../../images/icon_up.png'
 import iconDown from '../../images/icon_down.png'
 import iconLine from '../../images/icon_line.png'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import analytics from '@react-native-firebase/analytics';
 // import LoadingScreen from '../../components/LoadingScreen';
 
 const imageHeight = Dimensions.get('window').width * 0.45 * 1.43;
@@ -55,6 +56,13 @@ const TicketBook = () => {
   const scrollViewRef = useRef(null);
   const scrollPosition = useRef(0);
   const pageRef = useRef(page);
+
+  useEffect(() => {
+    analytics().logScreenView({
+      screen_name: '홈',
+      screen_class: 'home'
+    })
+  }, [])
   
   useEffect(() => {
     pageRef.current = page;

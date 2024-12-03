@@ -178,6 +178,13 @@ const EnrollInfoByOCR = ({ route, navigation }) => {
   }, []);
 
   useEffect(() => {
+    analytics().logScreenView({
+      screen_name: '카메라 티켓 등록 - OCR 정보 확인',
+      screen_class: 'ticket_register'
+    })
+  },[]);
+
+  useEffect(() => {
     if (ocrResponse) {
       const { ocr_result } = ocrResponse;
       setTitle(ocr_result.title || '');

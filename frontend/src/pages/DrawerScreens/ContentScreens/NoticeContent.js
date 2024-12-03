@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Text, StyleSheet, Image, ScrollView } from 'rea
 import {CustomText} from '../../../components/CustomText';
 import Header from '../../../components/Header';
 import {scale, verticalScale, moderateScale} from '../../../utils/sizeUtil'
+import analytics from '@react-native-firebase/analytics';
 
 const NoticeContent = ({route}) => {
 
@@ -18,6 +19,12 @@ const NoticeContent = ({route}) => {
     }
   }, [route.params]);
 
+  useEffect(() => {
+    analytics().logScreenView({
+      screen_name: '공지사항-{{'+route.params.gotNoticeDetails.noticeTitle+'}}',
+      screen_class: 'menu'
+    })
+  }, [])
 
   return (
     <View style={styles.container}>

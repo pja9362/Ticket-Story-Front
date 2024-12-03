@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../../components/Header';
 import { StyleSheet, SafeAreaView, ScrollView, Dimensions, View, Image, TouchableOpacity } from 'react-native';
 import { CustomText } from '../../components/CustomText';
+import analytics from '@react-native-firebase/analytics';
 
 import tutorial_cgv1 from '../../images/tutorial/cgv1.png';
 import tutorial_cgv2 from '../../images/tutorial/cgv2.png';
@@ -39,6 +40,10 @@ const TutorialScrape = () => {
     const renderContent = () => {
         switch(selectedTab) {
             case 0:
+                analytics().logScreenView({
+                    screen_name: '이용방법 - 온라인 티켓 등록 - {{CGV}}',
+                    screen_class: 'howtouse'
+                })
                 return (
                     <>
                         <Image source={tutorial_cgv1} style={{...styles.image, aspectRatio: 0.75}} />
@@ -49,6 +54,10 @@ const TutorialScrape = () => {
                     </>
                 );
             case 1:
+                analytics().logScreenView({
+                    screen_name: '이용방법 - 온라인 티켓 등록 - {{메가박스}}',
+                    screen_class: 'howtouse'
+                })
                 return (
                     <>
                         <Image source={tutorial_megabox1} style={{...styles.image, aspectRatio: 0.75}} />
@@ -59,6 +68,10 @@ const TutorialScrape = () => {
                     </>
                 )
             case 2:
+                analytics().logScreenView({
+                    screen_name: '이용방법 - 온라인 티켓 등록 - {{롯데시네마}}',
+                    screen_class: 'howtouse'
+                })
                 return (
                     <>
                         <Image source={tutorial_lotte1} style={{...styles.image, aspectRatio: 0.75}} />
@@ -68,6 +81,10 @@ const TutorialScrape = () => {
                     </>
                 )
             case 3:
+                analytics().logScreenView({
+                    screen_name: '이용방법 - 온라인 티켓 등록 - {{인터파크}}',
+                    screen_class: 'howtouse'
+                })
                 return (
                     <>
                         <Image source={tutorial_interpark1} style={{...styles.image, aspectRatio: 0.75}} />
@@ -77,6 +94,10 @@ const TutorialScrape = () => {
                     </>
                 )
             case 4:
+                analytics().logScreenView({
+                    screen_name: '이용방법 - 온라인 티켓 등록 - {{예스24}}',
+                    screen_class: 'howtouse'
+                })
                 return (
                     <>
                         <Image source={tutorial_yes1} style={{...styles.image, aspectRatio: 0.75}} />

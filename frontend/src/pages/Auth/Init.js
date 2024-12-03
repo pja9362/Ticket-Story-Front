@@ -13,6 +13,7 @@ import Header from '../../components/Header';
 import { useDispatch } from 'react-redux';
 import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
 import analytics from '@react-native-firebase/analytics';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -21,11 +22,14 @@ const Init = ({navigation}) => {
 
   const webViewRef = useRef(null);
   const dispatch = useDispatch();
+  const loggedUrlsRef = useRef(new Set());
 
   const [webViewTitle, setWebViewTitle] = useState('');
   const [webViewVisible, setWebViewVisible] = useState(false);
   const [redirectUrl, setRedirectUrl] = useState(null);
   const [webViewOpacity, setWebViewOpacity] = useState(1);
+  const [isKakaoLoginLogged, setIsKakaoLoginLogged] = useState(false);
+  const [isAppleLoginLogged, setIsAppleLoginLogged] = useState(false);
 
   useEffect(() => {
     const backAction = () => {
@@ -50,23 +54,123 @@ const Init = ({navigation}) => {
       setRedirectUrl(response);
       setWebViewVisible(true);
       analytics().logEvent('main_kakao_click')
+      // analytics().logEvent('sign_up_try_kakao',{step:1})
     } catch (error) {
       console.error('HANDLE KAKAO LOGIN error:', error);
       throw error;
     }
   };
 
-  const handleOAuthNavigationChange = (navState) => {
+  const handleOAuthNavigationChange = async (navState) => {
     console.log('------NAVIGATION CHANGE------');
     console.log('navState:', navState.url);
+
+    // if (navState.url.includes('3Dtrue#login')){
+    //   analytics().logEvent('sign_up_try_kakao',{step:1})
+    //   analytics().logScreenView({
+    //     screen_name: '카카오톡 회원가입',
+    //     screen_class: 'signup'
+    //   })
+    //   console.log('test1');
+    // }
+
+    const url = navState.url;
+
+    // 이미 기록된 URL인지 확인
+    if (!loggedUrlsRef.current.has(url)) {
+      // 기록되지 않은 URL이라면 이벤트 로그 후 기록
+      loggedUrlsRef.current.add(url);
+  
+      // 특정 URL 조건에 따라 이벤트 기록
+      if (url.includes('3Dtrue#login')) {
+
+        const eventLogged = await AsyncStorage.getItem('eventLogged_first_kakao_page');
+        if(!eventLogged) {
+          analytics().logEvent('sign_up_try_kakao',{step:1})
+          analytics().logScreenView({
+            screen_name: '카카오톡 회원가입',
+            screen_class: 'signup'
+          })
+          console.log('test1');
+          await AsyncStorage.setItem('eventLogged_first_kakao_page', 'true');
+        }
+        console.log('test1!!!!');
+      } else if (url.includes('through_account%3Dtrue#additionalAuth')) {
+
+        const eventLogged = await AsyncStorage.getItem('eventLogged_second_kakao_page');
+        if(!eventLogged) {
+          analytics().logEvent('sign_up_try_kakao',{step:2})
+          console.log('test2');
+          await AsyncStorage.setItem('eventLogged_second_kakao_page', 'true');
+        }
+        console.log('test2!!!!')
+      } else if (url.includes('https://logins.daum.net/accounts/kakaossotokenlogin.do')) {
+        const eventLogged = await AsyncStorage.getItem('eventLogged_third_kakao_page');
+        if(!eventLogged) {
+          analytics().logEvent('sign_up_try_kakao',{step:3})
+          analytics().logScreenView({
+            screen_name: '카카오톡 동의 선택',
+            screen_class: 'signup'
+          })
+          console.log('test3');
+          await AsyncStorage.setItem('eventLogged_third_kakao_page', 'true');
+        }
+        console.log('test3!!!!')
+      }
+
+      if (url.includes('https://appleid.apple.com/auth/authorize')) {
+
+        const eventLogged = await AsyncStorage.getItem('eventLogged_first_apple_page');
+        if(!eventLogged) {
+          analytics().logEvent('sign_up_try_apple', {step: 1}) 
+          console.log('애플 로그인 시도');
+          await AsyncStorage.setItem('eventLogged_first_apple_page', 'true');
+        }
+        analytics().logScreenView({
+          screen_name: '애플 로그인',
+          screen_class: 'login'
+        })    
+        console.log('애플 로그인 시도!!!!');
+      }
+    }
+
+
     if (navState.url.startsWith(`${API_URL}/api/v1/auth/oauth/kakao?code=`)) {
       setWebViewOpacity(0);
       console.log("Kakao Login Success!");
-      analytics().logEvent('login', {method: 'kakao'});
+
+      if (!isKakaoLoginLogged) {
+        analytics().logEvent('login', {method: 'kakao'});
+        setIsKakaoLoginLogged(true);
+      }
+
+      const eventLogged = await AsyncStorage.getItem('eventLogged_fourth_kakao_page');
+      if(!eventLogged) {
+        const today = new Date();
+        const formattedDate = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
+        analytics().logEvent('sign_up',{method:'kakao', signup_date: formattedDate})
+        await AsyncStorage.setItem('eventLogged_fourth_kakao_page', 'true');
+        console.log('kakao fourth')
+      }      
+
     } else if (navState.url == `${API_URL}/api/v1/auth/oauth/apple`) {
       setWebViewOpacity(0);
       console.log("Apple Login Success!");
-      analytics().logEvent('login', {method: 'apple'});
+
+      if (!isAppleLoginLogged) {
+        analytics().logEvent('login', {method: 'apple'});
+        setIsAppleLoginLogged(true);
+      }
+
+      const eventLogged = await AsyncStorage.getItem('eventLogged_second_apple_page');
+      if(!eventLogged) {
+        const today = new Date();
+        const formattedDate = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
+        analytics().logEvent('sign_up',{method:'apple', signup_date: formattedDate})
+        await AsyncStorage.setItem('eventLogged_second_apple_page', 'true');
+        console.log('apple second')
+      }
+
     } else {
       setWebViewOpacity(1);
     }

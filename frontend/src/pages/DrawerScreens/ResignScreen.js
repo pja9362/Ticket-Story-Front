@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import Header from '../../components/Header';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { CustomText, CustomTextInput } from '../../components/CustomText';
 import { checkPassword, deleteAccount } from '../../actions/auth/auth';
+import analytics from '@react-native-firebase/analytics';
 
 const ChangePassword = () => {
     const navigation = useNavigation();
@@ -18,6 +19,13 @@ const ChangePassword = () => {
     const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&#^+=])[A-Za-z\d@$!%*?&#^+=]{8,16}$/;
 
     const isValid = exPassword !== '' && passwordRegex.test(exPassword);
+
+    useEffect(() => {
+      analytics().logScreenView({
+        screen_name: '회원탈퇴',
+        screen_class: 'withdrawal'
+      })
+    }, [])
 
 
     const handleNext = async () => {

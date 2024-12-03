@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, Text, Image, TouchableOpacity, View, Modal } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { setHideImageInfo, setHideImageTitle, setDarkText } from '../reducers/overlaySlice';
@@ -31,6 +31,13 @@ const ShowImage = ({ route }) => {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedImages, setSelectedImages] = useState(null);
+
+    useEffect(() => {
+        analytics().logScreenView({
+            screen_name: '이미지카드 보기',
+            screen_class: 'storycard'
+        })
+    }, [])
 
     const closeModal = () => {
         setModalVisible(false);

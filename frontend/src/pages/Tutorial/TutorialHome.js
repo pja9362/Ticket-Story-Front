@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Header from '../../components/Header';
 import { ScrollView, StyleSheet, SafeAreaView, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { CustomText } from '../../components/CustomText';
 import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil';
+import analytics from '@react-native-firebase/analytics';
 
 import enrollWay1 from '../../images/tutorial/tutorial_1.png';
 import enrollWay2 from '../../images/tutorial/tutorial_2.png';
@@ -15,6 +16,14 @@ import viewWay3 from '../../images/tutorial/tutorial_6.png';
 const { width } = Dimensions.get('window');
 
 const TutorialHome = ({navigation}) => {
+
+    useEffect(() => {
+        analytics().logScreenView({
+          screen_name: '이용방법',
+          screen_class: 'howtouse'
+        })
+    }, [])
+
     const onImagePress = (imageName) => {
         switch(imageName) {
             case 'enrollWay1':
@@ -22,9 +31,17 @@ const TutorialHome = ({navigation}) => {
                 break;
             case 'enrollWay2':
                 navigation.navigate('TutorialEnroll', {type: 'camera'});
+                analytics().logScreenView({
+                    screen_name: '이용방법 - 카메라 티켓 등록',
+                    screen_class: 'howtouse'
+                })
                 break;
             case 'enrollWay3':
                 navigation.navigate('TutorialEnroll', {type: 'hand'});
+                analytics().logScreenView({
+                    screen_name: '이용방법 - 직접입력 티켓 등록',
+                    screen_class: 'howtouse'
+                })
                 break;
             case 'viewWay1':
                 navigation.navigate('TutorialView', {index: 0});

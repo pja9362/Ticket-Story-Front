@@ -35,6 +35,11 @@ const ShowContent = ({ route }) => {
         //   console.log('33223232',reviewEdit);
 
         })
+
+        analytics().logScreenView({
+            screen_name: '리뷰 카드 보기',
+            screen_class: 'storycard'
+        })
     }, []);
 
     const [modalVisible, setModalVisible] = useState(false);

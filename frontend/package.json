@@ -17,6 +17,7 @@
     "@react-native-community/slider": "^4.5.0",
     "@react-native-firebase/analytics": "^21.6.0",
     "@react-native-firebase/app": "^21.6.0",
+    "@react-native-seoul/kakao-login": "^5.4.1",
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/drawer": "^6.6.15",
     "@react-navigation/native": "^6.1.9",

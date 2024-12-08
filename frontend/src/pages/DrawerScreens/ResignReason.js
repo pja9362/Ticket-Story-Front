@@ -47,8 +47,7 @@ const ResignReason = ({route}) => {
             if (userType == 'KAKAO' || userType == 'APPLE') {
                 console.log('소셜 탈퇴');
                 navigation.navigate('SocialLogin', {socialType: userType, reasonNumber: reasonNumber});
-                analytics().logEvent('withdrawal')
-                analytics().setUserProperty('withdrawal_date', formattedDate);
+                analytics().logEvent('withdrawal', {withdrawal_date: formattedDate})
                 analytics().logScreenView({
                     screen_name: '회원탈퇴 완료',
                     screen_class: 'withdrawal'
@@ -64,8 +63,7 @@ const ResignReason = ({route}) => {
                     setModalVisible(false);
                     navigation.navigate('Init');
 
-                    analytics().logEvent('withdrawal')
-                    analytics().setUserProperty('withdrawal_date', formattedDate);
+                    analytics().logEvent('withdrawal', {withdrawal_date: formattedDate})
                     analytics().logScreenView({
                         screen_name: '회원탈퇴 완료',
                         screen_class: 'withdrawal'

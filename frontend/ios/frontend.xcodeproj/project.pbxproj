@@ -22,6 +22,7 @@
 		9E0B4C0F4B842AF32CC46491 /* libPods-frontend.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 55457B41BA40263E7C686B06 /* libPods-frontend.a */; };
 		ABD1B95371BF4FB1B22A6513 /* Pretendard-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A8F097FCF624498DA79AA002 /* Pretendard-ExtraBold.ttf */; };
 		DE2FD075DEAB454681058408 /* Pretendard-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C844C7291A4241BBBB6C853F /* Pretendard-Medium.ttf */; };
+		DFCCCA652D05AF0900B05CC5 /* SwiftBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFCCCA642D05AF0900B05CC5 /* SwiftBridge.swift */; };
 		F070B8015B8D486F9BD390E1 /* Pretendard-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B45D5BD86EC491EA9801B80 /* Pretendard-Light.ttf */; };
 		F80A2A2B87A24B788354A99B /* Pretendard-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7A559087020B4704A109A9F4 /* Pretendard-ExtraLight.ttf */; };
 		FB23CF4E1E9A48BABD16924F /* Pretendard-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EC9A475A16C742EE87C36D77 /* Pretendard-SemiBold.ttf */; };
@@ -63,6 +64,8 @@
 		B9FAE7AC658E43B99712AAA2 /* Pretendard-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-Regular.ttf"; path = "../src/fonts/Pretendard-Regular.ttf"; sourceTree = "<group>"; };
 		C844C7291A4241BBBB6C853F /* Pretendard-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-Medium.ttf"; path = "../src/fonts/Pretendard-Medium.ttf"; sourceTree = "<group>"; };
 		DE5D1EEF6C1046C899791549 /* Pods-frontend-frontendTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-frontend-frontendTests.debug.xcconfig"; path = "Target Support Files/Pods-frontend-frontendTests/Pods-frontend-frontendTests.debug.xcconfig"; sourceTree = "<group>"; };
+		DFCCCA632D05AF0900B05CC5 /* frontend-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "frontend-Bridging-Header.h"; sourceTree = "<group>"; };
+		DFCCCA642D05AF0900B05CC5 /* SwiftBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBridge.swift; sourceTree = "<group>"; };
 		E16B4A2BAC64FBBC5195AD3B /* libPods-frontend-frontendTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-frontend-frontendTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC9A475A16C742EE87C36D77 /* Pretendard-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Pretendard-SemiBold.ttf"; path = "../src/fonts/Pretendard-SemiBold.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -132,6 +135,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				DFCCCA642D05AF0900B05CC5 /* SwiftBridge.swift */,
+				DFCCCA632D05AF0900B05CC5 /* frontend-Bridging-Header.h */,
 			);
 			name = frontend;
 			sourceTree = "<group>";
@@ -251,7 +256,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1610;
 					};
 				};
 			};
@@ -483,6 +488,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				DFCCCA652D05AF0900B05CC5 /* SwiftBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -567,7 +573,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = U7RY3HU6F8;
+				DEVELOPMENT_TEAM = S6BA254F7F;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = frontend/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -581,8 +587,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.ticket-frontend";
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.ticket;
 				PRODUCT_NAME = frontend;
+				SWIFT_OBJC_BRIDGING_HEADER = "frontend-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -597,7 +604,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = U7RY3HU6F8;
+				DEVELOPMENT_TEAM = S6BA254F7F;
 				INFOPLIST_FILE = frontend/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -610,8 +617,9 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.ticket-frontend";
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.ticket;
 				PRODUCT_NAME = frontend;
+				SWIFT_OBJC_BRIDGING_HEADER = "frontend-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

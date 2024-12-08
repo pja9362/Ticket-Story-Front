@@ -69,7 +69,7 @@ const Init = ({navigation}) => {
       const token = result.accessToken;
       const idToken = result.idToken;
       if (token) {
-        Alert.alert('로그인 성공', `Access Token: ${token}`);
+        // Alert.alert('로그인 성공', `Access Token: ${token}`);
         // handleKaKaoAppLogin 호출 (회원가입 등록)
         try {
           const appLoginResult = await handleKaKaoAppLogin(token, idToken);
@@ -187,7 +187,8 @@ const Init = ({navigation}) => {
       if(!eventLogged) {
         const today = new Date();
         const formattedDate = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
-        analytics().logEvent('sign_up',{method:'kakao', signup_date: formattedDate})
+        analytics().logEvent('sign_up',{method:'kakao'})
+        analytics().setUserProperty('signup_date', formattedDate);
         await AsyncStorage.setItem('eventLogged_fourth_kakao_page', 'true');
         console.log('kakao fourth')
       }      
@@ -205,7 +206,8 @@ const Init = ({navigation}) => {
       if(!eventLogged) {
         const today = new Date();
         const formattedDate = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
-        analytics().logEvent('sign_up',{method:'apple', signup_date: formattedDate})
+        analytics().logEvent('sign_up',{method:'apple'})
+        analytics().setUserProperty('signup_date', formattedDate);
         await AsyncStorage.setItem('eventLogged_second_apple_page', 'true');
         console.log('apple second')
       }

@@ -7,13 +7,14 @@ import icon_kakao from '../../images/icon_kakao.png';
 import icon_apple from '../../images/icon_apple.png';
 import logo_ticket_white from '../../images/logo_ticket_white.png';
 import { API_URL } from '@env';
-import { handleOAuthKaKaoLogin, handleOAuthAppleLogin, saveTokens } from '../../actions/auth/auth';
+import { handleOAuthKaKaoLogin, handleOAuthAppleLogin, saveTokens, handleKaKaoAppLogin } from '../../actions/auth/auth';
 import {CustomText} from '../../components/CustomText';
 import Header from '../../components/Header';
 import { useDispatch } from 'react-redux';
 import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
 import analytics from '@react-native-firebase/analytics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { login, getAccessToken, logout } from '@react-native-seoul/kakao-login';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -47,17 +48,55 @@ const Init = ({navigation}) => {
   }, []);
 
 
+  // const handleKaKaoLogin = async () => {
+  //   try {
+  //     const response = await handleOAuthKaKaoLogin();
+  //     setWebViewTitle('카카오톡 로그인');
+  //     setRedirectUrl(response);
+  //     setWebViewVisible(true);
+  //     analytics().logEvent('main_kakao_click')
+  //     // analytics().logEvent('sign_up_try_kakao',{step:1})
+  //   } catch (error) {
+  //     console.error('HANDLE KAKAO LOGIN error:', error);
+  //     throw error;
+  //   }
+  // };
   const handleKaKaoLogin = async () => {
     try {
-      const response = await handleOAuthKaKaoLogin();
-      setWebViewTitle('카카오톡 로그인');
-      setRedirectUrl(response);
-      setWebViewVisible(true);
+      const result = await login()
+      console.log('----- Kakao Login Result:', result);
+
+      const token = result.accessToken;
+      const idToken = result.idToken;
+      if (token) {
+        Alert.alert('로그인 성공', `Access Token: ${token}`);
+        // handleKaKaoAppLogin 호출 (회원가입 등록)
+        try {
+          const appLoginResult = await handleKaKaoAppLogin(token, idToken);
+          console.log('----- App Login Result:', appLoginResult);
+
+          // Alert.alert('회원가입 성공', '앱 로그인 성공적으로 완료되었습니다.');
+          if (appLoginResult.refreshToken) {
+            await AsyncStorage.setItem(
+              'accessToken',
+              appLoginResult.accessToken,
+            );
+            await AsyncStorage.setItem(
+              'refreshToken',
+              appLoginResult.refreshToken,
+            );
+
+            navigation.navigate('MainStackWithDrawer');
+          }
+        } catch (appLoginError) {
+          console.error('App Login Error:', appLoginError);
+          Alert.alert('회원가입 실패', '다시 시도해주세요.');
+        }
+      }
       analytics().logEvent('main_kakao_click')
-      // analytics().logEvent('sign_up_try_kakao',{step:1})
     } catch (error) {
-      console.error('HANDLE KAKAO LOGIN error:', error);
-      throw error;
+      console.error('Kakao Login Error:', error);
+      Alert.alert('로그인 실패', '다시 시도해주세요.');
     }
   };
 

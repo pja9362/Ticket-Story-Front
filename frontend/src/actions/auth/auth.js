@@ -201,6 +201,21 @@ export const handleOAuthKaKaoLogin = async () => {
   }
 }
 
+
+
+export const handleKaKaoAppLogin = async (accessToken, idToken) => {
+  const body = JSON.stringify({ accessToken, idToken });
+  console.log("!!!! BODY", body)
+  const response = await axios.post(
+    `${API_URL}/api/v1/auth/oauth/kakao/app`,
+    body,
+    { headers: { 'Content-Type': 'application/json' } }    
+  );
+  console.log(response.data)
+
+  return response.data;
+};
+
 export const handleOAuthAppleLogin = async () => {
   console.log("APPLE LOGIN");
   try {

@@ -74,8 +74,20 @@ const Init = ({navigation}) => {
         try {
           const appLoginResult = await handleKaKaoAppLogin(token, idToken);
           console.log('----- App Login Result:', appLoginResult);
-          
-          Alert.alert('회원가입 성공', '앱 로그인 성공적으로 완료되었습니다.');
+
+          // Alert.alert('회원가입 성공', '앱 로그인 성공적으로 완료되었습니다.');
+          if (appLoginResult.refreshToken) {
+            await AsyncStorage.setItem(
+              'accessToken',
+              appLoginResult.accessToken,
+            );
+            await AsyncStorage.setItem(
+              'refreshToken',
+              appLoginResult.refreshToken,
+            );
+
+            navigation.navigate('MainStackWithDrawer');
+          }
         } catch (appLoginError) {
           console.error('App Login Error:', appLoginError);
           Alert.alert('회원가입 실패', '다시 시도해주세요.');

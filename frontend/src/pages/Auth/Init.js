@@ -15,6 +15,7 @@ import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
 import analytics from '@react-native-firebase/analytics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { login, getAccessToken, logout } from '@react-native-seoul/kakao-login';
+import { CommonActions } from '@react-navigation/native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -85,8 +86,14 @@ const Init = ({navigation}) => {
               'refreshToken',
               appLoginResult.refreshToken,
             );
-
-            navigation.navigate('MainStackWithDrawer');
+            
+            console.log('here')
+            // navigation.navigate('MainStackWithDrawer');
+            await navigation.dispatch(CommonActions.reset({
+              index: 0,
+              routes: [{name: 'MainStackWithDrawer'}]
+            }))
+            console.log('here?')
           }
         } catch (appLoginError) {
           console.error('App Login Error:', appLoginError);
@@ -215,7 +222,7 @@ const Init = ({navigation}) => {
     }
   };
 
-  const handleWebViewMessage = (event) => {
+  const handleWebViewMessage = async (event) => {
     console.log('------WEBVIEW MESSAGE------');
 
     let data = event.nativeEvent.data;
@@ -236,7 +243,13 @@ const Init = ({navigation}) => {
         if(result) {
           setWebViewVisible(false);
           setRedirectUrl(null);
-          navigation.navigate('MainStackWithDrawer');
+          // navigation.navigate('MainStackWithDrawer');
+          console.log('here2')
+          navigation.dispatch(CommonActions.reset({
+            index: 0,
+            routes: [{name: 'MainStackWithDrawer'}]
+          }))
+          console.log('here?2')
         } else {
           console.log('saveToken error');
           Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');

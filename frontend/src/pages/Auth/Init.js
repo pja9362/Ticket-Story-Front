@@ -69,7 +69,7 @@ const Init = ({navigation}) => {
       const token = result.accessToken;
       const idToken = result.idToken;
       if (token) {
-        Alert.alert('로그인 성공', `Access Token: ${token}`);
+        // Alert.alert('로그인 성공', `Access Token: ${token}`);
         // handleKaKaoAppLogin 호출 (회원가입 등록)
         try {
           const appLoginResult = await handleKaKaoAppLogin(token, idToken);

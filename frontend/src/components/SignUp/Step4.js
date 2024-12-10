@@ -12,7 +12,8 @@ const Step4 = () => {
   useEffect(() => {
     const today = new Date();
     const formattedDate = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
-    analytics().logEvent('sign_up', {method: 'general', signup_date: formattedDate});
+    analytics().logEvent('sign_up', {method: 'general'});
+    analytics().setUserProperty('signup_date', formattedDate);
   }, []);
 
   useEffect(() => {

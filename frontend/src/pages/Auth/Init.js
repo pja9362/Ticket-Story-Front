@@ -15,6 +15,7 @@ import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
 import analytics from '@react-native-firebase/analytics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { login, getAccessToken, logout } from '@react-native-seoul/kakao-login';
+import { CommonActions } from '@react-navigation/native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -85,8 +86,17 @@ const Init = ({navigation}) => {
               'refreshToken',
               appLoginResult.refreshToken,
             );
+            
+            console.log('here')
+            // navigation.navigate('MainStackWithDrawer');
+            await navigation.dispatch(CommonActions.reset({
+              index: 0,
+              routes: [{name: 'MainStackWithDrawer'}]
+            }))
+            console.log('here?')
 
-            navigation.navigate('MainStackWithDrawer');
+            analytics().logEvent('login', {method: 'kakao'});
+
           }
         } catch (appLoginError) {
           console.error('App Login Error:', appLoginError);
@@ -187,7 +197,8 @@ const Init = ({navigation}) => {
       if(!eventLogged) {
         const today = new Date();
         const formattedDate = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
-        analytics().logEvent('sign_up',{method:'kakao', signup_date: formattedDate})
+        analytics().logEvent('sign_up',{method:'kakao'})
+        analytics().setUserProperty('signup_date', formattedDate);
         await AsyncStorage.setItem('eventLogged_fourth_kakao_page', 'true');
         console.log('kakao fourth')
       }      
@@ -205,7 +216,8 @@ const Init = ({navigation}) => {
       if(!eventLogged) {
         const today = new Date();
         const formattedDate = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
-        analytics().logEvent('sign_up',{method:'apple', signup_date: formattedDate})
+        analytics().logEvent('sign_up',{method:'apple'})
+        analytics().setUserProperty('signup_date', formattedDate);
         await AsyncStorage.setItem('eventLogged_second_apple_page', 'true');
         console.log('apple second')
       }
@@ -215,7 +227,7 @@ const Init = ({navigation}) => {
     }
   };
 
-  const handleWebViewMessage = (event) => {
+  const handleWebViewMessage = async (event) => {
     console.log('------WEBVIEW MESSAGE------');
 
     let data = event.nativeEvent.data;
@@ -236,7 +248,13 @@ const Init = ({navigation}) => {
         if(result) {
           setWebViewVisible(false);
           setRedirectUrl(null);
-          navigation.navigate('MainStackWithDrawer');
+          // navigation.navigate('MainStackWithDrawer');
+          console.log('here2')
+          navigation.dispatch(CommonActions.reset({
+            index: 0,
+            routes: [{name: 'MainStackWithDrawer'}]
+          }))
+          console.log('here?2')
         } else {
           console.log('saveToken error');
           Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');

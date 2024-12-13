@@ -47,7 +47,7 @@ const EnrollFinish = ({navigation, route}) => {
         console.log('뭉', ticketId);
 
         // 페이지 조회 이벤트 기록
-        analytics().logEvent('ticket_register')
+        // analytics().logEvent('ticket_register')
         analytics().logScreenView({
           screen_name: '티켓 등록 완료',
           screen_class: 'ticket_register'

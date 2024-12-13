@@ -15,6 +15,7 @@ import {scale, verticalScale, moderateScale} from '../../utils/sizeUtil'
 import analytics from '@react-native-firebase/analytics';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { login, getAccessToken, logout } from '@react-native-seoul/kakao-login';
+import { CommonActions } from '@react-navigation/native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -101,8 +102,27 @@ const Init = ({navigation}) => {
             );
 
             // navigation.navigate('MainStackWithDrawer');
-            navigation.navigate('AppGuide');
+            // navigation.navigate('AppGuide');
             analytics().logEvent('login', {method: 'kakao'});
+
+            const eventLogged = await AsyncStorage.getItem('eventLogged_second_kakao_page');
+            console.log('이걸 뽑아보면 되지!!!!!!!!',eventLogged);
+
+            if(!eventLogged) {
+              const today = new Date();
+              const formattedDate = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
+              analytics().logEvent('sign_up',{method:'kakao', signup_date: formattedDate})
+              analytics().setUserProperty('signup_date', formattedDate);
+              await AsyncStorage.setItem('eventLogged_second_kakao_page', 'true');
+              console.log('kakao 회원가입')
+              navigation.navigate('AppGuide');
+            } else {
+              navigation.dispatch(CommonActions.reset({
+                  index: 0,
+                  routes: [{name: 'MainStackWithDrawer'}]
+              }))
+            }
+
           }
         } catch (appLoginError) {
           console.error('App Login Error:', appLoginError);
@@ -221,6 +241,7 @@ const Init = ({navigation}) => {
         const today = new Date();
         const formattedDate = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
         analytics().logEvent('sign_up',{method:'apple', signup_date: formattedDate})
+        analytics().setUserProperty('signup_date', formattedDate);
         await AsyncStorage.setItem('eventLogged_second_apple_page', 'true');
         console.log('apple second')
       }
@@ -246,13 +267,28 @@ const Init = ({navigation}) => {
     
     if (accessToken && refreshToken) {      
       console.log('Tokens found');
-      dispatch(saveTokens(jsonData, ([result, response]) => {
+      dispatch(saveTokens(jsonData, async ([result, response]) => {
         console.log('saveToken:', result, response);
         if(result) {
           setWebViewVisible(false);
           setRedirectUrl(null);
           // navigation.navigate('MainStackWithDrawer');
-          navigation.navigate('AppGuide');
+          console.log('애플만 되는거 맞지?')
+          // navigation.navigate('AppGuide');
+
+          const eventLogged = await AsyncStorage.getItem('eventLogged_apple_page');
+
+          if(!eventLogged) {
+            await AsyncStorage.setItem('eventLogged_apple_page', 'true');
+            console.log('apple 회원가입')
+            navigation.navigate('AppGuide');
+          } else {
+            navigation.dispatch(CommonActions.reset({
+                index: 0,
+                routes: [{name: 'MainStackWithDrawer'}]
+            }))
+          }
+
         } else {
           console.log('saveToken error');
           Alert.alert('소셜 로그인 에러. 잠시후 이용해주세요.');

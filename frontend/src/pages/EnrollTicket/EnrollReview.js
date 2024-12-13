@@ -167,6 +167,40 @@ const EnrollReview = ({navigation, route}) => {
       await AsyncStorage.removeItem(`tempReview_${ticketData.contentsDetails.contentsId || 'temp'}`);
 
       navigation.navigate('EnrollFinish', {ticketId});
+      
+      const photoExist = selectedImages.length === 1; 
+      const reviewExist = (reviewDetails.reviewDetails !== "" || reviewDetails.reviewTitle !== "") ? true : false;
+      const categoryForAnalytics = ticketData.category.toLowerCase();
+
+      // 유닉스타임 계산식
+      const [year, month, day] = ticketData.contentsDetails.date.split('.');
+      const [hour, minute] = ticketData.contentsDetails.time.split(':');
+      const combinedDate = new Date(year, parseInt(month) - 1, day, hour, minute);
+      const unixTime = Math.floor(combinedDate.getTime() / 1000);
+
+      // registerBy 값을 analytics용으로 매핑
+      let registerByForAnalytics = '';
+      if (ticketData.registerBy === 'OCR') {
+        registerByForAnalytics = 'camera';
+      } else if (ticketData.registerBy === 'SCRAPE') {
+        registerByForAnalytics = 'online';
+      } else if (ticketData.registerBy === 'BASIC') {
+        registerByForAnalytics = 'manual';
+      }
+
+      analytics().logEvent('ticket_register', {
+        viewing_rating: ratingDetails.contentsRating,
+        seat_rating: ratingDetails.seatRating,
+        photo: photoExist,
+        review: reviewExist,
+        time: unixTime,
+        place: ticketData.contentsDetails.location,
+        category: categoryForAnalytics,
+        contents: ticketData.contentsDetails.title,
+        method: registerByForAnalytics
+      });
+
+
     } catch (error) {
       console.error('Error saving review:', error);
     } finally {

@@ -11,14 +11,17 @@ const EnrollAgreement = ({route, navigation}) => {
   const [showSelectType, setShowSelectType] = useState(false);
 
   const onClick = (categoryInfo) => {
-    console.log(categoryInfo);
+
+    const categoryForAnalytics = categoryInfo.category.toLowerCase();
 
     if (action === 'hand') {
       navigation.navigate('EnrollInfoByHand', { categoryInfo });
-      analytics().logEvent('ticket_manual_category', {contents: categoryInfo.category, place: categoryInfo.categoryDetail});
+      analytics().logEvent('ticket_manual_category', {category: categoryForAnalytics, place: categoryInfo.categoryDetail});
+      // analytics().logEvent('ticket_manual_category', {contents: categoryInfo.category, place: categoryInfo.categoryDetail});
     } else if (action === 'camera') {
       navigation.navigate('EnrollByOCR', { categoryInfo });
-      analytics().logEvent('ticket_camera_category', {contents: categoryInfo.category, place: categoryInfo.categoryDetail});
+      analytics().logEvent('ticket_camera_category', {category: categoryForAnalytics, place: categoryInfo.categoryDetail});
+      // analytics().logEvent('ticket_camera_category', {contents: categoryInfo.category, place: categoryInfo.categoryDetail});
     }
   };
 

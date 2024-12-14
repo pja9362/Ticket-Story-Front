@@ -79,8 +79,8 @@ android {
         applicationId "com.ticketstory"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 31
-        versionName "1.0.30"
+        versionCode 33
+        versionName "1.0.32"
         multiDexEnabled true
     }
     signingConfigs {

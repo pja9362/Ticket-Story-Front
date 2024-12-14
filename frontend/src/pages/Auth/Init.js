@@ -64,6 +64,20 @@ const Init = ({navigation}) => {
   // };
   const handleKaKaoLogin = async () => {
     try {
+
+      analytics().logEvent('main_kakao_click')
+
+      const eventLogged = await AsyncStorage.getItem('eventLogged_first_kakao_page');
+      if(!eventLogged) {
+        analytics().logEvent('sign_up_try_kakao',{step:1})
+        analytics().logScreenView({
+          screen_name: '카카오톡 동의 선택',
+          screen_class: 'signup'
+        })
+        console.log('first_kakao_page!!!!');
+        await AsyncStorage.setItem('eventLogged_first_kakao_page', 'true');
+      }
+
       const result = await login()
       console.log('----- Kakao Login Result:', result);
 
@@ -86,16 +100,28 @@ const Init = ({navigation}) => {
               'refreshToken',
               appLoginResult.refreshToken,
             );
-            
-            console.log('here')
-            // navigation.navigate('MainStackWithDrawer');
-            await navigation.dispatch(CommonActions.reset({
-              index: 0,
-              routes: [{name: 'MainStackWithDrawer'}]
-            }))
-            console.log('here?')
 
+            // navigation.navigate('MainStackWithDrawer');
+            // navigation.navigate('AppGuide');
             analytics().logEvent('login', {method: 'kakao'});
+
+            const eventLogged = await AsyncStorage.getItem('eventLogged_second_kakao_page');
+            console.log('이걸 뽑아보면 되지!!!!!!!!',eventLogged);
+
+            if(!eventLogged) {
+              const today = new Date();
+              const formattedDate = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
+              analytics().logEvent('sign_up',{method:'kakao', signup_date: formattedDate})
+              analytics().setUserProperty('signup_date', formattedDate);
+              await AsyncStorage.setItem('eventLogged_second_kakao_page', 'true');
+              console.log('kakao 회원가입')
+              navigation.navigate('AppGuide');
+            } else {
+              navigation.dispatch(CommonActions.reset({
+                  index: 0,
+                  routes: [{name: 'MainStackWithDrawer'}]
+              }))
+            }
 
           }
         } catch (appLoginError) {
@@ -103,7 +129,6 @@ const Init = ({navigation}) => {
           Alert.alert('회원가입 실패', '다시 시도해주세요.');
         }
       }
-      analytics().logEvent('main_kakao_click')
     } catch (error) {
       console.error('Kakao Login Error:', error);
       Alert.alert('로그인 실패', '다시 시도해주세요.');
@@ -189,7 +214,7 @@ const Init = ({navigation}) => {
       console.log("Kakao Login Success!");
 
       if (!isKakaoLoginLogged) {
-        analytics().logEvent('login', {method: 'kakao'});
+        // analytics().logEvent('login', {method: 'kakao'});
         setIsKakaoLoginLogged(true);
       }
 
@@ -197,8 +222,7 @@ const Init = ({navigation}) => {
       if(!eventLogged) {
         const today = new Date();
         const formattedDate = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
-        analytics().logEvent('sign_up',{method:'kakao'})
-        analytics().setUserProperty('signup_date', formattedDate);
+        analytics().logEvent('sign_up',{method:'kakao', signup_date: formattedDate})
         await AsyncStorage.setItem('eventLogged_fourth_kakao_page', 'true');
         console.log('kakao fourth')
       }      
@@ -216,7 +240,7 @@ const Init = ({navigation}) => {
       if(!eventLogged) {
         const today = new Date();
         const formattedDate = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
-        analytics().logEvent('sign_up',{method:'apple'})
+        analytics().logEvent('sign_up',{method:'apple', signup_date: formattedDate})
         analytics().setUserProperty('signup_date', formattedDate);
         await AsyncStorage.setItem('eventLogged_second_apple_page', 'true');
         console.log('apple second')
@@ -227,7 +251,7 @@ const Init = ({navigation}) => {
     }
   };
 
-  const handleWebViewMessage = async (event) => {
+  const handleWebViewMessage = (event) => {
     console.log('------WEBVIEW MESSAGE------');
 
     let data = event.nativeEvent.data;
@@ -243,21 +267,31 @@ const Init = ({navigation}) => {
     
     if (accessToken && refreshToken) {      
       console.log('Tokens found');
-      dispatch(saveTokens(jsonData, ([result, response]) => {
+      dispatch(saveTokens(jsonData, async ([result, response]) => {
         console.log('saveToken:', result, response);
         if(result) {
           setWebViewVisible(false);
           setRedirectUrl(null);
           // navigation.navigate('MainStackWithDrawer');
-          console.log('here2')
-          navigation.dispatch(CommonActions.reset({
-            index: 0,
-            routes: [{name: 'MainStackWithDrawer'}]
-          }))
-          console.log('here?2')
+          console.log('애플만 되는거 맞지?')
+          // navigation.navigate('AppGuide');
+
+          const eventLogged = await AsyncStorage.getItem('eventLogged_apple_page');
+
+          if(!eventLogged) {
+            await AsyncStorage.setItem('eventLogged_apple_page', 'true');
+            console.log('apple 회원가입')
+            navigation.navigate('AppGuide');
+          } else {
+            navigation.dispatch(CommonActions.reset({
+                index: 0,
+                routes: [{name: 'MainStackWithDrawer'}]
+            }))
+          }
+
         } else {
           console.log('saveToken error');
-          Alert.alert('카카오 로그인 에러. 잠시후 이용해주세요.');
+          Alert.alert('소셜 로그인 에러. 잠시후 이용해주세요.');
         }
       })
       );

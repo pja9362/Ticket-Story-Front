@@ -224,11 +224,21 @@ const EnrollInfoByHand = ({ route, navigation }) => {
       }
     }
 
+    // mappedCategory를 소문자로 변환한 값
+    const mappedCategoryForAnalytics = category.toLowerCase();
+
+    // 유닉스타임 계산식
+    const [year, month, day] = date.split('.');
+    const [hour, minute] = time.split(':');
+    const combinedDate = new Date(year, parseInt(month) - 1, day, hour, minute);
+    const unixTime = Math.floor(combinedDate.getTime() / 1000);
+
     if (isFormValid()) {
       navigation.navigate('EnrollReview', { title, ticketData })
 
       const logDate = date.replace(/\./g, '');
-      analytics().logEvent('ticket_manual_info',{date: logDate, place: location, place_detail: locationDetail, place_seat: seats})
+      // analytics().logEvent('ticket_manual_info',{date: logDate, place: location, place_detail: locationDetail, place_seat: seats})
+      analytics().logEvent('ticket_manual_info',{category: mappedCategoryForAnalytics, time: unixTime, place: location, place_zone: locationDetail, place_seat: seats})
     } else {
       alert('필수 입력 항목을 모두 입력해주세요!');
     }
